@@ -1,5 +1,15 @@
 #!/bin/bash
 
+export PATH="$HOME/bin:$PATH"
+
+source ~/.virtualenvs/MainEnv/bin/activate
+
+if [ -f "$HOME/.bashrc" ]; then
+	alias r="source $HOME/.bashrc"
+elif [ -f "$HOME/.bash_profile" ]; then
+	alias r="source $HOME/.bash_profile"
+fi
+
 mkcd() {
 	if [ "$#" -ne "1" ]; then
 		echo "E: mkcd can only take 1 argument: [dir]"
@@ -8,7 +18,7 @@ mkcd() {
 	fi
 }
 
-border-text() {
+border() {
 	if [ "$#" -gt "0" ]; then
 		b="#"
 		lines=("$@")
@@ -37,7 +47,3 @@ mygpp() {
 		g++ "$1" -o "${1%.cpp}"
 	fi
 }
-
-export PATH="$HOME/bin:$PATH"
-alias r="source $HOME/.bashrc"
-source ~/.virtualenvs/MainEnv/bin/activate
