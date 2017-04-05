@@ -15,24 +15,26 @@ fi
 # 	function to replace OSX `exit` with `exit` and quit teminal
 
 mkcd() {
-	if [ "$#" -ne "1" ]; then
-		echo "E: mkcd can only take 1 argument: [dir]"
+	if [[ $# != 1 ]]; then
+		echo "Usage: mkcd DIR"
 	else
 		mkdir -p -- "$1" && cd -P -- "$1"
 	fi
 }
 
 border() {
-	if [ "$#" -gt "0" ]; then
+	if [[ $# > 0 ]]; then
 		b="#"
 		lines=("$@")
 		widest="0"
-		for l in "${lines[@]}"; do if [ "${#l}" -gt "$widest" ]; then widest="${#l}"; fi; done
+		for l in "${lines[@]}"; do
+			if [[ ${#l} > $widest ]]; then widest="${#l}"; fi
+		done
 		full_widest="$((widest+4))"
 		echo $(printf -- "$b%.0s" $(seq 1 $full_widest))
 		for l in "${lines[@]}"; do
 		width="${#l}"
-		if [ "$width" != "$widest" ]; then
+		if [[ $width != $widest ]]; then
 			echo "$b $l`printf ' %.0s' $(seq 1 $((widest-width)))` $b"
 		else
 			echo "$b $l $b"
@@ -40,14 +42,25 @@ border() {
 		done
 		echo $(printf -- "$b%.0s" $(seq 1 $full_widest))
 	else
-		echo "E: border-text requires an array of lines to border"
+		echo "Usage: border STRING_ARRAY"
 	fi
 }
 
 mygpp() {
-	if [ "$@" -ne "1" ]; then
-		echo "E: mygpp can only take 1 argument: [input_file]"
+	if [[ $# != 1 ]]; then
+		echo "Usage: mygpp FILE"
 	else
 		g++ "$1" -o "${1%.cpp}"
+	fi
+}
+
+qmygpp() {
+	if [[ $# != 1 ]]; then
+		echo "Usage: qmygpp FILE"
+	else
+		bin="${1%.cpp}"
+		mygpp "$1"
+		"./$bin"
+		rm "./$bin"
 	fi
 }
