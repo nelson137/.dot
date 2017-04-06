@@ -46,21 +46,30 @@ border() {
 	fi
 }
 
-mygpp() {
+bo() {
+	# Build-Only
 	if [[ $# != 1 ]]; then
-		echo "Usage: mygpp FILE"
+		echo "Usage: bo FILE"
 	else
 		g++ "$1" -o "${1%.cpp}"
 	fi
 }
 
-qmygpp() {
+bar() {
+	# Build-And-Run
+	if [[ $# != 1 ]]; then
+		echo "Usage: bar FILE"
+	else
+		bo "$1"
+		"./${1%.cpp}"
+}
+
+brr() {
+	# Build-Run-Remove
 	if [[ $# != 1 ]]; then
 		echo "Usage: qmygpp FILE"
 	else
-		bin="${1%.cpp}"
-		mygpp "$1"
-		"./$bin"
-		rm "./$bin"
+		bar "$1"
+		rm "./${1%.cpp}"
 	fi
 }
