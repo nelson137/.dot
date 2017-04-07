@@ -74,3 +74,28 @@ brr() {
 		rm "./${1%.cpp}"
 	fi
 }
+
+if [[ $(uname) == Darwin ]]; then
+	close() {
+		n=$(who | grep ttys -c)
+		if [[ $n == 1 ]]; then
+			osascript -e 'quit app "Terminal"'
+		elif [[ $n > 1 ]]; then
+			exit
+		fi
+	}
+
+	rm() {
+		args=("$@")
+		nonflags=()
+		for arg in "${args[@]}"; do
+			if [[ $arg != -* ]]; then
+				nonflags+=("$arg")
+			fi
+		done
+
+		if [[ ${#nonflags[@]} > 0 ]]; then
+			mv "${nonflags[@]}" "$HOME/.Trash"
+		fi
+	}
+fi
