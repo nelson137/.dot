@@ -10,10 +10,6 @@ elif [ -f "$HOME/.bash_profile" ]; then
 	alias r="source $HOME/.bash_profile"
 fi
 
-# TODO:
-# 	function to replace `rm <thing>` with `mv <thing> ~/.Trash`
-# 	function to replace OSX `exit` with `exit` and quit teminal
-
 mkcd() {
 	if [[ $# != 1 ]]; then
 		echo "Usage: mkcd DIR"
