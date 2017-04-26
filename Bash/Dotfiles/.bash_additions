@@ -46,6 +46,7 @@ bo() {
 	# Build-Only
 	if [[ $# != 1 ]]; then
 		echo "Usage: bo FILE"
+        echo "Call in directory of FILE"
 	else
 		g++ "$1" -o "${1%.cpp}"
 	fi
@@ -55,6 +56,7 @@ bar() {
 	# Build-And-Run
 	if [[ $# != 1 ]]; then
 		echo "Usage: bar FILE"
+        echo "Call in directory of FILE"
 	else
 		bo "$1"
 		"./${1%.cpp}"
@@ -64,11 +66,44 @@ bar() {
 brr() {
 	# Build-Run-Remove
 	if [[ $# != 1 ]]; then
-		echo "Usage: qmygpp FILE"
+		echo "Usage: brr FILE"
+        echo "Call in directory of FILE"
 	else
 		bar "$1"
 		rm "./${1%.cpp}"
 	fi
+}
+
+jo() {
+    # Java-Only
+    if [[ $# != 1 ]]; then
+        echo "Usage: jo FILE"
+        echo "Call in directory of FILE"
+    else
+        javac "$1"
+    fi
+}
+
+jar() {
+    # Java-And-Run
+    if [[ $# != 1 ]]; then
+        echo "Usage: jar FILE"
+        echo "Call in directory of FILE"
+    else
+        jo "$1"
+        java "${1%.java}"
+    fi
+}
+
+jrr() {
+    # Java-Run-Remove
+    if [[ $# != 1 ]]; then
+        echo "Usage: jrr FILE"
+        echo "Call in directory of FILE"
+    else
+        jar "$1"
+        rm "${1%.class}"
+    fi
 }
 
 if [[ $(uname) == Darwin ]]; then
@@ -78,20 +113,6 @@ if [[ $(uname) == Darwin ]]; then
 			osascript -e 'quit app "Terminal"'
 		elif [[ $n > 1 ]]; then
 			exit
-		fi
-	}
-
-	rm() {
-		args=("$@")
-		nonflags=()
-		for arg in "${args[@]}"; do
-			if [[ $arg != -* ]]; then
-				nonflags+=("$arg")
-			fi
-		done
-
-		if [[ ${#nonflags[@]} > 0 ]]; then
-			mv "${nonflags[@]}" "$HOME/.Trash"
 		fi
 	}
 fi
