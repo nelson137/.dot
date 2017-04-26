@@ -102,7 +102,7 @@ jrr() {
         echo "Call in directory of FILE"
     else
         jar "$1"
-        rm "${1%.class}"
+        rm "${1%.java}.class"
     fi
 }
 
