@@ -82,6 +82,12 @@ jrr() {
     fi
 }
 
+clera() {
+    echo ""#################
+### C L E R A ###
+#################"
+}
+
 if [[ $(uname) == Darwin ]]; then
 	close() {
 		n=$(who | grep ttys -c)
