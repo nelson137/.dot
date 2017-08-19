@@ -18,6 +18,17 @@ mkcd() {
 	fi
 }
 
+clera() {
+    echo "#################"
+    echo "### C L E R A ###"
+    echo "#################"
+}
+
+getip() {
+    echo "Public:  $(dig +short myip.opendns.com)"
+    echo "Private: $(ifconfig | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}')"
+}
+
 bo() {
 	# Build-Only
 	if [[ $# != 1 ]]; then
@@ -80,12 +91,6 @@ jrr() {
         jar "$1"
         rm "${1%.java}.class"
     fi
-}
-
-clera() {
-    echo "#################"
-    echo "### C L E R A ###"
-    echo "#################"
 }
 
 if [[ $(uname) == Darwin ]]; then
