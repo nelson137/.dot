@@ -25,7 +25,7 @@ clera() {
 }
 
 getip() {
-    echo "Public:  $(dig +short myip.opendns.com)"
+    echo "Public:  $(dig +short myip.opendns.com @resolver1.opendns.com)"
     echo "Private: $(ifconfig | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}')"
 }
 
