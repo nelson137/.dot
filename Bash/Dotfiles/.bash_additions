@@ -10,6 +10,18 @@ elif [ -f "$HOME/.bash_profile" ]; then
 	alias r="source $HOME/.bash_profile"
 fi
 
+if [[ $(uname) == Darwin ]]; then
+    alias ls="ls -Gp"
+    alias ll="ls -Gpoh"
+    alias la="ls -GpA"
+    
+    alias ssh-to-aws="ssh -i ~/.ssh/Main.pem ubuntu@ec2-34-210-71-203.us-west-2.compute.amazonaws.com"
+else
+    alias ls="ls -p --color"
+    alias ll="ls -poh --color"
+    alias la="ls -pA --color"
+fi
+
 mkcd() {
 	if [[ $# != 1 ]]; then
 		echo "Usage: mkcd DIR"
