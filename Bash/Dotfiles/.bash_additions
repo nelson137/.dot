@@ -22,20 +22,20 @@ elif [[ $(uname) == Linux ]]; then
     alias lal="ls -pAoh --color"
 fi
 
-ssh-aws-cmd="ssh -i ~/.ssh/Main.pem ubuntu@ec2-34-210-71-203.us-west-2.compute.amazonaws.com"
+aws_ssh_cmd="ssh -i ~/.ssh/Main.pem ubuntu@ec2-34-210-71-203.us-west-2.compute.amazonaws.com"
 uuid="$(cat ~/.instance_uuid | awk '{print $NF}')"
 if [[ $uuid == "9344462f-6d26-4f5c-bf78-0712eb2fc56b" ]]; then
     echo "macbook air"
-    alias ssh-to-aws="$ssh-aws-cmd"
+    alias ssh-to-aws="$aws_ssh_cmd"
 elif [[ $uuid == "b967243a-ee97-4320-8b0e-3101ffd28929" ]]; then
     echo "ubuntu virtualbox"
     # TODO: delete MainEnv
-    alias ssh-to-aws="$ssh-aws-cmd"
+    alias ssh-to-aws="$aws_ssh_cmd"
 elif [[ $uuid == "0b5f4d6c-024e-411f-8dc8-87dbf6eb5eaa" ]]; then
     echo "aws1 main"
 elif [[ $uuid == "88af29fe-fda2-4bcc-a65a-cfc61f9ef0b4" ]]; then
     echo "raspberry pi"
-    alias ssh-to-aws="$ssh-aws-cmd"
+    alias ssh-to-aws="$aws_ssh_cmd"
 elif [[ $uuid == "132b41dc-a118-4188-8bbf-1728c392d723" ]]; then
     echo "pythonanywhere"
     source ~/.virtualenvs/MainEnv/bin/activate
