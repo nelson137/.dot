@@ -31,6 +31,7 @@ elif [[ $uuid == "b967243a-ee97-4320-8b0e-3101ffd28929" ]]; then
     # TODO: delete MainEnv
     alias ssh-to-aws="$aws_ssh_cmd"
 elif [[ $uuid == "0b5f4d6c-024e-411f-8dc8-87dbf6eb5eaa" ]]; then
+    true
 elif [[ $uuid == "88af29fe-fda2-4bcc-a65a-cfc61f9ef0b4" ]]; then
     echo "raspberry pi"
     alias ssh-to-aws="$aws_ssh_cmd"
