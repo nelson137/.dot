@@ -23,7 +23,7 @@ elif [[ $(uname) == Linux ]]; then
 fi
 
 aws_ssh_cmd="ssh -i ~/.ssh/Main.pem ubuntu@ec2-34-210-71-203.us-west-2.compute.amazonaws.com"
-uuid="$(cat ~/.instance_uuid | awk '{print $NF}')"
+uuid="$(cat ~/.instance_uuid | awk 'NR==1{print $NF}')"
 if [[ $uuid == "9344462f-6d26-4f5c-bf78-0712eb2fc56b" ]]; then
     echo "macbook air"
     alias ssh-to-aws="$aws_ssh_cmd"
