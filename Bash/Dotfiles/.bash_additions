@@ -5,9 +5,9 @@ export PATH="$HOME/bin:$PATH"
 alias python="python3"
 
 if [ -f "$HOME/.bashrc" ]; then
-	alias r="source $HOME/.bashrc"
+    alias r="source $HOME/.bashrc"
 elif [ -f "$HOME/.bash_profile" ]; then
-	alias r="source $HOME/.bash_profile"
+    alias r="source $HOME/.bash_profile"
 fi
 
 if [[ $(uname) == Darwin ]]; then
@@ -37,11 +37,11 @@ elif [[ $uuid == "132b41dc-a118-4188-8bbf-1728c392d723" ]]; then # pythonanywher
 fi
 
 mkcd() {
-	if [[ $# != 1 ]]; then
-		echo "Usage: mkcd DIR"
-	else
-		mkdir -p -- "$1" && cd -P -- "$1"
-	fi
+    if [[ $# != 1 ]]; then
+        echo "Usage: mkcd DIR"
+    else
+        mkdir -p -- "$1" && cd -P -- "$1"
+    fi
 }
 
 clera() {
@@ -68,35 +68,35 @@ getip() {
 }
 
 bo() {
-	# Build-Only
-	if [[ $# != 1 ]]; then
-		echo "Usage: bo FILE"
+    # Build-Only
+    if [[ $# != 1 ]]; then
+        echo "Usage: bo FILE"
         echo "Call in directory of FILE"
-	else
-		g++ "$1" -o "${1%.cpp}"
-	fi
+    else
+        g++ "$1" -o "${1%.cpp}"
+    fi
 }
 
 bar() {
-	# Build-And-Run
-	if [[ $# != 1 ]]; then
-		echo "Usage: bar FILE"
+    # Build-And-Run
+    if [[ $# != 1 ]]; then
+        echo "Usage: bar FILE"
         echo "Call in directory of FILE"
-	else
-		bo "$1"
-		"./${1%.cpp}"
-	fi
+    else
+        bo "$1"
+        "./${1%.cpp}"
+    fi
 }
 
 brr() {
-	# Build-Run-Remove
-	if [[ $# != 1 ]]; then
-		echo "Usage: brr FILE"
+    # Build-Run-Remove
+    if [[ $# != 1 ]]; then
+        echo "Usage: brr FILE"
         echo "Call in directory of FILE"
-	else
-		bar "$1"
-		rm "./${1%.cpp}"
-	fi
+    else
+        bar "$1"
+        rm "./${1%.cpp}"
+    fi
 }
 
 jo() {
@@ -132,12 +132,12 @@ jrr() {
 }
 
 if [[ $(uname) == Darwin ]]; then
-	close() {
-		n=$(who | grep ttys -c)
-		if [[ $n == 1 ]]; then
-			osascript -e 'quit app "Terminal"'
-		elif [[ $n > 1 ]]; then
-			exit
-		fi
-	}
+    close() {
+        n=$(who | grep ttys -c)
+        if [[ $n == 1 ]]; then
+            osascript -e 'quit app "Terminal"'
+        elif [[ $n > 1 ]]; then
+            exit
+        fi
+    }
 fi
