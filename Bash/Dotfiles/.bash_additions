@@ -3,6 +3,7 @@
 export PATH="$HOME/bin:$PATH"
 
 alias python="python3"
+alias pip="pip3"
 
 if [ -f "$HOME/.bashrc" ]; then
     alias r="source $HOME/.bashrc"
