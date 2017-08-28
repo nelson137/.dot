@@ -160,6 +160,4 @@ elif [[ $using_cmder == true ]]; then # cmder
         echo "Public:  $(dig +short myip.opendns.com @resolver1.opendns.com)"
         echo "Private: $(ipconfig | grep "  IPv4" | awk '{print $NF}')"
     }
-    
-    echo cmder
 fi
