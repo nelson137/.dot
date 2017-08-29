@@ -142,8 +142,8 @@ elif [[ $uuid == "0b5f4d6c-024e-411f-8dc8-87dbf6eb5eaa" ]]; then # aws1 main
 elif [[ $uuid == "88af29fe-fda2-4bcc-a65a-cfc61f9ef0b4" ]]; then # raspberry pi
     unset -f ssh-to-pi
 elif [[ $uuid == "132b41dc-a118-4188-8bbf-1728c392d723" ]]; then # pythonanywhere
-    unset ssh-to-aws
-    unset ssh-to-pi
+    unset -f ssh-to-aws
+    unset -f ssh-to-pi
     
     unset jo
     unset jar
