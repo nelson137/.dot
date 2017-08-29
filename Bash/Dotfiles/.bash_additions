@@ -133,14 +133,14 @@ elif [[ $uuid == "b967243a-ee97-4320-8b0e-3101ffd28929" ]]; then # ubuntu virtua
     unset jar
     unset jrr
 elif [[ $uuid == "0b5f4d6c-024e-411f-8dc8-87dbf6eb5eaa" ]]; then # aws1 main
-    unset ssh-to-aws
-    unset ssh-to-pi
+    unset -f ssh-to-aws
+    unset -f ssh-to-pi
     
     unset jo
     unset jar
     unset jrr
 elif [[ $uuid == "88af29fe-fda2-4bcc-a65a-cfc61f9ef0b4" ]]; then # raspberry pi
-    unset ssh-to-pi
+    unset -f ssh-to-pi
 elif [[ $uuid == "132b41dc-a118-4188-8bbf-1728c392d723" ]]; then # pythonanywhere
     unset ssh-to-aws
     unset ssh-to-pi
@@ -160,3 +160,4 @@ elif [[ $using_cmder == true ]]; then # cmder
         echo "Private: $(ipconfig | grep "  IPv4" | awk '{print $NF}')"
     }
 fi
+
