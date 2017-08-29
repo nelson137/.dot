@@ -18,12 +18,12 @@ if [[ $(uname) == Darwin ]]; then
     alias ls="ls -Gp"
     alias la="ls -GpA"
     alias ll="ls -Gpoh"
-    alias lal="ls -GpAoh"
+    alias lla="ls -GpAoh"
 elif [[ $(uname) == Linux ]]; then
     alias ls="ls -p --color"
     alias la="ls -pA --color"
     alias ll="ls -poh --color"
-    alias lal="ls -pAoh --color"
+    alias lla="ls -pAoh --color"
 fi
 
 mkcd() {
