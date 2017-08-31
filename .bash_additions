@@ -1,0 +1,163 @@
+#!/bin/bash
+
+export PATH="$HOME/bin:$PATH"
+
+alias python="python3"
+alias pip="pip3"
+
+alias ssh-to-aws="ssh -i ~/.ssh/Main.pem ubuntu@ec2-34-210-71-203.us-west-2.compute.amazonaws.com"
+ssh-to-pi() { ssh nelson@192.168.1.131 || ssh nelson@75.132.101.100; }
+
+if [ -f "$HOME/.bashrc" ]; then
+    alias r="source $HOME/.bashrc"
+elif [ -f "$HOME/.bash_profile" ]; then
+    alias r="source $HOME/.bash_profile"
+fi
+
+if [[ $(uname) == Darwin ]]; then
+    alias ls="ls -Gp"
+    alias la="ls -GpA"
+    alias ll="ls -Gpoh"
+    alias lla="ls -GpAoh"
+elif [[ $(uname) == Linux ]]; then
+    alias ls="ls -p --color"
+    alias la="ls -pA --color"
+    alias ll="ls -poh --color"
+    alias lla="ls -pAoh --color"
+fi
+
+mkcd() {
+    if [[ $# != 1 ]]; then
+        echo "Usage: mkcd DIR"
+    else
+        mkdir -p -- "$1" && cd -P -- "$1"
+    fi
+}
+
+clera() {
+    a="\x7c"; b="\x24"; c="\x20"; d="\x22"; e="\x23"; f="\x96"; g="\x3a"; h="\x5f"
+    i="\x5c"; j="\x90"; k="\x95"; l="\xe2"; m="\x38"; n="\x2f"; o="\x0a"; p="\x88"
+    choices=("$c$c$e$e$e$e$e$c$c$e$c$c$c$c$c$c$c$e$e$e$e$e$e$e$c$e$e$e$e$e$e$c$c$c$c$c$e$c$c$c$c$o$c$e$c$c$c$c$c$e$c$e$c$c$c$c$c$c$c$e$c$c$c$c$c$c$c$e$c$c$c$c$c$e$c$c$c$e$c$e$c$c$c$o$c$e$c$c$c$c$c$c$c$e$c$c$c$c$c$c$c$e$c$c$c$c$c$c$c$e$c$c$c$c$c$e$c$c$e$c$c$c$e$c$c$o$c$e$c$c$c$c$c$c$c$e$c$c$c$c$c$c$c$e$e$e$e$e$c$c$c$e$e$e$e$e$e$c$c$e$c$c$c$c$c$e$c$o$c$e$c$c$c$c$c$c$c$e$c$c$c$c$c$c$c$e$c$c$c$c$c$c$c$e$c$c$c$e$c$c$c$e$e$e$e$e$e$e$c$o$c$e$c$c$c$c$c$e$c$e$c$c$c$c$c$c$c$e$c$c$c$c$c$c$c$e$c$c$c$c$e$c$c$e$c$c$c$c$c$e$c$o$c$c$e$e$e$e$e$c$c$e$e$e$e$e$e$e$c$e$e$e$e$e$e$e$c$e$c$c$c$c$c$e$c$e$c$c$c$c$c$e$c"
+             "$c$c$e$e$e$e$e$e$c$c$e$e$c$c$c$c$c$c$c$e$e$e$e$e$e$e$e$c$e$e$e$e$e$e$e$e$c$c$c$c$c$e$e$e$c$c$c$c$o$c$e$e$c$c$c$c$e$e$c$e$e$c$c$c$c$c$c$c$e$e$c$c$c$c$c$c$c$e$e$c$c$c$c$c$e$e$c$c$c$e$e$c$e$e$c$c$c$o$c$e$e$c$c$c$c$c$c$c$e$e$c$c$c$c$c$c$c$e$e$c$c$c$c$c$c$c$e$e$c$c$c$c$c$e$e$c$c$e$e$c$c$c$e$e$c$c$o$c$e$e$c$c$c$c$c$c$c$e$e$c$c$c$c$c$c$c$e$e$e$e$e$e$c$c$c$e$e$e$e$e$e$e$e$c$c$e$e$c$c$c$c$c$e$e$c$o$c$e$e$c$c$c$c$c$c$c$e$e$c$c$c$c$c$c$c$e$e$c$c$c$c$c$c$c$e$e$c$c$c$e$e$c$c$c$e$e$e$e$e$e$e$e$e$c$o$c$e$e$c$c$c$c$e$e$c$e$e$c$c$c$c$c$c$c$e$e$c$c$c$c$c$c$c$e$e$c$c$c$c$e$e$c$c$e$e$c$c$c$c$c$e$e$c$o$c$c$e$e$e$e$e$e$c$c$e$e$e$e$e$e$e$e$c$e$e$e$e$e$e$e$e$c$e$e$c$c$c$c$c$e$e$c$e$e$c$c$c$c$c$e$e$c"
+             "$c$c$c$h$h$h$h$h$c$h$c$c$c$c$c$c$h$h$h$h$h$h$c$h$h$h$h$h$c$c$c$c$c$c$c$c$c$c$c$c$c$o$c$c$n$c$h$h$h$h$a$c$a$c$c$c$c$a$c$c$h$h$h$h$a$c$c$h$h$c$i$c$c$c$c$c$n$i$c$c$c$c$c$o$c$a$c$a$c$c$c$c$a$c$a$c$c$c$c$a$c$a$h$h$c$c$a$c$a$h$h\x29$c$a$c$c$c$n$c$c$i$c$c$c$c$o$c$a$c$a$c$c$c$c$a$c$a$c$c$c$c$a$c$c$h$h$a$c$a$c$c$h$c$c$n$c$c$c$n$c$n$i$c$i$c$c$c$o$c$a$c$a$h$h$h$h$a$c$a$h$h$h$h$a$c$a$h$h$h$h$a$c$a$c$i$c$i$c$c$n$c$h$h$h$h$c$i$c$c$o$c$c$i$h$h$h$h$h$a$h$h$h$h$h$h$a$h$h$h$h$h$h$a$h$a$c$c$i$h$i$n$h$n$c$c$c$c$i$h$i$c"
+             "$c$c$c$c$c$c$h$h$h$c$c$c$c$c$c$c$c$c$c$c$h$h$h$c$c$c$c$c$c$c$h$h$h$c$c$c$c$c$c$c$c$c$c$c$h$h$h$c$c$c$c$c$c$c$c$c$c$c$h$h$h$c$c$c$c$c$c$o$c$c$c$c$c$n$i$c$c$i$c$c$c$c$c$c$c$c$c$n$i$h$h$i$c$c$c$c$c$n$i$c$c$i$c$c$c$c$c$c$c$c$c$n$i$c$c$i$c$c$c$c$c$c$c$c$c$n$i$c$c$i$c$c$c$c$c$o$c$c$c$c$n$g$g$i$c$c$i$c$c$c$c$c$c$c$n$g$n$c$c$n$c$c$c$c$n$g$g$i$c$c$i$c$c$c$c$c$c$c$n$g$g$i$c$c$i$c$c$c$c$c$c$c$n$g$g$i$c$c$i$c$c$c$c$o$c$c$c$n$g$n$i$g$i$c$c$i$c$c$c$c$c$n$g$n$c$c$n$c$c$c$c$n$g$n$i$g$i$c$c$i$c$c$c$c$c$n$g$n$i$g$i$c$c$i$c$c$c$c$c$n$g$n$i$g$i$c$c$i$c$c$c$o$c$c$n$g$n$c$c$i$g$i$c$c$i$c$c$c$n$g$n$c$c$n$c$c$c$c$n$g$g$i\x7e$i$g$i$c$c$i$c$c$c$n$g$g$i\x7e$i$g$i$c$c$i$c$c$c$n$g$g$i\x7e$i$g$i$c$c$i$c$c$o$c$n$g$n$h$h$n$c$i$g$i$h$h$i$c$n$g$n$h$h$n$c$c$c$c$n$g$n$i$g$i$c$i$g$i$h$h$i$c$n$g$n$i$g$i$c$i$g$i$h$h$i$c$n$g$n$i$g$i$c$i$g$i$h$h$i$c$o$c$i$g$i$c$c$i$c$c$i$n$h$h$n$c$i$g$i$c$c$i$c$c$c$c$i$g$i\x7e$i$g$i$c$i$n$h$h$n$c$i$n$h$a$g$g$i$n$g$n$c$c$n$c$i$n$h$h$i$g$i$n$g$n$c$c$n$c$o$c$c$i$g$i$c$c$i$c$c$c$c$c$c$c$c$i$g$i$c$c$i$c$c$c$c$i$g$i$c$i$g$i$h$h$i$c$c$c$c$c$c$a$g$a$g$g$n$c$c$n$c$c$c$c$c$c$c$i$g$g$n$c$c$n$c$c$o$c$c$c$i$g$i$c$c$i$c$c$c$c$c$c$c$c$i$g$i$c$c$i$c$c$c$c$i$g$i$c$i$n$h$h$n$c$c$c$c$c$c$a$g$a$i$n$h$h$n$c$c$c$c$c$c$c$c$n$g$n$c$c$n$c$c$c$o$c$c$c$c$i$g$i$h$h$i$c$c$c$c$c$c$c$c$i$g$i$h$h$i$c$c$c$c$i$g$i$h$h$i$c$c$c$c$c$c$c$c$a$g$a$c$c$a$c$c$c$c$c$c$c$c$c$n$g$n$c$c$n$c$c$c$c$o$c$c$c$c$c$i$n$h$h$n$c$c$c$c$c$c$c$c$c$i$n$h$h$n$c$c$c$c$c$i$n$h$h$n$c$c$c$c$c$c$c$c$c$i$a$h$h$a$c$c$c$c$c$c$c$c$c$i$n$h$h$n$c$c$c$c$c"
+             "$c$c$c$h$h$h$h$c$h$c$c$c$c$c$h$h$h$h$h$c$h$h$h$h$c$c$c$c$c$c$h$c$c$c$c$c$o$c$c$n$c$h$h$h$a$c$a$c$c$c$a$c$h$h$h$h$a$c$c$h$c$i$c$c$c$c$n$c$i$c$c$c$c$o$c$a$c$a$c$c$c$a$c$a$c$c$c$a$c$c$h$a$c$a$c$a$h\x29$c$a$c$c$n$c$h$c$i$c$c$c$o$c$a$c$a$h$h$h$a$c$a$h$h$h$a$c$a$h$h$h$a$c$c$h$c\x3c$c$c$n$c$h$h$h$c$i$c$c$o$c$c$i$h$h$h$h$a$h$h$h$h$h$a$h$h$h$h$h$a$h$a$c$i$h$i$n$h$n$c$c$c$i$h$i$c"
+             "$c$c$c\x2c\x61\x64$m$m$m$m\x62\x61\x2c$c$c$m$m$c$c$c$c$c$c$c$c$c$c$m$m$m$m$m$m$m$m$m$m$m$c$m$m$m$m$m$m$m$m\x62\x61$c$c$c$c$c$c$c$c$c\x64\x62$c$c$c$c$c$c$c$c$o$c$c\x64$m$d\x27$c$c$c$c\x60$d$m\x62$c$m$m$c$c$c$c$c$c$c$c$c$c$m$m$c$c$c$c$c$c$c$c$c$c$m$m$c$c$c$c$c$c$d$m\x62$c$c$c$c$c$c$c\x64$m$m\x62$c$c$c$c$c$c$c$o$c\x64$m\x27$c$c$c$c$c$c$c$c$c$c$c$m$m$c$c$c$c$c$c$c$c$c$c$m$m$c$c$c$c$c$c$c$c$c$c$m$m$c$c$c$c$c$c\x2c$m\x50$c$c$c$c$c$c\x64$m\x27\x60$m\x62$c$c$c$c$c$c$o$c$m$m$c$c$c$c$c$c$c$c$c$c$c$c$m$m$c$c$c$c$c$c$c$c$c$c$m$m\x61\x61\x61\x61\x61$c$c$c$c$c$m$m\x61\x61\x61\x61\x61\x61$m\x50\x27$c$c$c$c$c\x64$m\x27$c$c\x60$m\x62$c$c$c$c$c$o$c$m$m$c$c$c$c$c$c$c$c$c$c$c$c$m$m$c$c$c$c$c$c$c$c$c$c$m$m$d$d$d$d$d$c$c$c$c$c$m$m$d$d$d$d$m$m\x27$c$c$c$c$c$c\x64$m\x59\x61\x61\x61\x61\x59$m\x62$c$c$c$c$o$c\x59$m\x2c$c$c$c$c$c$c$c$c$c$c$c$m$m$c$c$c$c$c$c$c$c$c$c$m$m$c$c$c$c$c$c$c$c$c$c$m$m$c$c$c$c\x60$m\x62$c$c$c$c$c\x64$m$d$d$d$d$d$d$d$d$m\x62$c$c$c$o$c$c\x59$m\x61\x2e$c$c$c$c\x2e\x61$m\x50$c$m$m$c$c$c$c$c$c$c$c$c$c$m$m$c$c$c$c$c$c$c$c$c$c$m$m$c$c$c$c$c\x60$m\x62$c$c$c\x64$m\x27$c$c$c$c$c$c$c$c\x60$m\x62$c$c$o$c$c$c\x60$d\x59$m$m$m$m\x59$d\x27$c$c$m$m$m$m$m$m$m$m$m$m$m$c$m$m$m$m$m$m$m$m$m$m$m$c$m$m$c$c$c$c$c$c\x60$m\x62$c\x64$m\x27$c$c$c$c$c$c$c$c$c$c\x60$m\x62$c"
+             "$c$c$c$n$b$b$b$b$b$b$c$c$n$b$b$c$c$c$c$c$c$c$n$b$b$b$b$b$b$b$b$c$n$b$b$b$b$b$b$b$c$c$c$n$b$b$b$b$b$b$c$c$o$c$c$n$b$b$h$h$c$c$b$b$a$c$b$b$c$c$c$c$c$c$a$c$b$b$h$h$h$h$h$n$a$c$b$b$h$h$c$c$b$b$c$n$b$b$h$h$c$c$b$b$c$o$c$a$c$b$b$c$c$i$h$h$n$a$c$b$b$c$c$c$c$c$c$a$c$b$b$c$c$c$c$c$c$a$c$b$b$c$c$i$c$b$b$a$c$b$b$c$c$i$c$b$b$c$o$c$a$c$b$b$c$c$c$c$c$c$a$c$b$b$c$c$c$c$c$c$a$c$b$b$b$b$b$c$c$c$a$c$b$b$b$b$b$b$b$n$a$c$b$b$b$b$b$b$b$b$c$o$c$a$c$b$b$c$c$c$c$c$c$a$c$b$b$c$c$c$c$c$c$a$c$b$b$h$h$n$c$c$c$a$c$b$b$h$h$c$c$b$b$a$c$b$b$h$h$c$c$b$b$c$o$c$a$c$b$b$c$c$c$c$b$b$a$c$b$b$c$c$c$c$c$c$a$c$b$b$c$c$c$c$c$c$a$c$b$b$c$c$i$c$b$b$a$c$b$b$c$c$a$c$b$b$c$o$c$a$c$c$b$b$b$b$b$b$n$a$c$b$b$b$b$b$b$b$b$a$c$b$b$b$b$b$b$b$b$a$c$b$b$c$c$a$c$b$b$a$c$b$b$c$c$a$c$b$b$c$o$c$c$i$h$h$h$h$h$h$n$c$a$h$h$h$h$h$h$h$h$n$a$h$h$h$h$h$h$h$h$n$a$h$h$n$c$c$a$h$h$n$a$h$h$n$c$c$a$h$h$n$c")
+
+    i=$(awk "BEGIN { srand(); print int(rand()*${#choices[@]}) }")
+    printf "\n${choices[$i]}\n\n"
+}
+
+getip() {
+    echo "Public:  $(dig +short myip.opendns.com @resolver1.opendns.com)"
+    echo "Private: $(ifconfig | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}' | sed -e 's/addr://g')"
+}
+
+bo() {
+    # Build-Only
+    if [[ $# != 1 ]]; then
+        echo "Usage: bo FILE"
+        echo "Call in directory of FILE"
+    else
+        g++ "$1" -o "${1%.cpp}"
+    fi
+}
+
+bar() {
+    # Build-And-Run
+    if [[ $# != 1 ]]; then
+        echo "Usage: bar FILE"
+        echo "Call in directory of FILE"
+    else
+        bo "$1"
+        "./${1%.cpp}"
+    fi
+}
+
+brr() {
+    # Build-Run-Remove
+    if [[ $# != 1 ]]; then
+        echo "Usage: brr FILE"
+        echo "Call in directory of FILE"
+    else
+        bar "$1"
+        rm "./${1%.cpp}"
+    fi
+}
+
+jo() {
+    # Java-Only
+    if [[ $# != 1 ]]; then
+        echo "Usage: jo FILE"
+        echo "Call in directory of FILE"
+    else
+        javac "$1"
+    fi
+}
+
+jar() {
+    # Java-And-Run
+    if [[ $# != 1 ]]; then
+        echo "Usage: jar FILE"
+        echo "Call in directory of FILE"
+    else
+        jo "$1"
+        java "${1%.java}"
+    fi
+}
+
+jrr() {
+    # Java-Run-Remove
+    if [[ $# != 1 ]]; then
+        echo "Usage: jrr FILE"
+        echo "Call in directory of FILE"
+    else
+        jar "$1"
+        rm "${1%.java}.class"
+    fi
+}
+
+
+
+if [[ -e ~/.instance_uuid ]]; then
+    uuid="$(cat ~/.instance_uuid | awk 'NR==1{print $NF}')"
+elif [[ ! -z $uuid_from_cmder ]]; then
+    uuid="$uuid_from_cmder"
+fi
+
+if [[ $uuid == "9344462f-6d26-4f5c-bf78-0712eb2fc56b" ]]; then # macbook air
+    true #unset nothing
+elif [[ $uuid == "b967243a-ee97-4320-8b0e-3101ffd28929" ]]; then # ubuntu virtualbox
+    unset jo
+    unset jar
+    unset jrr
+elif [[ $uuid == "0b5f4d6c-024e-411f-8dc8-87dbf6eb5eaa" ]]; then # aws1 main
+    unset -f ssh-to-aws
+    unset -f ssh-to-pi
+    
+    unset jo
+    unset jar
+    unset jrr
+elif [[ $uuid == "88af29fe-fda2-4bcc-a65a-cfc61f9ef0b4" ]]; then # raspberry pi
+    unset -f ssh-to-pi
+elif [[ $uuid == "132b41dc-a118-4188-8bbf-1728c392d723" ]]; then # pythonanywhere
+    unset -f ssh-to-aws
+    unset -f ssh-to-pi
+    
+    unset jo
+    unset jar
+    unset jrr
+    
+    source ~/.virtualenvs/Py3/bin/activate
+elif [[ $using_cmder == true ]]; then # cmder
+    unset jo
+    unset jar
+    unset jrr
+    
+    getip() {
+        echo "Public:  $(dig +short myip.opendns.com @resolver1.opendns.com)"
+        echo "Private: $(ipconfig | grep "  IPv4" | awk '{print $NF}')"
+    }
+fi
+
