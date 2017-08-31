@@ -149,7 +149,7 @@ elif [[ $uuid == "132b41dc-a118-4188-8bbf-1728c392d723" ]]; then # pythonanywher
     unset jar
     unset jrr
     
-    source ~/.virtualenvs/MainEnv/bin/activate
+    source ~/.virtualenvs/Py3/bin/activate
 elif [[ $using_cmder == true ]]; then # cmder
     unset jo
     unset jar
