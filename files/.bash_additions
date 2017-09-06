@@ -1,6 +1,9 @@
 #!/bin/bash
 
-export PATH="$HOME/bin:$PATH"
+NPM_PACKAGES="${HOME}/.npm-packages"
+
+export PATH="${HOME}/bin:${NPM_PACKAGES}/bin:$PATH"
+export MANPATH="${NPM_PACKAGES}/share/man:$(manpath)"
 
 alias python="python3"
 alias pip="pip3"
