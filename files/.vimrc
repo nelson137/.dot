@@ -1,2 +1,2 @@
-set numbers
+set number
 
