@@ -1,0 +1,11 @@
+### dot/bin
+--	make ssh script
+	-	if usage is "ssh to (pi | aws)"
+		-	ssh-to-pi
+	-	else
+		-	call ssh with args
+
+### .bash_additions
+---	test if ssh-to-pi hangs when not on home network
+
+### .vimrc
