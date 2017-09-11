@@ -1,0 +1,8 @@
+#!/bin/bash
+
+mac_bin="/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
+linux_bin="/usr/bin/subl"
+
+"$mac_bin" "$@" &> /dev/null ||
+"$linux_bin" "$@" &> /dev/null ||
+echo "subl not found"
