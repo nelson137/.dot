@@ -6,7 +6,6 @@ alias python="python3"
 alias pip="pip3"
 
 alias ssh-to-aws="ssh -i ~/.ssh/Main.pem ubuntu@ec2-34-210-71-203.us-west-2.compute.amazonaws.com"
-ssh-to-pi() { ssh nelson@192.168.1.131 || ssh nelson@75.132.101.100; }
 
 if [ -f "$HOME/.bashrc" ]; then
     alias r="source $HOME/.bashrc"
@@ -31,6 +30,20 @@ mkcd() {
         echo "Usage: mkcd DIR"
     else
         mkdir -p -- "$1" && cd -P -- "$1"
+    fi
+}
+
+ssh-to-pi() {
+    host="192.168.1.131"
+    if (exec 3<>/dev/tcp/"${host}"/22) 2> /dev/null; then
+        ssh "nelson@$host"
+    else
+        host="75.132.101.100"
+        if (exec 3<>/dev/tcp/"${host}"/22) 2> /dev/null; then
+            ssh "nelson@$host"
+        else
+            echo "host is not available"
+        fi
     fi
 }
 
