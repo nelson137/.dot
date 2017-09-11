@@ -3,4 +3,3 @@ set number
 
 " Wrap lines
 set whichwrap+=<,>,h,l,[,]
-

@@ -173,4 +173,3 @@ elif [[ $using_cmder == true ]]; then # cmder
         echo "Private: $(ipconfig | grep "  IPv4" | awk '{print $NF}')"
     }
 fi
-
