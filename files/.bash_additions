@@ -1,49 +1,12 @@
 #!/bin/bash
 
-export PATH="${HOME}/bin:$PATH"
-
-alias python="python3"
-alias pip="pip3"
-
-alias ssh-to-aws="ssh -i ~/.ssh/Main.pem ubuntu@ec2-34-210-71-203.us-west-2.compute.amazonaws.com"
-
-if [ -f "$HOME/.bashrc" ]; then
-    alias r="source $HOME/.bashrc"
-elif [ -f "$HOME/.bash_profile" ]; then
-    alias r="source $HOME/.bash_profile"
-fi
-
-if [[ $(uname) == Darwin ]]; then
-    alias ls="ls -Gp"
-    alias la="ls -GpA"
-    alias ll="ls -Gpoh"
-    alias lla="ls -GpAoh"
-elif [[ $(uname) == Linux ]]; then
-    alias ls="ls -p --color"
-    alias la="ls -pA --color"
-    alias ll="ls -poh --color"
-    alias lla="ls -pAoh --color"
-fi
+### Functions ###
 
 mkcd() {
     if [[ $# != 1 ]]; then
         echo "Usage: mkcd DIR"
     else
         mkdir -p -- "$1" && cd -P -- "$1"
-    fi
-}
-
-ssh-to-pi() {
-    host="192.168.1.131"
-    if (exec 3<>/dev/tcp/"${host}"/22) 2> /dev/null; then
-        ssh "nelson@$host"
-    else
-        host="75.132.101.100"
-        if (exec 3<>/dev/tcp/"${host}"/22) 2> /dev/null; then
-            ssh "nelson@$host"
-        else
-            echo "host is not available"
-        fi
     fi
 }
 
@@ -62,73 +25,129 @@ clera() {
     printf "\n${choices[$i]}\n\n"
 }
 
-getip() {
-    echo "Public:  $(dig +short myip.opendns.com @resolver1.opendns.com)"
-    echo "Private: $(ifconfig | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}' | sed -e 's/addr://g')"
+### System-Specific Functions ###
+
+user_bin() {
+    export PATH="${HOME}/bin:$PATH"
 }
 
-bo() {
-    # Build-Only
-    if [[ $# != 1 ]]; then
-        echo "Usage: bo FILE"
-        echo "Call in directory of FILE"
+r_unix() {
+    if [ -f "$HOME/.bashrc" ]; then
+        alias r="source $HOME/.bashrc"
+    elif [ -f "$HOME/.bash_profile" ]; then
+        alias r="source $HOME/.bash_profile"
     else
-        g++ "$1" -o "${1%.cpp}"
+        echo "No bashrc file found"
     fi
 }
 
-bar() {
-    # Build-And-Run
-    if [[ $# != 1 ]]; then
-        echo "Usage: bar FILE"
-        echo "Call in directory of FILE"
+r_cmder() {
+    if [[ ! -z $CMDER_ROOT ]]; then
+        alias r="source ${CMDER_ROOT}/vendor/git-for-windows/etc/bash.bashrc"
     else
-        bo "$1"
-        "./${1%.cpp}"
+        echo "No bashrc file found"
     fi
 }
 
-brr() {
-    # Build-Run-Remove
-    if [[ $# != 1 ]]; then
-        echo "Usage: brr FILE"
-        echo "Call in directory of FILE"
-    else
-        bar "$1"
-        rm "./${1%.cpp}"
-    fi
+ls_mac() {
+    alias ls="ls -Gp"
+    alias la="ls -GpA"
+    alias ll="ls -Gpoh"
+    alias lla="ls -GpAoh"
 }
 
-jo() {
-    # Java-Only
-    if [[ $# != 1 ]]; then
-        echo "Usage: jo FILE"
-        echo "Call in directory of FILE"
-    else
-        javac "$1"
-    fi
+ls_linux() {
+    alias ls="ls -p --color"
+    alias la="ls -pA --color"
+    alias ll="ls -poh --color"
+    alias lla="ls -pAoh --color"
 }
 
-jar() {
-    # Java-And-Run
-    if [[ $# != 1 ]]; then
-        echo "Usage: jar FILE"
-        echo "Call in directory of FILE"
-    else
-        jo "$1"
-        java "${1%.java}"
-    fi
+python_aliases() {
+    alias python="python3"
+    alias pip="pip3"
 }
 
-jrr() {
-    # Java-Run-Remove
-    if [[ $# != 1 ]]; then
-        echo "Usage: jrr FILE"
-        echo "Call in directory of FILE"
-    else
-        jar "$1"
-        rm "${1%.java}.class"
-    fi
+getip_unix() {
+    getip() {
+        echo "Public:  $(dig +short myip.opendns.com @resolver1.opendns.com)"
+        echo "Private: $(ifconfig | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}' | sed -e 's/addr://g')"
+    }
+}
+
+getip_cmder() {
+    getip() {
+        echo "Public:  $(dig +short myip.opendns.com @resolver1.opendns.com)"
+        echo "Private: $(ipconfig | grep "  IPv4" | awk '{print $NF}')"
+    }
+}
+
+cpp_cmds() {
+    bo() {
+        # Build-Only
+        if [[ $# != 1 ]]; then
+            echo "Usage: bo FILE"
+            echo "Call in directory of FILE"
+        else
+            g++ "$1" -o "${1%.cpp}"
+        fi
+    }
+
+    bar() {
+        # Build-And-Run
+        if [[ $# != 1 ]]; then
+            echo "Usage: bar FILE"
+            echo "Call in directory of FILE"
+        else
+            bo "$1"
+            "./${1%.cpp}"
+        fi
+    }
+
+    brr() {
+        # Build-Run-Remove
+        if [[ $# != 1 ]]; then
+            echo "Usage: brr FILE"
+            echo "Call in directory of FILE"
+        else
+            bar "$1"
+            rm "./${1%.cpp}"
+        fi
+    }
+}
+
+java_cmds() {
+    jo() {
+        # Java-Only
+        if [[ $# != 1 ]]; then
+            echo "Usage: jo FILE"
+            echo "Call in directory of FILE"
+        else
+            javac "$1"
+        fi
+    }
+
+    jar() {
+        # Java-And-Run
+        if [[ $# != 1 ]]; then
+            echo "Usage: jar FILE"
+            echo "Call in directory of FILE"
+        else
+            jo "$1"
+            java "${1%.java}"
+        fi
+    }
+
+    jrr() {
+        # Java-Run-Remove
+        if [[ $# != 1 ]]; then
+            echo "Usage: jrr FILE"
+            echo "Call in directory of FILE"
+        else
+            jar "$1"
+            rm "${1%.java}.class"
+        fi
+    }
 }
 
 
@@ -137,39 +156,59 @@ if [[ -e ~/.instance_uuid ]]; then
     uuid="$(cat ~/.instance_uuid | awk 'NR==1{print $NF}')"
 elif [[ ! -z $uuid_from_cmder ]]; then
     uuid="$uuid_from_cmder"
+    unset uuid_from_cmder
+else
+    echo "UUID not found"
+    exit 1
 fi
 
-if [[ $uuid == "9344462f-6d26-4f5c-bf78-0712eb2fc56b" ]]; then # macbook air
-    true #unset nothing
-elif [[ $uuid == "b967243a-ee97-4320-8b0e-3101ffd28929" ]]; then # ubuntu virtualbox
-    unset jo
-    unset jar
-    unset jrr
-elif [[ $uuid == "0b5f4d6c-024e-411f-8dc8-87dbf6eb5eaa" ]]; then # aws1 main
-    unset -f ssh-to-aws
-    unset -f ssh-to-pi
-    
-    unset jo
-    unset jar
-    unset jrr
-elif [[ $uuid == "88af29fe-fda2-4bcc-a65a-cfc61f9ef0b4" ]]; then # raspberry pi
-    unset -f ssh-to-pi
-elif [[ $uuid == "132b41dc-a118-4188-8bbf-1728c392d723" ]]; then # pythonanywhere
-    unset -f ssh-to-aws
-    unset -f ssh-to-pi
-    
-    unset jo
-    unset jar
-    unset jrr
+if [[ $uuid == 9344462f-6d26-4f5c-bf78-0712eb2fc56b ]]; then # macbook air
+    user_bin
+    r_unix
+    ls_mac
+    getip_unix
+    cpp_cmds
+    java_cmds
+elif [[ $uuid == b967243a-ee97-4320-8b0e-3101ffd28929 ]]; then # ubuntu virtualbox
+    user_bin
+    r_unix
+    ls_linux
+    getip_unix
+    cpp_cmds
+elif [[ $uuid == 0b5f4d6c-024e-411f-8dc8-87dbf6eb5eaa ]]; then # aws1 main
+    user_bin
+    r_unix
+    ls_linux
+    getip_unix
+    cpp_cmds
+
+    NO_SSH_AWS=yes
+elif [[ $uuid == 88af29fe-fda2-4bcc-a65a-cfc61f9ef0b4 ]]; then # raspberry pi
+    user_bin
+    r_unix
+    ls_linux
+    getip_unix
+    cpp_cmds
+    java_cmds
+
+    NO_SSH_PI=yes
+elif [[ $uuid == 132b41dc-a118-4188-8bbf-1728c392d723 ]]; then # pythonanywhere
+    user_bin
+    r_unix
+    ls_linux
+    getip_unix
+    cpp_cmds
+
+    NO_SSH_AWS=yes
+    NO_SSH_PI=yes
     
     source ~/.virtualenvs/Py3/bin/activate
-elif [[ $using_cmder == true ]]; then # cmder
-    unset jo
-    unset jar
-    unset jrr
-    
-    getip() {
-        echo "Public:  $(dig +short myip.opendns.com @resolver1.opendns.com)"
-        echo "Private: $(ipconfig | grep "  IPv4" | awk '{print $NF}')"
-    }
+elif [[ $uuid == c61e701a-7089-433f-afc1-6e67117f2836 ]]; then # cmder
+    r_cmder
+    ls_linux
+    getip_cmder
+    cpp_cmds
+else
+    echo "UUID not recognized"
+    exit 1
 fi
