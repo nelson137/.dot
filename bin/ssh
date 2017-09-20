@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [[ $1 == to && $# == 2 ]]; then
+    shift
+    case $1 in
+        pi)
+            #echo sshing to pi...
+            /usr/bin/ssh -o ConnectTimeout=5 nelson@192.168.1.131 ||
+            /usr/bin/ssh -o ConnectTimeout=5 nelson@75.132.101.100
+            ;;
+        aws)
+            #echo sshing to aws ...
+            /usr/bin/ssh ubuntu@34.210.71.203
+            ;;
+        *)
+            echo "Server not recognized: $1"
+            ;;
+    esac
+else
+    /usr/bin/ssh "$@"
+fi
