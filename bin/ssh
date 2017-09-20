@@ -17,5 +17,5 @@ if [[ $1 == to && $# == 2 ]]; then
             ;;
     esac
 else
-    \ssh "$@"
+    /usr/bin/ssh "$@"
 fi
