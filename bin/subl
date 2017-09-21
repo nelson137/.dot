@@ -2,7 +2,9 @@
 
 mac_bin="/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
 linux_bin="/usr/bin/subl"
+cmder_bin="${CMDER_ROOT}/../Sublime Text 3/subl"
 
 "$mac_bin" "$@" 2> /dev/null ||
 "$linux_bin" "$@" 2> /dev/null ||
+"$cmder_bin" "$@" 2> /dev/null ||
 echo "subl not found"
