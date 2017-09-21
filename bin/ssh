@@ -3,18 +3,24 @@
 if [[ $1 == to && $# == 2 ]]; then
     shift
     case $1 in
-        pi)
-            #echo sshing to pi...
+    pi)
+        if [[ $NO_SSH_PI != yes ]]; then
             /usr/bin/ssh -o ConnectTimeout=5 nelson@192.168.1.131 ||
             /usr/bin/ssh -o ConnectTimeout=5 nelson@75.132.101.100
-            ;;
-        aws)
-            #echo sshing to aws ...
+        else
+            echo "SSH to Pi not allowed"
+        fi
+        ;;
+    aws)
+        if [[ $NO_SSH_PI != yes ]]; then
             /usr/bin/ssh ubuntu@34.210.71.203
-            ;;
-        *)
-            echo "Server not recognized: $1"
-            ;;
+        else
+            echo "SSH to AWS Main not allowed"
+        fi
+        ;;
+    *)
+        echo "Host not recognized: $1"
+        ;;
     esac
 else
     /usr/bin/ssh "$@"
