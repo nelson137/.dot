@@ -1,9 +1,17 @@
 " General
-    syntax on
-    set number
     set whichwrap+=<,>,h,l,[,]  " EOL wrapping
-    set cursorline  " horizontal line under selected line
     set backspace=indent,eol,start
+    set autoread  " auto read when changes are made to file from outside
+    set noswapfile
+
+
+
+" Graphics
+    syntax on
+    colorscheme default
+    set number
+    set ruler  " status bar at bottom right
+    set cursorline  "horizontal line under selected line
 
 
 
