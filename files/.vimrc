@@ -11,7 +11,6 @@
     colorscheme default
     set number
     set ruler  " status bar at bottom right
-    set cursorline  "horizontal line under selected line
 
 
 
