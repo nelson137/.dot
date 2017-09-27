@@ -52,3 +52,8 @@
             \     execute 'normal! g`"zvzz' |
             \ endif
     augroup END
+
+
+
+" TODO files config
+    au BufRead,BufNewFile TODO,*.TODO set noexpandtab shiftwidth=8 tabstop=8 softtabstop=0
