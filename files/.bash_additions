@@ -7,7 +7,7 @@ export PATH="${HOME}/bin:$PATH"
 alias python="python3"
 alias pip="pip3"
 
-PS1="\[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "
+PS1="\[\e]0;\u@\h: \W\a\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ "
 
 if [[ -f $HOME/.bashrc ]]; then
     alias r="source $HOME/.bashrc"
