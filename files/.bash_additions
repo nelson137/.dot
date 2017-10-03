@@ -19,6 +19,10 @@ else
     echo "No bashrc file found"
 fi
 
+# lesshst, stfu
+LESSHISTSIZE=0
+LESSHISTFILE=/dev/null
+
 
 
 ### System-Specific Config ###
