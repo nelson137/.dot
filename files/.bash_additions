@@ -96,12 +96,6 @@ brr() {
     fi
 }
 
-unset_cpp_cmds() {
-    unset bo
-    unset bar
-    unset brr
-}
-
 jo() {
     # Java-Only
     if [[ $# != 1 ]]; then
@@ -132,12 +126,6 @@ jrr() {
         jar "$1"
         rm "${1%.java}.class"
     fi
-}
-
-unset_java_cmds() {
-    unset jo
-    unset jar
-    unset jrr
 }
 
 
