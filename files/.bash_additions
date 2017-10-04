@@ -58,6 +58,12 @@ getip() {
     echo "Private: $(ifconfig | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}' | sed -e 's/addr://g')"
 }
 
+clera() {
+    choices=(banner digital standard)
+    i=$(( $RANDOM % ${#choices[@]} ))
+    figlet -f ${choices[$i]} clera
+}
+
 
 
 ### System-Specific Functions ###

@@ -1,5 +1,0 @@
-#!/bin/bash
-
-choices=(banner digital standard)
-i=$(( $RANDOM % ${#choices[@]} ))
-figlet -f ${choices[$i]} clera
