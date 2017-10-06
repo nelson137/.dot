@@ -13,7 +13,7 @@ if [[ $1 == to && $# == 2 ]]; then
         ;;
     aws)
         if [[ $NO_SSH_PI != yes ]]; then
-            /usr/bin/ssh ubuntu@34.210.71.203
+            /usr/bin/ssh nelson@34.210.71.203
         else
             echo "SSH to AWS Main not allowed"
         fi
