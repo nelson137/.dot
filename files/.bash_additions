@@ -162,10 +162,12 @@ fi
 
 if [[ $uuid == 9344462f-6d26-4f5c-bf78-0712eb2fc56b ]]; then # macbook air
     ls_mac
-elif [[ $uuid == b967243a-ee97-4320-8b0e-3101ffd28929 ]]; then # ubuntu virtualbox
+elif [[ $uuid == b967243a-ee97-4320-8b0e-3101ffd28929 ]]; then # ubuntu box
     ls_linux
 
     unset_java_cmds
+elif [[ $uuid == 66802eca-2a48-47d6-868a-95752053b563 ]]; then # debian box
+    # TODO
 elif [[ $uuid == 0b5f4d6c-024e-411f-8dc8-87dbf6eb5eaa ]]; then # aws main
     ls_linux
 
