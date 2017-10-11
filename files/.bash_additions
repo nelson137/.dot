@@ -7,14 +7,14 @@ export PATH="$HOME/bin:$PATH"
 alias python="python3"
 alias pip="pip3"
 
-PS1="\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\W\[\e[0m\] \$ "
+PS1="\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\]\W\[\e[m\] \$ "
 
 if [[ -f $HOME/.bashrc ]]; then
     alias r="source $HOME/.bashrc"
 elif [[ -f $HOME/.bash_profile ]]; then
     alias r="source $HOME/.bash_profile"
 elif [[ ! -z $CMDER_ROOT ]]; then
-    alias r="source ${CMDER_ROOT}/vendor/git-for-windows/etc/bash.bashrc"
+    alias r="source $CMDER_ROOT/vendor/git-for-windows/etc/bash.bashrc"
 else
     echo "No bashrc file found"
 fi
