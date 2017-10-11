@@ -2,12 +2,12 @@
 
 ### General Config ###
 
-export PATH="${HOME}/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
 
 alias python="python3"
 alias pip="pip3"
 
-PS1="\[\e[1;32m\]\u\[\e[0;32m\]@\[\e[1;32m\]\h\[\e[0m\]:\[\e[1;34m\]\W\[\e[0m\] \$ "
+PS1="\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\W\[\e[0m\] \$ "
 
 if [[ -f $HOME/.bashrc ]]; then
     alias r="source $HOME/.bashrc"
@@ -157,7 +157,7 @@ elif [[ ! -z $uuid_from_cmder ]]; then
     unset uuid_from_cmder
 else
     echo "UUID not found"
-    exit 1
+    return
 fi
 
 if [[ $uuid == 9344462f-6d26-4f5c-bf78-0712eb2fc56b ]]; then # macbook air
@@ -196,5 +196,4 @@ elif [[ $uuid == c61e701a-7089-433f-afc1-6e67117f2836 ]]; then # cmder
     }
 else
     echo "UUID not recognized"
-    exit 1
 fi
