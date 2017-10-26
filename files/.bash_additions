@@ -20,8 +20,10 @@ else
 fi
 
 # lesshst, stfu
-LESSHISTSIZE=0
 LESSHISTFILE=/dev/null
+
+# mysql_histfile, stfu
+MYSQL_HISTFILE=/dev/null
 
 
 
