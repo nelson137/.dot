@@ -1,0 +1,6 @@
+#!/bin/bash
+
+pictures=($HOME/Projects/Git/wallpapers/Debian/*)
+i="$(( $RANDOM % ${#pictures[@]} ))"
+pic="${pictures[$i]}"
+gsettings set org.gnome.desktop.background picture-uri "file://$pic"
