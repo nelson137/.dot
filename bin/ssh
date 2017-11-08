@@ -1,19 +1,26 @@
 #!/bin/bash
 
-if [[ $1 == to && $# == 2 ]]; then
+if [[ $# == 2 && $1 == to ]]; then
     shift
-    to='-o ConnectTimeout=5'
     case $1 in
     aws)
         /usr/bin/ssh nelson@34.210.71.203
         ;;
     pi)
-        /usr/bin/ssh -o ConnectTimeout=5 nelson@192.168.1.131 ||
-        /usr/bin/ssh -o ConnectTimeout=5 nelson@75.132.101.100
+        nc -z 192.168.1.131 22
+        if [[ $? == 0 ]]; then
+            /usr/bin/ssh nelson@192.168.1.131
+        else
+            /usr/bin/ssh nelson@75.132.101.100
+        fi
         ;;
     deb|debian)
-        /usr/bin/ssh -o ConnectTimeout=5 nelson@192.168.1.132 ||
-        /usr/bin/ssh -o ConnectTimeout=5 nelson@75.132.101.100 -p 22132
+        nc -z 192.168.1.132 22
+        if [[ $? == 0 ]]; then
+            /usr/bin/ssh nelson@192.168.1.132
+        else
+            /usr/bin/ssh nelson@75.132.101.100 -p 22132
+        fi
         ;;
     *)
         echo "Unknown host: $1"
