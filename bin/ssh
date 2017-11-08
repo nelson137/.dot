@@ -2,24 +2,21 @@
 
 if [[ $1 == to && $# == 2 ]]; then
     shift
+    to='-o ConnectTimeout=5'
     case $1 in
-    pi)
-        if [[ $NO_SSH_PI != yes ]]; then
-            /usr/bin/ssh -o ConnectTimeout=5 nelson@192.168.1.131 ||
-            /usr/bin/ssh -o ConnectTimeout=5 nelson@75.132.101.100
-        else
-            echo "SSH to Pi not allowed"
-        fi
-        ;;
     aws)
-        if [[ $NO_SSH_PI != yes ]]; then
-            /usr/bin/ssh nelson@34.210.71.203
-        else
-            echo "SSH to AWS Main not allowed"
-        fi
+        /usr/bin/ssh nelson@34.210.71.203
+        ;;
+    pi)
+        /usr/bin/ssh -o ConnectTimeout=5 nelson@192.168.1.131 ||
+        /usr/bin/ssh -o ConnectTimeout=5 nelson@75.132.101.100
+        ;;
+    deb|debian)
+        /usr/bin/ssh -o ConnectTimeout=5 nelson@192.168.1.132 ||
+        /usr/bin/ssh -o ConnectTimeout=5 nelson@75.132.101.100 -p 22132
         ;;
     *)
-        echo "Host not recognized: $1"
+        echo "Unknown host: $1"
         ;;
     esac
 else
