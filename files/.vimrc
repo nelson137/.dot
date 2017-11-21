@@ -10,7 +10,9 @@
     syntax on
     colorscheme default
     set number
-    set ruler  " status bar at bottom right
+    set laststatus=2  " status bar always visible
+    set statusline=%t  " file name in status bar
+    set ruler  " bar with cursor positions
 
 
 
