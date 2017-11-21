@@ -1,31 +1,56 @@
 #!/bin/bash
 
-if [[ $# == 2 && $1 == to ]]; then
-    shift
+usage() {
+    echo usage
+}
+
+set_ips() {
+    ssh_port="22"
     case $1 in
-    aws)
-        /usr/bin/ssh nelson@34.210.71.203
-        ;;
-    pi)
-        nc -z 192.168.1.131 22
-        if [[ $? == 0 ]]; then
-            /usr/bin/ssh nelson@192.168.1.131
-        else
-            /usr/bin/ssh nelson@75.132.101.100
-        fi
-        ;;
-    deb|debian)
-        nc -z 192.168.1.132 22
-        if [[ $? == 0 ]]; then
-            /usr/bin/ssh nelson@192.168.1.132
-        else
-            /usr/bin/ssh nelson@75.132.101.100 -p 22132
-        fi
-        ;;
-    *)
-        echo "Unknown host: $1"
-        ;;
+        aws       ) ip_int="34.210.71.203"; ip_ext="$ip_int" ;;
+        pi        ) ip_int="192.168.1.131"; ip_ext="75.132.101.100" ;;
+        deb|debian) ip_int="192.168.1.132"; ip_ext="75.132.101.100"; ssh_port="22132" ;;
+        *         ) echo "Unknown host: $1" >&2; exit 1 ;;
     esac
+}
+
+args=( $@ )
+for i in ${!args[@]}; do
+    if [[ ${args[$i]} == --help ]]; then
+        usage
+        exit
+    elif [[ ${args[$i]} == --super ]]; then
+        # TODO: test --super
+        unset args[$i]
+        echo /usr/bin/ssh ${args[@]}
+        exit
+    fi
+done
+
+while [[ $1 ]]; do
+    case $1 in
+        -x) use_ext=true; shift ;;
+        to) shift; host="$1"; set_ips "$1"; shift ;;
+        * ) echo "Option not recognized: $arg" >&2; exit 1 ;;
+    esac
+done
+
+if [[ -z $host ]]; then
+    echo "No host specified" >&2
+    exit 1
+fi
+
+if [[ $use_ext != true ]]; then
+    nc -z "$ip_int" 22
+    if [[ $? == 0 ]]; then
+        /usr/bin/ssh "nelson@$ip_int"
+        exit
+    fi
+fi
+
+nc -z "$ip_ext" "$ssh_port"
+if [[ $? == 0 ]]; then
+    /usr/bin/ssh "nelson@$ip_ext" -p "$ssh_port"
 else
-    /usr/bin/ssh "$@"
+    echo "Could not connect to host $ip_ext on port $ssh_port" >&2
 fi
