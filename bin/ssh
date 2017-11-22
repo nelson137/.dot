@@ -41,14 +41,14 @@ if [[ -z $host ]]; then
 fi
 
 if [[ $use_ext != true ]]; then
-    nc -w 3 -z "$ip_int" 22
+    nc -w 3 -z "$ip_int" 22 2>/dev/null
     if [[ $? == 0 ]]; then
         /usr/bin/ssh "nelson@$ip_int"
         exit
     fi
 fi
 
-nc -w 3 -z "$ip_ext" "$ssh_port"
+nc -w 3 -z "$ip_ext" "$ssh_port" 2>/dev/null
 if [[ $? == 0 ]]; then
     /usr/bin/ssh "nelson@$ip_ext" -p "$ssh_port"
 else
