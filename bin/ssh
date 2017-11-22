@@ -20,9 +20,8 @@ for i in ${!args[@]}; do
         usage
         exit
     elif [[ ${args[$i]} == --super ]]; then
-        # TODO: test --super
         unset args[$i]
-        echo /usr/bin/ssh ${args[@]}
+        /usr/bin/ssh ${args[@]}
         exit
     fi
 done
