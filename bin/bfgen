@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+
+from argparse import ArgumentParser
+from re import sub
+from itertools import groupby
+
+
+def write_script(ords, out_fn):
+    lines = [list(l[1]) for l in groupby(ords, key=lambda x: x['ord'] == 10)]
+    script = ''
+    for line in lines:
+        script += '++++++++++['
+
+        for char in line:
+            script += '>' + '+' * int(char['rounded']/10)
+        script += '<' * len(line) + '-]'
+
+        for char in line:
+            op = '+' if char['diff'] > 0 else '-'
+            script += '>' + op * abs(char['diff']) + '.'
+        script += '>'
+
+    with open(out_fn, 'w') as out_f:
+        out_f.write(script)
+
+
+def main(in_fn, out_fn):
+    with open(in_fn, 'r') as in_f:
+        text = in_f.read()
+
+    data = []
+    for o in [ord(c) for c in text]:
+        rounded = round(o/10) * 10
+        data.append({'char': chr(o), 'ord': o, 'rounded': rounded, 'diff': o-rounded})
+
+    write_script(data, out_fn)
+
+
+if __name__ == '__main__':
+    parser = ArgumentParser(description='script desc')
+    parser.add_argument('infile', help='infile desc')
+    parser.add_argument('-o', dest='outfile', default=None, help='o flag desc')
+    args = parser.parse_args()
+
+    if args.outfile is None:
+        args.outfile = sub('\.txt$', '', args.infile) + '.bf'
+
+    main(args.infile, args.outfile)
