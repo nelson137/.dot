@@ -11,8 +11,6 @@ PS1="\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\]\W\[\e[m\] \$ "
 
 if [[ -f $HOME/.bashrc ]]; then
     alias r="source $HOME/.bashrc"
-elif [[ -f $HOME/.bash_profile ]]; then
-    alias r="source $HOME/.bash_profile"
 elif [[ ! -z $CMDER_ROOT ]]; then
     alias r="source $CMDER_ROOT/vendor/git-for-windows/etc/bash.bashrc"
 else
@@ -51,7 +49,7 @@ mkcd() {
     if [[ $# != 1 ]]; then
         echo "Usage: mkcd DIR"
     else
-        mkdir -p -- "$1" && cd -P -- "$1"
+        mkdir -p "$1" && cd -P "$1"
     fi
 }
 
@@ -61,15 +59,12 @@ clera() {
     figlet -f ${choices[$i]} clera
 }
 
-
-
-### System-Specific Functions ###
+call_instructs() { echo "Call in the same directory as FILE"; }
 
 bo() {
     # Build-Only
     if [[ $# != 1 ]]; then
-        echo "Usage: bo FILE"
-        echo "Call in directory of FILE"
+        echo "Usage: bo FILE" && call_instructs
     else
         g++ "$1" -std=c++11 -o "${1%.cpp}"
     fi
@@ -78,8 +73,7 @@ bo() {
 bar() {
     # Build-And-Run
     if [[ $# == 0 ]]; then
-        echo "Usage: bar FILE"
-        echo "Call in directory of FILE"
+        echo "Usage: bar FILE" && call_instructs
     else
         fn="$1"
         shift
@@ -90,8 +84,7 @@ bar() {
 brr() {
     # Build-Run-Remove
     if [[ $# == 0 ]]; then
-        echo "Usage: brr FILE"
-        echo "Call in directory of FILE"
+        echo "Usage: brr FILE" && call_instructs
     else
         fn="$1"
         shift
@@ -99,17 +92,10 @@ brr() {
     fi
 }
 
-unset_cpp_cmds() {
-    unset bo
-    unset bar
-    unset brr
-}
-
 jo() {
     # Java-Only
     if [[ $# != 1 ]]; then
-        echo "Usage: jo FILE"
-        echo "Call in directory of FILE"
+        echo "Usage: jo FILE" && call_instructs
     else
         javac "$1"
     fi
@@ -118,8 +104,7 @@ jo() {
 jar() {
     # Java-And-Run
     if [[ $# != 1 ]]; then
-        echo "Usage: jar FILE"
-        echo "Call in directory of FILE"
+        echo "Usage: jar FILE" && call_instructs
     else
         jo "$1"
         java "${1%.java}"
@@ -129,65 +114,24 @@ jar() {
 jrr() {
     # Java-Run-Remove
     if [[ $# != 1 ]]; then
-        echo "Usage: jrr FILE"
-        echo "Call in directory of FILE"
+        echo "Usage: jrr FILE" && call_instructs
     else
         jar "$1"
         rm "${1%.java}.class"
     fi
 }
 
-unset_java_cmds() {
-    unset jo
-    unset jar
-    unset jrr
-}
-
 
 
 ### Setup ###
 
-if [[ -e ~/.instance_uuid ]]; then
-    uuid="$(cat ~/.instance_uuid | awk 'NR==1{print $NF}')"
-elif [[ ! -z $uuid_from_cmder ]]; then
-    uuid="$uuid_from_cmder"
-    unset uuid_from_cmder
-else
-    echo "UUID not found"
-    return
-fi
-
-if [[ $uuid == 9344462f-6d26-4f5c-bf78-0712eb2fc56b ]]; then # macbook air
+os="$(uname)"
+if [[ $os == Linux ]]; then
+    ls_linux
+    [[ $(uname -n) == glenn-liveconsole3 ]] &&
+        source "$HOME/.virtualenvs/Py3/bin/activate"
+elif [[ $os == Darwin ]]; then
     ls_mac
-elif [[ $uuid == b967243a-ee97-4320-8b0e-3101ffd28929 ]]; then # ubuntu box
+elif [[ $os == Cygwin ]]; then
     ls_linux
-
-    unset_java_cmds
-elif [[ $uuid == 66802eca-2a48-47d6-868a-95752053b563 ]]; then # debian box
-    ls_linux
-elif [[ $uuid == 0b5f4d6c-024e-411f-8dc8-87dbf6eb5eaa ]]; then # aws main
-    ls_linux
-
-    unset_java_cmds
-
-    export NO_SSH_AWS=yes
-elif [[ $uuid == 88af29fe-fda2-4bcc-a65a-cfc61f9ef0b4 ]]; then # raspberry pi
-    ls_linux
-
-    export NO_SSH_PI=yes
-elif [[ $uuid == 132b41dc-a118-4188-8bbf-1728c392d723 ]]; then # pythonanywhere
-    ls_linux
-    
-    unset_java_cmds
-
-    export NO_SSH_AWS=yes
-    export NO_SSH_PI=yes
-    
-    source "$HOME/.virtualenvs/Py3/bin/activate"
-elif [[ $uuid == c61e701a-7089-433f-afc1-6e67117f2836 ]]; then # cmder
-    ls_linux
-
-    unset_java_cmds
-else
-    echo "UUID not recognized"
 fi
