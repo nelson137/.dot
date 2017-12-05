@@ -13,3 +13,22 @@ ls_linux() {
     alias -g ll='ls -poh --color'
     alias -g lla='ls -pAoh --color'
 }
+
+
+
+
+
+
+
+### Setup ###
+
+os="$(uname)"
+if [[ $os == Linux ]]; then
+    ls_linux
+    [[ $(uname -n) == glenn-liveconsole3 ]] &&
+        source "$HOME/.virtualenvs/Py3/bin/activate"
+elif [[ $os == Darwin ]]; then
+    ls_mac
+elif [[ $os == Cygwin ]]; then
+    ls_linux
+fi
