@@ -6,6 +6,24 @@
 
 
 
+" Vundle
+    set nocompatible  " be iMproved
+    filetype off
+
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+
+    Plugin 'VundleVim/Vundle.vim'
+    Plugin 'scrooloose/nerdtree'
+    Plugin 'skammer/vim-css-color'
+    Plugin 'itchyny/lightline.vim'
+    " Plugin 'Raimondi/delimitMate'
+
+    call vundle#end()
+    filetype plugin indent on
+
+
+
 " Graphics
     syntax on
     colorscheme default
