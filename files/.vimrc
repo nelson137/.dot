@@ -59,3 +59,4 @@
 
 " TODO files config
     au BufRead,BufNewFile TODO,*.TODO set noexpandtab shiftwidth=8 tabstop=8 softtabstop=0
+    au BufRead,BufNewFile *.html set expandtab tabstop=2 shiftwidth=2 smartindent autoindent softtabstop=2
