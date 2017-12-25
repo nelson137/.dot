@@ -1,0 +1,15 @@
+{
+  "name": "custom-hyper-ayu",
+  "version": "1.0.0",
+  "description": "Custom Hyper theme based on Ayu Theme for Sublime Text",
+  "main": "index.js",
+  "keywords": [
+    "hyper",
+    "hyper-theme",
+    "colors",
+    "ayu"
+  ],
+  "author": "Nelson Earle",
+  "license": "MIT",
+  "dependencies": {}
+}
