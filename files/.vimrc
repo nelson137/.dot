@@ -3,6 +3,7 @@
     set backspace=indent,eol,start
     set autoread  " auto read when changes are made to file from outside
     set noswapfile
+    au VimLeave * if filereadable("$HOME/.vim/.netrwhist") | call delete("$HOME/.vim/.netrwhist") | endif  " no ~/.vim/.netrwhist file
 
 
 
