@@ -3,19 +3,10 @@
 alias python='python3'
 alias pip='pip3'
 
-ls_mac() {
-    alias ls='ls -Gp'
-    alias la='ls -GpA'
-    alias ll='ls -Gpoh'
-    alias lla='ls -GpAoh'
-}
-
-ls_linux() {
-    alias ls='ls -p --color'
-    alias la='ls -pA --color'
-    alias ll='ls -poh --color'
-    alias lla='ls -pAoh --color'
-}
+alias ls='ls -p --color'
+alias la='ls -pA --color'
+alias ll='ls -poh --color'
+alias lla='ls -pAoh --color'
 
 
 
@@ -33,6 +24,11 @@ clera() {
     choices=(banner digital standard)
     i=$(( $RANDOM % ${#choices[@]} ))
     figlet -f ${choices[$i]} clera
+}
+
+bat() {
+    BAT_STATS=$(upower -i $(upower -e | grep 'BAT'))
+    echo $BAT_STATS | grep --color=never -E "state|to\ empty|percentage"
 }
 
 call_instructs() { echo "Call in the same directory as FILE"; }
@@ -96,18 +92,3 @@ jrr() {
         rm "${1%.java}.class"
     fi
 }
-
-
-
-### Setup ###
-
-os="$(uname)"
-if [[ $os == Linux ]]; then
-    ls_linux
-    [[ $(uname -n) == glenn-liveconsole3 ]] &&
-        source "$HOME/.virtualenvs/Py3/bin/activate"
-elif [[ $os == Darwin ]]; then
-    ls_mac
-elif [[ $os == Cygwin ]]; then
-    ls_linux
-fi
