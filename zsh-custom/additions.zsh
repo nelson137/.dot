@@ -3,10 +3,10 @@
 alias python='python3'
 alias pip='pip3'
 
-alias ls='ls -p --color'
-alias la='ls -pA --color'
-alias ll='ls -poh --color'
-alias lla='ls -pAoh --color'
+alias ls='ls -pv --color'
+alias la='ls -pAv --color'
+alias ll='ls -pohv --color'
+alias lla='ls -pAohv --color'
 
 
 
