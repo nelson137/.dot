@@ -36,12 +36,14 @@
 
 
 " Indentation
-    set expandtab      " tabs to spaces
-    set tabstop=4      " tab width = 4
-    set shiftwidth=4   " indentation size = 4
-    set smartindent    " auto-indent
-    set autoindent     " fix indentation
-    set softtabstop=4  " backspace deletes 4 spaces
+    set expandtab       " tabs to spaces
+    set tabstop=4       " tab width = 4
+    set shiftwidth=4    " indentation size = 4
+    set autoindent      " fix indentation
+    set softtabstop=4   " backspace deletes 4 spaces
+    set cindent         " \
+    set cinkeys-=0#     "  > don't move # to col 0
+    set indentkeys-=0#  " /
 
 
 
