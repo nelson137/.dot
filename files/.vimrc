@@ -51,19 +51,23 @@
     let mapleader="."
     
     " .n toggles line numbers
-    nnoremap <leader>n :set number!<CR>
+    nmap <leader>n :set number!<CR>
     
     " H goes to beginning of line
-    nnoremap H 0
+    nmap H 0
+    vmap H 0
 
     " J goes to bottom of file
-    nnoremap J G
+    nmap J G
+    vmap J G
 
     " K goes to top of file
-    nnoremap K gg
+    nmap K gg
+    vmap K gg
 
     " L goes to end of line
-    nnoremap L $
+    nmap L $
+    vmap L $
 
 
 
