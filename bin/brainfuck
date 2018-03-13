@@ -4,17 +4,6 @@
 
 import sys
 
-class _Getch:
-    """Gets a single character from standard input. Does not echo to the
-screen."""
-    def __init__(self):
-        try:
-            self.impl = _GetchWindows()
-        except ImportError:
-            self.impl = _GetchUnix()
-
-    def __call__(self):
-        return self.impl()
 
 class _GetchUnix:
     def __init__(self):
@@ -31,6 +20,7 @@ class _GetchUnix:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return ch
 
+
 class _GetchWindows:
     def __init__(self):
         import msvcrt
@@ -40,17 +30,39 @@ class _GetchWindows:
         return msvcrt.getch()
 
 
+class _Getch:
+    """Gets a single character from standard input."""
+    def __init__(self):
+        try:
+            self.impl = _GetchWindows()
+        except ImportError:
+            self.impl = _GetchUnix()
 
-def execute(filename):
-    with open(filename, 'r') as f:
-        evaluate(f.read())
+    def __call__(self):
+        return self.impl()
+
+
+def cleanup(code):
+    out = filter(lambda x: x in ['>', '<', '+', '-', '[', ']', '.', ','], code)
+    return list(out)
+
+
+def buildbracemap(code):
+    temp_bracestack, bracemap = [], {}
+    for pos, cmd in enumerate(code):
+        if cmd == "[": temp_bracestack.append(pos)
+        if cmd == "]":
+            start = temp_bracestack.pop()
+            bracemap[start] = pos
+            bracemap[pos] = start
+
+    return bracemap
 
 
 def evaluate(code):
-    code = cleanup(code)
     bracemap = buildbracemap(code)
-
-    cells, codeptr, cellptr = [0], 0, 0
+    cells = [0]
+    codeptr, cellptr = 0, 0
 
     while codeptr < len(code):
         command = code[codeptr]
@@ -76,29 +88,10 @@ def evaluate(code):
         codeptr += 1
 
 
-def cleanup(code):
-    out = filter(lambda x: x in ['>', '<', '+', '-', '[', ']', '.', ','], code)
-    return list(out)
-
-
-def buildbracemap(code):
-    temp_bracestack, bracemap = [], {}
-    for pos, cmd in enumerate(code):
-        if cmd == "[": temp_bracestack.append(pos)
-        if cmd == "]":
-            start = temp_bracestack.pop()
-            bracemap[start] = pos
-            bracemap[pos] = start
-
-    return bracemap
-
-
-def main():
-    if len(sys.argv) == 2:
-        execute(sys.argv[1])
-    else:
-        print("Usage:", sys.argv[0], "filename")
-
-
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) == 2:
+        with open(sys.argv[1], 'r') as script:
+            code = script.read()
+        evaluate(cleanup(code))
+    else:
+        print('Usage: brainfuck infile')
