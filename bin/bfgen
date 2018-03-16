@@ -5,8 +5,18 @@ from argparse import ArgumentParser
 from itertools import groupby
 
 
-def write_script(ords, out_fn):
-    lines = [list(l[1]) for l in groupby(ords, key=lambda x: x['ord'] == 10)]
+def preprocess(text):
+    data = []
+    for o in [ord(c) for c in text]:
+        rounded = round(o/10) * 10
+        make_dict = lambda o, r, d: {'ord': o, 'rounded': r, 'diff': d}
+        data.append(make_dict(o, rounded, o-rounded))
+
+    return data
+
+
+def gen_script(data, outfn):
+    lines = [list(l[1]) for l in groupby(data, key=lambda x: x['ord'] == 10)]
     script = ''
     for line in lines:
         script += '++++++++++['
@@ -20,29 +30,35 @@ def write_script(ords, out_fn):
             script += '>' + op * abs(char['diff']) + '.'
         script += '>'
 
-    with open(out_fn, 'w') as out_f:
+    with open(outfn, 'w') as out_f:
         out_f.write(script)
 
 
-def main(in_fn, out_fn):
-    with open(in_fn, 'r') as in_f:
-        text = in_f.read()
+def main(args):
+    if args.infn is None:
+        if not sys.stdin.isatty():
+            text = sys.stdin.read()
+        else:
+            print('Nothing in stdin')
+            return
+        args.outfn = 'out.bf'
+    else:
+        try:
+            with open(args.infn, 'r') as f:
+                text = f.read()
+        except FileNotFoundError:
+            print('FileNotFound:', args.infn)
+            return
+        args.outfn = re.sub('\.txt$', '', args.infn) + '.bf'
 
-    data = []
-    for o in [ord(c) for c in text]:
-        rounded = round(o/10) * 10
-        data.append({'char': chr(o), 'ord': o, 'rounded': rounded, 'diff': o-rounded})
-
-    write_script(data, out_fn)
+    data = preprocess(text)
+    gen_script(data, args.outfn)
 
 
 if __name__ == '__main__':
-    parser = ArgumentParser(description='script desc')
-    parser.add_argument('infile', help='infile desc')
-    parser.add_argument('-o', dest='outfile', default=None, help='o flag desc')
-    args = parser.parse_args()
-
-    if args.outfile is None:
-        args.outfile = re.sub('\.txt$', '', args.infile) + '.bf'
-
-    main(args.infile, args.outfile)
+    parser = ArgumentParser(description='')
+    parser.add_argument('-i', '--input', dest='infn', metavar='infile',
+                        default=None, help='')
+    parser.add_argument('-o', '--output', dest='outfn', metavar='outfile',
+                        default=None, help='')
+    main(parser.parse_args())
