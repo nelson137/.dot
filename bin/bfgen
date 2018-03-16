@@ -34,22 +34,33 @@ def gen_script(data, outfn):
         out_f.write(script)
 
 
+def print_err(err, reason=None, usage=False):
+    if usage:
+        msg = 'usage: bfgen [-h] [-o outfile] infile'
+    else:
+        msg = 'bfgen: error: ' + err
+        if reason is not None: msg += ': ' + reason
+    print(msg)
+
+
 def main(args):
     if args.infn is None:
         if not sys.stdin.isatty():
             text = sys.stdin.read()
+            args.outfn = 'out.bf'
         else:
-            print('Nothing in stdin')
+            print_err(usage=True)
             return
-        args.outfn = 'out.bf'
     else:
         try:
             with open(args.infn, 'r') as f:
                 text = f.read()
         except FileNotFoundError:
-            print('FileNotFound:', args.infn)
+            print_err('file not found', reason=args.infn)
             return
-        args.outfn = re.sub('\.txt$', '', args.infn) + '.bf'
+
+        if args.outfn is None:
+            args.outfn = re.sub('\.txt$', '', args.infn) + '.bf'
 
     data = preprocess(text)
     gen_script(data, args.outfn)
@@ -57,8 +68,7 @@ def main(args):
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='')
-    parser.add_argument('-i', '--input', dest='infn', metavar='infile',
-                        default=None, help='')
+    parser.add_argument('infn', metavar='infile', default=None, help='')
     parser.add_argument('-o', '--output', dest='outfn', metavar='outfile',
                         default=None, help='')
     main(parser.parse_args())
