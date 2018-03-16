@@ -107,14 +107,15 @@ def main(args):
         if not sys.stdin.isatty():
             code = sys.stdin.read()
         else:
-            print('Nothing in stdin')
+            print('usage: brainfuck [-h] [infile]')
+            print('brainfuck: error: no input')
             return
     else:
         try:
             with open(args.infn, 'r') as f:
                 code = f.read()
         except FileNotFoundError:
-            print('FileNotFound:', args.infn)
+            print('brainfuck: error: file not found:', args.infn)
             return
 
     evaluate(cleanup(code))
@@ -122,6 +123,6 @@ def main(args):
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='')
-    parser.add_argument('-i', '--infile', dest='infn', metavar='infile',
-                        default=None, help='')
+    parser.add_argument('infn', nargs='?', metavar='infile', default=None,
+                        help='')
     main(parser.parse_args())
