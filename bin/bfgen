@@ -40,7 +40,7 @@ def print_err(err, reason=None, usage=False):
     else:
         msg = 'bfgen: error: ' + err
         if reason is not None: msg += ': ' + reason
-    print(msg)
+    print(msg, file=sys.stderr)
 
 
 def main(args):
@@ -50,14 +50,14 @@ def main(args):
             args.outfn = 'out.bf'
         else:
             print_err(usage=True)
-            return
+            sys.exit(1)
     else:
         try:
             with open(args.infn, 'r') as f:
                 text = f.read()
         except FileNotFoundError:
             print_err('file not found', reason=args.infn)
-            return
+            sys.exit(1)
 
         if args.outfn is None:
             args.outfn = re.sub('\.txt$', '', args.infn) + '.bf'
@@ -68,7 +68,8 @@ def main(args):
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='')
-    parser.add_argument('infn', metavar='infile', default=None, help='')
+    parser.add_argument('infn', nargs='?', metavar='infile', default=None,
+                        help='')
     parser.add_argument('-o', '--output', dest='outfn', metavar='outfile',
                         default=None, help='')
     main(parser.parse_args())
