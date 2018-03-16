@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-# 
-# Usage: ./brainfuck.py file
+
+"""usage: brainfuck INFILE"""
+
 
 import sys
+from argparse import ArgumentParser
 
 
 class _GetchUnix:
@@ -88,6 +90,8 @@ def evaluate(code):
         codeptr += 1
 
 
+'''
+# OLD
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         with open(sys.argv[1], 'r') as script:
@@ -95,3 +99,29 @@ if __name__ == "__main__":
         evaluate(cleanup(code))
     else:
         print('Usage: brainfuck infile')
+'''
+
+
+def main(args):
+    if args.infn is None:
+        if not sys.stdin.isatty():
+            code = sys.stdin.read()
+        else:
+            print('Nothing in stdin')
+            return
+    else:
+        try:
+            with open(args.infn, 'r') as f:
+                code = f.read()
+        except FileNotFoundError:
+            print('FileNotFound:', args.infn)
+            return
+
+    evaluate(cleanup(code))
+
+
+if __name__ == '__main__':
+    parser = ArgumentParser(description='')
+    parser.add_argument('-i', '--infile', dest='infn', metavar='infile',
+                        default=None, help='')
+    main(parser.parse_args())
