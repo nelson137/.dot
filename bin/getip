@@ -6,7 +6,7 @@ if [[ $? != 0 ]]; then
     exit 1
 fi
 
-echo "Public:  $(dig +short myip.opendns.com)"
+echo "Public:  $(dig +short myip.opendns.com @resolver1.opendns.com)"
 
 which ip >/dev/null 2>&1
 if [[ $? == 0 ]]; then
