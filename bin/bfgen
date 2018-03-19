@@ -41,25 +41,25 @@ def print_err(err, reason=None, usage=False):
         msg = 'bfgen: error: ' + err
         if reason is not None: msg += ': ' + reason
     print(msg, file=sys.stderr)
+    sys.exit(1)
 
 
 def main(args):
-    if args.infn is None:
-        if not sys.stdin.isatty():
+    if args.infn is None:  # if no infn was given
+        if not sys.stdin.isatty():  # if stdin is not empty
             text = sys.stdin.read()
-            args.outfn = 'out.bf'
-        else:
+        else:  # no input
             print_err(usage=True)
-            sys.exit(1)
+        if args.outfn is None:
+            args.outfn = 'out.bf'
     else:
         try:
             with open(args.infn, 'r') as f:
                 text = f.read()
         except FileNotFoundError:
-            print_err('file not found', reason=args.infn)
-            sys.exit(1)
+            print_err('file cannot be opened', reason=args.infn)
 
-        if args.outfn is None:
+        if args.outfn is None:  # if outfn not given use infn with bf ext
             args.outfn = re.sub('\.txt$', '', args.infn) + '.bf'
 
     data = preprocess(text)
