@@ -101,7 +101,6 @@ def print_err(err='', reason=None, usage=False):
 
 
 def main(args):
-    print(args)
     if not args.infns:
         if not sys.stdin.isatty():
             code = sys.stdin.read()
