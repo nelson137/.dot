@@ -97,29 +97,29 @@ def print_err(err='', reason=None, usage=False):
         msg = 'brainfuck: error: ' + err
         if reason is not None: msg += ': ' + reason
     print(msg, file=sys.stderr)
+    sys.exit(1)
 
 
 def main(args):
-    if args.infn is None:
+    print(args)
+    if not args.infns:
         if not sys.stdin.isatty():
             code = sys.stdin.read()
         else:
             print_err(usage=True)
-            print_err(err='no input')
-            sys.exit(1)
     else:
-        try:
-            with open(args.infn, 'r') as script:
-                code = script.read()
-        except FileNotFoundError:
-            print_err(err='file not found', reason=args.infn)
-            sys.exit(1)
+        for fn in args.infns:
+            try:
+                with open(fn, 'r') as script:
+                    code = script.read()
+            except FileNotFoundError:
+                print_err(err='cannot open file', reason=args.infns)
 
-    evaluate(cleanup(code))
+            evaluate(cleanup(code))
 
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='')
-    parser.add_argument('infn', nargs='?', metavar='infile', default=None,
+    parser.add_argument('infns', nargs='*', metavar='infiles', default=None,
                         help='')
     main(parser.parse_args())
