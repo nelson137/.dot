@@ -9,7 +9,7 @@ alias ll='ls -pohv --color'
 alias lla='ls -pAohv --color'
 
 alias update-system='sudo apt update && sudo apt upgrade -y'
-
+alias update-dot='cd ~/Projects/Git/dot && git pull && cd -'
 
 
 ### Functions ###
