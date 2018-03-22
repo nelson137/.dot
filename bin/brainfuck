@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+#
+# Brainfuck Interpreter
+# Copyright 2011 Sebastian Kaspari
 
 """usage: brainfuck INFILE"""
 
