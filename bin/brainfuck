@@ -55,8 +55,8 @@ def cleanup(code):
 def buildbracemap(code):
     temp_bracestack, bracemap = [], {}
     for pos, cmd in enumerate(code):
-        if cmd == "[": temp_bracestack.append(pos)
-        if cmd == "]":
+        if cmd == '[': temp_bracestack.append(pos)
+        if cmd == ']':
             start = temp_bracestack.pop()
             bracemap[start] = pos
             bracemap[pos] = start
@@ -71,22 +71,22 @@ def evaluate(code):
 
     while codeptr < len(code):
         command = code[codeptr]
-        if command == ">":
+        if command == '>':
             cellptr += 1
             if cellptr == len(cells): cells.append(0)
-        elif command == "<":
+        elif command == '<':
             cellptr = 0 if cellptr <= 0 else cellptr - 1
-        elif command == "+":
+        elif command == '+':
             cells[cellptr] = cells[cellptr] + 1 if cells[cellptr] < 255 else 0
-        elif command == "-":
+        elif command == '-':
             cells[cellptr] = cells[cellptr] - 1 if cells[cellptr] > 0 else 255
-        elif command == "[" and cells[cellptr] == 0:
+        elif command == '[' and cells[cellptr] == 0:
             codeptr = bracemap[codeptr]
-        elif command == "]" and cells[cellptr] != 0:
+        elif command == ']' and cells[cellptr] != 0:
             codeptr = bracemap[codeptr]
-        elif command == ".":
+        elif command == '.':
             sys.stdout.write(chr(cells[cellptr]))
-        elif command == ",":
+        elif command == ',':
             getch = _Getch()
             cells[cellptr] = ord(getch())
         
