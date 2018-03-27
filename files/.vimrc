@@ -42,7 +42,7 @@
     set autoindent      " fix indentation
     set softtabstop=4   " backspace deletes 4 spaces
     set cindent         " \
-    set cinkeys-=0#     "  > don't move # to col 0
+    set cinkeys-=0#     "  > don't eat spaces before #
     set indentkeys-=0#  " /
 
 
@@ -68,6 +68,9 @@
     " L goes to end of line
     nmap L $
     vmap L $
+
+    " w!! saves file even if you forgot to open it with sudo
+    cmap w!! w !sudo tee >/dev/null %
 
 
 
