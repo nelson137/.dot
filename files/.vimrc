@@ -71,6 +71,7 @@
 
     " w!! saves file even if you forgot to open it with sudo
     cmap w!! w !sudo tee >/dev/null %
+    cmap x!! w!!<CR>:q!<CR>
 
 
 
