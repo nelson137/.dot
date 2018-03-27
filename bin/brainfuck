@@ -106,7 +106,7 @@ def print_err(err='', reason=None, usage=False):
 def main(args):
     if not args.infns:
         if not sys.stdin.isatty():
-            code = sys.stdin.read()
+            evaluate(cleanup(sys.stdin.read()))
         else:
             print_err(usage=True)
     else:
