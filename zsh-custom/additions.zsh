@@ -27,8 +27,8 @@ mkcd() {
 
 clera() {
     choices=(banner digital standard)
-    i=$(( $RANDOM % ${#choices[@]} ))
-    figlet -f ${choices[$i]} clera
+    i=$(( $RANDOM % ${#choices[@]} + 1 ))
+    figlet -f ${choices[i]} clera
 }
 
 bat() {
