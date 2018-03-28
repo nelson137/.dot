@@ -54,8 +54,8 @@
     nmap <leader>n :set number!<CR>
     
     " H goes to beginning of line
-    nmap H 0
-    vmap H 0
+    nmap H ^
+    vmap H ^
 
     " J goes to bottom of file
     nmap J G
