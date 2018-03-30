@@ -41,9 +41,9 @@ HIST_STAMPS="mm/dd/yyyy"
 ZSH_CUSTOM="$HOME/Projects/Git/dot/zsh-custom"
 
 plugins=(
-  git
   colored-man-pages
-  zsh-syntax-highlighting
+  git
+  ssh-connect
   web-search
 )
 
