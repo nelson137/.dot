@@ -44,6 +44,7 @@ plugins=(
   git
   colored-man-pages
   zsh-syntax-highlighting
+  web-search
 )
 
 source $ZSH/oh-my-zsh.sh
