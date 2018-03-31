@@ -97,3 +97,8 @@ jrr() {
         rm "${1%.java}.class"
     fi
 }
+
+setup_phantomjs() {
+    export QT_QPA_PLATFORM=offscreen
+    export QT_QPA_FONTDIR=/usr/share/fonts
+}
