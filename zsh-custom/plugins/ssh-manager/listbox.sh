@@ -30,7 +30,7 @@ draw() {
             str+="  "
         fi
         echo "$str$it"
-        idx=$((idx+1))
+        ((idx++))
     done
 }
 
@@ -60,13 +60,7 @@ listbox() {
         shift
     done
 
-    [[ -z $arrow ]] && arrow=">"
-
-    local len=${#opts[@]}
-
-    local choice=0
     local titleLen=${#title}
-
     if [[ -n "$title" ]]; then
         echo -e "\n  $title"
         printf "  "
@@ -74,8 +68,13 @@ listbox() {
         echo ""
     fi
 
+    [[ -z $arrow ]] && arrow=">"
+    local len=${#opts[@]}
+    local choice=0
+
     draw
     while true; do
+        will_redraw=true
         key=$(bash -c 'read -n 1 -s key; echo $key')
 
         if [[ $key == q ]]; then
@@ -101,8 +100,13 @@ listbox() {
             choice=0
         elif [[ $key == J ]]; then
             choice=$((len-1))
+        else
+            echo $key >> out.txt
+            will_redraw=false
         fi
 
-        move; draw
+        if $will_redraw; then
+            move; draw
+        fi
     done
 }
