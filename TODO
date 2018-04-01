@@ -1,6 +1,4 @@
 --	create TODO file syntax for vim
----	fix bin/clera
----	add flags to bin/ssh for specifying LAN or WAN address
 --	translate bin/brainfuck to c++
 ----	finish files/.bash_additions
 ----	finish files/.tmux.conf
