@@ -1,4 +1,3 @@
---	create TODO file syntax for vim
 --	translate bin/brainfuck to c++
 ----	finish files/.bash_additions
 ----	finish files/.tmux.conf
