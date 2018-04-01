@@ -1,4 +1,4 @@
---	translate bin/brainfuck to c++
-----	finish files/.bash_additions
-----	finish files/.tmux.conf
-----	finish files/.vimrc
+translate bin/brainfuck to c++
+finish files/.bash_additions
+finish files/.tmux.conf
+finish files/.vimrc
