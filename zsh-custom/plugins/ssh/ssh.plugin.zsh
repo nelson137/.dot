@@ -9,7 +9,7 @@ ssh() {
         names+=("$name")
         internals+=("$int")
         externals+=("$ext")
-    done < "${src_dir}/connections.csv"
+    done < "${src}/connections.csv"
 
     local options=$(local IFS="|"; echo "${names[*]}")
     listbox -t "Connect:" -o "$options" -r || return
