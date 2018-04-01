@@ -41,10 +41,10 @@ HIST_STAMPS="mm/dd/yyyy"
 ZSH_CUSTOM="$HOME/Projects/Git/dot/zsh-custom"
 
 plugins=(
-  colored-man-pages
-  git
-  ssh-connect
-  web-search
+    colored-man-pages
+    git
+    ssh
+    web-search
 )
 
 source $ZSH/oh-my-zsh.sh
