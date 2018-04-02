@@ -43,6 +43,7 @@ ZSH_CUSTOM="$HOME/Projects/Git/dot/zsh-custom"
 plugins=(
     colored-man-pages
     git
+    git-prompt
     ssh
     web-search
 )
