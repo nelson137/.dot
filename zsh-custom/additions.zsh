@@ -1,5 +1,17 @@
 #!/bin/zsh
 
+ ############
+### Config ###
+ ############
+
+export ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;&'
+
+
+
+ #############
+### Aliases ###
+ #############
+
 alias python='python3'
 alias pip='pip3'
 
