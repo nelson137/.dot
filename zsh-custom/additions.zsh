@@ -114,3 +114,8 @@ setup_phantomjs() {
     export QT_QPA_PLATFORM=offscreen
     export QT_QPA_FONTDIR=/usr/share/fonts
 }
+
+brightness() {
+    local cmd="xrandr --output eDP-1 --brightness"
+    [[ $1 == reset ]] && eval "$cmd 1" || eval "$cmd $1"
+}
