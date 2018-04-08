@@ -69,6 +69,9 @@
     cnoremap w!! w !sudo tee >/dev/null %
     cnoremap x!! w!!<CR>:q!<CR>
 
+    " <Leader>64 base64 decodes selected text and replaces it
+    vnoremap <Leader>64 c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
+
 
 
 " Return to the line you were on last time
