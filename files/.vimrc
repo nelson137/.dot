@@ -48,7 +48,7 @@
 
 
 " Key bindings
-    let mapleader="."
+    let mapleader=" "
     
     " .n toggles line numbers
     nnoremap <leader>n :set number!<CR>
