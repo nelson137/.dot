@@ -51,7 +51,7 @@
     let mapleader=" "
     
     " .n toggles line numbers
-    nnoremap <leader>n :set number!<CR>
+    nnoremap <Leader>n :set number!<CR>
     
     " H goes to beginning of line
     noremap H ^
