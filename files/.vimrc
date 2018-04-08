@@ -51,19 +51,19 @@
     let mapleader="."
     
     " .n toggles line numbers
-    nmap <leader>n :set number!<CR>
+    nnoremap <leader>n :set number!<CR>
     
     " H goes to beginning of line
-    map H ^
+    noremap H ^
 
     " L goes to end of line
-    map L $
+    noremap L $
 
     " J goes to bottom of file
-    map J G
+    noremap J G
 
     " K goes to top of file
-    map K gg
+    noremap K gg
 
     " w!! saves file even if you forgot to open it with sudo
     cmap w!! w !sudo tee >/dev/null %
