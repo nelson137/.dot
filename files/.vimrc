@@ -54,20 +54,16 @@
     nmap <leader>n :set number!<CR>
     
     " H goes to beginning of line
-    nmap H ^
-    vmap H ^
-
-    " J goes to bottom of file
-    nmap J G
-    vmap J G
-
-    " K goes to top of file
-    nmap K gg
-    vmap K gg
+    map H ^
 
     " L goes to end of line
-    nmap L $
-    vmap L $
+    map L $
+
+    " J goes to bottom of file
+    map J G
+
+    " K goes to top of file
+    map K gg
 
     " w!! saves file even if you forgot to open it with sudo
     cmap w!! w !sudo tee >/dev/null %
