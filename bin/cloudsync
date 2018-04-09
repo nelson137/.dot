@@ -1,0 +1,9 @@
+#!/bin/bash
+
+user="nelson"
+dir="$HOME/Nextcloud"
+server="https://cloud.nelsonearle.tk"
+read -srp "Password: " passwd; echo ""
+
+nextcloudcmd -s -u "$user" -p "$passwd" --trust "$dir" "$server" &&
+    sudo chown -R nelson:nelson "$dir"
