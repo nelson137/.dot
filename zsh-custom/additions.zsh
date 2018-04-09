@@ -20,6 +20,12 @@ alias la='ls -pAv --color'
 alias ll='ls -pohv --color'
 alias lla='ls -pAohv --color'
 
+alias cp="cp -ir"
+alias du="du -h --max-depth=1"
+alias md="mkdir -p"
+alias mv="mv -i"
+alias rm="rm -r"
+
 alias update-system='sudo apt update && sudo apt upgrade -y'
 alias update-dot='cd ~/Projects/Git/dot && git pull && cd -'
 
