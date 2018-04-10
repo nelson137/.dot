@@ -1,12 +1,11 @@
 listbox_help() {
     echo "Usage: listbox [options]"
     echo "Example:"
-    echo "  listbox -t title -o \"option 1|option 2|option 3\" -r resultVariable -a '>'"
+    echo "  listbox -t title -o \"option 1|option 2|option 3\""
     echo "Options:"
     echo "  -h, --help                  help"
     echo "  -t, --title                 list title"
     echo "  -o, --options \"op 1|op 2\"   listbox options"
-    echo "  -r, --result <var>          result variable"
     echo "  -a, --arrow <symbol>        selected option symbol"
 }
 
@@ -117,4 +116,6 @@ listbox() {
             will_redraw=true
         fi
     done
+
+    unset title opts arrow no_echo
 }
