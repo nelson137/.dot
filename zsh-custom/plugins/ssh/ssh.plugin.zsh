@@ -12,7 +12,7 @@ ssh() {
     done < "${src}/connections.csv"
 
     local options=$(local IFS="|"; echo "${names[*]}")
-    listbox -t "Connect:" -o "$options" -r || return
+    listbox -t "Connect:" -o "$options" || return
 
     local index
     for ((i=1; i<=${#names}; i++)); do
