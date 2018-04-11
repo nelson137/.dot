@@ -2,7 +2,7 @@ ssh() {
     local src="$(dirname ${(%):-%x})"
     source "${src}/listbox.zsh"
 
-    # Read connections.csv into internals and externals arrays
+    # Read connections.csv into arrays
     local names=()
     declare -A internals externals
     while IFS=, read -r name int ext; do
