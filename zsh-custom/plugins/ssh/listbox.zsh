@@ -1,4 +1,4 @@
-listbox_help() {
+_usage() {
     echo "Usage: listbox [options]"
     echo "Example:"
     echo "  listbox -t title -o \"option 1|option 2|option 3\""
@@ -9,13 +9,35 @@ listbox_help() {
     echo "  -a, --arrow <symbol>        selected option symbol"
 }
 
-listbox() {
-    unset title opts arrow no_echo
+_move() {
+    for opt in "${opts[@]}"; do
+        tput cuu1
+    done
+    tput el1
+}
 
+_draw() {
+    local idx=1
+    for opt in "${opts[@]}"; do
+        local prefix=""
+        if [[ $idx == $choice ]]; then
+            prefix+="$arrow"
+        else
+            prefix+=$(printf %${#arrow}s)
+        fi
+        echo "$prefix $opt"
+        ((idx++))
+    done
+}
+
+listbox() {
+    unset title opts arrow
+
+    local no_echo=false
     while [[ $# > 0 ]]; do
         case $1 in
             -h|--help)
-                listbox_help
+                _usage
                 return 0 ;;
             -t|--title)
                 local title="$2"
@@ -29,8 +51,6 @@ listbox() {
             -a|--arrow)
                 local arrow="$2"
                 shift ;;
-            -n|--no-echo)
-                local no_echo=true ;;
             *)
         esac
         shift
@@ -40,27 +60,6 @@ listbox() {
         echo "Error: Options required"
         return 1
     fi
-
-    move() {
-        for opt in "${opts[@]}"; do
-            tput cuu1
-        done
-        tput el1
-    }
-
-    draw() {
-        local idx=1
-        for opt in "${opts[@]}"; do
-            local prefix=""
-            if [[ $idx == $choice ]]; then
-                prefix+="$arrow"
-            else
-                prefix+=$(printf %${#arrow}s)
-            fi
-            echo "$prefix $opt"
-            ((idx++))
-        done
-    }
 
     if [[ -n $title ]]; then
         local Lspace=" $(printf %${#arrow}s)"
@@ -73,7 +72,7 @@ listbox() {
     local len=${#opts[@]}
     local choice=1
     local will_redraw=true
-    draw
+    _draw
 
     while true; do
         key=$(bash -c 'read -n 1 -s key; echo $key')
@@ -82,12 +81,8 @@ listbox() {
             echo ""
             return 1
         elif [[ $key == "" ]]; then
-            if $no_echo; then
-                eval "export LISTBOX_CHOICE=\"${opts[$choice]}\""
-                echo ""
-            else
-                echo -e "\n${opts[$choice]}"
-            fi
+            eval "export LISTBOX_CHOICE=\"${opts[$choice]}\""
+            echo ""
             break
         elif [[ $key == k || $key == A ]]; then
             if [[ $choice > 1 ]]; then
@@ -110,12 +105,12 @@ listbox() {
         fi
 
         if $will_redraw; then
-            move
-            draw
+            _move
+            _draw
         else
             will_redraw=true
         fi
     done
 
-    unset title opts arrow no_echo
+    unset opts
 }
