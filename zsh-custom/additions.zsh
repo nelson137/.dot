@@ -45,12 +45,6 @@ mkcd() {
     fi
 }
 
-clera() {
-    choices=(banner digital standard)
-    i=$(( $RANDOM % ${#choices[@]} + 1 ))
-    figlet -f ${choices[i]} clera
-}
-
 bat() {
     local stats="$(upower -i "$(upower -e | grep BAT)" | sed 's/^\s\+//g')"
     echo "$stats" | grep --color=never -E "state|to empty|percentage"
