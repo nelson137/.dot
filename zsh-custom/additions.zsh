@@ -40,10 +40,6 @@ alias whois='whois -H'
 ### Functions ###
  ###############
 
-mkcd() {
-        eval "mkdir $1 && cd $1"
-}
-
 bat() {
     local stats="$(upower -i "$(upower -e | grep BAT)" | sed 's/^\s\+//g')"
     echo "$stats" | grep --color=never -E "state|to empty|percentage"
@@ -64,4 +60,8 @@ brightness() {
             return 1
         }
     fi
+}
+
+mkcd() {
+        eval "mkdir $1 && cd $1"
 }
