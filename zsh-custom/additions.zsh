@@ -32,6 +32,8 @@ alias pip='pip3'
 alias update-dot='cd ~/Projects/Git/dot && git pull && cd -'
 alias update-system='sudo apt update && sudo apt upgrade -y'
 
+alias whois='whois -H'
+
 
 
  ###############
