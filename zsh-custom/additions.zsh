@@ -38,11 +38,7 @@ alias update-dot='cd ~/Projects/Git/dot && git pull && cd -'
  ###############
 
 mkcd() {
-    if [[ $# != 1 ]]; then
-        echo "Usage: mkcd DIR"
-    else
-        mkdir -p "$1" && cd -P "$1"
-    fi
+        eval "mkdir $1 && cd $1"
 }
 
 bat() {
