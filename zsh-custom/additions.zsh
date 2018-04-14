@@ -52,8 +52,8 @@ clera() {
 }
 
 bat() {
-    BAT_STATS=$(upower -i $(upower -e | grep 'BAT'))
-    echo $BAT_STATS | grep --color=never -E "state|to\ empty|percentage"
+    local stats="$(upower -i "$(upower -e | grep BAT)" | sed 's/^\s\+//g')"
+    echo "$stats" | grep --color=never -E "state|to empty|percentage"
 }
 
 brightness() {
