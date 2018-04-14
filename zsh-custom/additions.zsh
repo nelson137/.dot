@@ -119,6 +119,18 @@ jrr() {
 }
 
 brightness() {
+    if [[ $# == 0 ]]; then
+        eval "xrandr --verbose | grep -i brightness | awk '{print \$2}'"
+        return
+    fi
+
     local cmd="xrandr --output eDP-1 --brightness"
-    [[ $1 == reset ]] && eval "$cmd 1" || eval "$cmd $1"
+    if [[ $1 == reset ]]; then
+        eval "$cmd 1.0"
+    else
+        eval "$cmd $1 >/dev/null 2>&1" || {
+            echo "Cannot set brightness to $1" >&2
+            return 1
+        }
+    fi
 }
