@@ -5,6 +5,8 @@
  ############
 
 export ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;&'
+
+# Phantomjs
 export QT_QPA_PLATFORM=offscreen
 export QT_QPA_FONTDIR=/usr/share/fonts
 
