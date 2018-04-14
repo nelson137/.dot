@@ -14,9 +14,6 @@ export QT_QPA_FONTDIR=/usr/share/fonts
 ### Aliases ###
  #############
 
-alias python='python3'
-alias pip='pip3'
-
 alias ls='ls -pv --color'
 alias la='ls -pAv --color'
 alias ll='ls -pohv --color'
@@ -28,8 +25,10 @@ alias md="mkdir -p"
 alias mv="mv -i"
 alias rm="rm -r"
 
-alias update-system='sudo apt update && sudo apt upgrade -y'
+alias python='python3'
+alias pip='pip3'
 alias update-dot='cd ~/Projects/Git/dot && git pull && cd -'
+alias update-system='sudo apt update && sudo apt upgrade -y'
 
 
 
