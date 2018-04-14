@@ -62,6 +62,14 @@ brightness() {
     fi
 }
 
+getip() {
+    echo "Public:  $(curl -sS https://icanhazip.com)"
+    printf "Private: "
+    local cmd
+    if (( ${+commands[ip]} )) && cmd="ip a" || cmd="ifconfig"
+    eval "$cmd | grep 'inet ' | grep -v '127.0.0.1' | awk '{print \$2}'"
+}
+
 mkcd() {
         eval "mkdir $1 && cd $1"
 }
