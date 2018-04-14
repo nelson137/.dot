@@ -56,37 +56,6 @@ bat() {
     echo $BAT_STATS | grep --color=never -E "state|to\ empty|percentage"
 }
 
-call_instructs() { echo "Call in the same directory as FILE"; }
-
-jo() {
-    # Java-Only
-    if [[ $# != 1 ]]; then
-        echo "usage: jo FILE" && call_instructs
-    else
-        javac "$1"
-    fi
-}
-
-jar() {
-    # Java-And-Run
-    if [[ $# != 1 ]]; then
-        echo "usage: jar FILE" && call_instructs
-    else
-        jo "$1"
-        java "${1%.java}"
-    fi
-}
-
-jrr() {
-    # Java-Run-Remove
-    if [[ $# != 1 ]]; then
-        echo "usage: jrr FILE" && call_instructs
-    else
-        jar "$1"
-        rm "${1%.java}.class"
-    fi
-}
-
 brightness() {
     if [[ $# == 0 ]]; then
         eval "xrandr --verbose | grep -i brightness | awk '{print \$2}'"
