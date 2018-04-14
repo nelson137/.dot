@@ -58,37 +58,6 @@ bat() {
 
 call_instructs() { echo "Call in the same directory as FILE"; }
 
-bo() {
-    # Build-Only
-    if [[ $# != 1 ]]; then
-        echo "usage: bo FILE"; call_instructs
-    else
-        g++ "$1" -std=c++11 -o "${1%.cpp}"
-    fi
-}
-
-bar() {
-    # Build-And-Run
-    if [[ $# == 0 ]]; then
-        echo "usage: bar FILE [ARGS]"; call_instructs
-    else
-        fn="$1"
-        shift
-        bo "$fn" && "./${fn%.cpp}" "$@"
-    fi
-}
-
-brr() {
-    # Build-Run-Remove
-    if [[ $# == 0 ]]; then
-        echo "usage: brr FILE [ARGS]"; call_instructs
-    else
-        fn="$1"
-        shift
-        bar "$fn" "$@" && rm "./${fn%.cpp}"
-    fi
-}
-
 jo() {
     # Java-Only
     if [[ $# != 1 ]]; then
