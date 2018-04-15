@@ -52,7 +52,16 @@ def cleanup(code):
     return list(out)
 
 
-def buildbracemap(code):
+def print_cells(cells, ptr=None):
+    cells = cells[:]
+    if ptr is not None: cells[ptr] = '(%d)' % cells[ptr]
+    cells = [str(val).ljust(5) for val in cells]
+    sys.stdout.write('\r\033[K')  # clear line
+    sys.stdout.write(' '.join(cells))
+    sys.stdout.flush()
+
+
+def _buildbracemap(code):
     temp_bracestack, bracemap = [], {}
     for pos, cmd in enumerate(code):
         if cmd == '[': temp_bracestack.append(pos)
@@ -64,12 +73,15 @@ def buildbracemap(code):
     return bracemap
 
 
-def evaluate(code):
-    bracemap = buildbracemap(code)
+def evaluate(code, dump=False, tape=False):
+    bracemap = _buildbracemap(code)
+    output = ''
     cells = [0]
     codeptr, cellptr = 0, 0
 
     while codeptr < len(code):
+        if tape: print_cells(cells, ptr=cellptr)
+
         command = code[codeptr]
         if command == '>':
             cellptr += 1
@@ -85,43 +97,73 @@ def evaluate(code):
         elif command == ']' and cells[cellptr] != 0:
             codeptr = bracemap[codeptr]
         elif command == '.':
-            sys.stdout.write(chr(cells[cellptr]))
+            if tape:
+                sys.stdout.write(chr(cells[cellptr]))
+            else:
+                output += chr(cells[cellptr])
         elif command == ',':
             getch = _Getch()
             cells[cellptr] = ord(getch())
         
         codeptr += 1
+        from time import sleep; sleep(.001)
+
+    # TODO
+    # ...
+    # elif command == ',':
+    #     prompt for input
+    #     if tape: delete that line as well as cells
+    # ...
+
+    if tape:
+        print_cells(cells, ptr=cellptr)
+        print(output)
+
+    if dump:
+        print_cells(cells)
+        print()
 
 
-def print_err(err='', reason=None, usage=False):
-    if usage:
-        msg = 'usage: brainfuck [-h] [infile]'
+def print_err(err):
+    if err == 'USAGE':
+        msg = 'usage: brainfuck [-h] [-d] [-t] FILE [FILE ...]'
     else:
-        msg = 'brainfuck: error: ' + err
-        if reason is not None: msg += ': ' + reason
+        msg = 'brainfuck error: ' + err
     print(msg, file=sys.stderr)
     sys.exit(1)
 
 
 def main(args):
-    if not args.infns:
-        if not sys.stdin.isatty():
-            evaluate(cleanup(sys.stdin.read()))
-        else:
-            print_err(usage=True)
-    else:
-        for fn in args.infns:
+    if not args.infiles:  # no file was passed as an argument
+        if not sys.stdin.isatty():  # stdin isn't empty
+            code = cleanup(sys.stdin.read())
+            evaluate(code, dump=args.dump_tape, tape=args.show_tape)
+        else:  # stdin is empty
+            print_err('USAGE')
+            sys.exit(1)
+    else:  # at least 1 file was passed as an argument
+        for fn in args.infiles:
             try:
-                with open(fn, 'r') as script:
-                    code = script.read()
+                with open(fn, 'r') as script: code = script.read()
+                code = cleanup(code)
+                evaluate(code, dump=args.dump_tape, tape=args.show_tape)
             except FileNotFoundError:
-                print_err(err='cannot open file', reason=args.infns)
-
-            evaluate(cleanup(code))
+                print_err('cannot open file ' + fn)
 
 
 if __name__ == '__main__':
-    parser = ArgumentParser(description='')
-    parser.add_argument('infns', nargs='*', metavar='infiles', default=None,
-                        help='')
+    usage = 'brainfuck [-h] [-d] [-t] FILE [FILE ...]'
+    desc = 'Executes one or more scripts written in brainfuck.'
+
+    d_help = 'print tape after executing script'
+    t_help = 'show tape during script execution'
+
+    parser = ArgumentParser(usage=usage, description=desc)
+    # nargs must be * so that file can be read from stdin
+    parser.add_argument('infiles', nargs='*', metavar='FILE', default=None)
+    tape_g = parser.add_mutually_exclusive_group()
+    tape_g.add_argument('-d', '--dump-tape', action='store_true', help=d_help)
+    tape_g.add_argument('-t', '--show-tape', action='store_true', help=t_help)
+
+    #print(parser.parse_args())
     main(parser.parse_args())
