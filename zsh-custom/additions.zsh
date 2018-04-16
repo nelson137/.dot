@@ -34,6 +34,8 @@ alias update-system='sudo apt update && sudo apt upgrade -y'
 
 alias whois='whois -H'
 
+unalias gcl
+
 
 
  ###############
@@ -60,6 +62,10 @@ brightness() {
             return 1
         }
     fi
+}
+
+gcl() {
+    git clone --recursive "git@github.com:nelson137/$1.git"
 }
 
 getip() {
