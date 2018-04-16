@@ -37,7 +37,8 @@ alias update-dot='cd ~/Projects/Git/dot && git pull && cd -'
 alias update-system='sudo apt update && sudo apt upgrade -y'
 alias whois='whois -H'
 
-
+# unalias l from .oh-my-zsh/lib/directories.zsh
+unalias l
 # unalias gcl from .oh-my-zsh/plugins/git
 unalias gcl
 
