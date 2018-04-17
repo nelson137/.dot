@@ -27,6 +27,7 @@ alias lla='ls -pAohv --color'
 alias cp="cp -ir"
 alias du="du -h --max-depth=1"
 alias md="mkdir -p"
+alias mkx="chmod +x"
 alias mv="mv -i"
 alias rm="rm -r"
 
