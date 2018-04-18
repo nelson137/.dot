@@ -86,6 +86,11 @@ getip() {
     eval "$cmd | grep 'inet ' | grep -v '127.0.0.1' | awk '{print \$2}'"
 }
 
+hostname() {
+    echo "$1" | sudo tee /etc/hostname >/dev/null
+    sudo hostname "$1"
+}
+
 mkcd() {
         eval "mkdir $1 && cd $1"
 }
