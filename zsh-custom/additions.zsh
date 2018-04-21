@@ -87,8 +87,12 @@ getip() {
 }
 
 hostname() {
-    echo "$1" | sudo tee /etc/hostname >/dev/null
-    sudo hostname "$1"
+    if [[ -z $1 ]]; then
+        command hostname
+    else
+        echo "$1" | sudo tee /etc/hostname >/dev/null
+        sudo hostname "$1"
+    fi
 }
 
 mkcd() {
