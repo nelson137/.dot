@@ -1,16 +1,17 @@
 " General
     set whichwrap+=<,>,h,l,[,]  " EOL wrapping
     set backspace=indent,eol,start
-    set autoread  " auto read when changes are made to file from outside
+    set autoread  " Automatically read when changes are made on disk
     set noswapfile
-    set undofile  " persistent file history
+    set undofile  " Persistent file history
     set undodir=~/.vim/undodir
-    au VimLeave * if filereadable("$HOME/.vim/.netrwhist") | call delete("$HOME/.vim/.netrwhist") | endif  " no ~/.vim/.netrwhist file
+    runtime ftplugin/man.vim  " Man plugin
+    au VimLeave * if filereadable("$HOME/.vim/.netrwhist") | call delete("$HOME/.vim/.netrwhist") | endif  " No ~/.vim/.netrwhist file
 
 
 
 " Vundle
-    set nocompatible  " be iMproved
+    set nocompatible  " Be iMproved
     filetype off
 
     set rtp+=~/.vim/bundle/Vundle.vim
@@ -31,48 +32,58 @@
     syntax on
     colorscheme default
     set number
-    set laststatus=2  " status bar always visible
-    set statusline=%t  " file name in status bar
-    set ruler  " bar with cursor positions
+    set laststatus=2   " Keep status bar always visible
+    set statusline=%t  " Put file name in status bar
+    set ruler          " Enable bar with cursor positions
 
 
 
 " Indentation
-    set expandtab       " tabs to spaces
-    set tabstop=4       " tab width = 4
-    set shiftwidth=4    " indentation size = 4
-    set autoindent      " fix indentation
-    set softtabstop=4   " backspace deletes 4 spaces
+    set expandtab       " Tabs to spaces
+    set tabstop=4       " Tab width = 4
+    set shiftwidth=4    " Indentation size = 4
+    set autoindent      " Fix indentation
+    set copyindent      " Use previous line's indentation
+    set softtabstop=4   " Backspace deletes 4 spaces
     set cindent         " \
-    set cinkeys-=0#     "  > don't eat spaces before #
+    set cinkeys-=0#     "  > Don't eat spaces before #
     set indentkeys-=0#  " /
+    set visualbell      " No beep beep
 
 
 
 " Key bindings
-    let mapleader=" "
+    let mapleader=","
     
-    " .n toggles line numbers
-    nnoremap <Leader>n :set number!<CR>
+    " .n Toggles line numbers
+    nnoremap  <Leader>n  :set number!<CR>
     
-    " H goes to beginning of line
-    noremap H ^
+    " H Goes to beginning of line
+    noremap  H  ^
 
-    " L goes to end of line
-    noremap L $
+    " L Goes to end of line
+    noremap  L  $
 
-    " J goes to bottom of file
-    noremap J G
+    " J Goes to bottom of file
+    noremap  J  G
 
-    " K goes to top of file
-    noremap K gg
+    " K Goes to top of file
+    noremap  K  gg
 
-    " w!! saves file even if you forgot to open it with sudo
-    cnoremap w!! w !sudo tee >/dev/null %
-    cnoremap x!! w!!<CR>:q!<CR>
+    nnoremap  <Leader>m  :Man <cword><CR>
 
-    " <Leader>64 base64 decodes selected text and replaces it
-    vnoremap <Leader>64 c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
+    " ,ev or ,sv Opens or sources .vimrc
+    " Thank you Derek Wyatt
+    nnoremap <silent>  <Leader>ev  :e $MYVIMRC<CR>
+    nnoremap <silent>  <Leader>sv  :so $MYVIMRC<CR>
+
+    " for when you forgot to open the file with sudo
+    " Thank you Steve Losh
+    cnoremap  w!!  w !sudo tee >/dev/null %
+    cnoremap  x!!  w!!<CR>:q!
+
+    " ,64 Base64 decodes selected text and replaces it
+    vnoremap  <Leader>64  c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
 
 
 
