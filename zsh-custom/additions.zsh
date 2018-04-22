@@ -98,3 +98,13 @@ hostname() {
 mkcd() {
         eval "mkdir $1 && cd $1"
 }
+
+newscript() {
+    [[ $# == 0 ]] && return
+    touch $@
+    mkx $@
+    for fn in $@; do
+        echo -e "#!/bin/bash\n\n" > "$fn"
+        vim + "$fn"  # + puts cursor at bottom of file
+    done
+}
