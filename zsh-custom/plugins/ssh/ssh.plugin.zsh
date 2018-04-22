@@ -1,4 +1,9 @@
 ssh() {
+    if [[ $# > 0 ]]; then
+        command ssh $@
+        return
+    fi
+
     local src="$(dirname ${(%):-%x})"
     source "${src}/listbox.zsh"
 
