@@ -55,7 +55,7 @@
 " Key bindings
     let mapleader=","
     
-    " .n Toggles line numbers
+    " ,n Toggles line numbers
     nnoremap  <Leader>n  :set number!<CR>
     
     " H Goes to beginning of line
