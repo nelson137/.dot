@@ -70,6 +70,9 @@
     " K Goes to top of file
     noremap  K  gg
 
+    " ,<F2> Don't fuck up indentation when pasting code
+    noremap <silent>  <Leader><F2>  :set invpaste<CR>
+
     nnoremap  <Leader>m  :Man <cword><CR>
 
     " ,ev or ,sv Opens or sources .vimrc
