@@ -56,18 +56,22 @@
 
     " Because holding shift is sooo annoying
     nnoremap  ;  :
+
+    " Move down/up rows in buffer, not up/down lines
+    noremap  j  gj
+    noremap  k  gk
     
     " H Goes to beginning of line
     noremap  H  ^
-
-    " L Goes to end of line
-    noremap  L  $
 
     " J Goes to bottom of file
     noremap  J  G
 
     " K Goes to top of file
     noremap  K  gg
+
+    " L Goes to end of line
+    noremap  L  $
 
     " ,<F2> Don't fuck up indentation when pasting code
     noremap <silent>  <Leader><F2>  :set invpaste<CR>
@@ -87,6 +91,12 @@
 
     " ,64 Base64 decodes selected text and replaces it
     vnoremap  <Leader>64  c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
+
+    " Better window nav
+    noremap  <C-h>  <C-w>h
+    noremap  <C-j>  <C-w>j
+    noremap  <C-k>  <C-w>k
+    noremap  <C-l>  <C-w>l
 
 
 
