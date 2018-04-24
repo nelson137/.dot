@@ -57,9 +57,6 @@
     " Because holding shift is sooo annoying
     nnoremap  ;  :
     
-    " ,n Toggles line numbers
-    nnoremap  <Leader>n  :set number!<CR>
-    
     " H Goes to beginning of line
     noremap  H  ^
 
