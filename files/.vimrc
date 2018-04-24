@@ -34,7 +34,6 @@
     set number
     set laststatus=2   " Keep status bar always visible
     set statusline=%t  " Put file name in status bar
-    set ruler          " Enable bar with cursor positions
 
 
 
