@@ -73,7 +73,7 @@
     " L Goes to end of line
     noremap  L  $
 
-    " ,<F2> Don't fuck up indentation when pasting code
+    " ,<F2> Don't fuck up indentation when pasting
     noremap <silent>  <Leader><F2>  :set invpaste<CR>
 
     " ,m Open man page for word under cursor
