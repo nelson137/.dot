@@ -54,6 +54,9 @@
 
 " Key bindings
     let mapleader=","
+
+    " Because holding shift is sooo annoying
+    nnoremap  ;  :
     
     " ,n Toggles line numbers
     nnoremap  <Leader>n  :set number!<CR>
