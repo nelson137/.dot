@@ -118,5 +118,12 @@
 
 
 
+" NERDTree
+    let NERDRemoveExtraSpaces=1
+    let NERDSpaceDelims=1
+    let NERDTrimTrailingWhitespace=1
+
+
+
 " TODO files config
     au BufRead,BufNewFile *.html set et ts=2 shiftwidth=2 si ai sts=2
