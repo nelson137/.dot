@@ -32,10 +32,15 @@ alias mv="mv -i"
 alias rm="rm -r"
 
 # my aliases
-alias python='python3'
+alias additions='vim ~/Projects/Git/dot/zsh-custom/additions.zsh'
+alias dot='cd ~/Projects/Git/dot'
+alias grep='egrep'
 alias pip='pip3'
+alias python='python3'
+alias sed='sed -r'
 alias update-dot='cd ~/Projects/Git/dot && git pull && cd -'
 alias update-system='sudo apt update && sudo apt upgrade -y'
+alias vimrc='vim ~/.vimrc'
 alias whois='whois -H'
 
 # unalias l from .oh-my-zsh/lib/directories.zsh
