@@ -1,4 +1,5 @@
 " General
+    set timeoutlen=500  " Max period of 500ms between keystrokes
     set whichwrap+=<,>,h,l,[,]  " EOL wrapping
     set backspace=indent,eol,start
     set autoread  " Automatically read when changes are made on disk
