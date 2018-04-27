@@ -1,7 +1,8 @@
 bo() {
     # Build-Only
     if [[ $# != 1 ]]; then
-        echo "usage: bo FILE" >&2
+        echo "Usage: bo FILE" >&2
+        return 1
     else
         g++ "$1" -std=c++11 -o "${1%.cpp}"
     fi
@@ -10,21 +11,23 @@ bo() {
 bar() {
     # Build-And-Run
     if [[ $# == 0 ]]; then
-        echo "usage: bar FILE [ARGS]" >&2
+        echo "Usage: bar FILE [ARGS ...]" >&2
+        return 1
     else
-        fn="$1"
+        file="$1"
         shift
-        bo "$fn" && "./${fn%.cpp}" "$@"
+        bo "$file" && "./${file%.cpp}" $@
     fi
 }
 
 brr() {
     # Build-Run-Remove
     if [[ $# == 0 ]]; then
-        echo "usage: brr FILE [ARGS]"; >&2
+        echo "Usage: brr FILE [ARGS ...]" >&2
+        return 1
     else
-        fn="$1"
+        file="$1"
         shift
-        bar "$fn" "$@" && rm "./${fn%.cpp}"
+        bar "$file" $@ && rm "./${file%.cpp}"
     fi
 }
