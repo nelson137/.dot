@@ -92,10 +92,9 @@
     nnoremap <silent>  <Leader>ev  :e $MYVIMRC<CR>
     nnoremap <silent>  <Leader>sv  :so $MYVIMRC<CR>
 
-    " for when you forgot to open the file with sudo
+    " for when you forget to open the file with sudo
     " Thank you Steve Losh
-    cnoremap  w!!  w !sudo tee >/dev/null %
-    cnoremap  x!!  w!!<CR>:q!
+    cnoremap  w!!  w !sudo tee >/dev/null %<CR>
 
     " ,64 Base64 decodes selected text and replaces it
     vnoremap  <Leader>64  c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
