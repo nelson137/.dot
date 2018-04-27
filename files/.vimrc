@@ -13,17 +13,24 @@
 
 " Vundle
     set nocompatible  " Be iMproved
+
     filetype off
-
-    set rtp+=~/.vim/bundle/Vundle.vim
+    set runtimepath+=~/.vim/bundle/Vundle.vim
     call vundle#begin()
-
+    Plugin 'Raimondi/delimitMate'
     Plugin 'VundleVim/Vundle.vim'
-    Plugin 'scrooloose/nerdtree'
-    Plugin 'skammer/vim-css-color'
+    Plugin 'apeschel/vim-syntax-apache'
+    Plugin 'elzr/vim-json'
+    Plugin 'godlygeek/tabular'
     Plugin 'itchyny/lightline.vim'
-    " Plugin 'Raimondi/delimitMate'
-
+    Plugin 'scrooloose/nerdtree'
+    Plugin 'scrooloose/nerdcommenter'
+    Plugin 'sjl/gundo.vim'
+    Plugin 'skammer/vim-css-color'
+    Plugin 'suan/vim-instant-markdown'
+    Plugin 'terryma/vim-multiple-cursors'
+    Plugin 'tpope/vim-fugitive'
+    Plugin 'tpope/vim-surround'
     call vundle#end()
     filetype plugin indent on
 
