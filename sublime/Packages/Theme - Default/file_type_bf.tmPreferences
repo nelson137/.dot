@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Credits: LogoMakr
+
+    Links:
+        brackets_diagonal: logomakr.com/3xKB5y
+        plus_blue_square: logomakr.com/77L2Ee
+        plus_boxed: logomakr.com/4ABmVA
+        plus_boxed_thick (file_type_bf): logomakr.com/90Bab7
+-->
+<plist version="1.0">
+  <dict>
+    <key>scope</key>
+    <string>source.brainfuck</string>
+    <key>settings</key>
+    <dict>
+      <key>icon</key>
+      <string>file_type_bf</string>
+    </dict>
+  </dict>
+</plist>

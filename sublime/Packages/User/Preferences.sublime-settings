@@ -1,0 +1,17 @@
+{
+	"close_windows_when_empty": false,
+	"color_scheme": "Packages/User/SublimeLinter/Flatland Dark (SL).tmTheme",
+	"copy_with_empty_selection": false,
+	"detect_indentation": false,
+	"drag_text": false,
+	"ensure_newline_at_eof_on_save": true,
+	"highlight_modified_tabs": true,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"match_brackets_angle": true,
+	"open_files_in_new_window": false,
+	"shift_tab_unindent": true,
+	"translate_tabs_to_spaces": true
+}

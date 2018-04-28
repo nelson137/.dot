@@ -1,0 +1,30 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: Brainfuck
+scopeName: source.brainfuck
+fileTypes: [bf]
+uuid: f87a4770-b3bc-484c-9af9-d1c7eed102be
+
+patterns:
+- name: comment.brainfuck
+  match: '[^<>\[\]\+\-\.,]'
+
+- name: keyword.control.brainfuck
+  comment: red
+  match: '[<>]'
+
+- name: constant.other.placeholder.brainfuck
+  comment: purple
+  match: '[\+\-]'
+
+- name: string.other.brainfuck
+  comment: yellow
+  match: '[\[\]]'
+
+- name: variable.parameter.brainfuck
+  comment: italic orange
+  match: '[\,\.]'
+
+- name: storage.type.brainfuck
+  comment: italic blue
+...

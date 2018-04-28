@@ -1,0 +1,4 @@
+{
+    "cmd": ["brainfuck", "$file"],
+    "selector": "source.brainfuck"
+}

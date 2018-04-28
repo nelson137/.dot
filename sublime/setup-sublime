@@ -1,0 +1,113 @@
+#!/bin/bash
+
+errexit() {
+    for arg in "$@"; do echo "$arg" >&2; done
+    exit 1
+}
+
+check_for_dir() {
+    linuxSubl="$HOME/.config/sublime-text-3"
+    macSubl="$HOME/Library/Application Support/Sublime Text 3"
+    winSubl="$HOME/AppData/Roaming/Sublime Text 3"
+    repo="$HOME"
+    if [[ -d $linuxSubl ]]; then
+        subl="$linuxSubl"
+    elif [[ -d $macSubl ]]; then
+        subl="$macSubl"
+    elif [[ -d $winSubl ]]; then
+        subl="$winSubl"
+        [[ -z $CMDER_ROOT ]] || repo="$CMDER_ROOT/../.."
+    fi
+}
+
+install_pkg_ctl() {
+    echo "Please install Package Control"
+    echo "Press 'ctrl+shift+p'"
+    echo "Type 'install package control' then press enter"
+
+    pc_installed=
+    until [[ $pc_installed == done ]]; do
+        read -p  "Type done when Package Conotrol is installed... " pc_installed
+    done
+
+    # automated Package Control install
+    #w=$(xdotool search --sync --all --onlyvisible --pid "$(pgrep sublime_text)")
+    #xdotool windowfocus --sync "$w"
+    #xdotool key --window "$w" 'Control_L+Shift_L+p' # 'ctrl+shift+p' ?
+    #xdotool type --window "$w" "install package control"
+    #xdotool key --window "$w"  "Return"
+    # wait for "done installing pc" window to pop up
+    # window check:
+    # xprop -id "$w" | grep 'WM_NAME(STRING)' | sed 's/WM_NAME(STRING) = //'
+}
+
+pulse_subl() {
+    which xdotool >/dev/null || errexit "xdotool is not installed"
+
+    subl
+    check_for_dir
+    until [[ -d $subl/Installed\ Packages ]]; do
+        sleep 1
+	check_for_dir
+    done
+    sleep 1
+
+    [[ $1 == install ]] && install_pkg_ctl
+    kill -15 "$(pgrep sublime_text)" >/dev/null 2>&1
+}
+
+
+
+unset subl repo attempt_install
+
+which subl >/dev/null || {
+    echo "Sublime Text is not installed"
+    read -p "Would you like to attempt the installation? [Y/n]" attempt_install
+    if [[ $attempt_install == y || $attempt_install == Y ]]; then
+        sudo echo "Creating the apt list file..."
+        echo 'deb https://download.sublimetext.com apt/stable/' | sudo tee /etc/apt/sources.list.d/sublime-text.list >/dev/null
+
+        echo "Installing the gpg key..."
+        wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add - >/dev/null 2>&1
+
+        sudo apt-get install apt-transport-https -y >/dev/null
+
+        echo "Updating..."
+        sudo apt-get update >/dev/null
+
+        echo "Installing sublime-text..."
+        sudo apt-get install sublime-text -y >/dev/null
+    else
+        exit
+    fi
+}
+
+pkill sublime_text
+
+check_for_dir
+if [[ -z $subl ]]; then
+    pulse_subl install
+else
+    [[ -e "$subl/Installed Packages/Package Control.sublime-package" ]] ||
+        pulse_subl install
+fi
+
+subl="${subl}/Packages"
+repo="${repo}/Projects/Git/config-files/Sublime/Packages"
+
+
+
+cd "$repo"
+packages=(*)
+for package in "${packages[@]}"; do
+    if [[ $package == User ]]; then
+        cd User
+	userFiles=(*)
+        for file in "${userFiles[@]}"; do
+            [[ -f ${subl}/User/$file ]] && rm "${subl}/User/$file"
+            ln -Fs "${repo}/User/$file" "${subl}/User/"
+        done
+    else
+        ln -Fs "${repo}/$package" "$subl"
+    fi
+done

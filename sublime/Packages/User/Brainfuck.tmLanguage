@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>fileTypes</key>
+    <array>
+        <string>bf</string>
+    </array>
+    <key>name</key>
+    <string>Brainfuck</string>
+    <key>patterns</key>
+    <array>
+        <dict>
+            <key>match</key>
+            <string>[^&lt;&gt;\[\]\+\-\.,]</string>
+            <key>name</key>
+            <string>comment.brainfuck</string>
+        </dict>
+        <dict>
+            <key>comment</key>
+            <string>red</string>
+            <key>match</key>
+            <string>[&lt;&gt;]</string>
+            <key>name</key>
+            <string>keyword.control.brainfuck</string>
+        </dict>
+        <dict>
+            <key>comment</key>
+            <string>purple</string>
+            <key>match</key>
+            <string>[\+\-]</string>
+            <key>name</key>
+            <string>constant.other.placeholder.brainfuck</string>
+        </dict>
+        <dict>
+            <key>comment</key>
+            <string>yellow</string>
+            <key>match</key>
+            <string>[\[\]]</string>
+            <key>name</key>
+            <string>string.other.brainfuck</string>
+        </dict>
+        <dict>
+            <key>comment</key>
+            <string>italic orange</string>
+            <key>match</key>
+            <string>[\,\.]</string>
+            <key>name</key>
+            <string>variable.parameter.brainfuck</string>
+        </dict>
+        <dict>
+            <key>comment</key>
+            <string>italic blue</string>
+            <key>name</key>
+            <string>storage.type.brainfuck</string>
+        </dict>
+    </array>
+    <key>scopeName</key>
+    <string>source.brainfuck</string>
+    <key>uuid</key>
+    <string>f87a4770-b3bc-484c-9af9-d1c7eed102be</string>
+</dict>
+</plist>

@@ -1,0 +1,6 @@
+{
+    "close_affected_buffers_when_deleting_even_if_dirty": true,
+    "confirm_before_deleting": false,
+    "disabled_menuitem_open_in_browser": true,
+    "default_browser": "chrome",
+}

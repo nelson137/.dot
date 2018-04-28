@@ -1,0 +1,26 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"A File Icon",
+		"Bash Build System",
+		"Djaneiro",
+		"Emmet",
+		"Git",
+		"MarkdownLivePreview",
+		"Package Control",
+		"PackageDev",
+		"PackageResourceViewer",
+		"SideBarEnhancements",
+		"SublimeLinter",
+		"SublimeLinter-annotations",
+		"SublimeLinter-pep8",
+		"SublimeLinter-pylint",
+		"Theme - Flatland",
+		"ToDone",
+		"Virtualenv"
+	]
+}
