@@ -23,30 +23,29 @@ alias la='ls -pAv --color'
 alias ll='ls -pohv --color'
 alias lla='ls -pAohv --color'
 
-# general aliases
+# Command aliases
 alias cp="cp -ir"
 alias du="du -h --max-depth=1"
+alias grep='egrep'
 alias md="mkdir -p"
 alias mkx="chmod +x"
 alias mv="mv -i"
 alias rm="rm -r"
+alias sed='sed -r'
+alias whois='whois -H'
 
-# my aliases
+# My aliases
 alias additions='vim ~/Projects/Git/dot/zsh-custom/additions.zsh'
 alias dot='cd ~/Projects/Git/dot'
-alias grep='egrep'
 alias pip='pip3'
 alias python='python3'
-alias sed='sed -r'
 alias update-dot='git -C ~/Projects/Git/dot pull'
 alias update-system='sudo apt update && sudo apt upgrade -y'
 alias vimrc='vim ~/.vimrc'
-alias whois='whois -H'
 
-# unalias l from .oh-my-zsh/lib/directories.zsh
-unalias l
-# unalias gcl from .oh-my-zsh/plugins/git
-unalias gcl
+# Unaliases
+unalias l  # Unalias l from .oh-my-zsh/lib/directories.zsh
+unalias gcl  # Unalias gcl from .oh-my-zsh/plugins/git
 
 
 
@@ -110,6 +109,6 @@ newscript() {
     mkx $@
     for fn in $@; do
         echo -e "#!/bin/bash\n\n" > "$fn"
-        vim + "$fn"  # + puts cursor at bottom of file
+        vim + "$fn"  # "+" Puts cursor at bottom of file
     done
 }
