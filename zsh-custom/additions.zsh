@@ -78,6 +78,15 @@ brightness() {
     fi
 }
 
+chhn() {
+    # Change Hostname
+    sudo echo >/dev/null  # Get sudo password before changing hostname
+    local old="$(hostname)"
+    local new; read -rp "New hostname: " new
+    echo "$new" | sudo tee /etc/hostname >/dev/null
+    sed -i "s/${old}/${new}/g" /etc/hosts
+}
+
 gcl() {
     git clone --recursive "git@github.com:nelson137/$1.git"
 }
@@ -89,15 +98,6 @@ getip() {
     local cmd
     if (( ${+commands[ip]} )) && cmd="ip a" || cmd="ifconfig"
     eval "$cmd | grep 'inet ' | grep -v '127.0.0.1' | awk '{print \$2}'"
-}
-
-hostname() {
-    if [[ -z $1 ]]; then
-        command hostname
-    else
-        echo "$1" | sudo tee /etc/hostname >/dev/null
-        sudo hostname "$1"
-    fi
 }
 
 mkcd() {
