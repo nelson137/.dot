@@ -7,7 +7,8 @@
 
 
 import sys
-from argparse import ArgumentParser
+from argparse import ArgumentParser, ArgumentTypeError
+from time import sleep
 
 
 class _GetchUnix:
@@ -73,11 +74,12 @@ def _buildbracemap(code):
     return bracemap
 
 
-def evaluate(code, dump=False, tape=False):
-    bracemap = _buildbracemap(code)
+def evaluate(code, dump, tape, user_in, delay=.01):
     output = ''
+    bracemap = _buildbracemap(code)
     cells = [0]
     codeptr, cellptr = 0, 0
+    getch = _Getch()
 
     while codeptr < len(code):
         if tape: print_cells(cells, ptr=cellptr)
@@ -97,27 +99,19 @@ def evaluate(code, dump=False, tape=False):
         elif command == ']' and cells[cellptr] != 0:
             codeptr = bracemap[codeptr]
         elif command == '.':
-            if tape:
-                sys.stdout.write(chr(cells[cellptr]))
-            else:
-                output += chr(cells[cellptr])
+            if tape: output += chr(cells[cellptr])
+            else: sys.stdout.write(chr(cells[cellptr]))
         elif command == ',':
-            getch = _Getch()
-            cells[cellptr] = ord(getch())
+            if tape: cells[cellptr] = ord(user_in.pop(0))
+            else: cells[cellptr] = ord(getch())
         
         codeptr += 1
-        from time import sleep; sleep(.001)
-
-    # TODO
-    # ...
-    # elif command == ',':
-    #     prompt for input
-    #     if tape: delete that line as well as cells
-    # ...
+        sleep(delay)
 
     if tape:
         print_cells(cells, ptr=cellptr)
-        print(output)
+        print()
+        print(output, end='')
 
     if dump:
         print_cells(cells)
@@ -126,44 +120,59 @@ def evaluate(code, dump=False, tape=False):
 
 def print_err(err):
     if err == 'USAGE':
-        msg = 'usage: brainfuck [-h] [-d] [-t] FILE [FILE ...]'
+        msg = 'usage: brainfuck-py [-h] [-d | -t] [-i INPUT] [FILE [FILE ...]]'
     else:
         msg = 'brainfuck error: ' + err
     print(msg, file=sys.stderr)
     sys.exit(1)
 
 
+def check_delay_type(value):
+    try:
+        int(value)
+    except ValueError:
+        raise ArgumentTypeError('%s is not a valid number' % value)
+
+
 def main(args):
-    if not args.infiles:  # no file was passed as an argument
+    infiles = args.infiles
+    dump_tape = args.dump_tape
+    show_tape = args.show_tape
+    user_in = list(args.input)
+    delay = int(args.time)
+
+    if not infiles:  # No file was passed as an argument
         if not sys.stdin.isatty():  # stdin isn't empty
             code = cleanup(sys.stdin.read())
-            evaluate(code, dump=args.dump_tape, tape=args.show_tape)
+            evaluate(code, dump_tape, show_tape, user_in, delay)
         else:  # stdin is empty
             print_err('USAGE')
             sys.exit(1)
-    else:  # at least 1 file was passed as an argument
-        for fn in args.infiles:
+    else:  # At least 1 file was passed as an argument
+        for fn in infiles:
             try:
                 with open(fn, 'r') as script: code = script.read()
                 code = cleanup(code)
-                evaluate(code, dump=args.dump_tape, tape=args.show_tape)
+                evaluate(code, dump_tape, show_tape, user_in, delay)
             except FileNotFoundError:
                 print_err('cannot open file ' + fn)
 
 
 if __name__ == '__main__':
-    usage = 'brainfuck [-h] [-d] [-t] FILE [FILE ...]'
     desc = 'Executes one or more scripts written in brainfuck.'
-
     d_help = 'print tape after executing script'
-    t_help = 'show tape during script execution'
+    v_help = 'show tape during script execution'
+    i_help = 'input for the , command'
+    t_help = 'the delay between each command'
 
-    parser = ArgumentParser(usage=usage, description=desc)
+    parser = ArgumentParser(description=desc)
     # nargs must be * so that file can be read from stdin
     parser.add_argument('infiles', nargs='*', metavar='FILE', default=None)
     tape_g = parser.add_mutually_exclusive_group()
     tape_g.add_argument('-d', '--dump-tape', action='store_true', help=d_help)
-    tape_g.add_argument('-t', '--show-tape', action='store_true', help=t_help)
+    tape_g.add_argument('-v', '--show-tape', action='store_true', help=t_help)
+    parser.add_argument('-i', '--input', default=[], help=i_help)
+    parser.add_argument('-t', '--time', type=check_delay_type, help=t_help)
 
     #print(parser.parse_args())
     main(parser.parse_args())
