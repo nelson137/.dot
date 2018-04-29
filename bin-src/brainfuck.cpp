@@ -80,12 +80,12 @@ void execute(char* fn) {
     }
 
     vector<char> code;
-    
+
     ifstream file(fn);
     if (file.is_open()) {
         char bf_chars_arr[] = {'<', '>', '+', '-', '[', ']', '.', ','};
         vector<char> bf_chars(bf_chars_arr, bf_chars_arr + sizeof(bf_chars_arr) / sizeof(bf_chars_arr[0]));
-        
+
         string line;
         while (getline(file, line)) {
             for (char c : line) {
