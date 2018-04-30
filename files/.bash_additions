@@ -128,8 +128,6 @@ jrr() {
 os="$(uname)"
 if [[ $os == Linux ]]; then
     ls_linux
-    [[ $(uname -n) == glenn-liveconsole3 ]] &&
-        source "$HOME/.virtualenvs/Py3/bin/activate"
 elif [[ $os == Darwin ]]; then
     ls_mac
 elif [[ $os == Cygwin ]]; then
