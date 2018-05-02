@@ -104,11 +104,12 @@ mkcd() {
 }
 
 newscript() {
-    [[ $# == 0 ]] && return
-    touch $@
-    mkx $@
-    for fn in $@; do
-        echo -e "#!/bin/bash\n\n" > "$fn"
-        vim + "$fn"  # "+" Puts cursor at bottom of file
+    [[ $# == 0 ]] && files=( t.sh ) || files=( $@ )
+    touch $files
+    chmod +x $files
+    for file in $files; do
+        echo -e "#!/bin/bash\n\n" > $file
+        print -s "vim $file"
+        vim + $file  # The "+" puts cursor at bottom of file
     done
 }
