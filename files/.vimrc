@@ -65,6 +65,10 @@
     " Because holding shift is sooo annoying
     nnoremap  ;  :
 
+    " For when you forget to open the file with sudo
+    " Thank you Steve Losh
+    cnoremap  w!!  w !sudo tee >/dev/null %<CR>
+
     " Move down/up rows in buffer, not up/down lines
     noremap  j  gj
     noremap  k  gk
@@ -81,6 +85,12 @@
     " L Goes to end of line
     noremap  L  $
 
+    " Better window nav
+    noremap  <C-h>  <C-w>h
+    noremap  <C-j>  <C-w>j
+    noremap  <C-k>  <C-w>k
+    noremap  <C-l>  <C-w>l
+
     " ,<F2> Don't fuck up indentation when pasting
     noremap <silent>  <Leader><F2>  :set invpaste<CR>
 
@@ -92,18 +102,11 @@
     nnoremap <silent>  <Leader>ev  :e $MYVIMRC<CR>
     nnoremap <silent>  <Leader>sv  :so $MYVIMRC<CR>
 
-    " for when you forget to open the file with sudo
-    " Thank you Steve Losh
-    cnoremap  w!!  w !sudo tee >/dev/null %<CR>
-
     " ,64 Base64 decodes selected text and replaces it
     vnoremap  <Leader>64  c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
 
-    " Better window nav
-    noremap  <C-h>  <C-w>h
-    noremap  <C-j>  <C-w>j
-    noremap  <C-k>  <C-w>k
-    noremap  <C-l>  <C-w>l
+    " Better paste in insert mode
+    inoremap  <C-p>  <C-r>"
 
 
 
