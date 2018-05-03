@@ -6,6 +6,19 @@ function! OpenVimrc()
     edit $MYVIMRC
 endfunction
 
+function! CompileAndRun()
+    exec 'w'
+    if &filetype == 'cpp'
+        exec 'AsyncRun g++ % -o %<; ./%<'
+    elseif &filetype == 'python'
+        exec 'AsyncRun python3 %'
+    elseif &filetype == 'sh'
+        exec 'AsyncRun ./%'
+    else
+        echo 'No AsyncRun rule exists for filetype' &filetype
+    endif
+endfunction
+
 
 
 " General
@@ -42,6 +55,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'scrooloose/nerdcommenter'
     Plugin 'sjl/gundo.vim'
     Plugin 'skammer/vim-css-color'
+    Plugin 'skywind3000/asyncrun.vim'
     Plugin 'suan/vim-instant-markdown'
     Plugin 'terryma/vim-multiple-cursors'
     Plugin 'tpope/vim-fugitive'
@@ -121,6 +135,9 @@ nnoremap  <Leader>m  :Man <cword><CR>
 nnoremap <silent>  <Leader>ev  :call OpenVimrc()<CR>
 nnoremap <silent>  <Leader>sv  :so $MYVIMRC<CR>
 
+" AsyncRun file
+nnoremap <silent>  ,r  :call CompileAndRun()<CR>
+
 " ,64 Base64 decodes selected text and replaces it
 vnoremap  <Leader>64  c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
 
@@ -151,6 +168,11 @@ highlight pythonSelf ctermfg=68 guifg=#5f87d7 cterm=bold gui=bold
 let NERDRemoveExtraSpaces=1
 let NERDSpaceDelims=1
 let NERDTrimTrailingWhitespace=1
+
+
+
+" AsyncRun
+let g:asyncrun_open = 8
 
 
 
