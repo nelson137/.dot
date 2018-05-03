@@ -27,7 +27,7 @@ dir="\$(dirname \$0)"
 
 for file in "\$@"; do
 
-    echo -e "\\nCompiling \$file ..."
+    echo -e "\nCompiling \$file ..."
     bin_name="\${file%.cpp}"
     # Compile cpp file into bin/
     g++ -std=c++11 "bin-src/\$file" -o "bin/\$bin_name"
@@ -119,7 +119,7 @@ for file in "\${to_rm[@]}"; do
     rm -f "bin/\$bin_name"
 
     # Remove bin/\$bin_name from .gitignore
-    sed -Ei "/^bin\/\${bin_name}\\n?/d" .gitignore
+    sed -Ei "/^bin\/\${bin_name}\n?/d" .gitignore
     if git ls-files -m | grep .gitignore >/dev/null; then
         "\${dir}/push-gitignore-changes.sh"
     fi
