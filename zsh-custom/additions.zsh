@@ -62,7 +62,7 @@ bat() {
 brightness() {
     # Get or set screen brightness
     if [[ $# == 0 ]]; then
-        eval "xrandr --verbose | grep -i brightness | awk '{print \$2}'"
+        xrandr --verbose | grep -i brightness | awk '{print $2}'
         return
     fi
 
@@ -100,7 +100,7 @@ getip() {
 }
 
 mkcd() {
-        eval "mkdir $1 && cd $1"
+        mkdir "$1" && cd "$1"
 }
 
 newscript() {
