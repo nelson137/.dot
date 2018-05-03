@@ -30,7 +30,7 @@ for file in "\$@"; do
     echo -e "\\nCompiling \$file ..."
     bin_name="\${file%.cpp}"
     # Compile cpp file into bin/
-    g++ "bin-src/\$file" -o "bin/\$bin_name"
+    g++ -std=c++11 "bin-src/\$file" -o "bin/\$bin_name"
 
     # Add bin/\$bin_name to .gitignore if it's not already there
     if ! grep "^bin/\$bin_name$" .gitignore >/dev/null; then
