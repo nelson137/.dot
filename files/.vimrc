@@ -26,17 +26,17 @@ au VimLeave * if filereadable("$HOME/.vim/.netrwhist") | call delete("$HOME/.vim
 
 " Vundle
 
-set nocompatible  " Be iMproved
-
 filetype off
 set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'Raimondi/delimitMate'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'apeschel/vim-syntax-apache'
 Plugin 'elzr/vim-json'
 Plugin 'godlygeek/tabular'
 Plugin 'itchyny/lightline.vim'
+Plugin 'python-mode/python-mode'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'sjl/gundo.vim'
