@@ -1,5 +1,16 @@
+" Functions
+
+function! OpenVimrc()
+    new
+    exe 'normal! '.winnr().'<C-w>w'
+    edit $MYVIMRC
+endfunction
+
+
+
 " General
 
+set nocompatible  " Be iMproved
 set timeoutlen=500  " Max period of 500ms between keystrokes
 set whichwrap+=<,>,h,l,[,]  " EOL wrapping
 set backspace=indent,eol,start
@@ -104,7 +115,7 @@ nnoremap  <Leader>m  :Man <cword><CR>
 
 " ,ev or ,sv Opens or sources .vimrc
 " Thank you Derek Wyatt
-nnoremap <silent>  <Leader>ev  :e $MYVIMRC<CR>
+nnoremap <silent>  <Leader>ev  :call OpenVimrc()<CR>
 nnoremap <silent>  <Leader>sv  :so $MYVIMRC<CR>
 
 " ,64 Base64 decodes selected text and replaces it
