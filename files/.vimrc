@@ -138,6 +138,11 @@ augroup END
 
 
 
+" python-mode
+let g:pymode_python = 'python3'
+
+
+
 " NERDTree
 
 let NERDRemoveExtraSpaces=1
