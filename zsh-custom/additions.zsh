@@ -113,3 +113,16 @@ newscript() {
         vim + $file  # The "+" puts cursor at bottom of file
     done
 }
+
+vimrm() {
+    cmd1='set nomodifiable'
+    cmd2='function! OnExit()
+        let choice = confirm("Do you want to delete this file", "&yes\n&no", 2)
+        if choice == 1
+            silent !rm %
+        endif
+    endfunction'
+    cmd3='autocmd VimLeavePre * call OnExit()'
+
+    vim "$1" -c "$cmd1" -c "$cmd2" -c "$cmd3"
+}
