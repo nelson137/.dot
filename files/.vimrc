@@ -142,6 +142,7 @@ augroup END
 
 " python-mode
 let g:pymode_python = 'python3'
+highlight pythonSelf ctermfg=68 guifg=#5f87d7 cterm=bold gui=bold
 
 
 
