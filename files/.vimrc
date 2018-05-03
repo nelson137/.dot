@@ -20,32 +20,34 @@ set undofile  " Persistent file history
 set undodir=~/.vim/undodir
 set wildmenu  " Zsh-like buffer completion
 runtime ftplugin/man.vim  " Man plugin
-au VimLeave * if filereadable("$HOME/.vim/.netrwhist") | call delete("$HOME/.vim/.netrwhist") | endif  " No ~/.vim/.netrwhist file
+au VimLeave * if filereadable('$HOME/.vim/.netrwhist') | call delete('$HOME/.vim/.netrwhist') | endif  " No ~/.vim/.netrwhist file
 
 
 
 " Vundle
 
 filetype off
-set runtimepath+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'Raimondi/delimitMate'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'apeschel/vim-syntax-apache'
-Plugin 'elzr/vim-json'
-Plugin 'godlygeek/tabular'
-Plugin 'itchyny/lightline.vim'
-Plugin 'python-mode/python-mode'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'sjl/gundo.vim'
-Plugin 'skammer/vim-css-color'
-Plugin 'suan/vim-instant-markdown'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
-call vundle#end()
+if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
+    set runtimepath+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+    Plugin 'Raimondi/delimitMate'
+    Plugin 'Valloric/YouCompleteMe'
+    Plugin 'VundleVim/Vundle.vim'
+    Plugin 'apeschel/vim-syntax-apache'
+    Plugin 'elzr/vim-json'
+    Plugin 'godlygeek/tabular'
+    Plugin 'itchyny/lightline.vim'
+    Plugin 'python-mode/python-mode'
+    Plugin 'scrooloose/nerdtree'
+    Plugin 'scrooloose/nerdcommenter'
+    Plugin 'sjl/gundo.vim'
+    Plugin 'skammer/vim-css-color'
+    Plugin 'suan/vim-instant-markdown'
+    Plugin 'terryma/vim-multiple-cursors'
+    Plugin 'tpope/vim-fugitive'
+    Plugin 'tpope/vim-surround'
+    call vundle#end()
+endif
 filetype plugin indent on
 
 
@@ -77,7 +79,7 @@ set visualbell      " No beep beep
 
 " Key bindings
 
-let mapleader=","
+let mapleader=','
 
 " Because holding shift is sooo annoying
 nnoremap  ;  :
@@ -127,12 +129,12 @@ inoremap  <C-p>  <C-r>"
 
 
 
-" Return to the line you were on last time
+" Open file to the same place you were last time
 augroup line_return
     au!
     au BufReadPost *
-        \ if line("'\"") > 0 && line("'\"") <= line("$") |
-        \     execute 'normal! g`"zvzz' |
+        \ if line("'\"") > 1 && line("'\"") <= line('$') |
+        \     exe 'normal! g`"' |
         \ endif
 augroup END
 
