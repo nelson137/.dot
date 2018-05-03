@@ -176,6 +176,6 @@ let g:asyncrun_open = 8
 
 
 
-" TODO files config
+" Filetype Configs
 
 au BufRead,BufNewFile *.html set et ts=2 shiftwidth=2 si ai sts=2
