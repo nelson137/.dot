@@ -93,10 +93,7 @@ gcl() {
 getip() {
     # Get public and private ip addresses
     echo "Public:  $(curl -sS https://icanhazip.com)"
-    printf "Private: "
-    local cmd
-    if (( ${+commands[ip]} )) && cmd="ip a" || cmd="ifconfig"
-    eval "$cmd | grep 'inet ' | grep -v '127.0.0.1' | awk '{print \$2}'"
+    echo "Private: $(hostname -I | awk '{print $1}')"
 }
 
 mkcd() {
