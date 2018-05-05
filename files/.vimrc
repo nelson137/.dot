@@ -165,9 +165,13 @@ augroup END
 
 let g:pymode_python = 'python3'
 highlight pythonSelf ctermfg=68 guifg=#5f87d7 cterm=bold gui=bold
+let g:pymode_doc_bind = ''
 
-" Ignore multiple statements on one line
-let g:pymode_lint_ignore = ['E701']
+" Linter ignore:
+"   Multiple statements on one line
+"   Multiple imports on one line
+"   Function is too complex
+let g:pymode_lint_ignore = ['E701', 'E401', 'C901']
 
 
 
