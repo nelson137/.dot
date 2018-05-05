@@ -73,7 +73,7 @@ def _build_bracemap(code):
     return bracemap
 
 
-def evaluate(code, dump, tape, user_in, delay=.01):
+def evaluate(code, dump_tape, verbose, user_in, delay):
     output = ''
     bracemap = _build_bracemap(code)
     cells = [0]
@@ -81,7 +81,7 @@ def evaluate(code, dump, tape, user_in, delay=.01):
     getch = _Getch()
 
     while codeptr < len(code):
-        if tape: _print_cells(cells, ptr=cellptr)
+        if verbose: _print_cells(cells, ptr=cellptr)
 
         command = code[codeptr]
         if command == '>':
@@ -98,22 +98,23 @@ def evaluate(code, dump, tape, user_in, delay=.01):
         elif command == ']' and cells[cellptr] != 0:
             codeptr = bracemap[codeptr]
         elif command == '.':
-            if tape: output += chr(cells[cellptr])
+            if dump_tape or verbose: output += chr(cells[cellptr])
             else: sys.stdout.write(chr(cells[cellptr]))
         elif command == ',':
-            if tape: cells[cellptr] = ord(user_in.pop(0))
+            if verbose: cells[cellptr] = ord(user_in.pop(0))
             else: cells[cellptr] = ord(getch())
 
         codeptr += 1
         sleep(delay)
 
-    if tape:
-        _print_cells(cells, ptr=cellptr)
-        print()
-        print(output, end='')
+    if dump_tape or verbose:
+        print(output)
 
-    if dump:
+    if dump_tape:
         _print_cells(cells)
+        print()
+    elif verbose:
+        _print_cells(cells, prt=cellptr)
         print()
 
 
@@ -127,6 +128,7 @@ def _print_err(err):
 
 
 def check_delay_type(value):
+    print(value)
     try:
         int(value)
     except ValueError:
@@ -136,14 +138,14 @@ def check_delay_type(value):
 def main(args):
     infiles = args.infiles
     dump_tape = args.dump_tape
-    show_tape = args.show_tape
+    verbose = args.verbose
     user_in = list(args.input)
-    delay = int(args.time)
+    delay = float(args.delay)
 
     if not infiles:  # No file was passed as an argument
         if not sys.stdin.isatty():  # stdin isn't empty
             code = cleanup(sys.stdin.read())
-            evaluate(code, dump_tape, show_tape, user_in, delay)
+            evaluate(code, dump_tape, verbose, user_in, delay)
         else:  # stdin is empty
             _print_err('USAGE')
             sys.exit(1)
@@ -152,25 +154,26 @@ def main(args):
             try:
                 with open(fn, 'r') as script: code = script.read()
                 code = cleanup(code)
-                evaluate(code, dump_tape, show_tape, user_in, delay)
+                evaluate(code, dump_tape, verbose, user_in, delay)
             except FileNotFoundError:
                 _print_err('cannot open file ' + fn)
 
 
 if __name__ == '__main__':
     desc = 'Executes one or more scripts written in brainfuck.'
-    d_help = 'print tape after executing script'
+    t_help = 'print tape after executing script'
     v_help = 'show tape during script execution'
     i_help = 'input for the , command'
-    t_help = 'the delay between each command'
+    d_help = 'the delay between each command'
 
     parser = ArgumentParser(description=desc)
     # nargs must be * so that file can be read from stdin
     parser.add_argument('infiles', nargs='*', metavar='FILE', default=None)
     tape_g = parser.add_mutually_exclusive_group()
-    tape_g.add_argument('-d', '--dump-tape', action='store_true', help=d_help)
-    tape_g.add_argument('-v', '--show-tape', action='store_true', help=t_help)
+    tape_g.add_argument('-t', '--dump-tape', action='store_true', help=d_help)
+    tape_g.add_argument('-v', '--verbose', action='store_true', help=t_help)
     parser.add_argument('-i', '--input', default=[], help=i_help)
-    parser.add_argument('-t', '--time', type=check_delay_type, help=t_help)
+    parser.add_argument('-d', '--delay', default=.01, type=check_delay_type,
+                        help=t_help)
 
     main(parser.parse_args())
