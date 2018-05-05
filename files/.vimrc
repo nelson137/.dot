@@ -95,12 +95,12 @@ set visualbell      " No beep beep
 
 let mapleader=','
 
-" Because holding shift is sooo annoying
-nnoremap  ;  :
-
 " For when you forget to open the file with sudo
 " Thank you Steve Losh
 cnoremap  w!!  w !sudo tee >/dev/null %<CR>
+
+" Because holding shift is sooo annoying
+nnoremap  ;  :
 
 " Move down/up rows in buffer, not up/down lines
 noremap  j  gj
@@ -143,6 +143,9 @@ vnoremap  <Leader>64  c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
 
 " Better paste in insert mode
 inoremap  <C-p>  <C-r>"
+
+" jj == <Esc> in insert mode
+inoremap  jj  <Esc>
 
 
 
