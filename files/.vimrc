@@ -147,6 +147,7 @@ inoremap  <C-p>  <C-r>"
 
 
 " Open file to the same place you were last time
+
 augroup line_return
     au!
     au BufReadPost *
@@ -158,8 +159,12 @@ augroup END
 
 
 " python-mode
+
 let g:pymode_python = 'python3'
 highlight pythonSelf ctermfg=68 guifg=#5f87d7 cterm=bold gui=bold
+
+" Ignore multiple statements on one line
+let g:pymode_lint_ignore = ['E701']
 
 
 
@@ -172,6 +177,7 @@ let NERDTrimTrailingWhitespace=1
 
 
 " AsyncRun
+
 let g:asyncrun_open = 8
 
 
