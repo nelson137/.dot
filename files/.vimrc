@@ -166,12 +166,14 @@ augroup END
 let g:pymode_python = 'python3'
 highlight pythonSelf ctermfg=68 guifg=#5f87d7 cterm=bold gui=bold
 let g:pymode_doc_bind = ''
+let g:pymode_lint_on_write = 0  " Don't lint on write
 
 " Linter ignore:
-"   Multiple statements on one line
-"   Multiple imports on one line
-"   Function is too complex
-let g:pymode_lint_ignore = ['E701', 'E401', 'C901']
+"   E265: block comment should start with '# '
+"   E401: multiple imports on one line
+"   E701: multiple statements on one line
+"   C901: function is too complex
+let g:pymode_lint_ignore = ['E265', 'E401', 'E701', 'C901']
 
 
 
