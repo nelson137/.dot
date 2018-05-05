@@ -3,8 +3,6 @@
 # Brainfuck Interpreter
 # Copyright 2011 Sebastian Kaspari
 
-"""usage: brainfuck INFILE"""
-
 
 import sys
 from argparse import ArgumentParser, ArgumentTypeError
@@ -49,20 +47,21 @@ class _Getch:
 
 
 def cleanup(code):
+    """Remove all non-brainfuck command characters from code."""
     out = filter(lambda x: x in ['>', '<', '+', '-', '[', ']', '.', ','], code)
     return list(out)
 
 
-def print_cells(cells, ptr=None):
+def _print_cells(cells, ptr=None):
     cells = cells[:]
     if ptr is not None: cells[ptr] = '(%d)' % cells[ptr]
     cells = [str(val).ljust(5) for val in cells]
-    sys.stdout.write('\r\033[K')  # clear line
+    sys.stdout.write('\r\033[K')  # Clear line
     sys.stdout.write(' '.join(cells))
     sys.stdout.flush()
 
 
-def _buildbracemap(code):
+def _build_bracemap(code):
     temp_bracestack, bracemap = [], {}
     for pos, cmd in enumerate(code):
         if cmd == '[': temp_bracestack.append(pos)
@@ -76,13 +75,13 @@ def _buildbracemap(code):
 
 def evaluate(code, dump, tape, user_in, delay=.01):
     output = ''
-    bracemap = _buildbracemap(code)
+    bracemap = _build_bracemap(code)
     cells = [0]
     codeptr, cellptr = 0, 0
     getch = _Getch()
 
     while codeptr < len(code):
-        if tape: print_cells(cells, ptr=cellptr)
+        if tape: _print_cells(cells, ptr=cellptr)
 
         command = code[codeptr]
         if command == '>':
@@ -104,21 +103,21 @@ def evaluate(code, dump, tape, user_in, delay=.01):
         elif command == ',':
             if tape: cells[cellptr] = ord(user_in.pop(0))
             else: cells[cellptr] = ord(getch())
-        
+
         codeptr += 1
         sleep(delay)
 
     if tape:
-        print_cells(cells, ptr=cellptr)
+        _print_cells(cells, ptr=cellptr)
         print()
         print(output, end='')
 
     if dump:
-        print_cells(cells)
+        _print_cells(cells)
         print()
 
 
-def print_err(err):
+def _print_err(err):
     if err == 'USAGE':
         msg = 'usage: brainfuck-py [-h] [-d | -t] [-i INPUT] [FILE [FILE ...]]'
     else:
@@ -146,7 +145,7 @@ def main(args):
             code = cleanup(sys.stdin.read())
             evaluate(code, dump_tape, show_tape, user_in, delay)
         else:  # stdin is empty
-            print_err('USAGE')
+            _print_err('USAGE')
             sys.exit(1)
     else:  # At least 1 file was passed as an argument
         for fn in infiles:
@@ -155,7 +154,7 @@ def main(args):
                 code = cleanup(code)
                 evaluate(code, dump_tape, show_tape, user_in, delay)
             except FileNotFoundError:
-                print_err('cannot open file ' + fn)
+                _print_err('cannot open file ' + fn)
 
 
 if __name__ == '__main__':
@@ -174,5 +173,4 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--input', default=[], help=i_help)
     parser.add_argument('-t', '--time', type=check_delay_type, help=t_help)
 
-    #print(parser.parse_args())
     main(parser.parse_args())
