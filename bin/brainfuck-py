@@ -5,42 +5,34 @@
 
 
 import sys
-from argparse import ArgumentParser, ArgumentTypeError
+from argparse import ArgumentParser, SUPPRESS
 from time import sleep
-
-
-class _GetchUnix:
-    def __init__(self):
-        import tty
-
-    def __call__(self):
-        import sys, tty, termios
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(1)
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
-
-
-class _GetchWindows:
-    def __init__(self):
-        import msvcrt
-
-    def __call__(self):
-        import msvcrt
-        return msvcrt.getch()
 
 
 class _Getch:
     """Gets a single character from standard input."""
+
     def __init__(self):
         try:
-            self.impl = _GetchWindows()
+            import msvcrt
+            self.impl = self.getch_windows
         except ImportError:
-            self.impl = _GetchUnix()
+            self.impl = self.getch_unix
+
+    def getch_windows(self):
+        import msvcrt
+        return msvcrt.getch()
+
+    def getch_unix(self):
+        import tty, termios
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(fd)
+            char = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return char
 
     def __call__(self):
         return self.impl()
@@ -48,17 +40,31 @@ class _Getch:
 
 def cleanup(code):
     """Remove all non-brainfuck command characters from code."""
-    out = filter(lambda x: x in ['>', '<', '+', '-', '[', ']', '.', ','], code)
-    return list(out)
+    bf_chars = ['>', '<', '+', '-', '[', ']', '.', ',']
+    return list(filter(lambda c: c in bf_chars, code))
+
+
+def stdout_write(string):
+    sys.stdout.write(string)
+    sys.stdout.flush()
 
 
 def _print_cells(cells, ptr=None):
     cells = cells[:]
     if ptr is not None: cells[ptr] = '(%d)' % cells[ptr]
     cells = [str(val).ljust(5) for val in cells]
-    sys.stdout.write('\r\033[K')  # Clear line
-    sys.stdout.write(' '.join(cells))
-    sys.stdout.flush()
+    stdout_write('\r\033[K')  # Clear line
+    stdout_write(' '.join(cells))
+
+
+def _print_err(err):
+    if err == 'USAGE':
+        msg = 'usage: brainfuck-py [-h] [-d DELAY] [--dump-tape | --show-tape]'
+        msg += '[-i INPUT]\n                    [FILE [FILE ...]]'
+    else:
+        msg = 'brainfuck: ' + err
+    print(msg, file=sys.stderr)
+    sys.exit(1)
 
 
 def _build_bracemap(code):
@@ -73,7 +79,7 @@ def _build_bracemap(code):
     return bracemap
 
 
-def evaluate(code, dump_tape, verbose, user_in, delay):
+def evaluate(code, dump_tape, show_tape, user_in, delay):
     output = ''
     bracemap = _build_bracemap(code)
     cells = [0]
@@ -81,7 +87,7 @@ def evaluate(code, dump_tape, verbose, user_in, delay):
     getch = _Getch()
 
     while codeptr < len(code):
-        if verbose: _print_cells(cells, ptr=cellptr)
+        if show_tape: _print_cells(cells, ptr=cellptr)
 
         command = code[codeptr]
         if command == '>':
@@ -98,54 +104,52 @@ def evaluate(code, dump_tape, verbose, user_in, delay):
         elif command == ']' and cells[cellptr] != 0:
             codeptr = bracemap[codeptr]
         elif command == '.':
-            if dump_tape or verbose: output += chr(cells[cellptr])
-            else: sys.stdout.write(chr(cells[cellptr]))
+            if dump_tape or show_tape: output += chr(cells[cellptr])
+            else: stdout_write(chr(cells[cellptr]))
         elif command == ',':
-            if verbose: cells[cellptr] = ord(user_in.pop(0))
-            else: cells[cellptr] = ord(getch())
+            if show_tape:
+                if len(user_in) == 0:
+                    print()
+                    _print_err("runtime error: not enough input was given")
+                cells[cellptr] = ord(user_in.pop(0))
+            else:
+                try:
+                    cells[cellptr] = ord(getch())
+                except:
+                    msg = 'runtime error: stdin is already in use.' + \
+                          '\nmake sure nothing is being piped in'
+                    _print_err(msg)
 
         codeptr += 1
-        sleep(delay)
-
-    if dump_tape or verbose:
-        print(output)
+        sleep(delay/1000.)
 
     if dump_tape:
         _print_cells(cells)
         print()
-    elif verbose:
-        _print_cells(cells, prt=cellptr)
+    elif show_tape:
+        _print_cells(cells, ptr=cellptr)
         print()
 
-
-def _print_err(err):
-    if err == 'USAGE':
-        msg = 'usage: brainfuck-py [-h] [-d | -t] [-i INPUT] [FILE [FILE ...]]'
-    else:
-        msg = 'brainfuck error: ' + err
-    print(msg, file=sys.stderr)
-    sys.exit(1)
-
-
-def check_delay_type(value):
-    print(value)
-    try:
-        int(value)
-    except ValueError:
-        raise ArgumentTypeError('%s is not a valid number' % value)
+    if (dump_tape or show_tape) and output:
+        print(output)
 
 
 def main(args):
     infiles = args.infiles
     dump_tape = args.dump_tape
-    verbose = args.verbose
+    show_tape = args.show_tape
     user_in = list(args.input)
-    delay = float(args.delay)
+    delay = args.delay
+
+    if show_tape and user_in == []:  # --show-tape without -i
+        _print_err('--show-tape requires -i/--input INPUT')
+    if user_in != [] and not show_tape:  # -i without --show-tape
+        _print_err('-i/--input is only for use with --show-tape')
 
     if not infiles:  # No file was passed as an argument
         if not sys.stdin.isatty():  # stdin isn't empty
             code = cleanup(sys.stdin.read())
-            evaluate(code, dump_tape, verbose, user_in, delay)
+            evaluate(code, dump_tape, show_tape, user_in, delay)
         else:  # stdin is empty
             _print_err('USAGE')
             sys.exit(1)
@@ -154,26 +158,32 @@ def main(args):
             try:
                 with open(fn, 'r') as script: code = script.read()
                 code = cleanup(code)
-                evaluate(code, dump_tape, verbose, user_in, delay)
+                evaluate(code, dump_tape, show_tape, user_in, delay)
             except FileNotFoundError:
                 _print_err('cannot open file ' + fn)
 
 
 if __name__ == '__main__':
     desc = 'Executes one or more scripts written in brainfuck.'
-    t_help = 'print tape after executing script'
-    v_help = 'show tape during script execution'
-    i_help = 'input for the , command'
-    d_help = 'the delay between each command'
+    h_help = 'Show this help message and exit.'
+    file_help = 'The name or names of a brainfuck script. Filenames can ' + \
+                'be read from stdin; however, filenames should not be ' + \
+                'passed through stdin and the command line at the same time.'
+    d_help = 'The delay in milliseconds between each command.'
+    dump_help = 'Output tape after executing script.'
+    show_help = 'Show tape live during script execution.'
+    i_help = 'Input for the , command.'
 
-    parser = ArgumentParser(description=desc)
+    parser = ArgumentParser(description=desc, add_help=False)
+    parser.add_argument('-h', '--help', action='help', default=SUPPRESS,
+                        help=h_help)
     # nargs must be * so that file can be read from stdin
-    parser.add_argument('infiles', nargs='*', metavar='FILE', default=None)
+    parser.add_argument('infiles', nargs='*', default=None, metavar='FILE',
+                        help=file_help)
+    parser.add_argument('-d', '--delay', type=int, default=10, help=d_help)
     tape_g = parser.add_mutually_exclusive_group()
-    tape_g.add_argument('-t', '--dump-tape', action='store_true', help=d_help)
-    tape_g.add_argument('-v', '--verbose', action='store_true', help=t_help)
+    tape_g.add_argument('--dump-tape', action='store_true', help=dump_help)
+    tape_g.add_argument('--show-tape', action='store_true', help=show_help)
     parser.add_argument('-i', '--input', default=[], help=i_help)
-    parser.add_argument('-d', '--delay', default=.01, type=check_delay_type,
-                        help=t_help)
 
     main(parser.parse_args())
