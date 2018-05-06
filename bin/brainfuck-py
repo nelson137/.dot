@@ -10,7 +10,7 @@ from time import sleep
 
 
 class _Getch:
-    """Gets a single character from standard input."""
+    """Read only one character from stdin."""
 
     def __init__(self):
         try:
@@ -38,12 +38,6 @@ class _Getch:
         return self.impl()
 
 
-def cleanup(code):
-    """Remove all non-brainfuck command characters from code."""
-    bf_chars = ['>', '<', '+', '-', '[', ']', '.', ',']
-    return list(filter(lambda c: c in bf_chars, code))
-
-
 def stdout_write(string):
     sys.stdout.write(string)
     sys.stdout.flush()
@@ -59,8 +53,8 @@ def _print_cells(cells, ptr=None):
 
 def _print_err(err):
     if err == 'USAGE':
-        msg = 'usage: brainfuck-py [-h] [-d DELAY] [--dump-tape | --show-tape]'
-        msg += '[-i INPUT]\n                    [FILE [FILE ...]]'
+        msg = 'usage: brainfuck-py [-h] [-d DELAY] [--dump-tape | ' + \
+              '--show-tape] [-i INPUT]\n                    [FILE [FILE ...]]'
     else:
         msg = 'brainfuck: ' + err
     print(msg, file=sys.stderr)
@@ -134,12 +128,18 @@ def evaluate(code, dump_tape, show_tape, user_in, delay):
         print(output)
 
 
+def cleanup(code):
+    """Remove all non-brainfuck command characters from code."""
+    bf_chars = ['>', '<', '+', '-', '[', ']', '.', ',']
+    return list(filter(lambda c: c in bf_chars, code))
+
+
 def main(args):
     infiles = args.infiles
+    delay = args.delay
     dump_tape = args.dump_tape
     show_tape = args.show_tape
     user_in = list(args.input)
-    delay = args.delay
 
     if show_tape and user_in == []:  # --show-tape without -i
         _print_err('--show-tape requires -i/--input INPUT')
@@ -147,6 +147,7 @@ def main(args):
         _print_err('-i/--input is only for use with --show-tape')
 
     if not infiles:  # No file was passed as an argument
+        # TODO: read filenames from stdin, not code
         if not sys.stdin.isatty():  # stdin isn't empty
             code = cleanup(sys.stdin.read())
             evaluate(code, dump_tape, show_tape, user_in, delay)
