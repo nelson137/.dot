@@ -103,11 +103,21 @@ mkcd() {
 newscript() {
     [[ $# == 0 ]] && files=( t.sh ) || files=( $@ )
     touch $files
-    chmod +x $files
     for file in $files; do
-        echo -e "#!/bin/bash\n\n" > $file
         print -s "vim $file"
-        vim + $file  # The "+" puts cursor at bottom of file
+        if [[ $file =~ \..cpp ]]; then
+            echo -ne "#include <iostream>\nusing namespace std;\n\nint" > $file
+            echo -e " main(int argc, char** argv) {\n    return 0;\n}" >> $file
+            vim +4 $file
+        elif [[ $file =~ \..py ]]; then
+            echo -e "#!/usr/bin/env python3\n\n" > $file
+            chmod +x $file
+            vim + +startinsert $file  # The "+" puts cursor at bottom of file
+        else
+            echo -e "#!/bin/bash\n\n" > $file
+            chmod +x $file
+            vim + +startinsert $file
+        fi
     done
 }
 
