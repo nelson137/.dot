@@ -32,6 +32,8 @@ set noswapfile
 set undofile  " Persistent file history
 set undodir=~/.vim/undodir
 set wildmenu  " Zsh-like buffer completion
+set splitright  " Open vertical splits to the right
+set splitbelow  " Open horizontal splits below
 runtime ftplugin/man.vim  " Man plugin
 au VimLeave * if filereadable('$HOME/.vim/.netrwhist') | call delete('$HOME/.vim/.netrwhist') | endif  " No ~/.vim/.netrwhist file
 
