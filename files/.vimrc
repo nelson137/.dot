@@ -59,7 +59,28 @@ set wildmenu  " Zsh-like buffer completion
 set splitright  " Open vertical splits to the right
 set splitbelow  " Open horizontal splits below
 runtime ftplugin/man.vim  " Man plugin
-au VimLeave * if filereadable('$HOME/.vim/.netrwhist') | call delete('$HOME/.vim/.netrwhist') | endif  " No ~/.vim/.netrwhist file
+
+
+
+" Autocmd
+
+" Open file to the same place you were last time
+augroup line_return
+    au!
+    au BufReadPost *
+        \ if line("'\"") > 1 && line("'\"") <= line('$') |
+        \     exe 'normal! g`"' |
+        \ endif
+augroup END
+
+" No ~/.vim/.netrwhist file
+augroup vimleave
+    au!
+    au VimLeave *
+        \ if filereadable('$HOME/.vim/.netrwhist') |
+        \     call delete('$HOME/.vim/.netrwhist')
+        \ endif  
+augroup END
 
 
 
@@ -175,18 +196,6 @@ inoremap  <C-p>  <C-r>"
 
 " jj == <Esc> in insert mode
 inoremap  jj  <Esc>
-
-
-
-" Open file to the same place you were last time
-
-augroup line_return
-    au!
-    au BufReadPost *
-        \ if line("'\"") > 1 && line("'\"") <= line('$') |
-        \     exe 'normal! g`"' |
-        \ endif
-augroup END
 
 
 
