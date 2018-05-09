@@ -1,21 +1,21 @@
 " Functions
 
 function! CompileAndRun()
-    exec 'w'
+    exe 'w'
     if &filetype == 'cpp'
-        exec 'AsyncRun g++ % -o %<; ./%<'
+        exe 'AsyncRun g++ % -o %<; ./%<'
     elseif &filetype == 'python'
-        exec 'AsyncRun python3 %'
+        exe 'AsyncRun python3 %'
     elseif &filetype == 'sh'
-        exec 'AsyncRun ./%'
+        exe 'AsyncRun ./%'
     else
         echo 'No AsyncRun rule exists for filetype' &filetype
     endif
 endfunction
 
 function! GetTodo()
-    let l:cwd = glob("todo")
-    let l:home = glob("$HOME/todo")
+    let l:cwd = glob('todo')
+    let l:home = glob('$HOME/todo')
     if !empty(l:cwd)
         return l:cwd
     elseif !empty(l:home)
@@ -23,9 +23,18 @@ function! GetTodo()
     endif
 endfunction
 
-function! OpenTodo()
-    exe "topleft vnew" GetTodo()
-    vertical resize 50
+function! ToggleTodo()
+    let l:last = winnr()
+    100 wincmd h
+    if expand('%:t') == 'todo'
+        exe 'x'
+        let l:last -= 1
+    else
+        exe 'topleft vnew' GetTodo()
+        vertical resize 50
+        let l:last += 1
+    endif
+    exe l:last 'wincmd w'
 endfunction
 
 function! OpenVimrc()
@@ -156,7 +165,7 @@ nnoremap <silent>  <Leader>sv  :so $MYVIMRC<CR>
 nnoremap <silent>  ,r  :call CompileAndRun()<CR>
 
 " Open todo
-nnoremap  <Leader>t  :call OpenTodo()<CR>
+nnoremap  <Leader>t  :call ToggleTodo()<CR>
 
 " ,64 Base64 decodes selected text and replaces it
 vnoremap  <Leader>64  c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
