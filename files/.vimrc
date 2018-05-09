@@ -1,11 +1,5 @@
 " Functions
 
-function! OpenVimrc()
-    new
-    exe 'normal! '.winnr().'<C-w>w'
-    edit $MYVIMRC
-endfunction
-
 function! CompileAndRun()
     exec 'w'
     if &filetype == 'cpp'
@@ -17,6 +11,27 @@ function! CompileAndRun()
     else
         echo 'No AsyncRun rule exists for filetype' &filetype
     endif
+endfunction
+
+function! GetTodo()
+    let l:cwd = glob("todo")
+    let l:home = glob("$HOME/todo")
+    if !empty(l:cwd)
+        return l:cwd
+    elseif !empty(l:home)
+        return l:home
+    endif
+endfunction
+
+function! OpenTodo()
+    exe "topleft vnew" GetTodo()
+    vertical resize 50
+endfunction
+
+function! OpenVimrc()
+    new
+    exe 'normal! '.winnr().'<C-w>w'
+    edit $MYVIMRC
 endfunction
 
 
@@ -139,6 +154,9 @@ nnoremap <silent>  <Leader>sv  :so $MYVIMRC<CR>
 
 " AsyncRun file
 nnoremap <silent>  ,r  :call CompileAndRun()<CR>
+
+" Open todo
+nnoremap  <Leader>t  :call OpenTodo()<CR>
 
 " ,64 Base64 decodes selected text and replaces it
 vnoremap  <Leader>64  c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
