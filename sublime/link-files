@@ -1,36 +1,40 @@
 #!/bin/bash
 
+win_setup() {
+    cmd() {
+        if [[ -f /mnt/c/Windows/System32/cmd.exe ]]; then
+            eval /mnt/c/Windows/System32/cmd.exe /C $@
+        else
+            echo "Cannot find cmd.exe" >&2
+        fi
+    }
+
+    subl='"C:\Users\nelson\AppData\Roaming\Sublime Text 3\Packages"'
+    repo='"C:\Users\nelson\AppData\Local\Packages\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\LocalState\rootfs\home\nelson\Projects\Git\dot\sublime\Packages"'
+
+    cmd "rmdir /S /Q $subl"
+    cmd "mklink /D $subl $repo"
+}
+
+winSubl="/mnt/c/Users/nelson/AppData/Roaming/Sublime Text 3"
+cmderSubl="$HOME/"  # TODO
 linuxSubl="$HOME/.config/sublime-text-3"
-macSubl="$HOME/Library/Application Support/Sublime Text 3"
-winSubl="$HOME/AppData/Roaming/Sublime Text 3"
-repo="$HOME"
-if [[ -d $linuxSubl ]]; then
+repo="$(cd "$(dirname $0)"; pwd)/Packages"
+if [[ -d $winSubl ]]; then
+    win_setup
+    exit
+elif [[ -d $cmderSubl ]]; then
+    # TODO
+    echo "TODO" >&2
+    exit 1
+elif [[ -d $linuxSubl ]]; then
     subl="$linuxSubl"
-elif [[ -d $macSubl ]]; then
-    subl="$macSubl"
-elif [[ -d $winSubl ]]; then
-    subl="$winSubl"
-    if [[ ! -z $CMDER_ROOT ]]; then
-    	repo="$CMDER_ROOT/../.."
-    fi
 else
-    echo "No Sublime directory found"
+    echo "Sublime directory not found" >&2
     exit 1
 fi
 subl="${subl}/Packages"
-repo="${repo}/Projects/Git/config-files/Sublime/Packages"
 
-cd "$repo"
-packages=(*)
-for package in "${packages[@]}"; do
-    if [[ $package == User ]]; then
-        mkdir -p User && cd User
-        userFiles=(*)
-        for file in "${userFiles[@]}"; do
-            ln -Fs "${repo}/User/$file" "${subl}/User"
-        done
-    else
-        ln -Fs "${repo}/$package" "$subl"
-    fi
-done
-
+# TODO: test
+rm -rf "$subl"
+ln -fs "$repo" "$subl"
