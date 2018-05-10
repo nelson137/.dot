@@ -1,10 +1,10 @@
 #!/bin/bash
 
-mac_bin="/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
-linux_bin="/usr/bin/subl"
+win_bin="/mnt/c/Program Files/Sublime Text 3/subl.exe"
 cmder_bin="${CMDER_ROOT}/../Sublime Text 3/subl"
+linux_bin="/usr/bin/subl"
 
-"$mac_bin" "$@" 2> /dev/null ||
-"$linux_bin" "$@" 2> /dev/null ||
-"$cmder_bin" "$@" 2> /dev/null ||
-echo "subl not found"
+"$win_bin" $@ 2>/dev/null ||
+    "$cmder_bin" $@ 2>/dev/null ||
+    "$linux_bin" $@ 2>/dev/null ||
+    echo "subl not found" >&2
