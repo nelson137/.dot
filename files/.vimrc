@@ -1,15 +1,19 @@
 " Functions
 
 function! CompileAndRun()
-    exe 'w'
-    if &filetype == 'cpp'
-        exe 'AsyncRun g++ % -o %<; ./%<'
-    elseif &filetype == 'python'
-        exe 'AsyncRun python3 %'
-    elseif &filetype == 'sh'
-        exe 'AsyncRun ./%'
+    if @% == ''
+        echo 'Error: file has no name'
     else
-        echo 'No AsyncRun rule exists for filetype' &filetype
+        exe 'w'
+        if &filetype == 'cpp'
+            exe 'AsyncRun g++ % -o %<; ./%<'
+        elseif &filetype == 'python'
+            exe 'AsyncRun python3 %'
+        elseif &filetype == 'sh'
+            exe 'AsyncRun ./%'
+        else
+            echo 'No AsyncRun rule exists for filetype' &filetype
+        endif
     endif
 endfunction
 
@@ -38,8 +42,7 @@ function! ToggleTodo()
 endfunction
 
 function! OpenVimrc()
-    new
-    exe 'normal! '.winnr().'<C-w>w'
+    topleft new
     edit $MYVIMRC
 endfunction
 
