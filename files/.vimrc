@@ -212,6 +212,7 @@ inoremap  jj  <Esc>
 
 let g:pymode_python = "python3"
 highlight pythonSelf ctermfg=68 guifg=#5f87d7 cterm=bold gui=bold
+" TODO: add more python highlighting
 let g:pymode_doc_bind = ""
 let g:pymode_lint_on_write = 0  " Don't lint on write
 
