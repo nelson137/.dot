@@ -149,7 +149,7 @@ set visualbell      " No beep beep
 
 " Key bindings
 
-let mapleader=","
+let mapleader = ","
 
 " For when you forget to open the file with sudo
 " Thank you Steve Losh
@@ -226,9 +226,9 @@ let g:pymode_lint_ignore = ["E265", "E401", "E701", "C901"]
 
 " NERDTree
 
-let NERDRemoveExtraSpaces=1
-let NERDSpaceDelims=1
-let NERDTrimTrailingWhitespace=1
+let NERDRemoveExtraSpaces = 1
+let NERDSpaceDelims = 1
+let NERDTrimTrailingWhitespace = 1
 
 
 
