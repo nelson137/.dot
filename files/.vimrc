@@ -28,6 +28,12 @@ function! GetTodo()
 endfunction
 
 function! ToggleTodo()
+    let l:todo = GetTodo()
+    if empty(l:todo)
+        echo "No todo file found"
+        return
+    endif
+
     let l:last = winnr()
     100 wincmd h
     if expand('%:t') == 'todo'
