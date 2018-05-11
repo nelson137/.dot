@@ -56,18 +56,18 @@ endfunction
 
 " General
 
-set nocompatible  " Be iMproved
-set timeoutlen=500  " Max period of 500ms between keystrokes
-set whichwrap+=<,>,[,]  " EOL wrapping
+set nocompatible            " Be iMproved
+set timeoutlen=500          " Max period of 500ms between keystrokes
+set whichwrap+=<,>,[,]      " EOL wrapping
 set backspace=indent,eol,start
-set autoread  " Automatically read when changes are made on disk
+set autoread                " Automatically read changes made on disk
 set noswapfile
-set undofile  " Persistent file history
-set undodir=~/.vim/undodir
-set wildmenu  " Zsh-like buffer completion
-set splitright  " Open vertical splits to the right
-set splitbelow  " Open horizontal splits below
-runtime ftplugin/man.vim  " Man plugin
+set undofile                " Persistent file history
+set undodir=~/.vim/undodir  " Put undo files in ~/.vim/undodir
+set wildmenu                " Zsh-like buffer completion
+set splitright              " Open vertical splits to the right
+set splitbelow              " Open horizontal splits below
+runtime ftplugin/man.vim    " Man plugin
 
 
 
