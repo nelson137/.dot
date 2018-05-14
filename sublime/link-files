@@ -12,7 +12,7 @@ win_setup() {
     subl='"C:\Users\nelson\AppData\Roaming\Sublime Text 3\Packages"'
     repo='"C:\Users\nelson\AppData\Local\Packages\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\LocalState\rootfs\home\nelson\Projects\Git\dot\sublime\Packages"'
 
-    cmd "rmdir /S /Q $subl"
+    cmd "rmdir /S /Q $subl" 2>/dev/null
     cmd "mklink /D $subl $repo"
 }
 
