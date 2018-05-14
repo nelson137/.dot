@@ -1,8 +1,4 @@
 {
-	"bootstrapped": true,
-	"in_process_packages":
-	[
-	],
 	"installed_packages":
 	[
 		"A File Icon",
@@ -17,7 +13,9 @@
 		"SideBarEnhancements",
 		"SublimeLinter",
 		"SublimeLinter-annotations",
-		"SublimeLinter-pep8",
+		"SublimeLinter-clang",
+		"SublimeLinter-javac",
+		"SublimeLinter-pycodestyle",
 		"SublimeLinter-pylint",
 		"Theme - Flatland",
 		"ToDone",
