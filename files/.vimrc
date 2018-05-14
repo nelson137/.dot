@@ -58,7 +58,6 @@ endfunction
 
 set nocompatible            " Be iMproved
 set timeoutlen=500          " Max period of 500ms between keystrokes
-set whichwrap+=<,>,[,]      " EOL wrapping
 set backspace=indent,eol,start
 set autoread                " Automatically read changes made on disk
 set noswapfile
