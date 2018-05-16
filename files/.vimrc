@@ -56,17 +56,20 @@ endfunction
 
 " General
 
-set nocompatible            " Be iMproved
-set timeoutlen=500          " Max period of 500ms between keystrokes
-set whichwrap+=<,>,[,]      " EOL wrapping
-set backspace=indent,eol,start
 set autoread                " Automatically read changes made on disk
+set backspace=indent,eol,start
+set nocompatible            " Be iMproved
 set noswapfile
-set undofile                " Persistent file history
-set undodir=~/.vim/undodir  " Put undo files in ~/.vim/undodir
-set wildmenu                " Zsh-like buffer completion
-set splitright              " Open vertical splits to the right
+set scrolloff=4             " Keep cursor 4 lines from top & bot when scrolling
+set shell=zsh               " Shell to use for !
+set showmode                " Show current mode (normal|visual|insert|...)
 set splitbelow              " Open horizontal splits below
+set splitright              " Open vertical splits to the right
+set timeoutlen=500          " Max period of 500ms between keystrokes
+set undodir=~/.vim/undodir  " Put undo files in ~/.vim/undodir
+set undofile                " Persistent file history
+set visualbell              " STOP BEEPING
+set wildmenu                " Zsh-like buffer completion
 runtime ftplugin/man.vim    " Man plugin
 
 
@@ -176,9 +179,13 @@ noremap  L  $
 
 " Better window nav
 noremap  <C-h>  <C-w>h
+inoremap  <C-h>  <Esc><C-w>h
 noremap  <C-j>  <C-w>j
+inoremap  <C-j>  <Esc><C-w>j
 noremap  <C-k>  <C-w>k
+inoremap  <C-k>  <Esc><C-w>k
 noremap  <C-l>  <C-w>l
+inoremap  <C-l>  <Esc><C-w>l
 
 " ,<F2> Don't fuck up indentation when pasting
 noremap <silent>  <Leader><F2>  :set invpaste<CR>
@@ -192,7 +199,7 @@ nnoremap <silent>  <Leader>ev  :call OpenVimrc()<CR>
 nnoremap <silent>  <Leader>sv  :so $MYVIMRC<CR>
 
 " AsyncRun file
-nnoremap <silent>  ,r  :call CompileAndRun()<CR>
+nnoremap <silent>  <Leader>r  :call CompileAndRun()<CR>
 
 " Open todo
 nnoremap  <Leader>t  :call ToggleTodo()<CR>
