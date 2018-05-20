@@ -1,6 +1,11 @@
 #!/bin/bash
 
 dir="$(dirname $0)"
+
 while read -r line; do
     sudo chmod 666 "$line"
-done < <(sudo find "${dir}/Packages/User" -maxdepth 1 -type f 2>/dev/null)
+done < <(sudo find "${dir}/Packages/User" -type f)
+
+while read -r line; do
+    sudo chmod 777 "$line"
+done < <(sudo find "${dir}/Packages/User" -type d)
