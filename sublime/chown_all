@@ -2,10 +2,12 @@
 
 dir="$(dirname $0)"
 
+# -rw-rw-rw- for each file in sublime/Packages/User
 while read -r line; do
     sudo chmod 666 "$line"
 done < <(sudo find "${dir}/Packages/User" -type f)
 
+# drwxrwxrwx for dir in sublime/Packages/User
 while read -r line; do
     sudo chmod 777 "$line"
 done < <(sudo find "${dir}/Packages/User" -type d)
