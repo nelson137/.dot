@@ -42,6 +42,7 @@ alias python='python3'
 alias update-dot='git -C ~/Projects/Git/dot pull'
 alias update-system='sudo apt update && sudo apt upgrade -y'
 alias vimrc='vim ~/.vimrc'
+alias zshrc='vim ~/.zshrc'
 
 # Unaliases
 unalias l  # Unalias l from .oh-my-zsh/lib/directories.zsh
