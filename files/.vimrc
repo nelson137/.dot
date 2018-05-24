@@ -254,4 +254,4 @@ let g:asyncrun_open = 8
 
 " Filetype Configs
 
-au BufRead,BufNewFile *.html set et ts=2 shiftwidth=2 si ai sts=2
+au BufRead,BufNewFile *.html set et ts=2 sw=2 sts=2 si ai
