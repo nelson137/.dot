@@ -1,3 +1,76 @@
+" General
+
+set autoread                " Automatically read changes made on disk
+set backspace=indent,eol,start
+set nocompatible            " Be iMproved
+set noswapfile
+set scrolloff=4             " Keep cursor 4 lines from top & bot when scrolling
+set shell=zsh               " Shell to use for !
+set showmode                " Show current mode (normal|visual|insert|...)
+set splitbelow              " Open horizontal splits below
+set splitright              " Open vertical splits to the right
+set timeoutlen=500          " Max period of 500ms between keystrokes
+set undodir=~/.vim/undodir  " Put undo files in ~/.vim/undodir
+set undofile                " Persistent file history
+set visualbell              " STOP BEEPING
+set wildmenu                " Zsh-like buffer completion
+runtime ftplugin/man.vim    " Man plugin
+
+
+
+" Indentation
+
+set expandtab       " Tabs to spaces
+set tabstop=4       " Tab width = 4
+set shiftwidth=4    " Indentation size = 4
+set autoindent      " Fix indentation
+set copyindent      " Use previous line's indentation
+set softtabstop=4   " Backspace deletes 4 spaces
+set cindent         " \
+set cinkeys-=0#     "  > Don't eat spaces before #
+set indentkeys-=0#  " /
+set visualbell      " No beep beep
+
+
+
+" Graphics
+
+syntax on
+colorscheme default
+set number
+set laststatus=2   " Keep status bar always visible
+set statusline=%t  " Put file name in status bar
+
+
+
+" Autocmd
+
+" Open file to the same place you were last time
+augroup line_return
+    au!
+    au BufReadPost *
+        \ if line("'\"") > 1 && line("'\"") <= line("$") |
+        \     exe 'normal! g`"' |
+        \ endif
+augroup END
+
+" No ~/.vim/.netrwhist file
+augroup vimleave
+    au!
+    au VimLeave *
+        \ if filereadable("$HOME/.vim/.netrwhist") |
+        \     call delete("$HOME/.vim/.netrwhist")
+        \ endif  
+augroup END
+
+
+
+" Filetype Configs
+
+au BufRead,BufNewFile *.html set et ts=2 sw=2 sts=2 si ai
+
+
+
 " Functions
 
 function! CompileAndRun()
@@ -51,102 +124,6 @@ function! OpenVimrc()
     topleft new
     edit $MYVIMRC
 endfunction
-
-
-
-" General
-
-set autoread                " Automatically read changes made on disk
-set backspace=indent,eol,start
-set nocompatible            " Be iMproved
-set noswapfile
-set scrolloff=4             " Keep cursor 4 lines from top & bot when scrolling
-set shell=zsh               " Shell to use for !
-set showmode                " Show current mode (normal|visual|insert|...)
-set splitbelow              " Open horizontal splits below
-set splitright              " Open vertical splits to the right
-set timeoutlen=500          " Max period of 500ms between keystrokes
-set undodir=~/.vim/undodir  " Put undo files in ~/.vim/undodir
-set undofile                " Persistent file history
-set visualbell              " STOP BEEPING
-set wildmenu                " Zsh-like buffer completion
-runtime ftplugin/man.vim    " Man plugin
-
-
-
-" Autocmd
-
-" Open file to the same place you were last time
-augroup line_return
-    au!
-    au BufReadPost *
-        \ if line("'\"") > 1 && line("'\"") <= line("$") |
-        \     exe 'normal! g`"' |
-        \ endif
-augroup END
-
-" No ~/.vim/.netrwhist file
-augroup vimleave
-    au!
-    au VimLeave *
-        \ if filereadable("$HOME/.vim/.netrwhist") |
-        \     call delete("$HOME/.vim/.netrwhist")
-        \ endif  
-augroup END
-
-
-
-" Vundle
-
-filetype off
-if !empty(glob("$HOME/.vim/bundle/Vundle.vim"))
-    set runtimepath+=~/.vim/bundle/Vundle.vim
-    call vundle#begin()
-    Plugin 'Raimondi/delimitMate'
-    Plugin 'Valloric/YouCompleteMe'
-    Plugin 'VundleVim/Vundle.vim'
-    Plugin 'apeschel/vim-syntax-apache'
-    Plugin 'elzr/vim-json'
-    Plugin 'godlygeek/tabular'
-    Plugin 'itchyny/lightline.vim'
-    Plugin 'python-mode/python-mode'
-    Plugin 'scrooloose/nerdtree'
-    Plugin 'scrooloose/nerdcommenter'
-    Plugin 'sjl/gundo.vim'
-    Plugin 'skammer/vim-css-color'
-    Plugin 'skywind3000/asyncrun.vim'
-    Plugin 'suan/vim-instant-markdown'
-    Plugin 'terryma/vim-multiple-cursors'
-    Plugin 'tpope/vim-fugitive'
-    Plugin 'tpope/vim-surround'
-    call vundle#end()
-endif
-filetype plugin indent on
-
-
-
-" Graphics
-
-syntax on
-colorscheme default
-set number
-set laststatus=2   " Keep status bar always visible
-set statusline=%t  " Put file name in status bar
-
-
-
-" Indentation
-
-set expandtab       " Tabs to spaces
-set tabstop=4       " Tab width = 4
-set shiftwidth=4    " Indentation size = 4
-set autoindent      " Fix indentation
-set copyindent      " Use previous line's indentation
-set softtabstop=4   " Backspace deletes 4 spaces
-set cindent         " \
-set cinkeys-=0#     "  > Don't eat spaces before #
-set indentkeys-=0#  " /
-set visualbell      " No beep beep
 
 
 
@@ -221,6 +198,35 @@ inoremap  jj  <Esc>
 
 
 
+" Vundle
+
+filetype off
+if !empty(glob("$HOME/.vim/bundle/Vundle.vim"))
+    set runtimepath+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+    Plugin 'Raimondi/delimitMate'
+    Plugin 'Valloric/YouCompleteMe'
+    Plugin 'VundleVim/Vundle.vim'
+    Plugin 'apeschel/vim-syntax-apache'
+    Plugin 'elzr/vim-json'
+    Plugin 'godlygeek/tabular'
+    Plugin 'itchyny/lightline.vim'
+    Plugin 'python-mode/python-mode'
+    Plugin 'scrooloose/nerdtree'
+    Plugin 'scrooloose/nerdcommenter'
+    Plugin 'sjl/gundo.vim'
+    Plugin 'skammer/vim-css-color'
+    Plugin 'skywind3000/asyncrun.vim'
+    Plugin 'suan/vim-instant-markdown'
+    Plugin 'terryma/vim-multiple-cursors'
+    Plugin 'tpope/vim-fugitive'
+    Plugin 'tpope/vim-surround'
+    call vundle#end()
+endif
+filetype plugin indent on
+
+
+
 " python-mode
 
 let g:pymode_python = "python3"
@@ -249,9 +255,3 @@ let NERDTrimTrailingWhitespace = 1
 " AsyncRun
 
 let g:asyncrun_open = 8
-
-
-
-" Filetype Configs
-
-au BufRead,BufNewFile *.html set et ts=2 sw=2 sts=2 si ai
