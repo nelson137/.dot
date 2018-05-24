@@ -187,6 +187,12 @@ inoremap  <C-k>  <Esc><C-w>k
 noremap  <C-l>  <C-w>l
 inoremap  <C-l>  <Esc><C-w>l
 
+" Better window resizing
+noremap  <C-w><C-h>  <C-w><
+noremap  <C-w><C-j>  <C-w>-
+noremap  <C-w><C-k>  <C-w>+
+noremap  <C-w><C-l>  <C-w>>
+
 " ,<F2> Don't fuck up indentation when pasting
 noremap <silent>  <Leader><F2>  :set invpaste<CR>
 
