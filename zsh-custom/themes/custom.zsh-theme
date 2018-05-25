@@ -28,6 +28,7 @@ _prompt_status() {
 }
 
 _prompt_line_2() {
+    # Green or red $
     local ret_status="%(?:%{$fg_bold[green]%}\$ :%{$fg_bold[red]%}\$ )"
     echo "${ret_status}"
 }
