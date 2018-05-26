@@ -9,19 +9,26 @@ _prompt_core() {
 }
 
 _prompt_status() {
+    local color_bat_pct() { echo "%{$fg_bold[$1]%}$2%%$reset_color%}"; }
     local status_items=()
 
     # Battery percent
     if which upower >/dev/null; then
-        local bat_percent="$(bat | tail -1 | awk '{print $2}')"
-        if [[ ${bat_percent%\%} -gt 25 ]]; then
-            bat_percent="%{$fg_bold[green]%}$bat_percent"
-        elif [[ ${bat_percent%\%} -gt 10 ]]; then
-            bat_percent="%{$fg_bold[yellow]%}$bat_percent"
+        local bat_status="$(bat | awk '/state/ {print $2}')"
+        local bat_percent="$(bat | awk '/percentage/ {print $2}' | tr -d '%')"
+        if [[ $bat_percent == 100 && $bat_status != discharging ]]; then
+            local pct="$(color_bat_pct green $bat_percent)"
+            status_items+=( "${pct}$(fg_bold green :UNPLUG)" )
+        elif (( $bat_percent > 25 )); then
+            status_items+=( "$(color_bat_pct green $bat_percent)" )
+        elif (( $bat_percent > 10 )); then
+            status_items+=( "$(color_bat_pct yellow $bat_percent)" )
+        elif [[ $bat_percent -le 10 && $bat_status == discharging ]]; then
+            local pct="$(color_bat_pct red $bat_percent)"
+            status_items+=( "${pct}$(fg_bold red ':PLUG IN')" )
         else
-            bat_percent="%{$fg_bold[red]%}$bat_percent"
+            status_items+=( "$(color_bat_pct red $bat_percent)" )
         fi
-        status_items+=( "${bat_percent}%$reset_color%}" )
     fi
 
     # Background jobs
