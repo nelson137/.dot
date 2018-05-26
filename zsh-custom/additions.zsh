@@ -35,8 +35,8 @@ alias sed='sed -r'
 alias whois='whois -H'
 
 # My aliases
+alias -g dot='~/Projects/Git/dot'
 alias additions='vim ~/Projects/Git/dot/zsh-custom/additions.zsh'
-alias dot='cd ~/Projects/Git/dot'
 alias pip='pip3'
 alias python='python3'
 alias update-dot='git -C ~/Projects/Git/dot pull'
