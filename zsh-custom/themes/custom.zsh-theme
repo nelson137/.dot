@@ -12,7 +12,7 @@ _prompt_status() {
     local status_items=()
 
     # Battery percent
-    if which bat >/dev/null; then
+    if which upower >/dev/null; then
         local bat_percent="$(bat | tail -1 | awk '{print $2}')"
         if [[ ${bat_percent%\%} -gt 25 ]]; then
             bat_percent="%{$fg_bold[green]%}$bat_percent"
