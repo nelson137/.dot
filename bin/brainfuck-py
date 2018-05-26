@@ -167,13 +167,15 @@ def main(args):
 if __name__ == '__main__':
     desc = 'Executes one or more scripts written in brainfuck.'
     h_help = 'Show this help message and exit.'
-    file_help = 'The name or names of a brainfuck script. Filenames can ' + \
-                'be read from stdin; however, filenames should not be ' + \
-                'passed through stdin and the command line at the same time.'
-    d_help = 'The delay in milliseconds between each command.'
-    dump_help = 'Output tape after executing script.'
-    show_help = 'Show tape live during script execution.'
-    i_help = 'Input for the , command.'
+    file_help = 'One or more names of Brainfuck scripts. Filenames are ' + \
+                'also read from stdin.'
+    c_help = 'Read code rather than filenames from the command line and ' + \
+             'from stdin.'
+    d_help = 'The delay, in milliseconds, between the execution of each ' + \
+             'Brainfuck command.'
+    dump_help = 'Output the tape after script execution.'
+    show_help = "Show the tape during script execution."
+    i_help = "The input for Brainfuck's , command."
 
     parser = ArgumentParser(description=desc, add_help=False)
     parser.add_argument('-h', '--help', action='help', default=SUPPRESS,
@@ -181,6 +183,7 @@ if __name__ == '__main__':
     # nargs must be * so that file can be read from stdin
     parser.add_argument('infiles', nargs='*', default=None, metavar='FILE',
                         help=file_help)
+    parser.add_argument('-c', '--code', action='store_true', help=c_help)
     parser.add_argument('-d', '--delay', type=int, default=10, help=d_help)
     tape_g = parser.add_mutually_exclusive_group()
     tape_g.add_argument('--dump-tape', action='store_true', help=dump_help)
