@@ -2,7 +2,8 @@
 
 local new_status_def=(
     'local local_="$(git rev-parse @)"'
-    'local remote="$(git rev-parse @{u})"'
+    'local url="$(git remote get-url origin)"'
+    "local remote=\"\$(git ls-remote \"\$url\" | awk '/HEAD/ {print \$1}')\""
     'local base="$(git merge-base @ @{u})"'
     ''
     'local custom_status'
@@ -34,4 +35,4 @@ new_line+='$ZSH_THEME_GIT_PROMPT_BRANCH$GIT_BRANCH%{${reset_color}%}"'
 lines=( $lines[1,$((n-1))] $new_status_def $new_line $lines[$((n+1)),$#lines] )
 # Define the modified function
 eval "${(j:
-:)lines}"  # TODO: eval "$lines" ???
+:)lines}"
