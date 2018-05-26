@@ -107,17 +107,19 @@ newscript() {
     for file in $files; do
         print -s "vim $file"
         if [[ $file =~ \..cpp ]]; then
-            echo -ne "#include <iostream>\nusing namespace std;\n\nint" > $file
-            echo -e " main(int argc, char** argv) {\n    return 0;\n}" >> $file
-            vim +4 $file
-        elif [[ $file =~ \..py ]]; then
-            echo -e "#!/usr/bin/env python3\n\n" > $file
-            chmod +x $file
-            vim + +startinsert $file  # The "+" puts cursor at bottom of file
+            echo -ne "#include <iostream>\nusing namespace std;\n\nint" > "$file"
+            echo -e " main(int argc, char** argv) {\n    return 0;\n}" >> "$file"
+            vim +4 "$file"
         else
-            echo -e "#!/bin/bash\n\n" > $file
-            chmod +x $file
-            vim + +startinsert $file
+            if [[ $file =~ \..py ]]; then
+                echo -e "#!/usr/bin/env python3\n\n" > "$file"
+            elif [[ $file =~ \..zsh ]]; then
+                echo -e "#!/bin/zsh\n\n" > "$file"
+            else
+                echo -e "#!/bin/bash\n\n" > "$file"
+            fi
+            vim + +startinsert "$file"  # "+" puts cursor at bottom of file
+            chmod +x "$file"
         fi
     done
 }
