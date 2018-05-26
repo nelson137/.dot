@@ -47,6 +47,7 @@ plugins=(
     c++-utils
     colored-man-pages
     git
+    git-prompt-custom
     git-prompt
     java-utils
     ssh
