@@ -28,7 +28,7 @@ _prompt_status() {
     (( $(jobs -l | wc -l) > 0 )) &&
         status_items+=( "%{$fg[cyan]%}\u2699%{$reset_color%}" )
 
-    echo "${(j:|:)status_items}"  # Join status_items with |
+    echo "[${(j:|:)status_items}]"  # Join status_items with |
 }
 
 _prompt_line_2() {
@@ -37,5 +37,5 @@ _prompt_line_2() {
     echo "${ret_status}"
 }
 
-PROMPT='╭─ $(_prompt_core) [$(_prompt_status)]
+PROMPT='╭─ $(_prompt_core) $(_prompt_status)
 ╰─ $(_prompt_line_2)%{$reset_color%}'
