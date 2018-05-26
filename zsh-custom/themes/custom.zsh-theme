@@ -1,10 +1,13 @@
 # vim:syntax=zsh
 
+local fg_color() { echo "%{$fg[$1]%}$2%{$reset_color%}"; }
+local fg_bold() { echo "%{$fg_bold[$1]%}$2%{$reset_color%}"; }
+
 _prompt_core() {
-    local user="%{$fg_bold[green]%}$USER"
-    local at="%{$fg[cyan]%}@"
-    local host="%{$fg_bold[green]%}$HOST"
-    local cwd="%{$fg[cyan]%}%~%{$reset_color%}"
+    local user="$(fg_bold green $USER)"
+    local at="$(fg_color cyan @)"
+    local host="$(fg_bold green $HOST)"
+    local cwd="$(fg_bold cyan %~)"
     echo "${user}${at}${host} ${cwd}"
 }
 
@@ -34,7 +37,7 @@ _prompt_status() {
     # Background jobs
     local bg_jobs="$(jobs -l | wc -l)"
     (( $bg_jobs > 0 )) &&
-        status_items+=( "%{$fg[cyan]%}\u2699:${bg_jobs}%{$reset_color%}" )
+        status_items+=( "$(fg_color cyan "\u2699:$bg_jobs")" )
 
     if [[ $#status_items == 0 ]]; then
         echo ""
@@ -44,9 +47,8 @@ _prompt_status() {
 }
 
 _prompt_line_2() {
-    # Green or red $
-    local ret_status="%(?:%{$fg_bold[green]%}\$ :%{$fg_bold[red]%}\$ )"
-    echo "${ret_status}"
+    # Green or red $ corresponding to $?
+    echo "%(?:$(fg_bold green '$') :$(fg_bold red '$') )"
 }
 
 PROMPT='╭─ $(_prompt_core) $(_prompt_status)
