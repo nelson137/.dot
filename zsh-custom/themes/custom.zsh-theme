@@ -24,6 +24,10 @@ _prompt_status() {
         status_items+=( "${bat_percent}%$reset_color%}" )
     fi
 
+    # Background jobs
+    (( $(jobs -l | wc -l) > 0 )) &&
+        status_items+=( "%{$fg[cyan]%}\u2699%{$reset_color%}" )
+
     echo "${(j:|:)status_items}"  # Join status_items with |
 }
 
