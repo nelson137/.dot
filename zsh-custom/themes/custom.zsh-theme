@@ -28,7 +28,11 @@ _prompt_status() {
     (( $(jobs -l | wc -l) > 0 )) &&
         status_items+=( "%{$fg[cyan]%}\u2699%{$reset_color%}" )
 
-    echo "[${(j:|:)status_items}]"  # Join status_items with |
+    if [[ $#status_items == 0 ]]; then
+        echo ""
+    else
+        echo "[${(j:|:)status_items}]"  # Join status_items with |
+    fi
 }
 
 _prompt_line_2() {
