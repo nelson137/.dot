@@ -25,8 +25,9 @@ _prompt_status() {
     fi
 
     # Background jobs
-    (( $(jobs -l | wc -l) > 0 )) &&
-        status_items+=( "%{$fg[cyan]%}\u2699%{$reset_color%}" )
+    local bg_jobs="$(jobs -l | wc -l)"
+    (( $bg_jobs > 0 )) &&
+        status_items+=( "%{$fg[cyan]%}\u2699:${bg_jobs}%{$reset_color%}" )
 
     if [[ $#status_items == 0 ]]; then
         echo ""
