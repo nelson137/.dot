@@ -135,7 +135,8 @@ def cleanup(code):
 
 
 def main(args):
-    infiles = args.infiles
+    read_code = args.code
+    print(read_code)
     delay = args.delay
     dump_tape = args.dump_tape
     show_tape = args.show_tape
@@ -146,19 +147,22 @@ def main(args):
     if user_in != [] and not show_tape:  # -i without --show-tape
         _print_err('-i/--input is only for use with --show-tape')
 
-    if not infiles:  # No file was passed as an argument
-        # TODO: read filenames from stdin, not code
-        if not sys.stdin.isatty():  # stdin isn't empty
+    infiles = args.infiles  # Filenames passed as arguments
+
+    if not sys.stdin.isatty():  # stdin is not empty
+        if read_code:  # Read Brainfuck code from stdin
             code = cleanup(sys.stdin.read())
-            evaluate(code, dump_tape, show_tape, user_in, delay)
-        else:  # stdin is empty
-            _print_err('USAGE')
-            sys.exit(1)
-    else:  # At least 1 file was passed as an argument
+            evalueate(code, dump_tape, show_tape, user_in, delay)
+        else:  # Read filenames from stdin
+            infiles.extend([l.strip() for l in sys.stdin.readlines()])
+
+    if not infiles:
+        _print_err('no input given')
+    else:
         for fn in infiles:
-            try:
-                with open(fn, 'r') as script: code = script.read()
-                code = cleanup(code)
+            try:  # Open and execute Brainfuck script
+                with open(fn, 'r') as script:
+                    code = cleanup(script.read())
                 evaluate(code, dump_tape, show_tape, user_in, delay)
             except FileNotFoundError:
                 _print_err('cannot open file ' + fn)
@@ -168,9 +172,8 @@ if __name__ == '__main__':
     desc = 'Executes one or more scripts written in brainfuck.'
     h_help = 'Show this help message and exit.'
     file_help = 'One or more names of Brainfuck scripts. Filenames are ' + \
-                'also read from stdin.'
-    c_help = 'Read code rather than filenames from the command line and ' + \
-             'from stdin.'
+                'read from both the command line and from stdin.'
+    c_help = 'Read code rather than filenames from stdin.'
     d_help = 'The delay, in milliseconds, between the execution of each ' + \
              'Brainfuck command.'
     dump_help = 'Output the tape after script execution.'
@@ -180,8 +183,8 @@ if __name__ == '__main__':
     parser = ArgumentParser(description=desc, add_help=False)
     parser.add_argument('-h', '--help', action='help', default=SUPPRESS,
                         help=h_help)
-    # nargs must be * so that file can be read from stdin
-    parser.add_argument('infiles', nargs='*', default=None, metavar='FILE',
+    # nargs must be * so that filenames can be read from stdin
+    parser.add_argument('infiles', nargs='*', default=[], metavar='FILE',
                         help=file_help)
     parser.add_argument('-c', '--code', action='store_true', help=c_help)
     parser.add_argument('-d', '--delay', type=int, default=10, help=d_help)
