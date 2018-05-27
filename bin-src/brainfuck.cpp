@@ -102,42 +102,34 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape, vector<char> in
 
         cmd = code.at(codeptr);
         switch (cmd) {
-            case '>':
-                if (++cellptr == cells.size()) cells.push_back(0);
-                break;
-            case '<':
-                cellptr = cellptr <= 0 ? 0 : --cellptr;
-                break;
-            case '+':
-                cells.at(cellptr) = cells[cellptr] < 255 ? ++cells[cellptr] : 0;
-                break;
-            case '-':
-                cells.at(cellptr) = cells[cellptr] > 0 ? --cells[cellptr] : 255;
-                break;
-            case '[':
-                if (cells.at(cellptr) == 0) codeptr = bracemap.at(codeptr);
-                break;
-            case ']':
-                if (cells.at(cellptr) != 0) codeptr = bracemap.at(codeptr);
-                break;
-            case '.':
-                if (dump_tape || show_tape)
-                    output += (char)cells.at(cellptr);
-                else
-                    cout << (char)cells.at(cellptr) << flush;
-                break;
-            case ',':
-                if (show_tape) {
-                    if (input.size() == 0) {
-                        cout << endl;
-                        print_err("runtime error: not enough input was given");
-                    }
-                    cells.at(cellptr) = (int)input.at(0);
-                    input.erase(input.begin());
-                } else {
-                    cells.at(cellptr) = (int)getch();
-                }
-                break;
+            case '>': if (++cellptr == cells.size()) cells.push_back(0);
+                      break;
+            case '<': cellptr = cellptr <= 0 ? 0 : --cellptr;
+                      break;
+            case '+': cells.at(cellptr) = cells[cellptr] < 255 ? ++cells[cellptr] : 0;
+                      break;
+            case '-': cells.at(cellptr) = cells[cellptr] > 0 ? --cells[cellptr] : 255;
+                      break;
+            case '[': if (cells.at(cellptr) == 0) codeptr = bracemap.at(codeptr);
+                      break;
+            case ']': if (cells.at(cellptr) != 0) codeptr = bracemap.at(codeptr);
+                      break;
+            case '.': if (dump_tape || show_tape)
+                          output += (char)cells.at(cellptr);
+                      else
+                          cout << (char)cells.at(cellptr) << flush;
+                      break;
+            case ',': if (show_tape) {
+                          if (input.size() == 0) {
+                              cout << endl;
+                              print_err("runtime error: not enough input was given");
+                          }
+                          cells.at(cellptr) = (int)input.at(0);
+                          input.erase(input.begin());
+                      } else {
+                          cells.at(cellptr) = (int)getch();
+                      }
+                      break;
         }
 
         codeptr++;
