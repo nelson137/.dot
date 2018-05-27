@@ -176,7 +176,8 @@ if __name__ == '__main__':
     h_help = 'Show this help message and exit.'
     file_help = 'One or more names of Brainfuck scripts. Filenames are ' + \
                 'read from both the command line and from stdin.'
-    c_help = 'Read code rather than filenames from stdin.'
+    c_help = 'Read code rather than filenames from stdin. However, -c ' + \
+             'will only read one script from stdin.'
     d_help = 'The delay, in milliseconds, between the execution of each ' + \
              'Brainfuck command.'
     dump_help = 'Output the tape after script execution.'
