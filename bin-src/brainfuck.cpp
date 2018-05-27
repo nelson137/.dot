@@ -153,12 +153,9 @@ vector<char> cleanup(string dirty_code) {
     vector<char> bf_chars(chars, chars+8);
 
     vector<char> clean_code;
-        for (char c : dirty_code) {
-            if (find(bf_chars.begin(), bf_chars.end(), c) != bf_chars.end()) {
-                clean_code.push_back(c);
-            }
-        }
-    }
+    for (char c : dirty_code)
+        if (find(bf_chars.begin(), bf_chars.end(), c) != bf_chars.end())
+            clean_code.push_back(c);
 
     return clean_code;
 }
