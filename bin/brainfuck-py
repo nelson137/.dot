@@ -5,7 +5,7 @@
 
 
 import sys
-from argparse import ArgumentParser, Namespace, SUPPRESS
+from argparse import ArgumentParser, Namespace, Action, SUPPRESS
 from time import sleep
 
 
@@ -191,20 +191,19 @@ def main(args):
 
 if __name__ == '__main__':
     desc = 'Executes one or more scripts written in Brainfuck.'
-    h_help = 'Show this help message and exit.'
     file_help = 'One or more names of Brainfuck scripts. Filenames are ' + \
                 'read from both the command line and from stdin.'
-    c_help = 'Read code rather than filenames from stdin. However, -c ' + \
-             'will only read one script from stdin.'
+    c_help = 'Read Brainfuck code from stdin. It is assumed that stdin ' + \
+             'contains one Brainfuck script.'
     d_help = 'The delay, in milliseconds, between the execution of each ' + \
              'Brainfuck command.'
+    f_help = "Read Brainfuck script filenames from stdin."
+    h_help = 'Show this help message and exit.'
+    i_help = "The input for Brainfuck's , command."
     dump_help = 'Output the tape after script execution.'
     show_help = "Show the tape during script execution."
-    i_help = "The input for Brainfuck's , command."
 
     parser = ArgumentParser(description=desc, add_help=False)
-    parser.add_argument('-h', '--help', action='help', default=SUPPRESS,
-                        help=h_help)
     # nargs must be * so that filenames or code can be read from stdin
     parser.add_argument('infiles', nargs='*', default=[], metavar='FILE',
                         help=file_help)
@@ -212,10 +211,13 @@ if __name__ == '__main__':
     # Use DelayAction to also set delay_changed when -d/--delay is used
     parser.add_argument('-d', '--delay', action=DelayAction, type=int,
                         default=0, help=d_help)
+    parser.add_argument('-f', '--filenames')
+    parser.add_argument('-h', '--help', action='help', default=SUPPRESS,
+                        help=h_help)
+    parser.add_argument('-i', '--input', default=[], help=i_help)
     tape_g = parser.add_mutually_exclusive_group()
     tape_g.add_argument('--dump-tape', action='store_true', help=dump_help)
     tape_g.add_argument('--show-tape', action='store_true', help=show_help)
-    parser.add_argument('-i', '--input', default=[], help=i_help)
 
     # Set delay_changed to False by default
     ns = Namespace(delay_changed=False)
