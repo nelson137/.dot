@@ -177,7 +177,8 @@ void help() {
         "",
         "optional arguments:",
         "  -h, --help            Show this help message and exit.",
-        "  -c, --code            Read code rather than filenames from stdin.",
+        "  -c, --code            Read code rather than filenames from stdin. However, ",
+        "                        -c will only read one script from stdin."
         "  -d DELAY, --delay DELAY",
         "                        The delay, in milliseconds, between the execution of",
         "                        each Brainfuck command.",
