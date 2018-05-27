@@ -190,7 +190,7 @@ if __name__ == '__main__':
     parser.add_argument('infiles', nargs='*', default=[], metavar='FILE',
                         help=file_help)
     parser.add_argument('-c', '--code', action='store_true', help=c_help)
-    parser.add_argument('-d', '--delay', type=int, default=10, help=d_help)
+    parser.add_argument('-d', '--delay', type=int, default=0, help=d_help)
     tape_g = parser.add_mutually_exclusive_group()
     tape_g.add_argument('--dump-tape', action='store_true', help=dump_help)
     tape_g.add_argument('--show-tape', action='store_true', help=show_help)
