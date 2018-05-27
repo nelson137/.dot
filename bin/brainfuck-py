@@ -136,7 +136,6 @@ def cleanup(code):
 
 def main(args):
     read_code = args.code
-    print(read_code)
     delay = args.delay
     dump_tape = args.dump_tape
     show_tape = args.show_tape
