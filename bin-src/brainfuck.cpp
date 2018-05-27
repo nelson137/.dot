@@ -193,6 +193,19 @@ void help() {
 
 
 int main(int argc, char** argv) {
+    vector<string> orig_args(argv, argv+argc);
+    orig_args.erase(orig_args.begin());  // Remove brainfuck call from args
+    vector<string> args;
+    for (string arg : orig_args) {
+        if (arg.substr(0,2) == "--")
+            args.push_back(arg);
+        else if (arg[0] == '-')
+            for (int j=1; j<arg.length(); j++)
+                args.push_back("-" + string(1, arg[j]));
+        else
+            args.push_back(arg);
+    }
+
     vector<string> infiles;
     bool read_code = false;
     int delay = 0;
@@ -200,8 +213,8 @@ int main(int argc, char** argv) {
     bool dump_tape = false;
     bool show_tape = false;
     vector<char> input;
-    for (int argi=1; argi<argc; argi++) {
-        string cmd = argv[argi];
+    for (int i=0; i<args.size(); i++) {
+        string cmd = args[i];
         if (cmd[0] == '-') {
             if (cmd == "-h" || cmd == "--help") {
                 help();
@@ -209,10 +222,10 @@ int main(int argc, char** argv) {
                 read_code = true;
             } else if (cmd == "-d" || cmd == "--delay") {
                 string err = "-d/--delay requires an integer";
-                if (++argi == argc) {
+                if (++i == argc) {
                     err_out(err);
                 } else {
-                    istringstream ss(argv[argi]);
+                    istringstream ss(argv[i]);
                     if (! (ss >> delay)) err_out(err);
                     delay_changed = true;
                 }
@@ -221,16 +234,16 @@ int main(int argc, char** argv) {
             } else if (cmd == "--show-tape") {
                 show_tape = true;
             } else if (cmd == "-i" || cmd == "--input") {
-                if (++argi == argc)
+                if (++i == argc)
                     err_out("-i/--input requires a value");
                 else {
                     // TODO: is this broken? can this be improved?
-                    char* i_arg = argv[argi];
-                    for (int i; i_arg[i] != '\0'; i++) {
-                        input.push_back(i_arg[i]);
+                    char* arg_i= argv[i];
+                    for (int j; arg_i[j] != '\0'; j++) {
+                        input.push_back(arg_i[j]);
                     }
                 }
-            } else {  // Unknown option
+            } else {
                 err_out("unknown option: " + cmd);
             }
         } else {  // Filename
