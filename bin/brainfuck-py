@@ -51,7 +51,7 @@ def _print_cells(cells, ptr=None):
     stdout_write(' '.join(cells))
 
 
-def _print_err(err):
+def _err_out(err):
     if err == 'USAGE':
         msg = 'usage: brainfuck-py [-h] [-d DELAY] [--dump-tape | ' + \
               '--show-tape] [-i INPUT]\n                    [FILE [FILE ...]]'
@@ -104,7 +104,7 @@ def evaluate(code, dump_tape, show_tape, user_in, delay):
             if show_tape:
                 if len(user_in) == 0:
                     print()
-                    _print_err("runtime error: not enough input was given")
+                    _err_out("runtime error: not enough input was given")
                 cells[cellptr] = ord(user_in.pop(0))
             else:
                 try:
@@ -112,7 +112,7 @@ def evaluate(code, dump_tape, show_tape, user_in, delay):
                 except:
                     msg = 'runtime error: stdin is already in use.' + \
                           '\nmake sure nothing is being piped in'
-                    _print_err(msg)
+                    _err_out(msg)
 
         codeptr += 1
         sleep(delay/1000.)
@@ -142,9 +142,9 @@ def main(args):
     user_in = list(args.input)
 
     if show_tape and user_in == []:  # --show-tape without -i
-        _print_err('--show-tape requires -i/--input INPUT')
+        _err_out('--show-tape requires -i/--input INPUT')
     if user_in != [] and not show_tape:  # -i without --show-tape
-        _print_err('-i/--input is only for use with --show-tape')
+        _err_out('-i/--input is only for use with --show-tape')
 
     infiles = args.infiles  # Filenames passed as arguments
     to_eval = []
@@ -162,10 +162,10 @@ def main(args):
             with open(fn, 'r') as script:
                 to_eval.append(cleanup(script.read()))
         except FileNotFoundError:
-            _print_err('cannot open file ' + fn)
+            _err_out('cannot open file ' + fn)
 
     if not to_eval:
-        _print_err('no input given')
+        _err_out('no input given')
     # Evaluate all code
     for code in to_eval:
         evaluate(code, dump_tape, show_tape, user_in, delay)
