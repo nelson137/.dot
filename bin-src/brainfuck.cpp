@@ -149,7 +149,7 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
 
 
 vector<char> cleanup(string dirty_code) {
-    char chars[] = {'<', '>', '+', '-', '[', ']', '.', ','};
+    char chars[] = { '<', '>', '+', '-', '[', ']', '.', ',' };
     vector<char> bf_chars(chars, chars+8);
 
     vector<char> clean_code;
@@ -183,7 +183,7 @@ void help() {
         "  --show-tape           Show the tape during script execution.",
         "  -i INPUT, --input INPUT",
         "                        The input for Brainfuck's , command."
-    }
+    };
 
     for (string line : help)
         cout << line << endl;
@@ -248,17 +248,16 @@ int main(int argc, char** argv) {
 
     // Auto set delay if --show-tape && delay wasn't changed by user
     if (show_tape && !delay_changed)
-        delay = 125
+        delay = 125;
 
     vector<vector<char>> to_eval;
 
     // Read filename(s) or code from stdin
-    vector<char> in_code;
+    string in_code;
     for (string in_line; getline(cin, in_line);) {
         if (read_code)  // Read code
-            // Append in_line to in_code
-            copy(in_line.begin(), in_line.end(), back_inserter(in_code));
-        else  // Read filename
+            in_code += in_line;
+        else  // Read filenames
             infiles.push_back(in_line);
     }
     if (in_code.size()) to_eval.push_back(cleanup(in_code));
@@ -267,16 +266,20 @@ int main(int argc, char** argv) {
     for (string fn : infiles) {
         ifstream bf_script(fn);
         if (bf_script.is_open()) {
-            vector<char> code;
-            string code_line;
+            // vector<char> code;
+            // string code_line;
+            string code, code_line;
             while (getline(bf_script, code_line))
-                copy(code_line.begin(), code_line.end(), back_inserter(code));
+                // copy(code_line.begin(), code_line.end(), back_inserter(code));
+                code += code_line;
+            to_eval.push_back(cleanup(code));
             bf_script.close();
         } else {
-            err_out("cannot open file " + filename);
+            err_out("cannot open file " + fn);
         }
     }
 
+    cout << "to_eval.size(): " << to_eval.size() << endl;
     if (!to_eval.size())
         err_out("no input given");
     // Evaluate all code
