@@ -199,6 +199,7 @@ int main(int argc, char** argv) {
     vector<string> infiles;
     bool read_code = false;
     int delay = 0;
+    bool delay_changed = false;
     bool dump_tape = false;
     bool show_tape = false;
     vector<char> input;
@@ -211,11 +212,12 @@ int main(int argc, char** argv) {
                 read_code = true;
             } else if (cmd == "-d" || cmd == "--delay") {
                 string err = "-d/--delay requires an integer";
-                if (++argi == argc)
+                if (++argi == argc) {
                     err_out(err);
-                else {
+                } else {
                     istringstream ss(argv[argi]);
                     if (! (ss >> delay)) err_out(err);
+                    delay_changed = true;
                 }
             } else if (cmd == "--dump-tape") {
                 dump_tape = true;
@@ -246,6 +248,10 @@ int main(int argc, char** argv) {
         err_out("--show-tape requires -i/--input INPUT");
     if (input.size() > 0 && !show_tape)  // -i without --show-tape
         err_out("-i/--input is only for use with --show-tape");
+
+    // Auto set delay if --show-tape && delay wasn't changed by user
+    if (show_tape && !delay_changed)
+        delay = 125
 
     vector<vector<char>> to_eval;
 
