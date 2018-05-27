@@ -38,7 +38,7 @@ class _Getch:
         return self.impl()
 
 
-def stdout_write(string):
+def _stdout_write(string):
     sys.stdout.write(string)
     sys.stdout.flush()
 
@@ -47,8 +47,8 @@ def _print_cells(cells, ptr=None):
     cells = cells[:]
     if ptr is not None: cells[ptr] = '(%d)' % cells[ptr]
     cells = [str(val).ljust(5) for val in cells]
-    stdout_write('\r\033[K')  # Clear line
-    stdout_write(' '.join(cells))
+    _stdout_write('\r\033[K')  # Clear line
+    _stdout_write(' '.join(cells))
 
 
 def _err_out(err):
@@ -99,7 +99,7 @@ def evaluate(code, dump_tape, show_tape, user_in, delay):
             codeptr = bracemap[codeptr]
         elif command == '.':
             if dump_tape or show_tape: output += chr(cells[cellptr])
-            else: stdout_write(chr(cells[cellptr]))
+            else: _stdout_write(chr(cells[cellptr]))
         elif command == ',':
             if show_tape:
                 if len(user_in) == 0:
