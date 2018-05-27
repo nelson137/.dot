@@ -172,7 +172,7 @@ def main(args):
 
 
 if __name__ == '__main__':
-    desc = 'Executes one or more scripts written in brainfuck.'
+    desc = 'Executes one or more scripts written in Brainfuck.'
     h_help = 'Show this help message and exit.'
     file_help = 'One or more names of Brainfuck scripts. Filenames are ' + \
                 'read from both the command line and from stdin.'
@@ -186,7 +186,7 @@ if __name__ == '__main__':
     parser = ArgumentParser(description=desc, add_help=False)
     parser.add_argument('-h', '--help', action='help', default=SUPPRESS,
                         help=h_help)
-    # nargs must be * so that filenames can be read from stdin
+    # nargs must be * so that filenames or code can be read from stdin
     parser.add_argument('infiles', nargs='*', default=[], metavar='FILE',
                         help=file_help)
     parser.add_argument('-c', '--code', action='store_true', help=c_help)
