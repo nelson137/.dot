@@ -5,7 +5,7 @@
 
 
 import sys
-from argparse import ArgumentParser, SUPPRESS
+from argparse import ArgumentParser, Namespace, SUPPRESS
 from time import sleep
 
 
@@ -36,6 +36,19 @@ class _Getch:
 
     def __call__(self):
         return self.impl()
+
+
+class DelayAction(Action):
+    """Set namespace.delay to the value passed with the -d/--delay
+    option and set namespace.delay_changed to True.
+    """
+
+    def __init__(self, option_strings, dest, nargs=None, **kwargs):
+        super().__init__(option_strings, dest, **kwargs)
+
+    def __call__(self, parser, namespace, value, option_string=None):
+        setattr(namespace, self.dest, value)
+        setattr(namespace, 'delay_changed', True)
 
 
 def _stdout_write(string):
@@ -137,6 +150,7 @@ def cleanup(code):
 def main(args):
     read_code = args.code
     delay = args.delay
+    delay_changed = args.delay_changed
     dump_tape = args.dump_tape
     show_tape = args.show_tape
     user_in = list(args.input)
@@ -145,6 +159,10 @@ def main(args):
         _err_out('--show-tape requires -i/--input INPUT')
     if user_in != [] and not show_tape:  # -i without --show-tape
         _err_out('-i/--input is only for use with --show-tape')
+
+    # Auto set delay if --show-tape && delay wasn't changed by user
+    if show_tape and not delay_changed:
+        delay = 125
 
     infiles = args.infiles  # Filenames passed as arguments
     to_eval = []
@@ -191,10 +209,14 @@ if __name__ == '__main__':
     parser.add_argument('infiles', nargs='*', default=[], metavar='FILE',
                         help=file_help)
     parser.add_argument('-c', '--code', action='store_true', help=c_help)
-    parser.add_argument('-d', '--delay', type=int, default=0, help=d_help)
+    # Use DelayAction to also set delay_changed when -d/--delay is used
+    parser.add_argument('-d', '--delay', action=DelayAction, type=int,
+                        default=0, help=d_help)
     tape_g = parser.add_mutually_exclusive_group()
     tape_g.add_argument('--dump-tape', action='store_true', help=dump_help)
     tape_g.add_argument('--show-tape', action='store_true', help=show_help)
     parser.add_argument('-i', '--input', default=[], help=i_help)
 
-    main(parser.parse_args())
+    # Set delay_changed to False by default
+    ns = Namespace(delay_changed=False)
+    main(parser.parse_args(namespace=ns))
