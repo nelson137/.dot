@@ -263,19 +263,20 @@ int main(int argc, char** argv) {
     if (show_tape && !delay_changed)
         delay = 125;
 
+    // All code to evaluate
     vector<vector<char>> to_eval;
 
     // Read filename(s) or code from stdin
     string in_code;
     for (string in_line; getline(cin, in_line);) {
-        if (read_code)  // Read code
+        if (read_code)  // Read code, put it in to_eval
             in_code += in_line;
-        else  // Read filenames
+        else  // Read filenames, put it in infiles
             infiles.push_back(in_line);
     }
     if (in_code.size()) to_eval.push_back(cleanup(in_code));
 
-    // Append code from each Brainfuck script to to_eval
+    // Add code from each Brainfuck script to to_eval
     for (string fn : infiles) {
         ifstream bf_script(fn);
         if (bf_script.is_open()) {
