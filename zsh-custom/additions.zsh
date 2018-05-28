@@ -5,8 +5,7 @@
  ############
 
 # awscli completions
-if [[ -d /opt/aws-cli ]] &&
-    source /opt/aws-cli/bin/aws_zsh_completer.sh
+[[ -d /opt/aws-cli ]] && source /opt/aws-cli/bin/aws_zsh_completer.sh
 
 # Don't eat preceding space when | is typed
 export ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;&'
