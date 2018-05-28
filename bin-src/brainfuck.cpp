@@ -71,7 +71,7 @@ char getch() {
 map<int, int> build_bracemap(vector<char> code) {
     vector<int> brace_stack;
     map<int, int> bracemap;
-    for (int i=0; i<code.size(); i++) {
+    for (int i=0; i<(int)code.size(); i++) {
         if (code[i] == '[') {
             brace_stack.push_back(i);
         } else if (code[i] == ']') {
@@ -96,12 +96,12 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
     int cellptr = 0;
 
     char cmd;
-    while (codeptr < code.size()) {
+    while (codeptr < (int) code.size()) {
         if (show_tape) print_cells_with_ptr(cells, cellptr);
 
         cmd = code.at(codeptr);
         switch (cmd) {
-            case '>': if (++cellptr == cells.size()) cells.push_back(0);
+            case '>': if (++cellptr == (int) cells.size()) cells.push_back(0);
                       break;
             case '<': cellptr = cellptr <= 0 ? 0 : --cellptr;
                       break;
@@ -200,7 +200,7 @@ int main(int argc, char** argv) {
         if (arg.substr(0,2) == "--")
             args.push_back(arg);
         else if (arg[0] == '-')
-            for (int j=1; j<arg.length(); j++)
+            for (int j=1; j<(int)arg.length(); j++)
                 args.push_back("-" + string(1, arg[j]));
         else
             args.push_back(arg);
@@ -213,7 +213,7 @@ int main(int argc, char** argv) {
     bool dump_tape = false;
     bool show_tape = false;
     vector<char> input;
-    for (int i=0; i<args.size(); i++) {
+    for (int i=0; i<(int)args.size(); i++) {
         string cmd = args[i];
         if (cmd[0] == '-') {
             if (cmd == "-h" || cmd == "--help") {
@@ -239,7 +239,7 @@ int main(int argc, char** argv) {
                 else {
                     // TODO: is this broken? can this be improved?
                     char* arg_i= argv[i];
-                    for (int j; arg_i[j] != '\0'; j++) {
+                    for (int j=0; arg_i[j] != '\0'; j++) {
                         input.push_back(arg_i[j]);
                     }
                 }
@@ -279,11 +279,8 @@ int main(int argc, char** argv) {
     for (string fn : infiles) {
         ifstream bf_script(fn);
         if (bf_script.is_open()) {
-            // vector<char> code;
-            // string code_line;
             string code, code_line;
             while (getline(bf_script, code_line))
-                // copy(code_line.begin(), code_line.end(), back_inserter(code));
                 code += code_line;
             to_eval.push_back(cleanup(code));
             bf_script.close();
