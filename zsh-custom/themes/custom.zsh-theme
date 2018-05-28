@@ -16,7 +16,7 @@ _prompt_status() {
     local status_items=()
 
     # Battery percent
-    if which upower >/dev/null; then
+    if which upower >/dev/null && bat >/dev/null 2>&1; then
         local bat_status="$(bat | awk '/state/ {print $2}')"
         local bat_percent="$(bat | awk '/percentage/ {print $2}' | tr -d '%')"
         if [[ $bat_percent == 100 && $bat_status != discharging ]]; then
