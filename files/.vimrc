@@ -227,14 +227,17 @@ filetype plugin indent on
 
 
 
-" python-mode
+" Plugin Configs
 
+" YouCompleteMe
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+
+" python-mode
 let g:pymode_python = "python3"
 highlight pythonSelf ctermfg=68 guifg=#5f87d7 cterm=bold gui=bold
 " TODO: add more python highlighting
 let g:pymode_doc_bind = ""
 let g:pymode_lint_on_write = 0  " Don't lint on write
-
 " Linter ignore:
 "   E265: block comment should start with "# "
 "   E401: multiple imports on one line
@@ -242,16 +245,10 @@ let g:pymode_lint_on_write = 0  " Don't lint on write
 "   C901: function is too complex
 let g:pymode_lint_ignore = ["E265", "E401", "E701", "C901"]
 
-
-
 " NERDTree
-
 let NERDRemoveExtraSpaces = 1
 let NERDSpaceDelims = 1
 let NERDTrimTrailingWhitespace = 1
 
-
-
 " AsyncRun
-
 let g:asyncrun_open = 8
