@@ -43,6 +43,4 @@ lines=(
 )
 
 # Define the modified function
-# Join lines with \n
-eval "${(j:
-:)lines}"
+eval "${(j:;:)lines}"  # Join lines with ;
