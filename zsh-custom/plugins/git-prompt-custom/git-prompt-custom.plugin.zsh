@@ -38,7 +38,7 @@ new_line_n+='$ZSH_THEME_GIT_PROMPT_BRANCH$GIT_BRANCH%{${reset_color}%}"'
 lines=(
     $lines[1,$((n-1))]        # Code before line n
     $new_status_def           # Pull & diverge status
-    $new_line                 # Modified line n
+    $new_line_n               # Modified line n
     $lines[$((n+1)),$#lines]  # Code after line n
 )
 
