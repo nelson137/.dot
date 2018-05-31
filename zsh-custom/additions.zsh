@@ -4,6 +4,9 @@
 ### Config ###
  ############
 
+# Fix nice error
+unsetopt BG_NICE
+
 # awscli completions
 [[ -d /opt/aws-cli ]] && source /opt/aws-cli/bin/aws_zsh_completer.sh
 
