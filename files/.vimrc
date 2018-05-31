@@ -196,6 +196,9 @@ inoremap  <C-p>  <C-r>"
 " jj == <Esc> in insert mode
 inoremap  jj  <Esc>
 
+" Make {<CR> set up brackets like an IDE would
+imap  {<CR>  {<CR>}<Esc>ko
+
 
 
 " Vundle
