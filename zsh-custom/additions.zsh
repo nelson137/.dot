@@ -94,6 +94,10 @@ chhn() {
     sed -i "s/${old}/${new}/g" /etc/hosts
 }
 
+cpstat() {
+    rsync --info=progress2 "$1" "$2"
+}
+
 gcl() {
     git clone --recursive "git@github.com:nelson137/$1.git"
 }
