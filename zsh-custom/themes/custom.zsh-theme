@@ -21,14 +21,14 @@ _prompt_status() {
         local bat_percent="$(bat | awk '/percentage/ {print $2}' | tr -d '%')"
         if [[ $bat_percent == 100 && $bat_status != discharging ]]; then
             local pct="$(color_bat_pct green $bat_percent)"
-            status_items+=( "${pct}$(fg_bold green :UNPLUG)" )
+            status_items+=( "${pct}$(fg_bold green ' UNPLUG')" )
         elif (( $bat_percent > 25 )); then
             status_items+=( "$(color_bat_pct green $bat_percent)" )
         elif (( $bat_percent > 10 )); then
             status_items+=( "$(color_bat_pct yellow $bat_percent)" )
         elif [[ $bat_percent -le 10 && $bat_status == discharging ]]; then
             local pct="$(color_bat_pct red $bat_percent)"
-            status_items+=( "${pct}$(fg_bold red ':PLUG IN')" )
+            status_items+=( "${pct}$(fg_bold red ' PLUG IN')" )
         else
             status_items+=( "$(color_bat_pct red $bat_percent)" )
         fi
