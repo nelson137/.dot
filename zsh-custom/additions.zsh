@@ -1,8 +1,6 @@
 #!/bin/zsh
 
- ############
 ### Config ###
- ############
 
 # Fix nice error
 unsetopt BG_NICE
@@ -19,9 +17,7 @@ export QT_QPA_FONTDIR=/usr/share/fonts
 
 
 
- #############
 ### Aliases ###
- #############
 
 # ls aliases
 alias ls='ls -pv --color'
@@ -30,15 +26,15 @@ alias ll='ls -pohv --color'
 alias lla='ls -pAohv --color'
 
 # Command aliases
-alias cp="cp -ir"
-alias du="du -h --max-depth=1"
+alias cp='cp -ir'
+alias du='du -h --max-depth=1'
 alias grep='egrep'
-alias md="mkdir -p"
-alias mkx="chmod +x"
-alias mv="mv -i"
+alias md='mkdir -p'
+alias mkx='chmod +x'
+alias mv='mv -i'
 alias pip='pip3'
 alias python='python3'
-alias rm="rm -r"
+alias rm='rm -r'
 alias sed='sed -r'
 alias whois='whois -H'
 
@@ -57,9 +53,7 @@ unalias gcl  # Unalias gcl from .oh-my-zsh/plugins/git
 
 
 
- ###############
 ### Functions ###
- ###############
 
 bat() {
     # Get battery stats
@@ -69,6 +63,7 @@ bat() {
 
 brightness() {
     # Get or set screen brightness
+
     if [[ $# == 0 ]]; then
         xrandr --verbose | grep -i brightness | awk '{print $2}'
         return
@@ -109,7 +104,7 @@ getip() {
 }
 
 mkcd() {
-        mkdir "$1" && cd "$1"
+    mkdir "$1" && cd "$1"
 }
 
 newscript() {
