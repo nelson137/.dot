@@ -101,7 +101,20 @@ cpstat() {
 }
 
 gcl() {
-    git clone --recursive "git@github.com:nelson137/$1.git"
+    # git clone username/repo(.git) or repo(.git)
+    # In the case without a username, it's assumed the repo is mine
+    local repo="${1%.git}"
+    if [[ $repo =~ ^.*/$ || $repo =~ ^/.+$ ]]; then
+        # Invalid repo names:
+        #  abc/
+        #  /abc
+        #  /
+        echo "invalid repo name: $repo" >&2
+    elif [[ $repo =~ .+/.+ ]]; then
+        git clone --recursive "https://github.com/${repo}.git"
+    else
+        git clone --recursive "git@github.com:nelson137/$1.git"
+    fi
 }
 
 getip() {
