@@ -140,15 +140,22 @@ newscript() {
     done
 }
 
+ps() {
+    # Remove 1 line containing "grep -E " from ps output so that
+    #  `ps aux | grep ...` can be run without seeing the grep call in
+    #  the ps output
+    command ps "$@" | grep -m 1 -v 'grep -E '
+}
+
 vimrm() {
     # vim a file, prompting to rm it when the user attempts to exit
     cmd1='set nomodifiable'
     cmd2='function! OnExit()
-        let choice = confirm("Do you want to delete this file", "&yes\n&no", 2)
-        if choice == 1
-            silent !rm %
-        endif
-    endfunction'
+              let choice = input("Do you want to rm this file [y/n]? ")
+              if choice == "y"
+                  silent !rm %
+              endif
+          endfunction'
     cmd3='autocmd VimLeavePre * call OnExit()'
 
     vim "$1" -c "$cmd1" -c "$cmd2" -c "$cmd3"
