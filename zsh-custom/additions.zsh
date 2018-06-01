@@ -34,7 +34,7 @@ alias lla='ls -pAohv --color'
 # Command aliases
 alias cp='cp -ir'
 alias du='du -h --max-depth=1'
-alias grep='egrep'
+alias grep='grep -E'
 alias md='mkdir -p'
 alias mkx='chmod +x'
 alias mv='mv -i'
