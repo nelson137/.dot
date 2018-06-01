@@ -95,7 +95,7 @@ chhn() {
 }
 
 cpstat() {
-    rsync --info=progress2 "$1" "$2"
+    rsync --info=progress2 "$@"
 }
 
 gcl() {
