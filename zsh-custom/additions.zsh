@@ -90,6 +90,7 @@ chhn() {
 }
 
 cpstat() {
+    # Use rsync to cp and show progress
     rsync --info=progress2 "$@"
 }
 
@@ -104,10 +105,13 @@ getip() {
 }
 
 mkcd() {
+    # Make then cd into a directory
     mkdir "$1" && cd "$1"
 }
 
 newscript() {
+    # Make a new script with boilerplate code and make it executable
+    #  if necessary
     [[ $# == 0 ]] && files=( t.sh ) || files=( $@ )
     touch $files
     for file in $files; do
@@ -131,6 +135,7 @@ newscript() {
 }
 
 vimrm() {
+    # vim a file, prompting to rm it when the user attempts to exit
     cmd1='set nomodifiable'
     cmd2='function! OnExit()
         let choice = confirm("Do you want to delete this file", "&yes\n&no", 2)
