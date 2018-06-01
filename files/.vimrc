@@ -100,6 +100,13 @@ function! GetTodo()
     endif
 endfunction
 
+function! OnExit(...)
+    let l:fn = a:0 == 0 ? "%" : a:1
+    let l:prompt_fn = l:fn == "%" ? "this file" : a:1
+    exe "let l:choice = input('Do you want to delete" l:prompt_fn "[y/n]? ')"
+    if l:choice == "y" | silent exe "!rm" l:fn | endif
+endfunction
+
 function! ToggleTodo()
     let l:todo = GetTodo()
     if empty(l:todo)

@@ -169,14 +169,5 @@ ps() {
 
 vimrm() {
     # vim a file, prompting to rm it when the user attempts to exit
-    cmd1='set nomodifiable'
-    cmd2='function! OnExit()
-              let choice = input("Do you want to rm this file [y/n]? ")
-              if choice == "y"
-                  silent !rm %
-              endif
-          endfunction'
-    cmd3='autocmd VimLeavePre * call OnExit()'
-
-    vim "$1" -c "$cmd1" -c "$cmd2" -c "$cmd3"
+    vim -c 'set nomodifiable' -c 'autocmd QuitPre * call OnExit()' "$@"
 }
