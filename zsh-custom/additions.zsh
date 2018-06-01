@@ -94,12 +94,17 @@ brightness() {
 }
 
 chhn() {
-    # Change Hostname
-    sudo echo >/dev/null  # Get sudo password before changing hostname
+    # Change hostname
+    sudo echo >/dev/null  # Cache sudo password
+    [[ $? != 0 ]] && return  # Exit if password not cached
     local old="$(hostname)"
-    local new; read -rp "New hostname: " new
+    local new; read -r 'new?New hostname: '
     echo "$new" | sudo tee /etc/hostname >/dev/null
-    sed -i "s/${old}/${new}/g" /etc/hosts
+    sudo sed -i.bak "s/${old}/${new}/g" /etc/hosts
+    # Vim new and old /etc/hosts file
+    # Prompt to delete old on exit
+    local cmd1='autocmd QuitPre * call OnExitVimrm()'
+    sudo vim -c "$cmd1" -c 'topleft vnew /etc/hosts' /etc/hosts.bak
 }
 
 cpstat() {

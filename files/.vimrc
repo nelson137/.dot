@@ -107,6 +107,11 @@ function! OnExit(...)
     if l:choice == "y" | silent exe "!rm" l:fn | endif
 endfunction
 
+function! OnExitVimrm()
+    call OnExit("~/hosts.bak")
+    silent exe ":xa"
+endfunction
+
 function! ToggleTodo()
     let l:todo = GetTodo()
     if empty(l:todo)
