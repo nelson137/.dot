@@ -53,6 +53,13 @@ alias update-system='sudo apt update && sudo apt upgrade -y'
 alias vimrc='vim ~/.vimrc'
 alias zshrc='vim ~/.zshrc'
 
+# System-specific aliases
+if [[ -d /mnt/c/Users/nelson ]]; then
+    alias desktop='/mnt/c/Users/nelson/Desktop'
+else
+    alias desktop='~/Desktop'
+fi
+
 # Unaliases
 unalias l  # Unalias l from .oh-my-zsh/lib/directories.zsh
 unalias gcl  # Unalias gcl from .oh-my-zsh/plugins/git
