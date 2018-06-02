@@ -109,7 +109,7 @@ chhn() {
 
 cpstat() {
     # Use rsync to cp and show progress
-    rsync --info=progress2 "$@"
+    rsync -r --info=progress2 "$@"
 }
 
 gcl() {
