@@ -3,7 +3,8 @@
 #  current git directory is behind or has diverged from origin.
 
 _git_pd_status() {
-    local pd_status_file="$1"
+    local git_dir="$(git rev-parse --absolute-git-dir)"
+    local pd_status_file="${git_dir}/pd_status"
     local local_="$(git rev-parse @)"
     local remote="$(git ls-remote origin | awk '/HEAD/ {print $1}')"
     local base="$(git merge-base @ @{u})"
@@ -47,7 +48,7 @@ _git_prompt_custom() {
         'local pd_status_file="${git_dir}/pd_status"'
         'touch "$pd_status_file"'
         'if (( $now - $last_run > 30 )); then'
-        '    _git_pd_status "$pd_status_file" >/dev/null &'
+        '    _git_pd_status >/dev/null &'
         '    echo "$now" > "$last_run_file"'
         'fi'
         'pd_status="$(< "$pd_status_file")"'
