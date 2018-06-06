@@ -15,6 +15,9 @@ export ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;&'
 export QT_QPA_PLATFORM=offscreen
 export QT_QPA_FONTDIR=/usr/share/fonts
 
+# Create vim undodir if it doesn't exist
+[[ ! -d ~/.vim/undodir ]] && mkdir -p ~/.vim/undodir
+
 
 
 ### Aliases ###
