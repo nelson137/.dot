@@ -221,8 +221,11 @@ filetype off
 if !empty(glob("$HOME/.vim/bundle/Vundle.vim"))
     set runtimepath+=~/.vim/bundle/Vundle.vim
     call vundle#begin()
+    if empty(matchstr(system('uname -m'), '\varmv\dl'))
+        " Enable YouCompleteMe if architecture isn't arm
+        Plugin 'Valloric/YouCompleteMe'
+    endif
     Plugin 'Raimondi/delimitMate'
-    Plugin 'Valloric/YouCompleteMe'
     Plugin 'VundleVim/Vundle.vim'
     Plugin 'apeschel/vim-syntax-apache'
     Plugin 'elzr/vim-json'
