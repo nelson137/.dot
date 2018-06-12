@@ -34,12 +34,13 @@ _git_prompt_custom() {
     )"
 
     # Put each line of git_super_status() into lines
-    local lines=()
+    local -a lines
     while read -r line; do
         lines+=( "$line" )
     done < <(echo "$gss")
 
-    local pull_diverge_status=(
+    local -a pull_diverge_status
+    pull_diverge_status=(
         'local now="$(date +%s)"'
         'local git_dir="$(git rev-parse --git-dir)"'
         'local last_run_file="${git_dir}/pd_status.last-run"'
