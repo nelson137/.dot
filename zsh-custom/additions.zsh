@@ -71,6 +71,8 @@ unalias gcl  # Unalias gcl from .oh-my-zsh/plugins/git
 
 ### Functions ###
 
+unsetopt aliases  # Turn aliases off while defining functions
+
 bat() {
     # Get battery stats
     upower -i "$(upower -e | grep BAT)" |
@@ -184,3 +186,5 @@ vimrm() {
     # vim a file, prompting to rm it when the user attempts to exit
     vim -c 'set nomodifiable' -c 'autocmd QuitPre * call OnExit()' "$@"
 }
+
+setopt aliases  # Turn aliases back on
