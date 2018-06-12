@@ -2,6 +2,8 @@
 
 set autoread                " Automatically read changes made on disk
 set backspace=indent,eol,start
+set encoding=utf-8
+set history=500             " Remember 500 ex commands
 set nocompatible            " Be iMproved
 set noswapfile
 set scrolloff=4             " Keep cursor 4 lines from top & bot when scrolling
@@ -12,9 +14,10 @@ set splitright              " Open vertical splits to the right
 set timeoutlen=500          " Max period of 500ms between keystrokes
 set undodir=~/.vim/undodir  " Put undo files in ~/.vim/undodir
 set undofile                " Persistent file history
-set visualbell              " STOP BEEPING
+set undolevels=1000         " Remember 1000 changes to file
+set visualbell              " No beep beep
 set wildmenu                " Zsh-like buffer completion
-runtime ftplugin/man.vim    " Man plugin
+runtime ftplugin/man.vim    " Enable man plugin
 
 
 
@@ -29,7 +32,6 @@ set softtabstop=4   " Backspace deletes 4 spaces
 set cindent         " \
 set cinkeys-=0#     "  > Don't eat spaces before #
 set indentkeys-=0#  " /
-set visualbell      " No beep beep
 
 
 
