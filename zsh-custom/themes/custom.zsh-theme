@@ -35,6 +35,9 @@ _prompt_status() {
             short_status="$(color_bat_pct red $percent)"
         fi
 
+        # Put ⚡ after battery percent if charging
+        [[ $state == charging ]] && short_status+=⚡
+
         status_items+=( "$short_status" )
     fi
 
