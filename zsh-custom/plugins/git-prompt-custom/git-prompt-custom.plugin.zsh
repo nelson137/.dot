@@ -6,8 +6,11 @@ _git_pd_status() {
     local git_dir="$(git rev-parse --git-dir)"
     local pd_status_file="${git_dir}/pd_status"
     local local_="$(git rev-parse @)"
-    local remote="$(git ls-remote origin | awk '/HEAD/ {print $1}')"
+    local remote="$(git ls-remote origin 2>/dev/null | awk '/HEAD/ {print $1}')"
     local base="$(git merge-base @ @{u})"
+
+    # Exit if cannot get hash of remote's most recent commit
+    [[ -z $remote ]] && return
 
     local pd_status=""
     if [[ $local_ == $remote ]]; then
