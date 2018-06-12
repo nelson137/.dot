@@ -73,8 +73,8 @@ unalias gcl  # Unalias gcl from .oh-my-zsh/plugins/git
 
 bat() {
     # Get battery stats
-    local stats="$(upower -i "$(upower -e | grep BAT)" | sed 's/^\s\+//g')"
-    echo "$stats" | grep --color=never -E "state|to empty|percentage"
+    upower -i "$(upower -e | grep BAT)" |
+        grep -E --color=never "state|to empty|percentage"
 }
 
 brightness() {
@@ -135,7 +135,7 @@ gcl() {
 getip() {
     # Get public and private ip addresses
     echo "Public:  $(curl -sS https://icanhazip.com)"
-    echo "Private: $(hostname -I | awk '{print $1}')"
+    echo "Private: $(ip route get 1 | awk '{print $NF; exit}')"
 }
 
 mkcd() {
