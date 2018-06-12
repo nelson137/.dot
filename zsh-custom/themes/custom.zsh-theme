@@ -44,7 +44,7 @@ _prompt_status() {
     # Background jobs
     local bg_jobs="$(jobs -l | wc -l)"
     (( $bg_jobs > 0 )) &&
-        status_items+=( "$(fg_color cyan "\u2699:$bg_jobs")" )
+        status_items+=( "$(fg_color cyan "⚙:$bg_jobs")" )
 
     if [[ $#status_items == 0 ]]; then
         echo ""
