@@ -265,10 +265,14 @@ let g:pymode_lint_on_write = 0  " Don't lint on write
 "   C901: function is too complex
 let g:pymode_lint_ignore = ["E265", "E401", "E701", "C901"]
 
-" NERDTree
+" NERDCommenter
 let NERDRemoveExtraSpaces = 1
 let NERDSpaceDelims = 1
 let NERDTrimTrailingWhitespace = 1
+" Only put 1 space between # and comment content
+let g:NERDCustomDelimiters = {
+    \ 'python': { 'left': '#' },
+\ }
 
 " AsyncRun
 let g:asyncrun_open = 8
