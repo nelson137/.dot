@@ -17,21 +17,25 @@ _prompt_status() {
 
     # Battery percent
     if which upower >/dev/null && bat >/dev/null 2>&1; then
-        local bat_status="$(bat | awk '/state/ {print $2}')"
-        local bat_percent="$(bat | awk '/percentage/ {print $2}' | tr -d '%')"
-        if [[ $bat_percent == 100 && $bat_status != discharging ]]; then
-            local pct="$(color_bat_pct green $bat_percent)"
-            status_items+=( "${pct}$(fg_bold green ' UNPLUG')" )
-        elif (( $bat_percent > 25 )); then
-            status_items+=( "$(color_bat_pct green $bat_percent)" )
-        elif (( $bat_percent > 10 )); then
-            status_items+=( "$(color_bat_pct yellow $bat_percent)" )
-        elif [[ $bat_percent -le 10 && $bat_status == discharging ]]; then
-            local pct="$(color_bat_pct red $bat_percent)"
-            status_items+=( "${pct}$(fg_bold red ' PLUG IN')" )
+        local state="$(bat | awk '/state/ {print $2}')"
+        local percent="$(bat | awk '/percentage/ {print $2}' | tr -d '%')"
+
+        local short_status
+        if [[ $percent == 100 && $state != discharging ]]; then
+            short_status="$(color_bat_pct green $percent)"
+            short_status+="$(fg_bold green ' UNPLUG')"
+        elif (( $percent > 25 )); then
+            short_status="$(color_bat_pct green $percent)"
+        elif (( $percent > 10 )); then
+            short_status="$(color_bat_pct yellow $percent)"
+        elif [[ $percent -le 10 && $state == discharging ]]; then
+            short_status="$(color_bat_pct red $percent)"
+            short_status+="$(fg_bold red ' PLUG IN')"
         else
-            status_items+=( "$(color_bat_pct red $bat_percent)" )
+            short_status="$(color_bat_pct red $percent)"
         fi
+
+        status_items+=( "$short_status" )
     fi
 
     # Background jobs
