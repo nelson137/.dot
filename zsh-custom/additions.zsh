@@ -135,7 +135,12 @@ gcl() {
 getip() {
     # Get public and private ip addresses
     echo "Public:  $(curl -sS https://icanhazip.com)"
-    echo "Private: $(ip route get 1 | awk '{print $NF; exit}')"
+    local private_ip="$(
+        ip route get 1 |
+        grep -oE '192\.168(\.[0-9]{1,3}){2}' |
+        grep -v '^192\.168\.1\.1$'
+    )"
+    echo "Private: $private_ip"
 }
 
 mkcd() {
