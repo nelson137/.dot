@@ -83,11 +83,11 @@ brightness() {
     # Get or set screen brightness
 
     if [[ $# == 0 ]]; then
-        xrandr --verbose | grep -i brightness | awk '{print $2}'
+        xrandr -d :0 --verbose | awk '/Brightness/ {print $2}'
         return
     fi
 
-    local cmd="xrandr --output eDP-1 --brightness"
+    local cmd="xrandr -d :0 --output eDP-1 --brightness"
     if [[ $1 == reset ]]; then
         eval "$cmd 1.0"
     else
