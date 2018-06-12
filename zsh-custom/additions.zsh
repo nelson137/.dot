@@ -80,19 +80,20 @@ bat() {
 }
 
 brightness() {
-    # Get or set screen brightness
+    # Get or set brightness of primary display
 
     if [[ $# == 0 ]]; then
+        # Output current brightness
         xrandr -d :0 --verbose | awk '/Brightness/ {print $2}'
         return
     fi
 
     local cmd="xrandr -d :0 --output eDP-1 --brightness"
-    if [[ $1 == reset ]]; then
+    if [[ $@ == reset ]]; then
         eval "$cmd 1.0"
     else
-        eval "$cmd $1 >/dev/null 2>&1" || {
-            echo "Cannot set brightness to $1" >&2
+        eval "$cmd $@ >/dev/null 2>&1" || {
+            echo "Cannot set brightness to $@" >&2
             return 1
         }
     fi
