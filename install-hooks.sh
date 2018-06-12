@@ -1,7 +1,7 @@
 #!/bin/bash
 
 dir="$(dirname $0)/.git/hooks"
-mkdir "$dir"
+mkdir -p "$dir"
 
 # rm ${dir}/*.sample
 
