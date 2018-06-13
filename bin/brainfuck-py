@@ -66,8 +66,9 @@ def _print_cells(cells, ptr=None):
 
 def _err_out(err):
     if err == 'USAGE':
-        msg = 'usage: brainfuck-py [-h] [-d DELAY] [--dump-tape | ' + \
-              '--show-tape] [-i INPUT]\n                    [FILE [FILE ...]]'
+        msg = 'usage: brainfuck-py [-h] [-c | -f] [-d DELAY] [--dump-tape' + \
+              ' | --show-tape]\n                    [-i INPUT]\n' + \
+              '                    [FILE [FILE ...]]'
     else:
         msg = 'brainfuck: ' + err
     print(msg, file=sys.stderr)
@@ -142,13 +143,14 @@ def evaluate(code, dump_tape, show_tape, user_in, delay):
 
 
 def cleanup(code):
-    """Remove all non-brainfuck command characters from code."""
+    """Return code with all non-Brainfuck command characters removed."""
     bf_chars = ['>', '<', '+', '-', '[', ']', '.', ',']
     return list(filter(lambda c: c in bf_chars, code))
 
 
 def main(args):
-    read_code = args.code
+    stdin_code = args.stdin_code
+    stdin_filenames = args.stdin_filenames
     delay = args.delay
     delay_changed = args.delay_changed
     dump_tape = args.dump_tape
@@ -158,7 +160,7 @@ def main(args):
     if show_tape and user_in == []:  # --show-tape without -i
         _err_out('--show-tape requires -i/--input INPUT')
     if user_in != [] and not show_tape:  # -i without --show-tape
-        _err_out('-i/--input is only for use with --show-tape')
+        _err_out('-i/--input can only be used with --show-tape')
 
     # Auto set delay if --show-tape && delay wasn't changed by user
     if show_tape and not delay_changed:
@@ -167,11 +169,13 @@ def main(args):
     infiles = args.infiles  # Filenames passed as arguments
     to_eval = []
 
-    # Read filename(s) or code from stdin
-    if not sys.stdin.isatty():  # stdin is not empty
-        if read_code:  # Read Brainfuck code from stdin
+    # Read from stdin
+    if not sys.stdin.isatty():  # If stdin is not empty
+        if stdin_code:
+            # Read Brainfuck code
             to_eval.append(cleanup(sys.stdin.read()))
-        else:  # Read filenames from stdin
+        elif stdin_filenames:
+            # Read filenames
             infiles.extend([l.strip() for l in sys.stdin.readlines()])
 
     # Append code from each Brainfuck script to to_eval
@@ -191,33 +195,35 @@ def main(args):
 
 if __name__ == '__main__':
     desc = 'Executes one or more scripts written in Brainfuck.'
-    file_help = 'One or more names of Brainfuck scripts. Filenames are ' + \
-                'read from both the command line and from stdin.'
-    c_help = 'Read Brainfuck code from stdin. It is assumed that stdin ' + \
-             'contains one Brainfuck script.'
+    h_help = 'Show this help message and exit.'
+    c_help = 'Read Brainfuck code from stdin.'
+    f_help = 'Read Brainfuck script filenames from stdin.'
     d_help = 'The delay, in milliseconds, between the execution of each ' + \
              'Brainfuck command.'
-    f_help = "Read Brainfuck script filenames from stdin."
-    h_help = 'Show this help message and exit.'
-    i_help = "The input for Brainfuck's , command."
     dump_help = 'Output the tape after script execution.'
     show_help = "Show the tape during script execution."
+    i_help = "The input for Brainfuck's , command."
+    file_help = 'One or more names of Brainfuck scripts. Filenames are ' + \
+                'read from both the command line and from stdin.'
 
     parser = ArgumentParser(description=desc, add_help=False)
-    # nargs must be * so that filenames or code can be read from stdin
-    parser.add_argument('infiles', nargs='*', default=[], metavar='FILE',
-                        help=file_help)
-    parser.add_argument('-c', '--code', action='store_true', help=c_help)
-    # Use DelayAction to also set delay_changed when -d/--delay is used
-    parser.add_argument('-d', '--delay', action=DelayAction, type=int,
-                        default=0, help=d_help)
-    parser.add_argument('-f', '--filenames')
     parser.add_argument('-h', '--help', action='help', default=SUPPRESS,
                         help=h_help)
-    parser.add_argument('-i', '--input', default=[], help=i_help)
+    stdin_type = parser.add_mutually_exclusive_group()
+    stdin_type.add_argument('-c', '--stdin-code', action='store_true',
+                            help=c_help)
+    stdin_type.add_argument('-f', '--stdin-filenames', action='store_true',
+                            help=f_help)
+    # Use DelayAction to set delay and delay_changed when -d/--delay is used
+    parser.add_argument('-d', '--delay', action=DelayAction, type=int,
+                        default=0, help=d_help)
     tape_g = parser.add_mutually_exclusive_group()
     tape_g.add_argument('--dump-tape', action='store_true', help=dump_help)
     tape_g.add_argument('--show-tape', action='store_true', help=show_help)
+    parser.add_argument('-i', '--input', default=[], help=i_help)
+    # nargs='*' so that filenames or code can be read from stdin
+    parser.add_argument('infiles', nargs='*', default=[], metavar='FILE',
+                        help=file_help)
 
     # Set delay_changed to False by default
     ns = Namespace(delay_changed=False)

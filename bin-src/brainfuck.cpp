@@ -33,8 +33,8 @@ void print_cells_with_ptr(vector<int> cells, int ptr) {
 void err_out(string err) {
     string msg;
     if (err == "USAGE") {
-        msg = "usage: brainfuck-py [-h] [-d DELAY] [--dump-tape | --show-";
-        msg += "tape] [-i INPUT]\n                    [FILE [FILE ...]]";
+        msg = "usage: brainfuck [-h] [-c | -f] [-d DELAY] [--dump-tape | ";
+        msg += "--show-tape]\n                 [-i INPUT] [FILE [FILE ...]]";
     } else
         msg = "brainfuck: " + err;
     cerr << msg << endl;
@@ -163,8 +163,8 @@ vector<char> cleanup(string dirty_code) {
 
 void help() {
     vector<string> help {
-        "usage: brainfuck-py [-h] [-c] [-d DELAY] [--dump-tape | --show-tape]",
-        "                    [-i INPUT] [FILE [FILE ...]]",
+        "usage: brainfuck [-h] [-c | -f] [-d DELAY] [--dump-tape | --show-tape]",
+        "                 [-i INPUT] [FILE [FILE ...]]",
         "",
         "Executes one or more scripts written in Brainfuck.",
         "",
@@ -174,8 +174,9 @@ void help() {
         "",
         "optional arguments:",
         "  -h, --help            Show this help message and exit.",
-        "  -c, --code            Read code rather than filenames from stdin. However, ",
-        "                        -c will only read one script from stdin."
+        "  -c, --stdin-code      Read Brainfuck code from stdin.",
+        "  -f, --stdin-filenames",
+        "                        Read Brainfuck script filenames from stdin.",
         "  -d DELAY, --delay DELAY",
         "                        The delay, in milliseconds, between the execution of",
         "                        each Brainfuck command.",
@@ -207,7 +208,8 @@ int main(int argc, char** argv) {
     }
 
     vector<string> infiles;
-    bool read_code = false;
+    bool stdin_code = false;
+    bool stdin_filenames = false;
     int delay = 0;
     bool delay_changed = false;
     bool dump_tape = false;
@@ -218,8 +220,10 @@ int main(int argc, char** argv) {
         if (cmd[0] == '-') {
             if (cmd == "-h" || cmd == "--help") {
                 help();
-            } else if (cmd == "-c" || cmd == "--code") {
-                read_code = true;
+            } else if (cmd == "-c" || cmd == "--stdin-code") {
+                stdin_code = true;
+            } else if (cmd == "-f" || cmd == "--stdin-filenames") {
+                stdin_filenames = true;
             } else if (cmd == "-d" || cmd == "--delay") {
                 string err = "-d/--delay requires an integer";
                 if (++i == argc) {
@@ -251,6 +255,9 @@ int main(int argc, char** argv) {
         }
     }
 
+    if (stdin_code && stdin_filenames)
+        err_out("arguments -c/--stdin-code and -f/--stdin-filenames cannot be used together.");
+
     if (dump_tape && show_tape)  // --dump-tape and --show-tape were both passed
         err_out("arguments --dump-tape and --show-tape cannot be used together");
 
@@ -266,15 +273,17 @@ int main(int argc, char** argv) {
     // All code to evaluate
     vector<vector<char>> to_eval;
 
-    // Read filename(s) or code from stdin
-    string in_code;
-    for (string in_line; getline(cin, in_line);) {
-        if (read_code)  // Read code, put it in to_eval
+    // Read code or filenames from stdin
+    if (stdin_code) {
+        string in_code;
+        for (string in_line; getline(cin, in_line);)
             in_code += in_line;
-        else  // Read filenames, put it in infiles
+        if (in_code.size())
+            to_eval.push_back(cleanup(in_code));
+    } else if (stdin_filenames) {
+        for (string in_line; getline(cin, in_line);)
             infiles.push_back(in_line);
     }
-    if (in_code.size()) to_eval.push_back(cleanup(in_code));
 
     // Add code from each Brainfuck script to to_eval
     for (string fn : infiles) {
