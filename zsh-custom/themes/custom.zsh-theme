@@ -24,9 +24,9 @@ _prompt_status() {
         if [[ $percent == 100 && $state != discharging ]]; then
             short_status="$(color_bat_pct green $percent)"
             short_status+="$(fg_bold green ' UNPLUG')"
-        elif (( $percent > 25 )); then
+        elif (( percent > 25 )); then
             short_status="$(color_bat_pct green $percent)"
-        elif (( $percent > 10 )); then
+        elif (( percent > 10 )); then
             short_status="$(color_bat_pct yellow $percent)"
         elif [[ $percent -le 10 && $state == discharging ]]; then
             short_status="$(color_bat_pct red $percent)"
@@ -43,7 +43,7 @@ _prompt_status() {
 
     # Background jobs
     local bg_jobs="$(jobs -l | wc -l)"
-    (( $bg_jobs > 0 )) &&
+    (( bg_jobs > 0 )) &&
         status_items+=( "$(fg_color cyan "⚙:$bg_jobs")" )
 
     if [[ $#status_items == 0 ]]; then

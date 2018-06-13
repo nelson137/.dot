@@ -53,7 +53,7 @@ _git_prompt_custom() {
         'local last_run="$(< "$last_run_file")"'
         'local pd_status_file="${git_dir}/pd_status"'
         'touch "$pd_status_file"'
-        'if (( $now - $last_run > 30 )); then'
+        'if (( now - last_run > 30 )); then'
         '    _git_pd_status >/dev/null &'
         '    echo "$now" > "$last_run_file"'
         'fi'
