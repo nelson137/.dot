@@ -132,7 +132,7 @@ gcl() {
     elif [[ $repo =~ .+/.+ ]]; then
         git clone --recursive "https://github.com/${repo}.git"
     else
-        git clone --recursive "git@github.com:nelson137/$1.git"
+        git clone --recursive "git@github.com:nelson137/${repo}.git"
     fi
 }
 
