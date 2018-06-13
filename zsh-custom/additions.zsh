@@ -65,6 +65,7 @@ fi
 # Unaliases
 unalias gcl  # From ~/.oh-my-zsh/plugins/git
 unalias gl  # From ~/.oh-my-zsh/plugins/git
+unalias gp  # From ~/.oh-my-zsh/plugins/git
 unalias l  # From ~/.oh-my-zsh/lib/directories.zsh
 
 
@@ -138,6 +139,11 @@ gcl() {
 gl() {
     # Pull and update pull/diverge prompt status
     git pull "$@" && (_git_pd_status >/dev/null &)
+}
+
+gp() {
+    # Push and update pull/diverge prompt status
+    git push "$@" && (_git_pd_status >/dev/null &)
 }
 
 getip() {
