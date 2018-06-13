@@ -26,7 +26,6 @@ export QT_QPA_FONTDIR=/usr/share/fonts
 alias glop='git log -p'
 alias gc='git commit'
 alias gcamsg='git commit -am'
-alias gl='git pull && (_git_pd_status >/dev/null &)'
 
 # ls aliases
 alias ls='ls -pv --color'
@@ -64,8 +63,9 @@ else
 fi
 
 # Unaliases
-unalias l  # Unalias l from .oh-my-zsh/lib/directories.zsh
-unalias gcl  # Unalias gcl from .oh-my-zsh/plugins/git
+unalias gcl  # From ~/.oh-my-zsh/plugins/git
+unalias gl  # From ~/.oh-my-zsh/plugins/git
+unalias l  # From ~/.oh-my-zsh/lib/directories.zsh
 
 
 
@@ -133,6 +133,11 @@ gcl() {
     else
         git clone --recursive "git@github.com:nelson137/$1.git"
     fi
+}
+
+gl() {
+    # Pull and update pull/diverge prompt status
+    git pull "$@" && (_git_pd_status >/dev/null &)
 }
 
 getip() {
