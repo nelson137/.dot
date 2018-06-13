@@ -171,7 +171,7 @@ vector<char> cleanup(string dirty_code) {
 
 
 void help() {
-    vector<string> help {
+    string help[21] {
         "usage: brainfuck [-h] [-c | -f] [-d DELAY] [--dump-tape | --show-tape]",
         "                 [-i INPUT] [FILE [FILE ...]]",
         "",
