@@ -9,19 +9,21 @@ _git_pd_status() {
     local remote="$(git ls-remote origin 2>/dev/null | awk '/HEAD/ {print $1}')"
     local base="$(git merge-base @ @{u})"
 
-    # Exit if cannot get hash of remote's most recent commit
-    [[ -z $remote ]] && return
-
-    local pd_status=""
-    if [[ $local_ == $remote ]]; then
-        true  # Up-to-date
-    elif [[ $local_ == $base ]]; then
-        pd_status="PULL"
-    elif [[ $remote == $base ]]; then
-        true  # Need to push
+    local pd_status
+    if [[ -z $remote ]]; then
+        pd_status="%{$fg[yellow]%}!%{$reset_color%}"
     else
-        pd_status="DIVERGED"
+        if [[ $local_ == $remote ]]; then
+            true  # Up-to-date
+        elif [[ $local_ == $base ]]; then
+            pd_status="PULL"
+        elif [[ $remote == $base ]]; then
+            true  # Need to push
+        else
+            pd_status="DIVERGED"
+        fi
     fi
+
     echo "$pd_status" > "$pd_status_file"
 }
 
