@@ -101,17 +101,26 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
 
         cmd = code.at(codeptr);
         switch (cmd) {
-            case '>': if (++cellptr == (int) cells.size()) cells.push_back(0);
+            case '>': if (++cellptr == (int) cells.size())
+                          cells.push_back(0);
                       break;
             case '<': cellptr = cellptr <= 0 ? 0 : --cellptr;
                       break;
-            case '+': cells.at(cellptr) = cells[cellptr] < 255 ? ++cells[cellptr] : 0;
+            case '+': if (cells[cellptr] < 255)
+                          cells.at(cellptr) = ++cells[cellptr];
+                      else
+                          cells.at(cellptr) = 0;
                       break;
-            case '-': cells.at(cellptr) = cells[cellptr] > 0 ? --cells[cellptr] : 255;
+            case '-': if (cells[cellptr] > 0)
+                          cells.at(cellptr) = --cells[cellptr];
+                      else
+                          cells.at(cellptr) = 255;
                       break;
-            case '[': if (cells.at(cellptr) == 0) codeptr = bracemap.at(codeptr);
+            case '[': if (cells.at(cellptr) == 0)
+                          codeptr = bracemap.at(codeptr);
                       break;
-            case ']': if (cells.at(cellptr) != 0) codeptr = bracemap.at(codeptr);
+            case ']': if (cells.at(cellptr) != 0)
+                          codeptr = bracemap.at(codeptr);
                       break;
             case '.': if (dump_tape || show_tape)
                           output += (char)cells.at(cellptr);
@@ -256,10 +265,12 @@ int main(int argc, char** argv) {
     }
 
     if (stdin_code && stdin_filenames)
-        err_out("arguments -c/--stdin-code and -f/--stdin-filenames cannot be used together.");
+        err_out("arguments -c/--stdin-code and -f/--stdin-filenames" \
+                " cannot be used together");
 
     if (dump_tape && show_tape)  // --dump-tape and --show-tape were both passed
-        err_out("arguments --dump-tape and --show-tape cannot be used together");
+        err_out("arguments --dump-tape and --show-tape" \
+                " cannot be used together");
 
     if (show_tape && input.size() == 0)  // --show-tape without -i
         err_out("--show-tape requires -i/--input INPUT");
