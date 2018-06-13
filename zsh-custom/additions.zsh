@@ -130,8 +130,10 @@ gcl() {
         #  /
         echo "invalid repo name: $repo" >&2
     elif [[ $repo =~ .+/.+ ]]; then
+        # Clone someone else's repo
         git clone --recursive "https://github.com/${repo}.git"
     else
+        # Clone my repo
         git clone --recursive "git@github.com:nelson137/${repo}.git"
     fi
 }
