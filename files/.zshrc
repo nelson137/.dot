@@ -51,6 +51,7 @@ plugins=(
     java-utils
     ssh
     web-search
+    zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
