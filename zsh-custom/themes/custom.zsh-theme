@@ -41,11 +41,16 @@ _prompt_status() {
         status_items+=( "$short_status" )
     fi
 
+    # Is sudo password still saved
+    sudo -n echo >/dev/null 2>&1 &&
+        status_items+=( "$(fg_bold red SUDO)" )
+
     # Background jobs
     local bg_jobs="$(jobs -l | wc -l)"
     (( bg_jobs > 0 )) &&
         status_items+=( "$(fg_color cyan "⚙:$bg_jobs")" )
 
+    # Combine any activated status widgets
     if [[ $#status_items == 0 ]]; then
         echo ""
     else
