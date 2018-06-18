@@ -51,6 +51,7 @@ plugins=(
     java-utils
     ssh
     web-search
+    zsh-autosuggestions
     zsh-syntax-highlighting
 )
 
