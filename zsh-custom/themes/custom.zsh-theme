@@ -11,8 +11,8 @@ _prompt_core() {
     echo "${user}${at}${host} ${cwd}"
 }
 
+_color_bat_pct() { echo "%{$fg_bold[$1]%}$2%%$reset_color%}"; }
 _prompt_status() {
-    local color_bat_pct() { echo "%{$fg_bold[$1]%}$2%%$reset_color%}"; }
     local status_items=()
 
     # Battery percent
@@ -22,17 +22,17 @@ _prompt_status() {
 
         local short_status
         if [[ $percent == 100 && $state != discharging ]]; then
-            short_status="$(color_bat_pct green $percent)"
+            short_status="$(_color_bat_pct green $percent)"
             short_status+="$(fg_bold green ' UNPLUG')"
         elif (( percent > 25 )); then
-            short_status="$(color_bat_pct green $percent)"
+            short_status="$(_color_bat_pct green $percent)"
         elif (( percent > 10 )); then
-            short_status="$(color_bat_pct yellow $percent)"
+            short_status="$(_color_bat_pct yellow $percent)"
         elif [[ $percent -le 10 && $state == discharging ]]; then
-            short_status="$(color_bat_pct red $percent)"
+            short_status="$(_color_bat_pct red $percent)"
             short_status+="$(fg_bold red ' PLUG IN')"
         else
-            short_status="$(color_bat_pct red $percent)"
+            short_status="$(_color_bat_pct red $percent)"
         fi
 
         # Put ⚡ after battery percent if charging
