@@ -55,6 +55,9 @@ plugins=(
     zsh-syntax-highlighting
 )
 
+# zsh-syntax-highlighting config
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets cursor root)
+
 source $ZSH/oh-my-zsh.sh
 
 
