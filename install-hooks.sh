@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dir="$(dirname $0)/.git/hooks"
+dir="$(dirname "$0")/.git/hooks"
 mkdir -p "$dir"
 
 rm ${dir}/*.sample
@@ -59,7 +59,7 @@ EOF
 cat > "${dir}/cpp-compile.sh" <<'EOF'
 #!/bin/bash
 
-dir="$(dirname $0)"  # dir=.git/hooks
+dir="$(dirname "$0")"  # dir=.git/hooks
 
 for file in "$@"; do
     echo -e "\nCompiling $file ..."
@@ -79,7 +79,7 @@ EOF
 cat > "${dir}/post-merge" <<'EOF'
 #!/bin/bash
 
-dir="$(dirname $0)"  # dir=.git/hooks
+dir="$(dirname "$0")"  # dir=.git/hooks
 options="-r --diff-filter=_ --no-commit-id --name-only --relative=bin-src"
 
 
@@ -113,7 +113,7 @@ cat > "${dir}/pre-push" <<'EOF'
 #!/bin/bash
 
 url="$2"
-dir="$(dirname $0)"  # dir=.git/hooks
+dir="$(dirname "$0")"  # dir=.git/hooks
 # remote_commit = hash of last commit on remote
 remote_commit=$(git ls-remote "$url" | grep HEAD | awk '{print $1}')
 # current_commit = hash of last local commit
@@ -195,7 +195,7 @@ cat > "${dir}/update-vim-plugins.sh" <<'EOF'
 
 # Update plugins if plugin changes were made in files/.vimrc
 
-dir="$(dirname $0)"  # dir=.git/hooks
+dir="$(dirname "$0")"  # dir=.git/hooks
 
 last_pull="${dir}/last-pull"
 current="$(git rev-parse HEAD)"  # current = hash of last local commit
