@@ -93,7 +93,8 @@ brightness() {
     if [[ $@ == reset ]]; then
         eval "$cmd 1.0"
     else
-        eval "$cmd $@ >/dev/null 2>&1" || {
+        # >&! redirects stdout and stderr
+        eval "$cmd $@ >&!/dev/null" || {
             echo "Cannot set brightness to $@" >&2
             return 1
         }
