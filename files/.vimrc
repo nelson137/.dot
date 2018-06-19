@@ -75,20 +75,33 @@ au BufRead,BufNewFile *.html set et ts=2 sw=2 sts=2 si ai
 " Functions
 
 function! CompileAndRun()
-    if @% == ''
-        echo 'Error: file has no name'
+    if expand('%:t') == ''
+        call Error('Error: file has no name')
+        return
     else
-        exe 'w'
-        if &filetype == 'cpp'
-            exe 'AsyncRun g++ % -o %<; ./%<'
-        elseif &filetype == 'python'
-            exe 'AsyncRun python3 %'
-        elseif &filetype == 'sh'
-            exe 'AsyncRun ./%'
-        else
-            echo 'No AsyncRun rule exists for filetype' &filetype
-        endif
+        let l:filetype = &filetype != '' ? &filetype : expand('%:e')
     endif
+
+    exe 'w'
+    if l:filetype == 'cpp'
+        " % = filename, %< = filename sans extension
+        exe 'AsyncRun g++ % -o %<; ./%<'
+    elseif l:filetype == 'python'
+        exe 'AsyncRun python3 %'
+    elseif l:filetype == 'sh'
+        if !IsX()
+            let l:prompt = '"Do you want to make this file executable [y/n]? "'
+            exe 'let l:choice = input('.l:prompt.')'
+            if l:choice == 'y' | silent exe '!chmod +x %' | endif
+        endif
+        exe 'AsyncRun ./%'
+    else
+        exe 'call Error("Error: I don''t know how to run' l:filetype 'files")'
+    endif
+endfunction
+
+function! Error(msg)
+    echohl ErrorMsg | echo a:msg | echohl None
 endfunction
 
 function! GetTodo()
@@ -98,6 +111,18 @@ function! GetTodo()
         return l:cwd
     elseif !empty(l:home)
         return l:home
+    endif
+endfunction
+
+function! IsX()
+    silent exe '!test -x' expand('%:p')
+    silent exe 'redraw!'
+    if v:shell_error
+        " Return status was non-zero
+        return 0
+    else
+        " Return status was zero
+        return 1
     endif
 endfunction
 
