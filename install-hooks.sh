@@ -3,7 +3,7 @@
 dir="$(dirname "$0")/.git/hooks"
 mkdir -p "$dir"
 
-rm ${dir}/*.sample
+rm -f ${dir}/*.sample
 
 
 cat > "${dir}/commit-msg" <<'EOF'
