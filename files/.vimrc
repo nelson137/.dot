@@ -54,7 +54,7 @@ augroup line_return
         \ if line("'\"") > 1 && line("'\"") <= line('$') |
         \     exe 'normal! g`"' |
         \ endif
-augroup END
+augroup end
 
 " No ~/.vim/.netrwhist file
 augroup vimleave
@@ -63,7 +63,7 @@ augroup vimleave
         \ if filereadable('$HOME/.vim/.netrwhist') |
         \     call delete('$HOME/.vim/.netrwhist')
         \ endif  
-augroup END
+augroup end
 
 
 
