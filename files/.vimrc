@@ -40,18 +40,18 @@ set indentkeys-=0#  " /
 syntax on
 colorscheme default
 set number
-set laststatus=2   " Keep status bar always visible
+set laststatus=2   " Always show status line
 set statusline=%t  " Put file name in status bar
 
 
 
 " Autocmd
 
-" Open file to the same place you were last time
+" Open file to the same line I was on last time
 augroup line_return
     au!
     au BufReadPost *
-        \ if line("'\"") > 1 && line("'\"") <= line("$") |
+        \ if line("'\"") > 1 && line("'\"") <= line('$') |
         \     exe 'normal! g`"' |
         \ endif
 augroup END
@@ -60,8 +60,8 @@ augroup END
 augroup vimleave
     au!
     au VimLeave *
-        \ if filereadable("$HOME/.vim/.netrwhist") |
-        \     call delete("$HOME/.vim/.netrwhist")
+        \ if filereadable('$HOME/.vim/.netrwhist') |
+        \     call delete('$HOME/.vim/.netrwhist')
         \ endif  
 augroup END
 
@@ -76,25 +76,25 @@ au BufRead,BufNewFile *.html set et ts=2 sw=2 sts=2 si ai
 " Functions
 
 function! CompileAndRun()
-    if @% == ""
-        echo "Error: file has no name"
+    if @% == ''
+        echo 'Error: file has no name'
     else
-        exe "w"
-        if &filetype == "cpp"
-            exe "AsyncRun g++ % -o %<; ./%<"
-        elseif &filetype == "python"
-            exe "AsyncRun python3 %"
-        elseif &filetype == "sh"
-            exe "AsyncRun ./%"
+        exe 'w'
+        if &filetype == 'cpp'
+            exe 'AsyncRun g++ % -o %<; ./%<'
+        elseif &filetype == 'python'
+            exe 'AsyncRun python3 %'
+        elseif &filetype == 'sh'
+            exe 'AsyncRun ./%'
         else
-            echo "No AsyncRun rule exists for filetype" &filetype
+            echo 'No AsyncRun rule exists for filetype' &filetype
         endif
     endif
 endfunction
 
 function! GetTodo()
-    let l:cwd = glob("todo")
-    let l:home = glob("$HOME/todo")
+    let l:cwd = glob('todo')
+    let l:home = glob('$HOME/todo')
     if !empty(l:cwd)
         return l:cwd
     elseif !empty(l:home)
@@ -103,35 +103,35 @@ function! GetTodo()
 endfunction
 
 function! OnExit(...)
-    let l:fn = a:0 == 0 ? "%" : a:1
-    let l:prompt_fn = l:fn == "%" ? "this file" : a:1
-    exe "let l:choice = input('Do you want to delete" l:prompt_fn "[y/n]? ')"
-    if l:choice == "y" | silent exe "!rm" l:fn | endif
+    let l:fn = a:0 == 0 ? '%' : a:1
+    let l:prompt_fn = l:fn == '%' ? 'this file' : a:1
+    exe 'let l:choice = input("Do you want to delete' l:prompt_fn '[y/n]? ")'
+    if l:choice == 'y' | silent exe '!rm' l:fn | endif
 endfunction
 
 function! OnExitVimrm()
-    call OnExit("~/hosts.bak")
-    silent exe ":xa"
+    call OnExit('~/hosts.bak')
+    silent exe ':xa'
 endfunction
 
 function! ToggleTodo()
     let l:todo = GetTodo()
     if empty(l:todo)
-        echo "No todo file found"
+        echo 'No todo file found'
         return
     endif
 
     let l:last = winnr()
     100 wincmd h
-    if expand("%:t") == "todo"
-        exe "x"
+    if expand('%:t') == 'todo'
+        exe 'x'
         let l:last -= 1
     else
-        exe "topleft vnew" l:todo
+        exe 'topleft vnew' l:todo
         vertical resize 50
         let l:last += 1
     endif
-    exe l:last "wincmd w"
+    exe l:last 'wincmd w'
 endfunction
 
 function! OpenVimrc()
@@ -143,9 +143,9 @@ endfunction
 
 " Key bindings
 
-let mapleader = ","
+let mapleader = ','
 
-" For when you forget to open the file with sudo
+" For when I forget to open a file with sudo
 " Thank you Steve Losh
 cnoremap  w!!  w !sudo tee >/dev/null %<CR>
 
@@ -156,16 +156,16 @@ nnoremap  ;  :
 noremap  j  gj
 noremap  k  gk
 
-" H Goes to beginning of line
+" H goes to beginning of line
 noremap  H  ^
 
-" J Goes to bottom of file
+" J goes to bottom of file
 noremap  J  G
 
-" K Goes to top of file
+" K goes to top of file
 noremap  K  gg
 
-" L Goes to end of line
+" L goes to end of line
 noremap  L  $
 
 " Better window nav
@@ -202,7 +202,7 @@ nnoremap <silent>  <Leader>r  :call CompileAndRun()<CR>
 nnoremap  <Leader>t  :call ToggleTodo()<CR>
 
 " ,64 Base64 decodes selected text and replaces it
-vnoremap  <Leader>64  c<C-r>=system("base64 --decode", @")<CR><C-h><Esc>
+vnoremap  <Leader>64  c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
 
 " Better paste in insert mode
 inoremap  <C-p>  <C-r>"
@@ -218,7 +218,7 @@ imap  {<CR>  {<CR>}<Esc>ko
 " Vundle
 
 filetype off
-if !empty(glob("$HOME/.vim/bundle/Vundle.vim"))
+if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     set runtimepath+=~/.vim/bundle/Vundle.vim
     call vundle#begin()
     if empty(matchstr(system('uname -m'), '\varmv\dl'))
@@ -253,17 +253,17 @@ filetype plugin indent on
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 
 " python-mode
-let g:pymode_python = "python3"
+let g:pymode_python = 'python3'
 highlight pythonSelf ctermfg=68 guifg=#5f87d7 cterm=bold gui=bold
 " TODO: add more python highlighting
-let g:pymode_doc_bind = ""
+let g:pymode_doc_bind = ''
 let g:pymode_lint_on_write = 0  " Don't lint on write
 " Linter ignore:
 "   E265: block comment should start with "# "
 "   E401: multiple imports on one line
 "   E701: multiple statements on one line
 "   C901: function is too complex
-let g:pymode_lint_ignore = ["E265", "E401", "E701", "C901"]
+let g:pymode_lint_ignore = ['E265', 'E401', 'E701', 'C901']
 
 " NERDCommenter
 let NERDRemoveExtraSpaces = 1
