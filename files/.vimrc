@@ -146,71 +146,71 @@ let mapleader = ','
 
 " For when I forget to open a file with sudo
 " Thank you Steve Losh
-cnoremap  w!!  w !sudo tee >/dev/null %<CR>
+cnoremap   w!!   w !sudo tee >/dev/null %<CR>
 
 " Because holding shift is sooo annoying
-nnoremap  ;  :
+nnoremap   ;   :
 
 " Move down/up rows in buffer, not up/down lines
-noremap  j  gj
-noremap  k  gk
+noremap   j   gj
+noremap   k   gk
 
 " H goes to beginning of line
-noremap  H  ^
+noremap   H   ^
 
 " J goes to bottom of file
-noremap  J  G
+noremap   J   G
 
 " K goes to top of file
-noremap  K  gg
+noremap   K   gg
 
 " L goes to end of line
-noremap  L  $
+noremap   L   $
 
 " Better window nav
-noremap  <C-h>  <C-w>h
-inoremap  <C-h>  <Esc><C-w>h
-noremap  <C-j>  <C-w>j
-inoremap  <C-j>  <Esc><C-w>j
-noremap  <C-k>  <C-w>k
-inoremap  <C-k>  <Esc><C-w>k
-noremap  <C-l>  <C-w>l
-inoremap  <C-l>  <Esc><C-w>l
+noremap   <C-h>   <C-w>h
+inoremap   <C-h>   <Esc><C-w>h
+noremap   <C-j>   <C-w>j
+inoremap   <C-j>   <Esc><C-w>j
+noremap   <C-k>   <C-w>k
+inoremap   <C-k>   <Esc><C-w>k
+noremap   <C-l>   <C-w>l
+inoremap   <C-l>   <Esc><C-w>l
 
 " Better window resizing
-noremap  <C-w><C-h>  <C-w><
-noremap  <C-w><C-j>  <C-w>-
-noremap  <C-w><C-k>  <C-w>+
-noremap  <C-w><C-l>  <C-w>>
+noremap   <C-w><C-h>   <C-w><
+noremap   <C-w><C-j>   <C-w>-
+noremap   <C-w><C-k>   <C-w>+
+noremap   <C-w><C-l>   <C-w>>
 
 " ,<F2> Don't fuck up indentation when pasting
-noremap <silent>  <Leader><F2>  :set invpaste<CR>
+noremap <silent>   <Leader><F2>   :set invpaste<CR>
 
 " ,m Open man page for word under cursor
-nnoremap  <Leader>m  :Man <cword><CR>
+nnoremap   <Leader>m   :Man <cword><CR>
 
 " ,ev or ,sv Opens or sources .vimrc
 " Thank you Derek Wyatt
-nnoremap <silent>  <Leader>ev  :call OpenVimrc()<CR>
-nnoremap <silent>  <Leader>sv  :so $MYVIMRC<CR>
+nnoremap <silent>   <Leader>ev   :call OpenVimrc()<CR>
+nnoremap <silent>   <Leader>sv   :so $MYVIMRC<CR>
 
 " AsyncRun file
-nnoremap <silent>  <Leader>r  :call CompileAndRun()<CR>
+nnoremap <silent>   <Leader>r   :call CompileAndRun()<CR>
 
 " Open todo
-nnoremap  <Leader>t  :call ToggleTodo()<CR>
+nnoremap   <Leader>t   :call ToggleTodo()<CR>
 
 " ,64 Base64 decodes selected text and replaces it
-vnoremap  <Leader>64  c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
+vnoremap   <Leader>64   c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
 
 " Better paste in insert mode
-inoremap  <C-p>  <C-r>"
+inoremap   <C-p>   <C-r>"
 
 " jj == <Esc> in insert mode
-inoremap  jj  <Esc>
+inoremap   jj   <Esc>
 
 " Make {<CR> set up brackets like an IDE would
-imap  {<CR>  {<CR>}<Esc>ko
+imap   {<CR>   {<CR>}<Esc>ko
 
 
 
