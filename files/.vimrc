@@ -41,7 +41,6 @@ syntax on
 colorscheme default
 set number
 set laststatus=2   " Always show status line
-set statusline=%t  " Put file name in status bar
 
 
 
