@@ -111,7 +111,7 @@ chhn() {
     sudo sed -i.bak "s/${old}/${new}/g" /etc/hosts
     # Vim new and old /etc/hosts file
     # Prompt to delete old on exit
-    local cmd1='autocmd QuitPre * call OnExitVimrm()'
+    local cmd1='autocmd QuitPre * call OnExitChhn()'
     sudo vim -c "$cmd1" -c 'topleft vnew /etc/hosts' /etc/hosts.bak
 }
 
@@ -198,8 +198,8 @@ ps() {
 }
 
 vimrm() {
-    # vim a file, prompting to rm it when the user attempts to exit
-    vim -c 'set nomodifiable' -c 'autocmd QuitPre * call OnExit()' "$@"
+    # vim a file, prompting to rm it when the user exits
+    vim -c 'set nomodifiable' -c 'autocmd QuitPre * call OnExitVimrm()' "$@"
 }
 
 setopt aliases  # Turn aliases back on
