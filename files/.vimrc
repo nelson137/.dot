@@ -104,6 +104,10 @@ function! Error(msg)
     echohl ErrorMsg | echo a:msg | echohl None
 endfunction
 
+function! Info(msg)
+    echohl MoreMsg | echo a:msg | echohl None
+endfunction
+
 function! GetTodo()
     let l:cwd = glob('todo')
     let l:home = glob('$HOME/todo')
@@ -217,7 +221,7 @@ nnoremap   <Leader>m   :Man <cword><CR>
 " ,ev or ,sv Opens or sources .vimrc
 " Thank you Derek Wyatt
 nnoremap <silent>   <Leader>ev   :call OpenVimrc()<CR>
-nnoremap <silent>   <Leader>sv   :so $MYVIMRC<CR>
+nnoremap <silent>   <Leader>sv   :so $MYVIMRC<CR>:call Info('Done')<CR>
 
 " AsyncRun file
 nnoremap <silent>   <Leader>r   :call CompileAndRun()<CR>
