@@ -101,11 +101,11 @@ function! CompileAndRun()
 endfunction
 
 function! Error(msg)
-    echohl ErrorMsg | echo a:msg | echohl None
+    exe 'echohl ErrorMsg | echo "'.a:msg.'" | echohl None'
 endfunction
 
 function! Info(msg)
-    echohl MoreMsg | echo a:msg | echohl None
+    exe 'echohl MoreMsg | echo "'.a:msg.'" | echohl None'
 endfunction
 
 function! GetTodo()
