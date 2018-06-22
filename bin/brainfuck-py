@@ -131,7 +131,7 @@ def evaluate(code, dump_tape, show_tape, user_in, delay):
         print()
 
     if (dump_tape or show_tape) and output:
-        print(output)
+        print(output, end='')
 
 
 def cleanup(code):
