@@ -95,43 +95,51 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
 
         cmd = code.at(codeptr);
         switch (cmd) {
-            case '>': if (++cellptr == (int) cells.size())
-                          cells.push_back(0);
-                      break;
-            case '<': cellptr = cellptr <= 0 ? 0 : --cellptr;
-                      break;
-            case '+': if (cells[cellptr] < 255)
-                          cells.at(cellptr) = ++cells[cellptr];
-                      else
-                          cells.at(cellptr) = 0;
-                      break;
-            case '-': if (cells[cellptr] > 0)
-                          cells.at(cellptr) = --cells[cellptr];
-                      else
-                          cells.at(cellptr) = 255;
-                      break;
-            case '[': if (cells.at(cellptr) == 0)
-                          codeptr = bracemap.at(codeptr);
-                      break;
-            case ']': if (cells.at(cellptr) != 0)
-                          codeptr = bracemap.at(codeptr);
-                      break;
-            case '.': if (dump_tape || show_tape)
-                          output += (char)cells.at(cellptr);
-                      else
-                          cout << (char)cells.at(cellptr) << flush;
-                      break;
-            case ',': if (show_tape) {
-                          if (input.size() == 0) {
-                              cout << endl;
-                              err_out("runtime error: not enough input was given");
-                          }
-                          cells.at(cellptr) = (int)input.at(0);
-                          input.erase(input.begin());
-                      } else {
-                          cells.at(cellptr) = (int)getch();
-                      }
-                      break;
+            case '>':
+                if (++cellptr == (int) cells.size())
+                    cells.push_back(0);
+                break;
+            case '<':
+                cellptr = cellptr <= 0 ? 0 : --cellptr;
+                break;
+            case '+':
+                if (cells[cellptr] < 255)
+                    cells.at(cellptr) = ++cells[cellptr];
+                else
+                    cells.at(cellptr) = 0;
+                break;
+            case '-':
+                if (cells[cellptr] > 0)
+                    cells.at(cellptr) = --cells[cellptr];
+                else
+                    cells.at(cellptr) = 255;
+                break;
+            case '[':
+                if (cells.at(cellptr) == 0)
+                    codeptr = bracemap.at(codeptr);
+                break;
+            case ']':
+                if (cells.at(cellptr) != 0)
+                    codeptr = bracemap.at(codeptr);
+                break;
+            case '.':
+                if (dump_tape || show_tape)
+                    output += (char)cells.at(cellptr);
+                else
+                    cout << (char)cells.at(cellptr) << flush;
+                break;
+            case ',':
+                if (show_tape) {
+                    if (input.size() == 0) {
+                        cout << endl;
+                        err_out("runtime error: not enough input was given");
+                    }
+                    cells.at(cellptr) = (int)input.at(0);
+                    input.erase(input.begin());
+                } else {
+                    cells.at(cellptr) = (int)getch();
+                }
+                break;
         }
 
         codeptr++;
@@ -312,6 +320,7 @@ int main(int argc, char** argv) {
 
     if (!to_eval.size())
         err_out("no input given");
+
     // Evaluate all code
     for (vector<char> code : to_eval)
         evaluate(code, dump_tape, show_tape, input, delay);
