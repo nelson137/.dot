@@ -241,6 +241,9 @@ inoremap   jj   <Esc>
 " Make {<CR> set up brackets like an IDE would
 imap   {<CR>   {<CR>}<Esc>ko
 
+" Gundo mapping
+nnoremap <Leader>u :GundoToggle<CR>
+
 
 
 " Vundle
@@ -301,6 +304,10 @@ let NERDTrimTrailingWhitespace = 1
 let g:NERDCustomDelimiters = {
     \ 'python': { 'left': '#' },
 \ }
+
+" Gundo
+let g:gundo_help = 0
+let g:gundo_prefer_python3 = 1
 
 " AsyncRun
 let g:asyncrun_open = 8
