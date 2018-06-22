@@ -153,7 +153,7 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
     }
 
     if (output.size() > 0 && (dump_tape || show_tape))
-        cout << output << endl;
+        cout << output;
 }
 
 
