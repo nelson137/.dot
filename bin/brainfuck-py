@@ -104,8 +104,10 @@ def evaluate(code, dump_tape, show_tape, user_in, delay):
         elif command == ']' and cells[cellptr] != 0:
             codeptr = bracemap[codeptr]
         elif command == '.':
-            if dump_tape or show_tape: output += chr(cells[cellptr])
-            else: _stdout_write(chr(cells[cellptr]))
+            if dump_tape or show_tape:
+                output += chr(cells[cellptr])
+            else:
+                _stdout_write(chr(cells[cellptr]))
         elif command == ',':
             if show_tape:
                 if len(user_in) == 0:
