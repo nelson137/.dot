@@ -203,6 +203,7 @@ void help() {
 
 
 int main(int argc, char** argv) {
+    // Split options -abc into -a -b -c
     vector<string> orig_args(argv, argv+argc);
     vector<string> args;
     for (string arg : orig_args) {
@@ -240,7 +241,8 @@ int main(int argc, char** argv) {
                     err_out(err);
                 } else {
                     istringstream ss(argv[i]);
-                    if (! (ss >> delay)) err_out(err);
+                    if (! (ss >> delay))
+                        err_out(err);
                     delay_changed = true;
                 }
             } else if (cmd == "--dump-tape") {
@@ -253,9 +255,8 @@ int main(int argc, char** argv) {
                 else {
                     // TODO: is this broken? can this be improved?
                     char* arg_i= argv[i];
-                    for (int j=0; arg_i[j] != '\0'; j++) {
+                    for (int j=0; arg_i[j] != '\0'; j++)
                         input.push_back(arg_i[j]);
-                    }
                 }
             } else {
                 err_out("unknown option: " + cmd);
@@ -269,13 +270,17 @@ int main(int argc, char** argv) {
         err_out("arguments -c/--stdin-code and -f/--stdin-filenames" \
                 " cannot be used together");
 
-    if (dump_tape && show_tape)  // --dump-tape and --show-tape were both passed
+    // --dump-tape and --show-tape were both passed
+    if (dump_tape && show_tape)
         err_out("arguments --dump-tape and --show-tape" \
                 " cannot be used together");
 
-    if (show_tape && input.size() == 0)  // --show-tape without -i
+    // --show-tape without -i
+    if (show_tape && input.size() == 0)
         err_out("--show-tape requires -i/--input INPUT");
-    if (input.size() > 0 && !show_tape)  // -i without --show-tape
+
+    // -i without --show-tape
+    if (input.size() > 0 && !show_tape)
         err_out("-i/--input is only for use with --show-tape");
 
     // Auto set delay if --show-tape && delay wasn't changed by user
