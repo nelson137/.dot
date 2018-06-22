@@ -65,13 +65,7 @@ def _print_cells(cells, ptr=None):
 
 
 def _err_out(err):
-    if err == 'USAGE':
-        msg = 'usage: brainfuck-py [-h] [-c | -f] [-d DELAY] [--dump-tape' + \
-              ' | --show-tape]\n                    [-i INPUT]\n' + \
-              '                    [FILE [FILE ...]]'
-    else:
-        msg = 'brainfuck: ' + err
-    print(msg, file=sys.stderr)
+    print('brainfuck:', err, file=sys.stderr)
     sys.exit(1)
 
 

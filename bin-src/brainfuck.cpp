@@ -31,13 +31,7 @@ void print_cells_with_ptr(vector<int> cells, int ptr) {
 
 
 void err_out(string err) {
-    string msg;
-    if (err == "USAGE") {
-        msg = "usage: brainfuck [-h] [-c | -f] [-d DELAY] [--dump-tape | ";
-        msg += "--show-tape]\n                 [-i INPUT] [FILE [FILE ...]]";
-    } else
-        msg = "brainfuck: " + err;
-    cerr << msg << endl;
+    cerr << "brainfuck: " << err << endl;
     exit(1);
 }
 
