@@ -310,7 +310,6 @@ int main(int argc, char** argv) {
         }
     }
 
-    cout << "to_eval.size(): " << to_eval.size() << endl;
     if (!to_eval.size())
         err_out("no input given");
     // Evaluate all code
