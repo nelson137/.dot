@@ -204,7 +204,6 @@ void help() {
 
 int main(int argc, char** argv) {
     vector<string> orig_args(argv, argv+argc);
-    orig_args.erase(orig_args.begin());  // Remove brainfuck call from args
     vector<string> args;
     for (string arg : orig_args) {
         if (arg.substr(0,2) == "--")
@@ -224,8 +223,10 @@ int main(int argc, char** argv) {
     bool dump_tape = false;
     bool show_tape = false;
     vector<char> input;
-    for (int i=0; i<(int)args.size(); i++) {
-        string cmd = args[i];
+
+    string cmd;
+    for (int i=1; i<(int)args.size(); i++) {
+        cmd = args[i];
         if (cmd[0] == '-') {
             if (cmd == "-h" || cmd == "--help") {
                 help();
