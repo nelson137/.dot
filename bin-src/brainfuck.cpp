@@ -14,18 +14,28 @@ using namespace std;
 void print_cells(vector<int> cells) {
     cout << "\033[2K\r" << flush;
     for (int c : cells) {
-        cout << setw(5) << c << flush;
+        cout << ' ' << setw(4) << c << flush;
     }
 }
 
 
 void print_cells_with_ptr(vector<int> cells, int ptr) {
     cout << "\033[2K\r" << flush;
+    int i;
+    string to_cout;
     for (auto it = cells.begin(); it != cells.end(); it++) {
-        int i = distance(cells.begin(), it);
-        if (i == ptr) cout << setw(5) << '(' << cells.at(i) << ')';
-        else cout << setw(5) << cells.at(i);
-        cout << flush;
+        i = distance(cells.begin(), it);
+        if (i == ptr) {
+            to_cout = '(' + to_string(cells.at(i));
+            while (to_cout.length() < 4)
+                to_cout += ' ';
+            to_cout += ") ";
+        } else {
+            to_cout = ' ' + to_string(cells.at(i));
+            while (to_cout.length() < 6)
+                to_cout += ' ';
+        }
+        cout<< to_cout << flush;
     }
 }
 

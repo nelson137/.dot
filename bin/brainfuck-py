@@ -55,11 +55,14 @@ def _stdout_write(string):
 
 
 def _print_cells(cells, ptr=None):
-    cells = cells[:]
-    if ptr is not None: cells[ptr] = '(%d)' % cells[ptr]
-    cells = [str(val).ljust(5) for val in cells]
-    _stdout_write('\r\033[K')  # Clear line
-    _stdout_write(' '.join(cells))
+    to_print = []
+    for n in range(len(cells)):
+        if ptr is not None and n == ptr:
+            to_print.append('(%s)' % str(cells[n]).ljust(3))
+        else:
+            to_print.append(' ' + str(cells[n]).ljust(4))
+    print('\r\033[K', end='', flush=True)  # Clear line
+    print(' '.join(to_print), end='', flush=True)
 
 
 def _err_out(err):
