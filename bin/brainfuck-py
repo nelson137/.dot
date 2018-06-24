@@ -154,8 +154,6 @@ def main(args):
     show_tape = args.show_tape
     user_in = list(args.input)
 
-    if show_tape and user_in == []:  # --show-tape without -i
-        _err_out('--show-tape requires -i/--input INPUT')
     if user_in != [] and not show_tape:  # -i without --show-tape
         _err_out('-i/--input can only be used with --show-tape')
 

@@ -287,13 +287,9 @@ int main(int argc, char** argv) {
         err_out("arguments --dump-tape and --show-tape" \
                 " cannot be used together");
 
-    // --show-tape without -i
-    if (show_tape && input.size() == 0)
-        err_out("--show-tape requires -i/--input INPUT");
-
     // -i without --show-tape
     if (input.size() > 0 && !show_tape)
-        err_out("-i/--input is only for use with --show-tape");
+        err_out("-i/--input can only be used with --show-tape");
 
     // Auto set delay if --show-tape && delay wasn't changed by user
     if (show_tape && !delay_changed)
