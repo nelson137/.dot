@@ -67,6 +67,9 @@ export LANG=en_US.UTF-8
 
 export EDITOR='vim'
 
+# Fix zsh-autosuggestions plugin coloring in tmux
+export TERM=xterm-256color
+
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
