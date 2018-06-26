@@ -80,27 +80,6 @@ bat() {
         grep -E --color=never 'state|to empty|percentage'
 }
 
-brightness() {
-    # Get or set brightness of primary display
-
-    if [[ $# == 0 ]]; then
-        # Output current brightness
-        xrandr -d :0 --verbose | awk '/Brightness/ {print $2}'
-        return
-    fi
-
-    local cmd='xrandr -d :0 --output eDP-1 --brightness'
-    if [[ $@ == reset ]]; then
-        eval "$cmd 1.0"
-    else
-        # >&! redirects stdout and stderr
-        eval "$cmd $@ >&!/dev/null" || {
-            echo "Cannot set brightness to $@" >&2
-            return 1
-        }
-    fi
-}
-
 chhn() {
     # Change hostname
     sudo echo >/dev/null  # Cache sudo password
