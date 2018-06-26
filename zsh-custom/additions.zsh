@@ -25,7 +25,7 @@ export QT_QPA_FONTDIR=/usr/share/fonts
 # git aliases
 alias glop='git log -p'
 alias gc='git commit'
-alias gcamsg='git add -A; git commit -m'
+alias gcam='git add -A; git commit -m'
 
 # ls aliases
 alias ls='ls -pv --color'
