@@ -77,7 +77,7 @@ unsetopt aliases  # Turn aliases off while defining functions
 bat() {
     # Get battery stats
     upower -i "$(upower -e | grep BAT)" |
-        grep -E --color=never "state|to empty|percentage"
+        grep -E --color=never 'state|to empty|percentage'
 }
 
 brightness() {
@@ -89,7 +89,7 @@ brightness() {
         return
     fi
 
-    local cmd="xrandr -d :0 --output eDP-1 --brightness"
+    local cmd='xrandr -d :0 --output eDP-1 --brightness'
     if [[ $@ == reset ]]; then
         eval "$cmd 1.0"
     else
@@ -170,22 +170,22 @@ newscript() {
     #  if necessary
     [[ $# == 0 ]] && files=( t.sh ) || files=( $@ )
     touch $files
-    for file in $files; do
-        print -s "vim $file"
-        if [[ $file =~ \..cpp ]]; then
-            echo -ne "#include <iostream>\nusing namespace std;\n\nint" > "$file"
-            echo -e " main(int argc, char** argv) {\n    return 0;\n}" >> "$file"
-            vim +4 "$file"
+    for f in $files; do
+        print -s "vim $f"
+        if [[ $f =~ \..cpp ]]; then
+            echo -ne "#include <iostream>\nusing namespace std;\n\nint" > "$f"
+            echo -e " main(int argc, char** argv) {\n    return 0;\n}" >> "$f"
+            vim +4 "$f"
         else
-            if [[ $file =~ \..py ]]; then
-                echo -e "#!/usr/bin/env python3\n\n" > "$file"
-            elif [[ $file =~ \..zsh ]]; then
-                echo -e "#!/bin/zsh\n\n" > "$file"
+            if [[ $f =~ \..py ]]; then
+                echo -e "#!/usr/bin/env python3\n\n" > "$f"
+            elif [[ $f =~ \..zsh ]]; then
+                echo -e "#!/bin/zsh\n\n" > "$f"
             else
-                echo -e "#!/bin/bash\n\n" > "$file"
+                echo -e "#!/bin/bash\n\n" > "$f"
             fi
-            vim + +startinsert "$file"  # "+" puts cursor at bottom of file
-            chmod +x "$file"
+            vim + +startinsert "$f"  # "+" puts cursor at bottom of file
+            chmod +x "$f"
         fi
     done
 }
