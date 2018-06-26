@@ -1,9 +1,14 @@
 #!/bin/bash
 
-dir=~/Nextcloud
-server="https://cloud.nelsonearle.tk"
-read -srp "Password: " passwd
-echo ""
+cloudsync() {
+    local dir=~/Nextcloud
+    local server='https://cloud.nelsonearle.tk'
+    local passwd
+    read -srp 'Password: ' passwd
+    echo ''
 
-nextcloudcmd -s -u nelson -p "$passwd" --trust "$dir" "$server" &&
-    sudo chown -R nelson:nelson "$dir"
+    nextcloudcmd -s -u nelson -p "$passwd" --trust "$dir" "$server" &&
+        sudo chown -R nelson:nelson "$dir"
+}
+
+cloudsync "$@"
