@@ -1,10 +1,14 @@
 #!/bin/bash
 
-win_bin="/mnt/c/Program Files/Sublime Text 3/subl.exe"
-cmder_bin="${CMDER_ROOT}/../Sublime Text 3/subl"
-linux_bin="/usr/bin/subl"
+subl() {
+    local win_bin='/mnt/c/Program Files/Sublime Text 3/subl.exe'
+    local cmder_bin="${CMDER_ROOT}/../Sublime Text 3/subl"
+    local linux_bin='/usr/bin/subl'
 
-"$win_bin" $@ 2>/dev/null ||
-    "$cmder_bin" $@ 2>/dev/null ||
-    "$linux_bin" $@ 2>/dev/null ||
-    echo "subl not found" >&2
+    "$win_bin" $@ 2>/dev/null ||
+        "$cmder_bin" $@ 2>/dev/null ||
+        "$linux_bin" $@ 2>/dev/null ||
+        echo 'subl not found' >&2
+}
+
+subl "$@"
