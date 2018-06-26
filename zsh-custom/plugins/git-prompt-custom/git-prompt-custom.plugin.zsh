@@ -7,10 +7,11 @@ _git_pd_status() {
     local pd_status_file="${git_dir}/pd_status"
     local local_="$(git rev-parse @)"
     local remote="$(git ls-remote origin 2>/dev/null | awk '/HEAD/ {print $1}')"
-    local base="$(git merge-base @ @{u})"
+    local base="$(git merge-base @ @{u} 2>/dev/null)"
 
     local pd_status
     if [[ -z $remote ]]; then
+        # Cannot access remote
         pd_status="%{$fg[yellow]%}!%{$reset_color%}"
     else
         if [[ $local_ == $remote ]]; then
