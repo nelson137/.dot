@@ -50,8 +50,6 @@ alias whois='whois -H'
 alias -g dot='~/Projects/Git/dot'
 alias additions='vim ~/Projects/Git/dot/zsh-custom/additions.zsh'
 alias socwd='command du -csh . | tail -1'
-alias update-dot='git -C ~/Projects/Git/dot pull'
-alias update-system='sudo apt update && sudo apt upgrade -y'
 alias vimrc='vim ~/.vimrc'
 alias zshrc='vim ~/.zshrc'
 
@@ -174,6 +172,22 @@ ps() {
     # `ps aux | grep ...` can be run without seeing the grep call in
     # the ps output
     command ps "$@" | grep -Evm 1 'grep -E '
+}
+
+update() {
+    if [[ -x $1 ]]; then
+        update system
+        return
+    fi
+
+    case "$1" in
+        dot)
+            git -C ~/Projects/Git/dot/pull ;;
+        system)
+            sudo apt update && sudo apt upgrade -y ;;
+        *)
+            echo "target not recognized: $1" >&2 ;;
+    esac
 }
 
 vimrm() {
