@@ -242,7 +242,7 @@ inoremap   jj   <Esc>
 imap   {<CR>   {<CR>}<Esc>ko
 
 " Gundo mapping
-nnoremap <Leader>u :GundoToggle<CR>
+nnoremap   <Leader>u   :GundoToggle<CR>
 
 
 
