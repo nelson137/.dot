@@ -97,6 +97,10 @@ cpstat() {
     rsync -r --info=progress2 "$@"
 }
 
+dc() {
+    nohup "$@" >/dev/null 2>&1 &!
+}
+
 gcl() {
     # git clone username/repo(.git) or repo(.git)
     # In the case without a username, it's assumed the repo is mine
