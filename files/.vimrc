@@ -244,6 +244,9 @@ imap   {<CR>   {<CR>}<Esc>ko
 " Gundo mapping
 nnoremap   <Leader>u   :GundoToggle<CR>
 
+" Toggle line numbers
+nnoremap <silent>   <Leader>n   :set nu!<CR>
+
 
 
 " Vundle
