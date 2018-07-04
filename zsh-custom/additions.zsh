@@ -171,9 +171,9 @@ newscript() {
 
 ps() {
     # Remove 1 line containing "grep -E " from ps output so that
-    #  `ps aux | grep ...` can be run without seeing the grep call in
-    #  the ps output
-    command ps "$@" | grep -m 1 -v 'grep -E '
+    # `ps aux | grep ...` can be run without seeing the grep call in
+    # the ps output
+    command ps "$@" | grep -Evm 1 'grep -E '
 }
 
 vimrm() {
