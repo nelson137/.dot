@@ -22,17 +22,6 @@ export QT_QPA_FONTDIR=/usr/share/fonts
 
 ### Aliases ###
 
-# git aliases
-alias glop='git log -p'
-alias gc='git commit'
-alias gcam='git add -A; git commit -m'
-
-# ls aliases
-alias ls='ls -pv --color'
-alias la='ls -pAv --color'
-alias ll='ls -pohv --color'
-alias lla='ls -pAohv --color'
-
 # Command aliases
 alias cp='cp -ir'
 alias du='du -h --max-depth=1'
@@ -45,6 +34,17 @@ alias python='python3'
 alias rm='rm -r'
 alias sed='sed -r'
 alias whois='whois -H'
+
+# ls aliases
+alias ls='ls -pv --color'
+alias la='ls -pAv --color'
+alias ll='ls -pohv --color'
+alias lla='ls -pAohv --color'
+
+# git aliases
+alias glop='git log -p'
+alias gc='git commit'
+alias gcam='git add -A; git commit -m'
 
 # My aliases
 alias -g dot='~/Projects/Git/dot'
