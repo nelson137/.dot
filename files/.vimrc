@@ -247,6 +247,9 @@ nnoremap   <Leader>u   :GundoToggle<CR>
 " Toggle line numbers
 nnoremap <silent>   <Leader>n   :set nu!<CR>
 
+" Don't swap selection and register " when pasting
+xnoremap   p   pgvy
+
 
 
 " Vundle
