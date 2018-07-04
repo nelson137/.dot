@@ -2,14 +2,10 @@
 # Get or set the brightness of the screen and/or the physical display
 # TODO: [[ ! -f /sys/class/backlight/intel_backlight/brightness ]] && disable -s
 
-lum_usage() {
-    echo -n 'Usage: lum [-h | --help] [-s | --screen | -d | --display]' >&2
-    echo ' [BRIGHTNESS]' >&2
-}
-
 lum_help() {
-    lum_usage
     {
+        echo -n 'Usage: lum [-h|--help] [-s|--screen|-d|--display]'
+        echo ' [BRIGHTNESS]'
         echo
         echo 'Get or set the brightness of the screen or physical display.'
         echo
@@ -18,18 +14,12 @@ lum_help() {
         echo '  -s, --screen   Set the screen brightness to BRIGHTNESS'
         echo '  -d, --display  Set the physical display brightness to BRIGHTNESS'
     } >&2
+    exit
 }
 
 lum_err() {
-    if [[ "$1" == help ]]; then
-        lum_help
-        exit
-    else
-        echo "Err: $1" >&2
-        lum_usage
-        echo "Try 'lum -h' for more information" >&2
-        exit 1
-    fi
+    echo "lum: $1" >&2
+    exit 1
 }
 
 lum() {
@@ -65,7 +55,7 @@ lum() {
             -d|--display)
                 set_display=1 ;;
             -*|--*)
-                lum_err "Option not recognized: $1" ;;
+                lum_err "option not recognized: $1" ;;
             *)
                 brightness+=( "$1" ) ;;
         esac
@@ -73,19 +63,19 @@ lum() {
     done
 
     [[ "$help" ]] &&
-        lum_err help
+        lum_help
 
     # Both -s and -d were given
     [[ "$set_screen" && "$set_display" ]] &&
-        lum_err 'Cannot sed screen and display brightness at the same time'
+        lum_err 'cannot set screen and display brightness at the same time'
 
     # No brightness was given
     [[ "${#brightness[@]}" == 0 ]] &&
-        lum_err 'No brightness given'
+        lum_err 'no brightness given'
 
     # Multiple brightnesses were given
     [[ "${#brightness[@]}" > 1 ]] &&
-        lum_err 'Cannot set more than one brightness at the same time'
+        lum_err 'cannot set more than one brightness at the same time'
 
     local brightness="${brightness[0]}"
 
@@ -103,10 +93,10 @@ lum() {
         else
             # Error out if brightness is not an integer
             [[ "$brightness" =~ ^[0-9]+$ ]] ||
-                lum_err "Cannot set brightness to $brightness"
+                lum_err "cannot set brightness to $brightness"
             # Use bc to compare floating point numbers
             (( $(echo "$brightness > $s_max" | bc -l) )) &&
-                lum_err "Max screen brightness is $s_max"
+                lum_err "max screen brightness is $s_max"
             eval "$cmd $brightness"
         fi
     elif [[ "$set_display" == 1 ]]; then  # Set display brightness
@@ -117,10 +107,10 @@ lum() {
         else
             # Use bc to compare floating point numbers
             (( $(echo "$brightness > $d_max" | bc -l) )) &&
-                lum_err "Max display brightness is $d_max"
+                lum_err "max display brightness is $d_max"
             # Error out if xrandr call fails
             eval "$cmd $brightness >/dev/null 2>&1" ||
-                lum_err "Cannot set brightness to $brightness"
+                lum_err "cannot set brightness to $brightness"
         fi
     else  # No -s or -d option was given
         if [[ "$brightness" == reset ]]; then
