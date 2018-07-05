@@ -1,0 +1,110 @@
+#!/bin/bash
+# Make this system headless or not headless
+
+
+
+headless_help() {
+    echo 'Usage: headless <cmd>'
+    echo
+    echo 'Make this system headless or not headless.'
+    echo
+    echo -n 'This script modifies the GRUB_CMDLINE_LINUX_DEFAULT and '
+    echo 'GRUB_TERMINAL'
+    echo 'variables in /etc/default/grub, then runs `systemctl set-default` in'
+    echo 'order to either make this system "headless" or not.'
+    echo
+    echo 'Commands:'
+    echo '  yes  Make the necessary changes to boot directly to the console'
+    echo '  no   Make the necessary changes to boot to the GUI'
+    exit
+}
+
+
+
+headless_err() {
+    [[ "$1" == help ]] &&
+        headless_help >&2
+
+    echo "headless: $1" >&2
+    exit 1
+}
+
+
+
+headless_reboot() {
+    local response
+    read -rp 'Would you like to reboot now (yes/no)? ' response
+
+    if [[ "$response" =~ ^[Yy]es$ ]]; then
+        sudo reboot
+    else
+        headless_err 'not rebooting'
+    fi
+}
+
+
+
+headless_yes() {
+    sudo sed -ri 's/^(GRUB_CMDLINE_LINUX_DEFAULT=).*$/\1"text"/' \
+        /etc/default/grub
+    sudo sed -ri 's/^#(GRUB_TERMINAL=.*)$/\1/' \
+        /etc/default/grub
+
+    sudo update-grub
+    sudo systemctl set-default multi-user.target
+
+    headless_reboot
+}
+
+
+
+headless_no() {
+    sudo sed -ri 's/^(GRUB_CMDLINE_LINUX_DEFAULT=).*$/\1"quiet splash"/' \
+        /etc/default/grub
+    sudo sed -ri 's/^(GRUB_TERMINAL=.*)$/#\1/' \
+        /etc/default/grub
+
+    sudo update-grub
+    sudo systemctl set-default graphical.target
+
+    headless_reboot
+}
+
+
+
+headless() {
+    [[ $# == 0 ]] &&
+        headless_err help
+
+    # Parse arguments
+    local help yes no
+    while [[ $# > 0 ]]; do
+        case "$1" in
+            -h|--help)
+                help=1 ;;
+            y|yes)
+                yes=1 ;;
+            n|no)
+                no=1 ;;
+            *)
+                headless_err "argument not recognized: $1"
+        esac
+        shift
+    done
+
+    [[ $help == 1 ]] &&
+        headless_help
+
+    [[ $yes == 1 && $no == 1 ]] &&
+        headless_err help
+
+    [[ $yes == 1 ]] &&
+        headless_yes
+
+    [[ $no == 1 ]] &&
+        headless_no
+}
+
+
+
+headless "$@"
