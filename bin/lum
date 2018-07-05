@@ -2,6 +2,8 @@
 # Get or set the brightness of the screen and/or the physical display
 # TODO: [[ ! -f /sys/class/backlight/intel_backlight/brightness ]] && disable -s
 
+
+
 lum_help() {
     {
         echo -n 'Usage: lum [-h|--help] [-s|--screen|-d|--display]'
@@ -17,10 +19,14 @@ lum_help() {
     exit
 }
 
+
+
 lum_err() {
     echo "lum: $1" >&2
     exit 1
 }
+
+
 
 lum() {
     # Max screen and display brightnesses
@@ -122,5 +128,7 @@ lum() {
         fi
     fi
 }
+
+
 
 lum "$@"
