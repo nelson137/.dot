@@ -109,7 +109,7 @@ lum() {
             (( $(echo "$brightness > $d_max" | bc -l) )) &&
                 lum_err "max display brightness is $d_max"
             # Error out if xrandr call fails
-            eval "$cmd $brightness >/dev/null 2>&1" ||
+            eval "$cmd $brightness &>/dev/null" ||
                 lum_err "cannot set brightness to $brightness"
         fi
     else  # No -s or -d option was given

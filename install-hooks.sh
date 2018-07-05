@@ -181,7 +181,7 @@ sed -r 's/^ {4}//' > "${dir}/push-gitignore-changes.sh" <<'EOF'
     # If ahead by 1 commit
     if [[ "$(git rev-list --count origin...HEAD)" == 1 ]]; then
         echo "Pushing updated .gitignore ..."
-        git push >/dev/null 2>&1 || err_echo "Could not push .gitignore changes"
+        git push &>/dev/null || err_echo "Could not push .gitignore changes"
     fi
 EOF
 

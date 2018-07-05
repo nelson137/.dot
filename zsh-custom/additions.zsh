@@ -100,7 +100,7 @@ cpstat() {
 }
 
 dc() {
-    nohup "$@" >/dev/null 2>&1 &!
+    nohup "$@" &>!/dev/null &!
 }
 
 gcl() {

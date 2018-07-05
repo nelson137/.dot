@@ -16,7 +16,7 @@ _prompt_status() {
     local status_items=()
 
     # Battery percent
-    if which upower >/dev/null && bat >/dev/null 2>&1; then
+    if which upower >/dev/null && bat &>/dev/null; then
         local state="$(bat | awk '/state/ {print $2}')"
         local percent="$(bat | awk '/percentage/ {print $2}' | tr -d '%')"
 
@@ -42,7 +42,7 @@ _prompt_status() {
     fi
 
     # Is sudo password still saved
-    sudo -n echo >/dev/null 2>&1 &&
+    sudo -n echo &>/dev/null &&
         status_items+=( "$(fg_bold red SUDO)" )
 
     # Background jobs
