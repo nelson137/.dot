@@ -5,23 +5,25 @@
 
 
 lum_help() {
-    {
-        echo -n 'Usage: lum [-h|--help] [-s|--screen|-d|--display]'
-        echo ' [BRIGHTNESS]'
-        echo
-        echo 'Get or set the brightness of the screen or physical display.'
-        echo
-        echo 'Options:'
-        echo '  -h, --help     Print this help message and exit'
-        echo '  -s, --screen   Set the screen brightness to BRIGHTNESS'
-        echo '  -d, --display  Set the physical display brightness to BRIGHTNESS'
-    } >&2
+    echo 'Usage: lum [-h|--help]'
+    echo '       lum [-s|--screen] <brightness>'
+    echo '       lum [-d|--display] <brightness>'
+    echo
+    echo 'Get or set the brightness of the screen or physical display.'
+    echo
+    echo 'Options:'
+    echo '  -h, --help     Print this help message and exit'
+    echo '  -s, --screen   Set the screen brightness to <brightness>'
+    echo '  -d, --display  Set the physical display brightness to <brightness>'
     exit
 }
 
 
 
 lum_err() {
+    [[ "$1" == help ]] &&
+        lum_help >&2
+
     echo "lum: $1" >&2
     exit 1
 }
@@ -46,12 +48,11 @@ lum() {
 
         echo "Screen:  ${s}/${s_max} (${s_p}%)"
         echo "Display: $d"
-        return
+        exit
     fi
 
     # Parse arguments
-    local help set_screen set_display
-    local -a brightness
+    local help set_screen set_display brightness
     while [[ $# > 0 ]]; do
         case $1 in
             -h|--help)
@@ -63,27 +64,23 @@ lum() {
             -*|--*)
                 lum_err "option not recognized: $1" ;;
             *)
-                brightness+=( "$1" ) ;;
+                [[ -n "$brightness" ]] &&
+                    lum_err help
+                brightness="$1" ;;
         esac
         shift
     done
 
-    [[ "$help" ]] &&
+    [[ "$help" == 1 ]] &&
         lum_help
 
     # Both -s and -d were given
-    [[ "$set_screen" && "$set_display" ]] &&
-        lum_err 'cannot set screen and display brightness at the same time'
+    [[ "$set_screen" == 1 && "$set_display" == 1 ]] &&
+        lum_err help
 
     # No brightness was given
-    [[ "${#brightness[@]}" == 0 ]] &&
-        lum_err 'no brightness given'
-
-    # Multiple brightnesses were given
-    [[ "${#brightness[@]}" > 1 ]] &&
-        lum_err 'cannot set more than one brightness at the same time'
-
-    local brightness="${brightness[0]}"
+    [[ -z "$brightness" ]] &&
+        lum_err help
 
     # Commands to set brightness and their default values
     local screen_cmd='sudo tee /sys/class/backlight/intel_backlight/brightness >/dev/null <<<'
@@ -124,7 +121,7 @@ lum() {
             eval "$screen_cmd $screen_default"
             eval "$display_cmd $display_default"
         else
-            lum_err '-s or -d is required'
+            lum_err help
         fi
     fi
 }
