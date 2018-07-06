@@ -9,10 +9,10 @@ alias pip="pip3"
 
 PS1="\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\]\W\[\e[m\] \$ "
 
-if [[ -f $HOME/.bashrc ]]; then
-    alias r="source $HOME/.bashrc"
-elif [[ ! -z $CMDER_ROOT ]]; then
-    alias r="source $CMDER_ROOT/vendor/git-for-windows/etc/bash.bashrc"
+if [[ -f "$HOME/.bashrc" ]]; then
+    alias r="source '$HOME/.bashrc'"
+elif [[ -n "$CMDER_ROOT" ]]; then
+    alias r="source '$CMDER_ROOT/vendor/git-for-windows/etc/bash.bashrc'"
 else
     echo "No bashrc file found"
 fi
