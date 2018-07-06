@@ -1,7 +1,7 @@
 jo() {
-    # Java-Only
+    # Java Only
     if [[ $# != 1 ]]; then
-        echo "Usage: jo FILE" >&2
+        echo 'Usage: jo FILE' >&2
         return 1
     else
         javac "$1"
@@ -9,9 +9,9 @@ jo() {
 }
 
 jar() {
-    # Java-And-Run
+    # Java And Run
     if [[ $# != 1 ]]; then
-        echo "Usage: jar FILE" >&2
+        echo 'Usage: jar FILE' >&2
         return 1
     else
         jo "$1"
@@ -20,9 +20,9 @@ jar() {
 }
 
 jrr() {
-    # Java-Run-Remove
+    # Java, Run, Remove
     if [[ $# != 1 ]]; then
-        echo "Usage: jrr FILE" >&2
+        echo 'Usage: jrr FILE' >&2
         return 1
     else
         jar "$1" && rm "${1%.java}.class"
