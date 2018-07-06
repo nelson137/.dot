@@ -8,17 +8,21 @@ bo() {
     fi
 }
 
+
+
 bar() {
     # Build And Run
     if [[ $# == 0 ]]; then
         echo 'Usage: bar <file> [<execution args> ...]' >&2
         return 1
     else
-        file="$1"
+        src="$1"
         shift
-        bo "$file" && "./${file%.cpp}" $@
+        bo "$src" && "./${src%.cpp}" "$@"
     fi
 }
+
+
 
 brr() {
     # Build, Run, Remove
@@ -26,8 +30,8 @@ brr() {
         echo 'Usage: brr <file> [<execution args> ...]' >&2
         return 1
     else
-        file="$1"
+        src="$1"
         shift
-        bar "$file" $@ && rm "./${file%.cpp}"
+        bar "$src" "$@" && rm "./${src%.cpp}"
     fi
 }
