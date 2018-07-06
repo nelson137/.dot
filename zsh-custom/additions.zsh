@@ -51,7 +51,7 @@ alias -g dot='~/Projects/Git/dot'
 alias additions='vim ~/Projects/Git/dot/zsh-custom/additions.zsh'
 alias rainbow='cat /dev/urandom | base64 | figlet -ctf term | lolcat -fad 1 -s 75 -p 5'
 alias socwd='command du -csh . | tail -1'
-alias suspend='sudo systemctl suspend'
+# alias suspend='sudo systemctl suspend'
 alias vimrc='vim ~/.vimrc'
 alias zshrc='vim ~/.zshrc'
 
