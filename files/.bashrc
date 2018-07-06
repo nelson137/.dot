@@ -102,4 +102,8 @@ if ! shopt -oq posix; then
   fi
 fi
 
-source "$HOME/.bash_additions"
+if [ -f "$HOME/.bash_additions" ]; then
+    source "$HOME/.bash_additions"
+else
+    echo "$HOME/.bash_additions not found" >&2
+fi
