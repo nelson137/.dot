@@ -2,6 +2,11 @@
 
 export PATH="$HOME/bin:$PATH"
 
+# Main prompt = "user@hostname:cwd $ "
+#   user@hostname - green
+#   : - white
+#   cwd - blue
+#   $ - white
 PS1="\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\]\W\[\e[m\] \$ "
 
 # lesshst, stfu

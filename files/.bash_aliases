@@ -1,9 +1,11 @@
 #!/bin/bash
 
+# Command aliases
 alias pip='pip3'
 alias python='python3'
 alias r='exec bash'
 
+# ls aliases
 alias ls='ls -p --color'
 alias la='ls -pA --color'
 alias ll='ls -poh --color'
