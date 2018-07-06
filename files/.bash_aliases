@@ -2,7 +2,7 @@
 
 alias pip='pip3'
 alias python='python3'
-alias r='source "$HOME/.bashrc"'
+alias r='exec bash'
 
 alias ls='ls -p --color'
 alias la='ls -pA --color'
