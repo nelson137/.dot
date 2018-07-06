@@ -4,8 +4,8 @@
 
 export PATH="$HOME/bin:$PATH"
 
-alias python="python3"
-alias pip="pip3"
+alias python='python3'
+alias pip='pip3'
 
 PS1="\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\]\W\[\e[m\] \$ "
 
@@ -14,7 +14,7 @@ if [[ -f "$HOME/.bashrc" ]]; then
 elif [[ -n "$CMDER_ROOT" ]]; then
     alias r="source '$CMDER_ROOT/vendor/git-for-windows/etc/bash.bashrc'"
 else
-    echo "No bashrc file found"
+    echo 'No bashrc file found'
 fi
 
 # lesshst, stfu
@@ -28,17 +28,17 @@ MYSQL_HISTFILE=/dev/null
 ### System-Specific Config ###
 
 ls_mac() {
-    alias ls="ls -Gp"
-    alias la="ls -GpA"
-    alias ll="ls -Gpoh"
-    alias lla="ls -GpAoh"
+    alias ls='ls -Gp'
+    alias la='ls -GpA'
+    alias ll='ls -Gpoh'
+    alias lla='ls -GpAoh'
 }
 
 ls_linux() {
-    alias ls="ls -p --color"
-    alias la="ls -pA --color"
-    alias ll="ls -poh --color"
-    alias lla="ls -pAoh --color"
+    alias ls='ls -p --color'
+    alias la='ls -pA --color'
+    alias ll='ls -poh --color'
+    alias lla='ls -pAoh --color'
 }
 
 
@@ -47,7 +47,7 @@ ls_linux() {
 
 mkcd() {
     if [[ $# != 1 ]]; then
-        echo "Usage: mkcd DIR"
+        echo 'Usage: mkcd DIR'
     else
         mkdir -p "$1" && cd -P "$1"
     fi
@@ -59,12 +59,12 @@ clera() {
     figlet -f ${choices[$i]} clera
 }
 
-call_instructs() { echo "Call in the same directory as FILE"; }
+call_instructs() { echo 'Call in the same directory as FILE'; }
 
 bo() {
     # Build-Only
     if [[ $# != 1 ]]; then
-        echo "Usage: bo FILE" && call_instructs
+        echo 'Usage: bo FILE' && call_instructs
     else
         g++ "$1" -std=c++11 -o "${1%.cpp}"
     fi
@@ -73,7 +73,7 @@ bo() {
 bar() {
     # Build-And-Run
     if [[ $# == 0 ]]; then
-        echo "Usage: bar FILE" && call_instructs
+        echo 'Usage: bar FILE' && call_instructs
     else
         fn="$1"
         shift
@@ -84,7 +84,7 @@ bar() {
 brr() {
     # Build-Run-Remove
     if [[ $# == 0 ]]; then
-        echo "Usage: brr FILE" && call_instructs
+        echo 'Usage: brr FILE' && call_instructs
     else
         fn="$1"
         shift
@@ -95,7 +95,7 @@ brr() {
 jo() {
     # Java-Only
     if [[ $# != 1 ]]; then
-        echo "Usage: jo FILE" && call_instructs
+        echo 'Usage: jo FILE' && call_instructs
     else
         javac "$1"
     fi
@@ -104,7 +104,7 @@ jo() {
 jar() {
     # Java-And-Run
     if [[ $# != 1 ]]; then
-        echo "Usage: jar FILE" && call_instructs
+        echo 'Usage: jar FILE' && call_instructs
     else
         jo "$1"
         java "${1%.java}"
@@ -114,7 +114,7 @@ jar() {
 jrr() {
     # Java-Run-Remove
     if [[ $# != 1 ]]; then
-        echo "Usage: jrr FILE" && call_instructs
+        echo 'Usage: jrr FILE' && call_instructs
     else
         jar "$1"
         rm "${1%.java}.class"
