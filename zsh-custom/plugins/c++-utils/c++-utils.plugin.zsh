@@ -1,5 +1,5 @@
 bo() {
-    # Build-Only
+    # Build Only
     if [[ $# != 1 ]]; then
         echo "Usage: bo FILE" >&2
         return 1
@@ -9,7 +9,7 @@ bo() {
 }
 
 bar() {
-    # Build-And-Run
+    # Build And Run
     if [[ $# == 0 ]]; then
         echo "Usage: bar FILE [ARGS ...]" >&2
         return 1
@@ -21,7 +21,7 @@ bar() {
 }
 
 brr() {
-    # Build-Run-Remove
+    # Build, Run, Remove
     if [[ $# == 0 ]]; then
         echo "Usage: brr FILE [ARGS ...]" >&2
         return 1
