@@ -102,8 +102,12 @@ if ! shopt -oq posix; then
   fi
 fi
 
-if [ -f "$HOME/.bash_additions" ]; then
-    source "$HOME/.bash_additions"
-else
-    echo "$HOME/.bash_additions not found" >&2
-fi
+# User config files
+bash_files=( ~/.bash_{additions,aliases,functions} )
+for bf in "${bash_files[@]}"; do
+    if [[ -f "$bf" ]]; then
+        source "$bf"
+    else
+        echo "$bf not found" >&2
+    fi
+done
