@@ -36,10 +36,10 @@ alias sed='sed -r'
 alias whois='whois -H'
 
 # ls aliases
-alias ls='ls -pv --color'
-alias la='ls -pAv --color'
-alias ll='ls -pohv --color'
-alias lla='ls -pAohv --color'
+alias ls='ls -pv --color --time-style=long-iso'
+alias la='ls -pAv --color --time-style=long-iso'
+alias ll='ls -pohv --color --time-style=long-iso'
+alias lla='ls -pAohv --color --time-style=long-iso'
 
 # git aliases
 alias glop='git log -p'
