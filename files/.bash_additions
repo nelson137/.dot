@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export PATH="$HOME/bin:$PATH"
-
 # Main prompt = "user@hostname:cwd $ "
 #   user@hostname - green
 #   : - white
@@ -9,8 +7,20 @@ export PATH="$HOME/bin:$PATH"
 #   $ - white
 PS1="\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\]\W\[\e[m\] \$ "
 
+export PATH="$HOME/bin:$PATH"
+
 # lesshst, stfu
 LESSHISTFILE=/dev/null
 
 # mysql_histfile, stfu
 MYSQL_HISTFILE=/dev/null
+
+# awscli completions
+[[ -d /opt/aws-cli ]] && source /opt/aws-cli/bin/aws_zsh_completer.sh
+
+# Phantomjs
+export QT_QPA_PLATFORM=offscreen
+export QT_QPA_FONTDIR=/usr/share/fonts
+
+# Create vim undodir if it doesn't exist
+[[ ! -d ~/.vim/undodir ]] && mkdir -p ~/.vim/undodir
