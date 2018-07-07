@@ -10,7 +10,7 @@ sed -r 's/^ {4}//' > "${dir}/commit-msg" <<'EOF'
     #!/bin/bash
 
     # Put lines of commit message into array
-    local -a commit_msg
+    declare -a commit_msg
     while read line; do
         commit_msg+=( "$line" )
     done < <(cat "$1")
@@ -24,9 +24,9 @@ sed -r 's/^ {4}//' > "${dir}/commit-msg" <<'EOF'
 
     # Remove leading and trailing blank lines
     #  and lines containing only space characters
-    local start=0
-    local end="$(( ${#commit_msg[@]} - 1 ))"
-    local len="$(( ${#commit_msg[@]} ))"
+    start=0
+    end="$(( ${#commit_msg[@]} - 1 ))"
+    len="$(( ${#commit_msg[@]} ))"
     while [[ -z "${commit_msg[$start]//[ $'\t'$'\n']*}" ]]; do
         ((start++))
         ((len--))
@@ -42,7 +42,7 @@ sed -r 's/^ {4}//' > "${dir}/commit-msg" <<'EOF'
 
     # Get number of characers in commit message
     #  -1 because of the added newline
-    local msg_len="$(( $(echo "$commit_msg" | wc -m) - 1 ))"
+    msg_len="$(( $(echo "$commit_msg" | wc -m) - 1 ))"
 
     if (( msg_len > 50 )); then
         echo "Commit message is $msg_len characters" >&2
