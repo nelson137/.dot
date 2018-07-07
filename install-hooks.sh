@@ -6,52 +6,6 @@ mkdir -p "$dir"
 rm -f ${dir}/*.sample
 
 
-sed -r 's/^ {4}//' > "${dir}/commit-msg" <<'EOF'
-    #!/bin/bash
-
-    # Put lines of commit message into array
-    declare -a commit_msg
-    while read line; do
-        commit_msg+=( "$line" )
-    done < <(cat "$1")
-
-    n="$(cat $1 | grep -n '^# Please enter the commit message' | cut -d: -f1)"
-    if [[ -n $n ]]; then
-        ((n--))
-        # Cut out comments and patch from message
-        commit_msg=( "${commit_msg[@]:0:$n}" )
-    fi
-
-    # Remove leading and trailing blank lines
-    #  and lines containing only space characters
-    start=0
-    end="$(( ${#commit_msg[@]} - 1 ))"
-    len="$(( ${#commit_msg[@]} ))"
-    while [[ -z "${commit_msg[$start]//[ $'\t'$'\n']*}" ]]; do
-        ((start++))
-        ((len--))
-    done
-    while [[ -z "${commit_msg[$end]//[ $'\t'$'\n']*}" ]]; do
-        ((len--))
-        ((end--))
-    done
-    commit_msg=( "${commit_msg[@]:$start:$len}" )
-
-    # Join commit_msg array with newline
-    commit_msg="$(for l in "${commit_msg[@]}"; do echo "$l"; done)"
-
-    # Get number of characers in commit message
-    #  -1 because of the added newline
-    msg_len="$(( $(echo "$commit_msg" | wc -m) - 1 ))"
-
-    if (( msg_len > 50 )); then
-        echo "Commit message is $msg_len characters" >&2
-        echo "The maximum is 50" >&2
-        exit 1
-    fi
-EOF
-
-
 sed -r 's/^ {4}//' > "${dir}/cpp-compile.sh" <<'EOF'
     #!/bin/bash
 
@@ -212,5 +166,5 @@ sed -r 's/^ {4}//' > "${dir}/update-vim-plugins.sh" <<'EOF'
 EOF
 
 
-chmod +x "${dir}/"{commit-msg,cpp-compile.sh,post-merge,pre-push}
+chmod +x "${dir}/"{cpp-compile.sh,post-merge,pre-push}
 chmod +x "${dir}/"{push-gitignore-changes.sh,update-vim-plugins.sh}
