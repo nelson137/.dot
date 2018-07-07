@@ -50,7 +50,7 @@ headless_yes() {
     sudo sed -ri 's/^#(GRUB_TERMINAL=.*)$/\1/' \
         /etc/default/grub
 
-    sudo update-grub
+    sudo update-grub 2>/dev/null
     sudo systemctl set-default multi-user.target
 
     headless_reboot
@@ -64,7 +64,7 @@ headless_no() {
     sudo sed -ri 's/^(GRUB_TERMINAL=.*)$/#\1/' \
         /etc/default/grub
 
-    sudo update-grub
+    sudo update-grub 2>/dev/null
     sudo systemctl set-default graphical.target
 
     headless_reboot
