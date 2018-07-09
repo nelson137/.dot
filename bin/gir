@@ -79,7 +79,7 @@ gir() {
     # Curl POST failed
     echo 'Could not create Github repo.'
     read -rp 'Would you like to re-cache the password (yes/no)? ' response
-    if [[ "$response" =~ ^[Yy][Ee][Ss]$ ]]; then
+    if [[ "$response" =~ ^[Yy]([Ee][Ss])?$ ]]; then
         gir_store_passwd
         gir "$@"
     else

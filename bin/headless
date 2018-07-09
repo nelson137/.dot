@@ -35,7 +35,7 @@ headless_reboot() {
     local response
     read -rp 'Would you like to reboot now (yes/no)? ' response
 
-    [[ "$response" =~ ^[Yy][Ee][Ss]$ ]] &&
+    [[ "$response" =~ ^[Yy]([Ee][Ss])?$ ]] &&
         sudo reboot
 }
 
