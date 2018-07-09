@@ -35,11 +35,8 @@ headless_reboot() {
     local response
     read -rp 'Would you like to reboot now (yes/no)? ' response
 
-    if [[ "$response" =~ ^[Yy][Ee][Ss]$ ]]; then
+    [[ "$response" =~ ^[Yy][Ee][Ss]$ ]] &&
         sudo reboot
-    else
-        headless_err 'not rebooting'
-    fi
 }
 
 
