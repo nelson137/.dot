@@ -51,7 +51,7 @@ headless_yes() {
         /etc/default/grub
 
     sudo update-grub 2>/dev/null
-    sudo systemctl set-default multi-user.target
+    sudo systemctl set-default multi-user.target 2>/dev/null
 
     headless_reboot
 }
@@ -65,7 +65,7 @@ headless_no() {
         /etc/default/grub
 
     sudo update-grub 2>/dev/null
-    sudo systemctl set-default graphical.target
+    sudo systemctl set-default graphical.target 2>/dev/null
 
     headless_reboot
 }
