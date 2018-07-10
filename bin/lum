@@ -99,7 +99,7 @@ lum() {
             -*|--*)
                 lum_err "option not recognized: $1" ;;
             *)
-                [[ -n "$brightness" ]] &&
+                [[ "$brightness" ]] &&
                     lum_err help
                 brightness="$1" ;;
         esac

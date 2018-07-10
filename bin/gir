@@ -57,7 +57,7 @@ gir() {
             -*|--*)
                 gir_err "option not recognized: $1" ;;
             *)
-                [[ -n "$repo" ]] &&
+                [[ "$repo" ]] &&
                     gir_err help
                 repo="$1" ;;
         esac
