@@ -50,7 +50,7 @@ gir() {
 
     # Parse arguments
     local help repo
-    while [[ $# > 0 ]]; do
+    while (( $# > 0 )); do
         case $1 in
             -h|--help)
                 help=1 ;;

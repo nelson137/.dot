@@ -34,7 +34,7 @@ listbox() {
     unset title opts arrow
 
     local no_echo=false
-    while [[ $# > 0 ]]; do
+    while (( $# > 0 )); do
         case $1 in
             -h|--help)
                 _usage

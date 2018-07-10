@@ -82,7 +82,7 @@ lum() {
 
     # Parse arguments
     local help verbose set_s set_d brightness
-    while [[ $# > 0 ]]; do
+    while (( $# > 0 )); do
         case $1 in
             -h|--help)
                 help=1 ;;

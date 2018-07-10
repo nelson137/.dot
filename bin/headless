@@ -75,7 +75,7 @@ headless() {
 
     # Parse arguments
     local help yes no
-    while [[ $# > 0 ]]; do
+    while (( $# > 0 )); do
         case "$1" in
             -h|--help)
                 help=1 ;;
