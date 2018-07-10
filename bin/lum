@@ -2,6 +2,10 @@
 # Get or set the brightness of the screen and/or the physical display
 # TODO: [[ ! -f /sys/class/backlight/intel_backlight/brightness ]] && disable -s
 
+# Max screen and display brightnesses
+s_max="$(cat /sys/class/backlight/intel_backlight/max_brightness)"
+d_max=2
+
 
 
 lum_help() {
@@ -30,11 +34,31 @@ lum_err() {
 
 
 
-lum() {
-    # Max screen and display brightnesses
-    local s_max="$(cat /sys/class/backlight/intel_backlight/max_brightness)"
-    local d_max=2
+lum_set_screen() {
+    # Error out if brightness is not an integer
+    [[ "$1" =~ ^[0-9]+$ ]] ||
+        lum_err "cannot set brightness to $1"
+    # Use bc to compare floating point numbers
+    (( $(echo "$1 > $s_max" | bc -l) )) &&
+        lum_err "max screen brightness is $s_max"
 
+    sudo tee /sys/class/backlight/intel_backlight/brightness >/dev/null <<< "$1"
+}
+
+
+
+lum_set_display() {
+    # Use bc to compare floating point numbers
+    (( $(echo "$1 > $d_max" | bc -l) )) &&
+        lum_err "max display brightness is $d_max"
+    # Error out if xrandr call fails
+    xrandr -d :0 --output eDP-1 --brightness "$1" &>/dev/null ||
+        lum_err "cannot set brightness to $1"
+}
+
+
+
+lum() {
     # Output current screen and display brightness if no arguments were given
     if [[ $# == 0 ]]; then
         # Get current and max screen brightness, calculate brightness percent
@@ -82,44 +106,27 @@ lum() {
     [[ -z "$brightness" ]] &&
         lum_err help
 
-    # Commands to set brightness and their default values
-    local screen_cmd='sudo tee /sys/class/backlight/intel_backlight/brightness >/dev/null <<<'
+    # Default brightness values
     local screen_default='61'
-    local display_cmd='xrandr -d :0 --output eDP-1 --brightness'
     local display_default='1.0'
 
     if [[ "$set_screen" == 1 ]]; then  # Set screen brightness
-        local cmd="$screen_cmd"
-
         if [[ "$brightness" == reset ]]; then
-            eval "$cmd $screen_default"
+            lum_set_screen "$screen_default"
         else
-            # Error out if brightness is not an integer
-            [[ "$brightness" =~ ^[0-9]+$ ]] ||
-                lum_err "cannot set brightness to $brightness"
-            # Use bc to compare floating point numbers
-            (( $(echo "$brightness > $s_max" | bc -l) )) &&
-                lum_err "max screen brightness is $s_max"
-            eval "$cmd $brightness"
+            lum_set_screen "$brightness"
         fi
     elif [[ "$set_display" == 1 ]]; then  # Set display brightness
-        local cmd="$display_cmd"
-
         if [[ "$brightness" == reset ]]; then
-            eval "$cmd $display_default"
+            lum_set_display "$display_default"
         else
-            # Use bc to compare floating point numbers
-            (( $(echo "$brightness > $d_max" | bc -l) )) &&
-                lum_err "max display brightness is $d_max"
-            # Error out if xrandr call fails
-            eval "$cmd $brightness &>/dev/null" ||
-                lum_err "cannot set brightness to $brightness"
+            lum_set_display "$brightness"
         fi
     else  # No -s or -d option was given
         if [[ "$brightness" == reset ]]; then
             # Reset both screen and display brightnesses
-            eval "$screen_cmd $screen_default"
-            eval "$display_cmd $display_default"
+            lum_set_screen "$screen_default"
+            lum_set_display "$display_default"
         else
             lum_err help
         fi
