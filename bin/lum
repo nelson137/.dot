@@ -12,8 +12,8 @@ d_b_max='2'
 
 lum_help() {
     echo 'Usage: lum [-h|--help]'
-    echo '       lum [-s|--screen] [<brightness>|reset]'
-    echo '       lum [-d|--display] [<brightness>|reset]'
+    echo '       lum [-v|--verbose] [-s|--screen] [<brightness>|reset]'
+    echo '       lum [-v|--verbose] [-d|--display] [<brightness>|reset]'
     echo
     echo 'Get or set the brightness of the screen or physical display.'
     echo
@@ -80,6 +80,32 @@ lum() {
     xrandr -d :0 &>/dev/null ||
         local d_b_disabled=1
 
+    # Parse arguments
+    local help verbose set_s set_d brightness
+    while [[ $# > 0 ]]; do
+        case $1 in
+            -h|--help)
+                help=1 ;;
+            -v|--verbose)
+                verbose=1 ;;
+            -s|--screen)
+                [[ "$s_b_disabled" == 1 ]] &&
+                    lum_err 'cannot get or modify screen brightness'
+                set_s=1 ;;
+            -d|--display)
+                [[ "$d_b_disabled" == 1 ]] &&
+                    lum_err 'cannot get or modify display brightness'
+                set_d=1 ;;
+            -*|--*)
+                lum_err "option not recognized: $1" ;;
+            *)
+                [[ -n "$brightness" ]] &&
+                    lum_err help
+                brightness="$1" ;;
+        esac
+        shift
+    done
+
     # Output current screen and display brightness if no arguments were given
     if [[ $# == 0 ]]; then
         # Current screen brightness
@@ -103,38 +129,17 @@ lum() {
         echo "Screen:  ${s_b}/${s_b_max} (${s_b_percent}%)"
         echo "Display: $d_b"
 
-        [[ "$s_b_disabled" == 1 ]] &&
-            lum_warn 'cannot get or modify screen brightness'
+        # Only print warnings if verbose
+        if [[ "$verbose" == 1 ]]; then
+            [[ "$s_b_disabled" == 1 ]] &&
+                lum_warn 'cannot get or modify screen brightness'
 
-        [[ "$d_b_disabled" == 1 ]] &&
-            lum_warn 'cannot get or modify display brightness'
+            [[ "$d_b_disabled" == 1 ]] &&
+                lum_warn 'cannot get or modify display brightness'
+        fi
 
         exit
     fi
-
-    # Parse arguments
-    local help set_s set_d brightness
-    while [[ $# > 0 ]]; do
-        case $1 in
-            -h|--help)
-                help=1 ;;
-            -s|--screen)
-                [[ "$s_b_disabled" == 1 ]] &&
-                    lum_err 'cannot get or modify screen brightness'
-                set_s=1 ;;
-            -d|--display)
-                [[ "$d_b_disabled" == 1 ]] &&
-                    lum_err 'cannot get or modify display brightness'
-                set_d=1 ;;
-            -*|--*)
-                lum_err "option not recognized: $1" ;;
-            *)
-                [[ -n "$brightness" ]] &&
-                    lum_err help
-                brightness="$1" ;;
-        esac
-        shift
-    done
 
     [[ "$help" == 1 ]] &&
         lum_help
