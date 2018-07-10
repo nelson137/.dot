@@ -45,8 +45,7 @@ _git_prompt_custom() {
         lines+=( "$line" )
     done < <(echo "$gss")
 
-    local -a pull_diverge_status
-    pull_diverge_status=(
+    local pull_diverge_status=(
         'local now="$(date +%s)"'
         'local git_dir="$(git rev-parse --git-dir)"'
         'local last_run_file="${git_dir}/pd_status.last-run"'
