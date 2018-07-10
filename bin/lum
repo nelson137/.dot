@@ -72,13 +72,14 @@ lum_set_d_b() {
 
 
 lum() {
+    local s_b_disabled d_b_disabled
     # Disable -s/--screen if cannot get or modify screen brightness
     [[ ! -f "${s_b_dir}/brightness" ]] &&
-        local s_b_disabled=1
+        s_b_disabled=1
 
     # Disable -d/--display if cannot get or modify display brightness
     xrandr -d :0 &>/dev/null ||
-        local d_b_disabled=1
+        d_b_disabled=1
 
     # Parse arguments
     local help verbose set_s set_d brightness
