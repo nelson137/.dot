@@ -81,10 +81,24 @@ lum() {
     xrandr -d :0 &>/dev/null ||
         d_b_disabled=1
 
+    local argc="$#"
+
+    # Split options
+    # Ex: -abc becomes -a -b -c
+    local argv=()
+    while [[ "$1" ]]; do
+        if [[ "$1" =~ ^-[^\-]{2,}$ ]]; then
+            argv+=( $(python3 -c 'print(" -".join(input())[2:])' <<< "$1") )
+        else
+            argv+=( "$1" )
+        fi
+        shift
+    done
+
     # Parse arguments
     local help verbose set_s set_d brightness
-    while (( $# > 0 )); do
-        case $1 in
+    for arg in "${argv[@]}"; do
+        case "$arg" in
             -h|--help)
                 help=1 ;;
             -v|--verbose)
@@ -98,17 +112,16 @@ lum() {
                     lum_err 'cannot get or modify display brightness'
                 set_d=1 ;;
             -*|--*)
-                lum_err "option not recognized: $1" ;;
+                lum_err "option not recognized: $arg" ;;
             *)
                 [[ "$brightness" ]] &&
                     lum_err help
-                brightness="$1" ;;
+                brightness="$arg" ;;
         esac
-        shift
     done
 
     # Output current screen and display brightness if no arguments were given
-    if [[ $# == 0 ]]; then
+    if [[ "$argc" == 0 ]]; then
         # Current screen brightness
         local s_b="$(cat "${s_b_dir}/brightness")"
 
