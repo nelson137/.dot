@@ -95,6 +95,9 @@ headless() {
     [[ $yes == 1 && $no == 1 ]] &&
         headless_err help
 
+    # Only continue if the sudo password gets cached
+    sudo echo >/dev/null || exit 1
+
     [[ $yes == 1 ]] &&
         headless_yes
 
