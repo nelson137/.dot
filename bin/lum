@@ -10,8 +10,8 @@ d_max=2
 
 lum_help() {
     echo 'Usage: lum [-h|--help]'
-    echo '       lum [-s|--screen] <brightness>'
-    echo '       lum [-d|--display] <brightness>'
+    echo '       lum [-s|--screen] [<brightness>|reset]'
+    echo '       lum [-d|--display] [<brightness>|reset]'
     echo
     echo 'Get or set the brightness of the screen or physical display.'
     echo
