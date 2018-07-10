@@ -2,11 +2,11 @@
 # Get or set the brightness of the screen and/or the physical display
 
 # Screen brightness directory
-s_brightness_d='/sys/class/backlight/intel_backlight'
+s_b_dir='/sys/class/backlight/intel_backlight'
 
 # Max screen and display brightnesses
-s_max="$(cat "${s_brightness_d}/max_brightness")"
-d_max=2
+s_b_max="$(cat "${s_b_dir}/max_brightness")"
+d_b_max=2
 
 
 
@@ -42,23 +42,23 @@ lum_warn() {
 
 
 
-lum_set_screen() {
+lum_set_s_b() {
     # Error out if brightness is not an integer
     [[ "$1" =~ ^[0-9]+$ ]] ||
         lum_err "cannot set brightness to $1"
     # Use bc to compare floating point numbers
-    (( $(echo "$1 > $s_max" | bc -l) )) &&
-        lum_err "max screen brightness is $s_max"
+    (( $(echo "$1 > $s_b_max" | bc -l) )) &&
+        lum_err "max screen brightness is $s_b_max"
 
-    sudo tee "${s_brightness_d}/brightness" >/dev/null <<< "$1"
+    sudo tee "${s_b_dir}/brightness" >/dev/null <<< "$1"
 }
 
 
 
-lum_set_display() {
+lum_set_d_b() {
     # Use bc to compare floating point numbers
-    (( $(echo "$1 > $d_max" | bc -l) )) &&
-        lum_err "max display brightness is $d_max"
+    (( $(echo "$1 > $d_b_max" | bc -l) )) &&
+        lum_err "max display brightness is $d_b_max"
     # Error out if xrandr call fails
     xrandr -d :0 --output eDP-1 --brightness "$1" &>/dev/null ||
         lum_err "cannot set brightness to $1"
@@ -68,52 +68,59 @@ lum_set_display() {
 
 lum() {
     # Disable -s/--screen if cannot get or modify screen brightness
-    [[ ! -f "${s_brightness_d}/brightness" ]] &&
-        local screen_disabled=1
+    [[ ! -f "${s_b_dir}/brightness" ]] &&
+        local s_b_disabled=1
 
     # Disable -d/--display if cannot get or modify display brightness
     xrandr -d :0 &>/dev/null ||
-        local display_disabled=1
+        local d_b_disabled=1
 
     # Output current screen and display brightness if no arguments were given
     if [[ $# == 0 ]]; then
-        # Get current and max screen brightness, calculate brightness percent
-        local s="$(cat "${s_brightness_d}/brightness")"
-        local s_p="$(echo "scale=2; 100*${s}/${s_max}" | bc)"  # Brightness %
-        s_p="$(echo "$s_p" | sed -r 's/0+$//')"  # Remove trailing zeros
-        s_p="$(echo "$s_p" | sed -r 's/\.$//')"  # Remove trailing .
+        # Current screen brightness
+        local s_b="$(cat "${s_b_dir}/brightness")"
 
-        # Get current display brightness
-        local d="$(
+        # Calculate brightness percent
+        # - Get percent with 2 decimal places
+        # - Remove trailing zeros
+        # - Remove trailling .
+        local s_b_percent="$(
+            echo "scale=2; 100*${s_b}/${s_b_max}" | bc |
+            sed -r 's/0+$//' |
+            sed -r 's/\.$//'
+        )"
+
+        # Current display brightness
+        local d_b="$(
             xrandr -d :0 --verbose 2>/dev/null | awk '/Brightness/ {print $2}'
         )"
 
-        echo "Screen:  ${s}/${s_max} (${s_p}%)"
-        echo "Display: $d"
+        echo "Screen:  ${s_b}/${s_b_max} (${s_b_percent}%)"
+        echo "Display: $d_b"
 
-        [[ "$screen_disabled" == 1 ]] &&
+        [[ "$s_b_disabled" == 1 ]] &&
             lum_warn 'cannot get or modify screen brightness'
 
-        [[ "$display_disabled" == 1 ]] &&
+        [[ "$d_b_disabled" == 1 ]] &&
             lum_warn 'cannot get or modify display brightness'
 
         exit
     fi
 
     # Parse arguments
-    local help set_screen set_display brightness
+    local help set_s set_d brightness
     while [[ $# > 0 ]]; do
         case $1 in
             -h|--help)
                 help=1 ;;
             -s|--screen)
-                [[ "$screen_disabled" == 1 ]] &&
+                [[ "$s_b_disabled" == 1 ]] &&
                     lum_err 'cannot get or modify screen brightness'
-                set_screen=1 ;;
+                set_s=1 ;;
             -d|--display)
-                [[ "$display_disabled" == 1 ]] &&
+                [[ "$d_b_disabled" == 1 ]] &&
                     lum_err 'cannot get or modify display brightness'
-                set_display=1 ;;
+                set_d=1 ;;
             -*|--*)
                 lum_err "option not recognized: $1" ;;
             *)
@@ -127,8 +134,8 @@ lum() {
     [[ "$help" == 1 ]] &&
         lum_help
 
-    # Both -s and -d were given
-    [[ "$set_screen" == 1 && "$set_display" == 1 ]] &&
+    # Both -s/--screen and -d/--display were given
+    [[ "$set_s" == 1 && "$set_d" == 1 ]] &&
         lum_err help
 
     # No brightness was given
@@ -136,26 +143,26 @@ lum() {
         lum_err help
 
     # Default brightness values
-    local screen_default='61'
-    local display_default='1.0'
+    local s_b_default='61'
+    local d_b_default='1.0'
 
-    if [[ "$set_screen" == 1 ]]; then  # Set screen brightness
+    if [[ "$set_s" == 1 ]]; then  # Set screen brightness
         if [[ "$brightness" == reset ]]; then
-            lum_set_screen "$screen_default"
+            lum_set_s_b "$s_b_default"
         else
-            lum_set_screen "$brightness"
+            lum_set_s_b "$brightness"
         fi
-    elif [[ "$set_display" == 1 ]]; then  # Set display brightness
+    elif [[ "$set_d" == 1 ]]; then  # Set display brightness
         if [[ "$brightness" == reset ]]; then
-            lum_set_display "$display_default"
+            lum_set_d_b "$d_b_default"
         else
-            lum_set_display "$brightness"
+            lum_set_d_b "$brightness"
         fi
-    else  # No -s or -d option was given
+    else  # No -s/--screen or -d/--display option was given
         if [[ "$brightness" == reset ]]; then
             # Reset both screen and display brightnesses
-            lum_set_screen "$screen_default"
-            lum_set_display "$display_default"
+            lum_set_s_b "$s_b_default"
+            lum_set_d_b "$d_b_default"
         else
             lum_err help
         fi
