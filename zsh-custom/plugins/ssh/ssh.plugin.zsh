@@ -9,7 +9,7 @@ ssh() {
 
     # Read connections.csv into arrays
     local names=()
-    declare -A internals externals
+    local -A internals externals
     while IFS=, read -r name int ext; do
         names+=("$name")
         internals[$name]=$int
