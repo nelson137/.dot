@@ -6,7 +6,7 @@ s_b_dir='/sys/class/backlight/intel_backlight'
 
 # Max screen and display brightnesses
 s_b_max="$(cat "${s_b_dir}/max_brightness")"
-d_b_max=2
+d_b_max='2'
 
 
 
@@ -43,25 +43,30 @@ lum_warn() {
 
 
 lum_set_s_b() {
-    # Error out if brightness is not an integer
+    # Print error if brightness is not an integer
     [[ "$1" =~ ^[0-9]+$ ]] ||
         lum_err "cannot set brightness to $1"
-    # Use bc to compare floating point numbers
+    # Check if brightness exceeds max
+    # - Use bc to compare floats
     (( $(echo "$1 > $s_b_max" | bc -l) )) &&
         lum_err "max screen brightness is $s_b_max"
 
-    sudo tee "${s_b_dir}/brightness" >/dev/null <<< "$1"
+    # Try to change screen brightness, print error if it fails
+    sudo tee "${s_b_dir}/brightness" >/dev/null <<< "$1" ||
+        lum_err "cannot set screen brightness to $1"
 }
 
 
 
 lum_set_d_b() {
-    # Use bc to compare floating point numbers
+    # Check if brightness exceeds max
+    # - Use bc to compare floats
     (( $(echo "$1 > $d_b_max" | bc -l) )) &&
         lum_err "max display brightness is $d_b_max"
-    # Error out if xrandr call fails
+
+    # Try to change display brightness, print error if it fails
     xrandr -d :0 --output eDP-1 --brightness "$1" &>/dev/null ||
-        lum_err "cannot set brightness to $1"
+        lum_err "cannot set display brightness to $1"
 }
 
 
@@ -148,14 +153,18 @@ lum() {
 
     if [[ "$set_s" == 1 ]]; then  # Set screen brightness
         if [[ "$brightness" == reset ]]; then
+            # Reset screen brightness
             lum_set_s_b "$s_b_default"
         else
+            # Set screen brightness to $brightness
             lum_set_s_b "$brightness"
         fi
     elif [[ "$set_d" == 1 ]]; then  # Set display brightness
         if [[ "$brightness" == reset ]]; then
+            # Reset display brightness
             lum_set_d_b "$d_b_default"
         else
+            # Set display brightness to $brightness
             lum_set_d_b "$brightness"
         fi
     else  # No -s/--screen or -d/--display option was given
