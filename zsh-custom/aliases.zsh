@@ -26,7 +26,8 @@ alias gcam='git add -A; git commit -m'
 
 # My aliases
 alias -g dot='~/Projects/Git/dot'
-alias additions='vim ~/Projects/Git/dot/zsh-custom/additions.zsh'
+alias aliases='vim ~/Projects/Git/dot/zsh-custom/aliases.zsh'
+alias funcs='vim ~/Projects/Git/dot/zsh-custom/functions.zsh'
 alias r='exec zsh'
 alias rainbow='cat /dev/urandom | base64 | figlet -ctf term | lolcat -fad 1 -s 75 -p 5'
 alias socwd='command du -csh . | tail -1'
