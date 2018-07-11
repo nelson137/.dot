@@ -110,6 +110,11 @@ dc() {
     nohup "$@" &>!/dev/null &!
 }
 
+force_wifi() {
+    # Open http site to force WAP portal redirect
+    dc xdg-open 'http://icanhazip.com'
+}
+
 gcl() {
     # git clone username/repo(.git) or repo(.git)
     # In the case without a username, it's assumed the repo is mine
