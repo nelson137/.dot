@@ -19,14 +19,15 @@ xrandr -d :0 &>/dev/null ||
 
 
 lum_help() {
-    echo 'Usage: lum [-h|--help]'
-    echo '       lum [-v|--verbose] [-s|--screen] [reset|<brightness>]'
-    echo '       lum [-v|--verbose] [-d|--display] [reset|<brightness>]'
+    echo 'Usage: lum -h'
+    echo '       lum reset'
+    echo '       lum [-v] {-s|-d} <brightness>'
     echo
     echo 'Get or set the brightness of the screen or physical display.'
     echo
     echo 'Options:'
     echo '  -h, --help     Print this help message and exit'
+    echo '  -v, --verbose  Print warnings'
     echo '  -s, --screen   Set the screen brightness to <brightness>'
     echo '  -d, --display  Set the physical display brightness to <brightness>'
     exit 0
