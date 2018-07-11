@@ -68,7 +68,7 @@ lum_set_d_b() {
     outputs="$(for o in "${outputs[@]}"; do echo -n " --output $o"; done)"
 
     # Try to change display brightness, print error if it fails
-    xrandr -d :0 "$outputs" --brightness "$1" &>/dev/null ||
+    xrandr -d :0 $outputs --brightness $1 &>/dev/null ||
         lum_err "cannot set display brightness to $1"
 }
 
