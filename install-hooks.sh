@@ -12,7 +12,7 @@ sed -r 's/^ {4}//' > "${dir}/cpp-compile.sh" <<'EOF'
     dir="$(dirname "$0")"  # dir=.git/hooks
 
     for file in "$@"; do
-        echo -e "\nCompiling $file ..."
+        echo "Compiling $file ..."
         bin_name="${file%.cpp}"
         # Compile cpp file into bin/
         g++ -std=c++11 "bin-src/$file" -o "bin/$bin_name"
@@ -23,6 +23,7 @@ sed -r 's/^ {4}//' > "${dir}/cpp-compile.sh" <<'EOF'
             "${dir}/push-gitignore-changes.sh"
         fi
     done
+    echo
 EOF
 
 
