@@ -93,6 +93,7 @@ function! CompileAndRun()
             let l:prompt = '"Do you want to make this file executable [y/n]? "'
             exe 'let l:choice = input('.l:prompt.')'
             if l:choice == 'y' | silent exe '!chmod +x %' | endif
+            silent exe 'redraw!'
         endif
         exe 'AsyncRun ./%'
     else
