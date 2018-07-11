@@ -61,8 +61,10 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets cursor root)
 source $ZSH/oh-my-zsh.sh
 
 
-# User configuration
 
+### My Config ###
+
+# Locale
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
@@ -71,8 +73,24 @@ export EDITOR='vim'
 # Fix zsh-autosuggestions plugin coloring in tmux
 export TERM=xterm-256color
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
+# Fix nice error
+unsetopt BG_NICE
 
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
+# Delete duplicate history items before unique ones
+setopt HIST_EXPIRE_DUPS_FIRST
+
+# Don't add commands to history if they have a leading space
+setopt HIST_IGNORE_SPACE
+
+# awscli completions
+[[ -d /opt/aws-cli ]] && source /opt/aws-cli/bin/aws_zsh_completer.sh
+
+# Don't eat preceding space when | is typed
+export ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;&'
+
+# Phantomjs
+export QT_QPA_PLATFORM=offscreen
+export QT_QPA_FONTDIR=/usr/share/fonts
+
+# Create vim undodir if it doesn't exist
+[[ ! -d ~/.vim/undodir ]] && mkdir -p ~/.vim/undodir

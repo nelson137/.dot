@@ -1,31 +1,5 @@
 #!/bin/zsh
 
-### Config ###
-
-# Fix nice error
-unsetopt BG_NICE
-
-# Delete duplicate history items before unique ones
-setopt HIST_EXPIRE_DUPS_FIRST
-
-# Don't add commands to history if they have a leading space
-setopt HIST_IGNORE_SPACE
-
-# awscli completions
-[[ -d /opt/aws-cli ]] && source /opt/aws-cli/bin/aws_zsh_completer.sh
-
-# Don't eat preceding space when | is typed
-export ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;&'
-
-# Phantomjs
-export QT_QPA_PLATFORM=offscreen
-export QT_QPA_FONTDIR=/usr/share/fonts
-
-# Create vim undodir if it doesn't exist
-[[ ! -d ~/.vim/undodir ]] && mkdir -p ~/.vim/undodir
-
-
-
 ### Aliases ###
 
 # Command aliases
