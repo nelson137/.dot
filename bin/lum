@@ -64,8 +64,11 @@ lum_set_d_b() {
     (( $(echo "$1 > $d_b_max" | bc -l) )) &&
         lum_err "max display brightness is $d_b_max"
 
+    local outputs=( $(xrandr | awk '/ connected/ {print $1}') )
+    outputs="$(for o in "${outputs[@]}"; do echo -n " --output $o"; done)"
+
     # Try to change display brightness, print error if it fails
-    xrandr -d :0 --output eDP-1 --brightness "$1" &>/dev/null ||
+    xrandr -d :0 "$outputs" --brightness "$1" &>/dev/null ||
         lum_err "cannot set display brightness to $1"
 }
 
