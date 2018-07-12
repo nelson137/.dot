@@ -22,7 +22,7 @@ sed -r 's/^ {4}//' > "${hooks}/cpp-compile.sh" <<'EOF'
     current_commit="$3"
 
     # git diff-tree options
-    options="-r --diff-filter=_ --no-commit-id --name-only --relative=bin-src"
+    options='-r --diff-filter=_ --no-commit-id --name-only --relative=bin-src'
 
 
     # Added and modified files
@@ -43,7 +43,7 @@ sed -r 's/^ {4}//' > "${hooks}/cpp-compile.sh" <<'EOF'
     uniq_to_compile=()
     while read -r uniq_file; do
         uniq_to_compile+=( "$uniq_file" )
-    done < <(for file in "${to_compile[@]}"; do echo "$file"; done | sort -u)
+    done < <(for f in "${to_compile[@]}"; do echo "$f"; done | sort -u)
 
     for file in "${uniq_to_compile[@]}"; do
         # Compile cpp file into bin/
@@ -137,12 +137,12 @@ sed -r 's/^ {4}//' > "${hooks}/push-gitignore-changes.sh" <<'EOF'
     git add .gitignore >/dev/null
 
     git commit -m "added bin/$bin_name to .gitignore" >/dev/null ||
-        err_echo "Could not commit .gitignore changes"
+        err_echo 'Could not commit .gitignore changes'
 
     # If ahead by 1 commit
     if [[ "$(git rev-list --count origin...HEAD)" == 1 ]]; then
-        echo "Pushing updated .gitignore ..."
-        git push &>/dev/null || err_echo "Could not push .gitignore changes"
+        echo 'Pushing updated .gitignore ...'
+        git push &>/dev/null || err_echo 'Could not push .gitignore changes'
     fi
 EOF
 
@@ -165,11 +165,11 @@ sed -r 's/^ {4}//' > "${hooks}/update-vim-plugins.sh" <<'EOF'
     if [[ -f "$last_pull" ]]; then
         # Find changes to files/.vimrc that involve plugins
         git diff "$(< $last_pull)" "$current" files/.vimrc |
-            egrep "^(\+|-)" | egrep -v "^(\+|-){3}" |
-            egrep "Plugin (\".+\"|'.+')"
+            grep -E '^(\+|-)' | grep -Ev '^(\+|-){3}' |
+            grep -E "Plugin (\".+\"|'.+')"
 
         if [[ $? == 0 ]]; then
-            echo "Updating Vundle plugins ..."
+            echo 'Updating Vundle plugins ...'
             vim +PluginClean! +PluginInstall +qall
         fi
     fi
