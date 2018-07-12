@@ -40,11 +40,11 @@ sed -r 's/^ {4}//' > "${dir}/post-merge" <<'EOF'
     to_compile=( $(git diff-tree ${options/_/AM} ORIG_HEAD HEAD) )
 
     # to_compile += files not yet compiled
-    for file in $(ls bin-src); do
-        bin_name="${file%.cpp}"
+    while read -r file; do
+        bin_name="$(basename "${file%.cpp}")"
         [[ ! -f "bin/$bin_name" ]] &&
             to_compile+=( "$file" )
-    done
+    done < <(find bin-src -type f -name '*.cpp')
 
     # Remove duplicate items
     while read -r uniq_file; do
@@ -78,12 +78,11 @@ sed -r 's/^ {4}//' > "${dir}/pre-push" <<'EOF'
     to_compile=( $(git diff-tree ${options/_/AM} $remote_commit $current_commit) )
 
     # to_compile += files in bin-src that aren't in bin
-    for file in $(ls bin-src); do
-        bin_name="${file%.cpp}"
-        if [[ ! -f "bin/$bin_name" ]]; then
+    while read -r file; do
+        bin_name="$(basename "${file%.cpp}")"
+        [[ ! -f "bin/$bin_name" ]] &&
             to_compile+=( "$file" )
-        fi
-    done
+    done < <(find bin-src -type f -name '*.cpp')
 
     # Remove duplicate items
     while read -r uniq_file; do
