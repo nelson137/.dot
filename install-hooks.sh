@@ -9,9 +9,43 @@ rm -f ${dir}/*.sample
 sed -r 's/^ {4}//' > "${dir}/cpp-compile.sh" <<'EOF'
     #!/bin/bash
 
-    dir="$(dirname "$0")"  # dir=.git/hooks
+    # dir = .git/hooks
+    dir="$(dirname "$0")"
 
-    for file in "$@"; do
+    # context = which hook this script is being executed by
+    context="$1"
+
+    # remote_commit = hash of last commit on remote
+    remote_commit="$2"
+
+    # current_commit = hash of last local commit
+    current_commit="$3"
+
+    # git diff-tree options
+    options="-r --diff-filter=_ --no-commit-id --name-only --relative=bin-src"
+
+
+    # to_compile = added and modified files
+    [[ "$context" == post-merge ]] &&
+        trees='ORIG_HEAD HEAD'
+    [[ "$context" == pre-push ]] &&
+        trees="$remote_commit $current_commit"
+    to_compile=( $(git diff-tree ${options/_/AM} $trees) )
+
+    # to_compile += files not yet compiled
+    while read -r file; do
+        bin_name="$(basename "${file%.cpp}")"
+        [[ ! -f "bin/$bin_name" ]] &&
+            to_compile+=( "$file" )
+    done < <(find bin-src -type f -name '*.cpp')
+
+    # Remove duplicate items
+    uniq_to_compile=()
+    while read -r uniq_file; do
+        uniq_to_compile+=( "$uniq_file" )
+    done < <(for file in "${to_compile[@]}"; do echo "$file"; done | sort -u)
+
+    for file in "${uniq_to_compile[@]}"; do
         echo "Compiling $file ..."
         bin_name="${file%.cpp}"
         # Compile cpp file into bin/
@@ -24,36 +58,39 @@ sed -r 's/^ {4}//' > "${dir}/cpp-compile.sh" <<'EOF'
         fi
     done
     echo
+
+    if [[ "$context" == pre-push ]]; then
+        # Remove binaries of deleted cpp files
+
+        # to_rm = removed files (includes old names of renamed files)
+        to_rm=(
+            $(git diff-tree ${options/_/D} "$remote_commit" "$current_commit")
+        )
+
+        for file in "${to_rm[@]}"; do
+            bin_name="${file%.cpp}"
+            echo "Removing bin/$bin_name ..."
+            rm -f "bin/$bin_name"
+
+            # Remove bin/$bin_name from .gitignore
+            sed -Ei "/^bin\/${bin_name}\n?/d" .gitignore
+            # If .gitignore has been modified
+            [[ $(git diff --name-only .gitignore) == .gitignore ]] &&
+                "${dir}/push-gitignore-changes.sh"
+        done
+    fi
 EOF
 
 
 sed -r 's/^ {4}//' > "${dir}/post-merge" <<'EOF'
     #!/bin/bash
 
-    dir="$(dirname "$0")"  # dir=.git/hooks
-    options="-r --diff-filter=_ --no-commit-id --name-only --relative=bin-src"
+    # dir = .git/hooks
+    dir="$(dirname "$0")"
 
 
-    # Compile modified bin-src/ files
-
-    # to_compile = added and modified files
-    to_compile=( $(git diff-tree ${options/_/AM} ORIG_HEAD HEAD) )
-
-    # to_compile += files not yet compiled
-    while read -r file; do
-        bin_name="$(basename "${file%.cpp}")"
-        [[ ! -f "bin/$bin_name" ]] &&
-            to_compile+=( "$file" )
-    done < <(find bin-src -type f -name '*.cpp')
-
-    # Remove duplicate items
-    while read -r uniq_file; do
-        uniq_to_compile+=( "$uniq_file" )
-    done < <(for file in "${to_compile[@]}"; do echo "$file"; done | sort -u)
-
-    # Compile modified cpp files
-    "${dir}/cpp-compile.sh" "${uniq_to_compile[@]}"
-
+    # Compile added, modified, and uncompiled bin-src/ files
+    "${dir}/cpp-compile.sh" post-merge
 
     # Update plugins if changes were made in plugin section of files/.vimrc
     "${dir}/update-vim-plugins.sh"
@@ -63,52 +100,21 @@ EOF
 sed -r 's/^ {4}//' > "${dir}/pre-push" <<'EOF'
     #!/bin/bash
 
+    # dir = .git/hooks
+    dir="$(dirname "$0")"
+
+    # url = url of reciever of the push
     url="$2"
-    dir="$(dirname "$0")"  # dir=.git/hooks
+
     # remote_commit = hash of last commit on remote
     remote_commit=$(git ls-remote "$url" | grep HEAD | awk '{print $1}')
+
     # current_commit = hash of last local commit
     current_commit=$(git rev-parse HEAD)
-    options="-r --diff-filter=_ --no-commit-id --name-only --relative=bin-src"
 
 
-    ### Compile added and modified files ###
-
-    # to_compile = added and modified files
-    to_compile=( $(git diff-tree ${options/_/AM} $remote_commit $current_commit) )
-
-    # to_compile += files in bin-src that aren't in bin
-    while read -r file; do
-        bin_name="$(basename "${file%.cpp}")"
-        [[ ! -f "bin/$bin_name" ]] &&
-            to_compile+=( "$file" )
-    done < <(find bin-src -type f -name '*.cpp')
-
-    # Remove duplicate items
-    while read -r uniq_file; do
-        uniq_to_compile+=( "$uniq_file" )
-    done < <(for file in "${to_compile[@]}"; do echo "$file"; done | sort -u)
-
-    # Compile added, modified, and uncompiled cpp files
-    "${dir}/cpp-compile.sh" "${uniq_to_compile[@]}"
-
-
-    ### Remove deleted files ###
-
-    # to_rm = removed files (includes old names of renamed files)
-    to_rm=( $(git diff-tree ${options/_/D} $remote_commit $current_commit) )
-
-    for file in "${to_rm[@]}"; do
-        bin_name="${file%.cpp}"
-        echo "Removing bin/$bin_name ..."
-        rm -f "bin/$bin_name"
-
-        # Remove bin/$bin_name from .gitignore
-        sed -Ei "/^bin\/${bin_name}\n?/d" .gitignore
-        # If .gitignore has been modified
-        [[ $(git diff --name-only .gitignore) == .gitignore ]] &&
-            "${dir}/push-gitignore-changes.sh"
-    done
+    # Compile added, modified, and uncompiled bin-src/ files
+    "${dir}/cpp-compile.sh" pre-push "$remote_commit" "$current_commit"
 
 
     # Update plugins if changes were made in plugin section of files/.vimrc
