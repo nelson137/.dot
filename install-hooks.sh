@@ -1,38 +1,38 @@
 #!/bin/bash
 
-dir="$(dirname "$0")/.git/hooks"
-mkdir -p "$dir"
+hooks="$(dirname "$0")/.git/hooks"
+mkdir -p "$hooks"
 
-rm -f ${dir}/*.sample
+rm -f ${hooks}/*.sample
 
 
-sed -r 's/^ {4}//' > "${dir}/cpp-compile.sh" <<'EOF'
+sed -r 's/^ {4}//' > "${hooks}/cpp-compile.sh" <<'EOF'
     #!/bin/bash
 
-    # dir = .git/hooks
-    dir="$(dirname "$0")"
+    # <git dir>/hooks
+    hooks="$(dirname "$0")"
 
-    # context = which hook this script is being executed by
+    # Which hook this script is being executed by
     context="$1"
 
-    # remote_commit = hash of last commit on remote
+    # Hash of last commit on remote
     remote_commit="$2"
 
-    # current_commit = hash of last local commit
+    # Hash of last local commit
     current_commit="$3"
 
     # git diff-tree options
     options="-r --diff-filter=_ --no-commit-id --name-only --relative=bin-src"
 
 
-    # to_compile = added and modified files
+    # Added and modified files
     [[ "$context" == post-merge ]] &&
         trees='ORIG_HEAD HEAD'
     [[ "$context" == pre-push ]] &&
         trees="$remote_commit $current_commit"
     to_compile=( $(git diff-tree ${options/_/AM} $trees) )
 
-    # to_compile += files not yet compiled
+    # Files not yet compiled
     while read -r file; do
         bin_name="$(basename "${file%.cpp}")"
         [[ ! -f "bin/$bin_name" ]] &&
@@ -46,15 +46,15 @@ sed -r 's/^ {4}//' > "${dir}/cpp-compile.sh" <<'EOF'
     done < <(for file in "${to_compile[@]}"; do echo "$file"; done | sort -u)
 
     for file in "${uniq_to_compile[@]}"; do
+        # Compile cpp file into bin/
         echo "Compiling $file ..."
         bin_name="${file%.cpp}"
-        # Compile cpp file into bin/
         g++ -std=c++11 "bin-src/$file" -o "bin/$bin_name"
 
         # Add bin/$bin_name to .gitignore if it's not already there
         if ! grep "^bin/$bin_name$" .gitignore >/dev/null; then
             echo "bin/$bin_name" >> .gitignore
-            "${dir}/push-gitignore-changes.sh"
+            "${hooks}/push-gitignore-changes.sh"
         fi
     done
     echo
@@ -62,12 +62,13 @@ sed -r 's/^ {4}//' > "${dir}/cpp-compile.sh" <<'EOF'
     if [[ "$context" == pre-push ]]; then
         # Remove binaries of deleted cpp files
 
-        # to_rm = removed files (includes old names of renamed files)
+        # Removed files (includes old names of renamed files)
         to_rm=(
             $(git diff-tree ${options/_/D} "$remote_commit" "$current_commit")
         )
 
         for file in "${to_rm[@]}"; do
+            # Remove binary from bin/
             bin_name="${file%.cpp}"
             echo "Removing bin/$bin_name ..."
             rm -f "bin/$bin_name"
@@ -76,53 +77,53 @@ sed -r 's/^ {4}//' > "${dir}/cpp-compile.sh" <<'EOF'
             sed -Ei "/^bin\/${bin_name}\n?/d" .gitignore
             # If .gitignore has been modified
             [[ $(git diff --name-only .gitignore) == .gitignore ]] &&
-                "${dir}/push-gitignore-changes.sh"
+                "${hooks}/push-gitignore-changes.sh"
         done
     fi
 EOF
 
 
-sed -r 's/^ {4}//' > "${dir}/post-merge" <<'EOF'
+sed -r 's/^ {4}//' > "${hooks}/post-merge" <<'EOF'
     #!/bin/bash
 
-    # dir = .git/hooks
-    dir="$(dirname "$0")"
+    # <git dir>/hooks
+    hooks="$(dirname "$0")"
 
 
     # Compile added, modified, and uncompiled bin-src/ files
-    "${dir}/cpp-compile.sh" post-merge
+    "${hooks}/cpp-compile.sh" post-merge
 
     # Update plugins if changes were made in plugin section of files/.vimrc
-    "${dir}/update-vim-plugins.sh"
+    "${hooks}/update-vim-plugins.sh"
 EOF
 
 
-sed -r 's/^ {4}//' > "${dir}/pre-push" <<'EOF'
+sed -r 's/^ {4}//' > "${hooks}/pre-push" <<'EOF'
     #!/bin/bash
 
-    # dir = .git/hooks
-    dir="$(dirname "$0")"
+    # <git dir>/hooks
+    hooks="$(dirname "$0")"
 
-    # url = url of reciever of the push
+    # Url of reciever of the push
     url="$2"
 
-    # remote_commit = hash of last commit on remote
+    # Hash of last commit on remote
     remote_commit=$(git ls-remote "$url" | grep HEAD | awk '{print $1}')
 
-    # current_commit = hash of last local commit
+    # Hash of last local commit
     current_commit=$(git rev-parse HEAD)
 
 
     # Compile added, modified, and uncompiled bin-src/ files
-    "${dir}/cpp-compile.sh" pre-push "$remote_commit" "$current_commit"
+    "${hooks}/cpp-compile.sh" pre-push "$remote_commit" "$current_commit"
 
 
     # Update plugins if changes were made in plugin section of files/.vimrc
-    "${dir}/update-vim-plugins.sh"
+    "${hooks}/update-vim-plugins.sh"
 EOF
 
 
-sed -r 's/^ {4}//' > "${dir}/push-gitignore-changes.sh" <<'EOF'
+sed -r 's/^ {4}//' > "${hooks}/push-gitignore-changes.sh" <<'EOF'
     #!/bin/bash
 
     err_echo() {
@@ -146,15 +147,20 @@ sed -r 's/^ {4}//' > "${dir}/push-gitignore-changes.sh" <<'EOF'
 EOF
 
 
-sed -r 's/^ {4}//' > "${dir}/update-vim-plugins.sh" <<'EOF'
+sed -r 's/^ {4}//' > "${hooks}/update-vim-plugins.sh" <<'EOF'
     #!/bin/bash
 
     # Update plugins if plugin changes were made in files/.vimrc
 
-    dir="$(dirname "$0")"  # dir=.git/hooks
+    # <git dir>/hooks
+    hooks="$(dirname "$0")"
 
-    last_pull="${dir}/last-pull"
-    current="$(git rev-parse HEAD)"  # current = hash of last local commit
+    # Time of last pull
+    last_pull="${hooks}/last-pull"
+
+    # Hash of last local commit
+    current="$(git rev-parse HEAD)"
+
 
     if [[ -f "$last_pull" ]]; then
         # Find changes to files/.vimrc that involve plugins
@@ -172,5 +178,5 @@ sed -r 's/^ {4}//' > "${dir}/update-vim-plugins.sh" <<'EOF'
 EOF
 
 
-chmod +x "${dir}/"{cpp-compile.sh,post-merge,pre-push}
-chmod +x "${dir}/"{push-gitignore-changes.sh,update-vim-plugins.sh}
+chmod +x "${hooks}/"{cpp-compile.sh,post-merge,pre-push}
+chmod +x "${hooks}/"{push-gitignore-changes.sh,update-vim-plugins.sh}
