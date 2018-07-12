@@ -35,7 +35,7 @@ sed -r 's/^ {4}//' > "${hooks}/cpp-compile.sh" <<'EOF'
     # Files not yet compiled
     while read -r file; do
         bin_name="$(basename "${file%.cpp}")"
-        [[ ! -f "bin/$bin_name" ]] &&
+        [[ ! -f "bin/compiled/$bin_name" ]] &&
             to_compile+=( "$file" )
     done < <(find bin-src -type f -name '*.cpp')
 
@@ -46,16 +46,10 @@ sed -r 's/^ {4}//' > "${hooks}/cpp-compile.sh" <<'EOF'
     done < <(for f in "${to_compile[@]}"; do echo "$f"; done | sort -u)
 
     for file in "${uniq_to_compile[@]}"; do
-        # Compile cpp file into bin/
+        # Compile cpp file into bin/compiled/
         echo "Compiling $file ..."
         bin_name="${file%.cpp}"
-        g++ -std=c++11 "bin-src/$file" -o "bin/$bin_name"
-
-        # Add bin/$bin_name to .gitignore if it's not already there
-        if ! grep "^bin/$bin_name$" .gitignore >/dev/null; then
-            echo "bin/$bin_name" >> .gitignore
-            "${hooks}/push-gitignore-changes.sh"
-        fi
+        g++ -std=c++11 "bin-src/$file" -o "bin/compiled/$bin_name"
     done
     echo
 
@@ -68,16 +62,10 @@ sed -r 's/^ {4}//' > "${hooks}/cpp-compile.sh" <<'EOF'
         )
 
         for file in "${to_rm[@]}"; do
-            # Remove binary from bin/
+            # Remove binary from bin/compiled/
             bin_name="${file%.cpp}"
-            echo "Removing bin/$bin_name ..."
-            rm -f "bin/$bin_name"
-
-            # Remove bin/$bin_name from .gitignore
-            sed -Ei "/^bin\/${bin_name}\n?/d" .gitignore
-            # If .gitignore has been modified
-            [[ $(git diff --name-only .gitignore) == .gitignore ]] &&
-                "${hooks}/push-gitignore-changes.sh"
+            echo "Removing bin/compiled/$bin_name ..."
+            rm -f "bin/compiled/$bin_name"
         done
     fi
 EOF
@@ -123,30 +111,6 @@ sed -r 's/^ {4}//' > "${hooks}/pre-push" <<'EOF'
 EOF
 
 
-sed -r 's/^ {4}//' > "${hooks}/push-gitignore-changes.sh" <<'EOF'
-    #!/bin/bash
-
-    err_echo() {
-        echo "$1" >&2
-        exit 1
-    }
-
-    # Exit if .gitignore has not been modified
-    [[ $(git diff --name-only .gitignore) == .gitignore ]] || exit 1
-
-    git add .gitignore >/dev/null
-
-    git commit -m "added bin/$bin_name to .gitignore" >/dev/null ||
-        err_echo 'Could not commit .gitignore changes'
-
-    # If ahead by 1 commit
-    if [[ "$(git rev-list --count origin...HEAD)" == 1 ]]; then
-        echo 'Pushing updated .gitignore ...'
-        git push &>/dev/null || err_echo 'Could not push .gitignore changes'
-    fi
-EOF
-
-
 sed -r 's/^ {4}//' > "${hooks}/update-vim-plugins.sh" <<'EOF'
     #!/bin/bash
 
@@ -178,5 +142,4 @@ sed -r 's/^ {4}//' > "${hooks}/update-vim-plugins.sh" <<'EOF'
 EOF
 
 
-chmod +x "${hooks}/"{cpp-compile.sh,post-merge,pre-push}
-chmod +x "${hooks}/"{push-gitignore-changes.sh,update-vim-plugins.sh}
+chmod +x "${hooks}/"{cpp-compile.sh,post-merge,pre-push,update-vim-plugins.sh}
