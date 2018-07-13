@@ -1,5 +1,5 @@
 ssh() {
-    if [[ $# > 0 ]]; then
+    if (( $# > 0 )); then
         command ssh "$@"
         return
     fi

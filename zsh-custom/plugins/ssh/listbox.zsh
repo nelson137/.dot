@@ -85,13 +85,13 @@ listbox() {
             export LISTBOX_CHOICE="${opts[$choice]}"
             break
         elif [[ $key == k || $key == A ]]; then
-            if [[ $choice > 1 ]]; then
+            if (( $choice > 1 )); then
                 ((choice--))
             else
                 will_redraw=false
             fi
         elif [[ $key == j || $key == B ]]; then
-            if [[ $choice < $len ]]; then
+            if (( $choice < $len )); then
                 ((choice++))
             else
                 will_redraw=false
