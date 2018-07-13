@@ -40,4 +40,6 @@ ssh() {
             command ssh "$ext"
         fi
     fi
+
+    unset LISTBOX_CHOICE
 }
