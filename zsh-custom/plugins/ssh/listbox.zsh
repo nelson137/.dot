@@ -1,14 +1,3 @@
-lb_usage() {
-    echo "Usage: listbox [options]"
-    echo "Example:"
-    echo "  listbox -t title -o \"option 1|option 2|option 3\""
-    echo "Options:"
-    echo "  -h, --help                  help"
-    echo "  -t, --title                 list title"
-    echo "  -o, --options \"op 1|op 2\"   listbox options"
-    echo "  -a, --arrow <symbol>        selected option symbol"
-}
-
 lb_move() {
     for opt in "${opts[@]}"; do
         tput cuu1
@@ -36,9 +25,6 @@ listbox() {
     local no_echo=false
     while (( $# > 0 )); do
         case "$1" in
-            -h|--help)
-                lb_usage
-                return 0 ;;
             -t|--title)
                 local title="$2"
                 shift ;;
@@ -55,11 +41,6 @@ listbox() {
         esac
         shift
     done
-
-    if [[ -z $opts ]]; then
-        echo 'Error: Options required'
-        return 1
-    fi
 
     if [[ -n $title ]]; then
         local Lspace=" $(printf %${#arrow}s)"
