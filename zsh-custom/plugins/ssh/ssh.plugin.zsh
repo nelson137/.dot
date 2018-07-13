@@ -16,10 +16,8 @@ ssh() {
         externals[$name]="$ext"
     done < "${src}/connections.csv"
 
-    # Join options with |
-    local options=$(local IFS="|"; echo "${names[*]}")
     # Run primary menu. return if error occurs
-    listbox -t 'Connect:' -o "$options" || return
+    listbox -t 'Connect:' -o "${(j:|:)names}" || return
 
     local int="${internals[$LISTBOX_CHOICE]}"
     local ext="${externals[$LISTBOX_CHOICE]}"
