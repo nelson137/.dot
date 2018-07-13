@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 ssh() {
     if (( $# > 0 )); then
         command ssh "$@"

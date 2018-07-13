@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 lb_move() {
     for opt in "${opts[@]}"; do
         tput cuu1
