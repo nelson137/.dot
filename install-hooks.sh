@@ -45,24 +45,23 @@ sed -r 's/^ {4}//' > "${hooks}/cpp-compile.sh" <<'EOF'
         uniq_to_compile+=( "$uniq_file" )
     done < <(for f in "${to_compile[@]}"; do echo "$f"; done | sort -u)
 
+    # Compile cpp files into bin/compiled/
     for file in "${uniq_to_compile[@]}"; do
-        # Compile cpp file into bin/compiled/
         echo "Compiling $file ..."
         bin_name="${file%.cpp}"
         g++ -std=c++11 "bin-src/$file" -o "bin/compiled/$bin_name"
     done
     echo
 
+    # Delete binaries of removed cpp files
     if [[ "$context" == pre-push ]]; then
-        # Remove binaries of deleted cpp files
-
         # Removed files (includes old names of renamed files)
         to_rm=(
             $(git diff-tree ${options/_/D} "$remote_commit" "$current_commit")
         )
 
+        # Remove binaries from bin/compiled/
         for file in "${to_rm[@]}"; do
-            # Remove binary from bin/compiled/
             bin_name="${file%.cpp}"
             echo "Removing bin/compiled/$bin_name ..."
             rm -f "bin/compiled/$bin_name"
