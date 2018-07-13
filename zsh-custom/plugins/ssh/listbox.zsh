@@ -31,7 +31,6 @@ lb_draw() {
 listbox() {
     unset title opts arrow
 
-    local no_echo=false
     while (( $# > 0 )); do
         case "$1" in
             -t|--title)
