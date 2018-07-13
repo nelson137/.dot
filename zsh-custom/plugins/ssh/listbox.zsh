@@ -19,11 +19,11 @@ _move() {
 _draw() {
     local idx=1
     for opt in "${opts[@]}"; do
-        local prefix=""
+        local prefix=''
         if [[ $idx == $choice ]]; then
             prefix+="$arrow"
         else
-            prefix+=$(printf %${#arrow}s)
+            prefix+="$(printf %${#arrow}s)"
         fi
         echo "$prefix $opt"
         ((idx++))
@@ -35,7 +35,7 @@ listbox() {
 
     local no_echo=false
     while (( $# > 0 )); do
-        case $1 in
+        case "$1" in
             -h|--help)
                 _usage
                 return 0 ;;
@@ -43,10 +43,10 @@ listbox() {
                 local title="$2"
                 shift ;;
             -o|--options)
-                local OIFS=$IFS
+                local OIFS="$IFS"
                 IFS=$'\n'
-                opts=( $(echo "$2" | tr "|" "\n") )
-                IFS=$OIFS
+                opts=( $(echo "$2" | tr '|' '\n') )
+                IFS="$OIFS"
                 shift ;;
             -a|--arrow)
                 local arrow="$2"
@@ -57,30 +57,30 @@ listbox() {
     done
 
     if [[ -z $opts ]]; then
-        echo "Error: Options required"
+        echo 'Error: Options required'
         return 1
     fi
 
     if [[ -n $title ]]; then
         local Lspace=" $(printf %${#arrow}s)"
         printf "\n$Lspace$title\n$Lspace"
-        printf %"${#title}"s | tr " " "-"
+        printf %"${#title}"s | tr ' ' '-'
         echo ""
     fi
 
-    [[ -z $arrow ]] && arrow=">"
-    local len=${#opts[@]}
+    [[ -z $arrow ]] && arrow='>'
+    local len="${#opts[@]}"
     local choice=1
     local will_redraw=true
     _draw
 
     while true; do
-        key=$(bash -c 'read -n 1 -s key; echo $key')
+        key="$(bash -c 'read -n 1 -s key; echo $key')"
 
         if [[ $key == q ]]; then
             echo ""
             return 1
-        elif [[ $key == "" ]]; then
+        elif [[ $key == '' ]]; then
             eval "export LISTBOX_CHOICE=\"${opts[$choice]}\""
             echo ""
             break
@@ -99,12 +99,12 @@ listbox() {
         elif [[ $key == K ]]; then
             choice=1
         elif [[ $key == J ]]; then
-            choice=$len
+            choice="$len"
         else
             will_redraw=false
         fi
 
-        if $will_redraw; then
+        if "$will_redraw"; then
             _move
             _draw
         else

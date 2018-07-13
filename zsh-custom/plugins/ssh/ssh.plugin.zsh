@@ -1,6 +1,6 @@
 ssh() {
     if [[ $# > 0 ]]; then
-        command ssh $@
+        command ssh "$@"
         return
     fi
 
@@ -12,17 +12,17 @@ ssh() {
     local -A internals externals
     while IFS=, read -r name int ext; do
         names+=("$name")
-        internals[$name]=$int
-        externals[$name]=$ext
+        internals[$name]="$int"
+        externals[$name]="$ext"
     done < "${src}/connections.csv"
 
     # Join options with |
     local options=$(local IFS="|"; echo "${names[*]}")
     # Run primary menu. return if error occurs
-    listbox -t "Connect:" -o "$options" || return
+    listbox -t 'Connect:' -o "$options" || return
 
-    local int=${internals[$LISTBOX_CHOICE]}
-    local ext=${externals[$LISTBOX_CHOICE]}
+    local int="${internals[$LISTBOX_CHOICE]}"
+    local ext="${externals[$LISTBOX_CHOICE]}"
 
     if [[ -z $int ]]; then
         # There is only an external ip
