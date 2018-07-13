@@ -60,32 +60,33 @@ listbox() {
     while true; do
         key="$(bash -c 'read -n 1 -s key; echo $key')"
 
-        if [[ $key == q ]]; then
-            echo
-            return 1
-        elif [[ $key == '' ]]; then
-            echo
-            export LISTBOX_CHOICE="${opts[$choice]}"
-            break
-        elif [[ $key == k || $key == A ]]; then
-            if (( $choice > 1 )); then
-                ((choice--))
-            else
-                will_redraw=false
-            fi
-        elif [[ $key == j || $key == B ]]; then
-            if (( $choice < $len )); then
-                ((choice++))
-            else
-                will_redraw=false
-            fi
-        elif [[ $key == K ]]; then
-            choice=1
-        elif [[ $key == J ]]; then
-            choice="$len"
-        else
-            will_redraw=false
-        fi
+        case "$key" in
+            q)
+                echo
+                return 1 ;;
+            '')
+                echo
+                export LISTBOX_CHOICE="${opts[choice]}"
+                break ;;
+            k|A)
+                if (( $choice > 1 )); then
+                    ((choice--))
+                else
+                    will_redraw=false
+                fi ;;
+            j|B)
+                if (( $choice < $len )); then
+                    ((choice++))
+                else
+                    will_redraw=false
+                fi ;;
+            K)
+                choice=1 ;;
+            J)
+                choice="$len" ;;
+            *)
+                will_redraw=false ;;
+        esac
 
         if "$will_redraw"; then
             lb_move
