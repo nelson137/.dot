@@ -51,7 +51,10 @@ sed -r 's/^ {4}//' > "${hooks}/cpp-compile.sh" <<'EOF'
         bin_name="${file%.cpp}"
         g++ -std=c++11 "bin-src/$file" -o "bin/compiled/$bin_name"
     done
-    echo
+
+    # Put newline between compile messages and git output
+    (( "${#uniq_to_compile[@]}" > 0 )) &&
+        echo
 
     # Delete binaries of removed cpp files
     if [[ "$context" == pre-push ]]; then
