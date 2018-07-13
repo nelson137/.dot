@@ -26,18 +26,18 @@ ssh() {
 
     if [[ -z $int ]]; then
         # There is only an external ip
-        eval "command ssh $ext"
+        command ssh "$ext"
     elif [[ -z $ext ]]; then
         # There is only an internal ip
-        eval "command ssh $int"
+        command ssh "$int"
     else
         local title="Host Location:"
         local options="Internal|External"
         listbox -t "$title" -o "$options" -r || return
         if [[ $LISTBOX_CHOICE == Internal ]]; then
-            eval "command ssh $int"
+            command ssh "$int"
         else
-            eval "command ssh $ext"
+            command ssh "$ext"
         fi
     fi
 }
