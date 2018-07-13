@@ -65,7 +65,7 @@ listbox() {
         local Lspace=" $(printf %${#arrow}s)"
         printf "\n$Lspace$title\n$Lspace"
         printf %"${#title}"s | tr ' ' '-'
-        echo ""
+        echo
     fi
 
     [[ -z $arrow ]] && arrow='>'
@@ -78,11 +78,11 @@ listbox() {
         key="$(bash -c 'read -n 1 -s key; echo $key')"
 
         if [[ $key == q ]]; then
-            echo ""
+            echo
             return 1
         elif [[ $key == '' ]]; then
-            eval "export LISTBOX_CHOICE=\"${opts[$choice]}\""
-            echo ""
+            echo
+            export LISTBOX_CHOICE="${opts[$choice]}"
             break
         elif [[ $key == k || $key == A ]]; then
             if [[ $choice > 1 ]]; then
