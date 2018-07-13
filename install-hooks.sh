@@ -6,6 +6,7 @@ mkdir -p "$hooks"
 rm -f ${hooks}/*.sample
 
 
+
 sed -r 's/^ {4}//' > "${hooks}/cpp-compile.sh" <<'EOF'
     #!/bin/bash
 
@@ -73,6 +74,7 @@ sed -r 's/^ {4}//' > "${hooks}/cpp-compile.sh" <<'EOF'
 EOF
 
 
+
 sed -r 's/^ {4}//' > "${hooks}/post-merge" <<'EOF'
     #!/bin/bash
 
@@ -86,6 +88,7 @@ sed -r 's/^ {4}//' > "${hooks}/post-merge" <<'EOF'
     # Update plugins if changes were made in plugin section of files/.vimrc
     "${hooks}/update-vim-plugins.sh"
 EOF
+
 
 
 sed -r 's/^ {4}//' > "${hooks}/pre-push" <<'EOF'
@@ -113,9 +116,9 @@ sed -r 's/^ {4}//' > "${hooks}/pre-push" <<'EOF'
 EOF
 
 
+
 sed -r 's/^ {4}//' > "${hooks}/update-vim-plugins.sh" <<'EOF'
     #!/bin/bash
-
     # Update plugins if plugin changes were made in files/.vimrc
 
     # <git dir>/hooks
@@ -142,6 +145,7 @@ sed -r 's/^ {4}//' > "${hooks}/update-vim-plugins.sh" <<'EOF'
 
     echo "$current" > "$last_pull"
 EOF
+
 
 
 chmod +x "${hooks}/"{cpp-compile.sh,post-merge,pre-push,update-vim-plugins.sh}
