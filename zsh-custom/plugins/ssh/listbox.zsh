@@ -1,4 +1,4 @@
-_usage() {
+lb_usage() {
     echo "Usage: listbox [options]"
     echo "Example:"
     echo "  listbox -t title -o \"option 1|option 2|option 3\""
@@ -9,14 +9,14 @@ _usage() {
     echo "  -a, --arrow <symbol>        selected option symbol"
 }
 
-_move() {
+lb_move() {
     for opt in "${opts[@]}"; do
         tput cuu1
     done
     tput el1
 }
 
-_draw() {
+lb_draw() {
     local idx=1
     for opt in "${opts[@]}"; do
         local prefix=''
@@ -37,7 +37,7 @@ listbox() {
     while (( $# > 0 )); do
         case "$1" in
             -h|--help)
-                _usage
+                lb_usage
                 return 0 ;;
             -t|--title)
                 local title="$2"
@@ -72,7 +72,7 @@ listbox() {
     local len="${#opts[@]}"
     local choice=1
     local will_redraw=true
-    _draw
+    lb_draw
 
     while true; do
         key="$(bash -c 'read -n 1 -s key; echo $key')"
@@ -105,8 +105,8 @@ listbox() {
         fi
 
         if "$will_redraw"; then
-            _move
-            _draw
+            lb_move
+            lb_draw
         else
             will_redraw=true
         fi
