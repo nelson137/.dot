@@ -131,7 +131,7 @@ newscript() {
 
 
 update() {
-    if [[ -x $1 ]]; then
+    if [[ -z $1 ]]; then
         update system
         return
     fi
