@@ -1,0 +1,25 @@
+#!/bin/bash
+
+
+
+update() {
+    # Update the dot repository or this system
+
+    if [[ -z $1 ]]; then
+        update system
+        return
+    fi
+
+    case "$1" in
+        dot)
+            git -C ~/Projects/Git/dot pull ;;
+        system)
+            sudo apt update && sudo apt upgrade -y ;;
+        *)
+            echo "update: target not recognized: $1" >&2 ;;
+    esac
+}
+
+
+
+update "$@"

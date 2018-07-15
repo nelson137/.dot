@@ -140,26 +140,6 @@ newscript() {
 
 
 
-update() {
-    # Update the dot repository or this system
-
-    if [[ -z $1 ]]; then
-        update system
-        return
-    fi
-
-    case "$1" in
-        dot)
-            git -C ~/Projects/Git/dot pull ;;
-        system)
-            sudo apt update && sudo apt upgrade -y ;;
-        *)
-            echo "update: target not recognized: $1" >&2 ;;
-    esac
-}
-
-
-
 vimrm() {
     # vim a file, prompting to rm it when the user exits
     vim -c 'set nomodifiable' -c 'autocmd QuitPre * call OnExitVimrm()' "$@"
