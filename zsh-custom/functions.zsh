@@ -154,7 +154,7 @@ update() {
         system)
             sudo apt update && sudo apt upgrade -y ;;
         *)
-            echo "target not recognized: $1" >&2 ;;
+            echo "update: target not recognized: $1" >&2 ;;
     esac
 }
 
