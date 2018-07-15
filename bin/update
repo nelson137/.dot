@@ -2,21 +2,62 @@
 
 
 
+update_help() {
+    echo 'Usage: update [-h|--help] <target>'
+    echo
+    echo 'Updates the given target using the appropriate method.'
+    echo
+    echo 'Options:'
+    echo '  -h, --help  Print this help message and exit'
+    echo
+    echo 'Targets:'
+    echo '  system  Execute apt update && apt upgrade (default)'
+    echo '  dot     Execute git pull on the dot repository'
+    exit 0
+}
+
+
+
+update_err() {
+    echo "update: $1" >&2
+    exit 1
+}
+
+
+
 update() {
     # Update the dot repository or this system
 
-    if [[ -z $1 ]]; then
-        update system
-        return
-    fi
+    # Parse arguments
+    local help target
+    while (( $# > 0 )); do
+        case "$1" in
+            -h|--help)
+                help=1 ;;
+            system)
+                target='system' ;;
+            dot)
+                target='dot' ;;
+            -*|--*)
+                update_err "option not recognized: $1" ;;
+            *)
+                update_err "target not recognized: $1" ;;
+        esac
+        shift
+    done
 
-    case "$1" in
+    [[ "$help" ]] &&
+        update_help
+
+    # Default target is system
+    [[ -z "$target" ]] &&
+        target='system'
+
+    case "$target" in
         dot)
             git -C ~/Projects/Git/dot pull ;;
         system)
             sudo apt update && sudo apt upgrade -y ;;
-        *)
-            echo "update: target not recognized: $1" >&2 ;;
     esac
 }
 
