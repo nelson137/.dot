@@ -95,7 +95,7 @@ gp() {
 
 getip() {
     # Get public and private ip addresses
-    echo "Public:  $(curl -s https://icanhazip.com)"
+    echo "Public:  $(curl -s http://icanhazip.com)"
     local private_ip="$(
         ip route get 1 |
         grep -oE '192\.168(\.[0-9]{1,3}){2}' |
