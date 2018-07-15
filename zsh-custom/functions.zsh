@@ -14,12 +14,21 @@ bat() {
 
 chhn() {
     # Change hostname
-    sudo echo >/dev/null  # Cache sudo password
-    [[ $? != 0 ]] && return  # Exit if password not cached
+
+    # Cache sudo password
+    sudo echo >/dev/null
+
+    # Exit if password not cached
+    [[ $? != 0 ]] &&
+        return 1
+
     local old="$(hostname)"
     local new; read -r 'new?New hostname: '
+
+    # Change hostname
     echo "$new" | sudo tee /etc/hostname >/dev/null
     sudo sed -i.bak "s/${old}/${new}/g" /etc/hosts
+
     # Vim new and old /etc/hosts file
     # Prompt to delete old on exit
     local cmd1='autocmd QuitPre * call OnExitChhn()'
@@ -36,6 +45,7 @@ cpstat() {
 
 
 dc() {
+    # Execute arguments completely disconnect from this terminal
     nohup "$@" &>!/dev/null &!
 }
 
@@ -105,7 +115,7 @@ mkcd() {
 
 newscript() {
     # Make a new script with boilerplate code and make it executable
-    #  if necessary
+    # if necessary
     [[ $# == 0 ]] && files=( t.sh ) || files=( $@ )
     touch $files
     for f in $files; do
@@ -131,6 +141,8 @@ newscript() {
 
 
 update() {
+    # Update the dot repository or this system
+
     if [[ -z $1 ]]; then
         update system
         return
