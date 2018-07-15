@@ -16,7 +16,7 @@ gir_help() {
     echo 'Arguments:'
     echo '  -h, --help   Print this help message and exit'
     echo '  <directory>  The name of the Github repo that will be created'
-    exit
+    exit 0
 }
 
 

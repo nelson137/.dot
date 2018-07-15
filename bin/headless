@@ -16,7 +16,7 @@ headless_help() {
     echo 'Commands:'
     echo '  yes  Make the necessary changes to boot directly to the console'
     echo '  no   Make the necessary changes to boot to the GUI'
-    exit
+    exit 0
 }
 
 
