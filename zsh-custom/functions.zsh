@@ -94,14 +94,26 @@ gp() {
 
 
 getip() {
-    # Get public and private ip addresses
-    echo "Public:  $(curl -s http://icanhazip.com)"
+    # Get private and public ip addresses
+
+    # Ignore all stderr output
+    exec 2>/dev/null
+
     local private_ip="$(
         ip route get 1 |
         grep -oE '192\.168(\.[0-9]{1,3}){2}' |
         grep -v '^192\.168\.1\.1$'
     )"
+
+    local public_ip
+    if which dig >/dev/null; then
+        public_ip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+    else
+        public_ip="$(curl -s http://icanhazip.com)"
+    fi
+
     echo "Private: $private_ip"
+    echo "Public:  $public_ip"
 }
 
 
