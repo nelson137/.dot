@@ -1,27 +1,124 @@
 #!/bin/bash
-# Get internal and external ip addresses
+# Print the internal and external ip addresses of this machine
+
+
+
+getip_help() {
+    echo 'Usage: getip [-h|--help] [-i|-e]'
+    echo
+    echo 'Print the internal and external ip addresses of this machine.'
+    echo
+    echo 'If called without any arguments, getip prints out both the internal'
+    echo 'and external ip addresses with labels.'
+    echo
+    echo 'Options:'
+    echo '  -h, --help      Print this help message and exit'
+    echo '  -i, --internal  Print only the internal ip address'
+    echo '  -e, --external  Print only the external ip address'
+    exit
+}
+
+
+
+getip_err() {
+    [[ "$1" == help ]] &&
+        getip_help >&2
+
+    echo "getip: $1" >&2
+    exit 1
+}
+
+
+
+getip_int_ips() {
+    local all_ifaces=(
+        $(ip link | awk '/^[0-9]/ {print $2}' | tr -d : | grep -v '^lo$')
+    )
+
+    # Attempt to get the internal ip of each network interface
+    local -a has_ip int_ips
+    for iface in "${all_ifaces[@]}"; do
+        ip="$(
+            ip -4 -o a show "$iface" |
+            grep -Po '(?<=inet )[0-9]+(\.[0-9]+){3}/[0-9]+'
+        )"
+        if [[ -n "$ip" ]]; then
+            has_ip+=( "$iface" )
+            ips+=( "$ip" )
+        fi
+    done
+
+    # If there are multiple ips label each one with its iface name
+    for i in "${!ips[@]}"; do
+        (( "$i" > 0 )) &&
+            echo '\n             '
+        (( "${#ips[@]}" > 1 )) &&
+            echo "${has_ip[i]}: "
+        echo "${ips[i]}"
+    done
+}
+
+
+
+getip_ext_ip() {
+    if which dig >/dev/null; then
+        dig +short myip.opendns.com @resolver1.opendns.com 2>/dev/null
+    else
+        curl -s http://icanhazip.com
+    fi
+}
 
 
 
 getip() {
-    # Ignore all stderr output
-    exec 2>/dev/null
+    # Split options
+    # Ex: -abc becomes -a -b -c
+    local argv=()
+    while (( $# > 0 )); do
+        if [[ "$1" =~ ^-[^\-]{2,}$ ]]; then
+            for (( i=1; i<${#1}; i++ )); do
+                argv+=( "-${1:i:1}" )
+            done
+        else
+            argv+=( "$1" )
+        fi
+        shift
+    done
 
-    local int="$(
-        ip route get 1 |
-        grep -oE '192\.168(\.[0-9]{1,3}){2}' |
-        grep -v '^192\.168\.1\.1$'
-    )"
+    # Parse arguments
+    local arg help show_int show_ext
+    for (( i=0; i<${#argv[@]}; i++ )); do
+        arg="${argv[i]}"
+        case "$arg" in
+            -h|--help)
+                help=1 ;;
+            -i|--internal)
+                show_int=1 ;;
+            -e|--external)
+                show_ext=1 ;;
+            -*|--*)
+                getip_err "option not recognized: $arg" ;;
+            *)
+                getip_err "argument not recognized: $arg" ;;
+        esac
+        shift
+    done
 
-    local ext
-    if which dig >/dev/null; then
-        ext="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+    [[ "$help" == 1 ]] &&
+        getip_help
+
+    # Both -i/--internal and -e/--external were given
+    [[ "$show_int" && "$show_ext" ]] &&
+        getip_err help
+
+    if [[ "$show_int" ]]; then
+        echo "$(getip_int_ips)"
+    elif [[ "$show_ext" ]]; then
+        echo "$(getip_ext_ip)"
     else
-        ext="$(curl -s http://icanhazip.com)"
+        echo "Internal: $(getip_int_ips)"
+        echo "External: $(getip_ext_ip)"
     fi
-
-    echo "Internal: $int"
-    echo "External: $ext"
 }
 
 
