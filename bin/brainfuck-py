@@ -49,11 +49,6 @@ class DelayAction(Action):
         setattr(namespace, 'delay_changed', True)
 
 
-def _stdout_write(string):
-    sys.stdout.write(string)
-    sys.stdout.flush()
-
-
 def _print_cells(cells, ptr=None):
     to_print = []
     for n in range(len(cells)):
@@ -110,7 +105,7 @@ def evaluate(code, dump_tape, show_tape, user_in, delay):
             if dump_tape or show_tape:
                 output += chr(cells[cellptr])
             else:
-                _stdout_write(chr(cells[cellptr]))
+                print(chr(cells[cellptr]), end='', flush=True)
         elif command == ',':
             if show_tape:
                 if len(user_in) == 0:
