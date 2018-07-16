@@ -12,9 +12,10 @@ getip_help() {
     echo 'and external ip addresses with labels.'
     echo
     echo 'Options:'
-    echo '  -h, --help      Print this help message and exit'
-    echo '  -i, --internal  Print only the internal ip address'
-    echo '  -e, --external  Print only the external ip address'
+    echo '  -h, --help       Print this help message and exit'
+    echo '  -i, --internal   Print only the internal ip address'
+    echo '  -e, --external   Print only the external ip address'
+    echo '  -n, --no-labels  Do not print labels with the output'
     exit
 }
 
@@ -87,6 +88,7 @@ getip() {
 
     # Parse arguments
     local arg help show_int show_ext
+    local labels=1
     for (( i=0; i<${#argv[@]}; i++ )); do
         arg="${argv[i]}"
         case "$arg" in
@@ -96,6 +98,8 @@ getip() {
                 show_int=1 ;;
             -e|--external)
                 show_ext=1 ;;
+            -n|--no-labels)
+                unset labels ;;
             -*|--*)
                 getip_err "option not recognized: $arg" ;;
             *)
@@ -116,8 +120,8 @@ getip() {
     elif [[ "$show_ext" ]]; then
         echo "$(getip_ext_ip)"
     else
-        echo "Internal: $(getip_int_ips)"
-        echo "External: $(getip_ext_ip)"
+        echo "${labels:+Internal: }$(getip_int_ips)"
+        echo "${labels:+External: }$(getip_ext_ip)"
     fi
 }
 
