@@ -122,9 +122,11 @@ lum() {
     # Split options
     # Ex: -abc becomes -a -b -c
     local argv=()
-    while [[ "$1" ]]; do
+    while (( $# > 0 )); do
         if [[ "$1" =~ ^-[^\-]{2,}$ ]]; then
-            argv+=( $(python3 -c 'print(" -".join(input())[2:])' <<< "$1") )
+            for (( i=1; i<${#1}; i++ )); do
+                argv+=( "-${1:i:1}" )
+            done
         else
             argv+=( "$1" )
         fi
