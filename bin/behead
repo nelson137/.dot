@@ -14,8 +14,8 @@ behead_help() {
     echo 'order to either make this system "headless" or not.'
     echo
     echo 'Commands:'
-    echo '  yes  Make the necessary changes to boot directly to the console'
-    echo '  no   Make the necessary changes to boot to the GUI'
+    echo '  y[es]  Make the necessary changes to boot directly to the console'
+    echo '  n[o]   Make the necessary changes to boot to the GUI'
     exit 0
 }
 
