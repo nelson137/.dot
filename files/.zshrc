@@ -94,3 +94,5 @@ export QT_QPA_FONTDIR=/usr/share/fonts
 
 # Create vim undodir if it doesn't exist
 [[ ! -d ~/.vim/undodir ]] && mkdir -p ~/.vim/undodir
+
+true
