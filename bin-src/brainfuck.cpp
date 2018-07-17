@@ -11,38 +11,136 @@
 using namespace std;
 
 
-void print_cells(vector<int> cells) {
-    cout << "\033[2K\r" << flush;
-    for (int c : cells) {
-        cout << ' ' << setw(4) << c << flush;
-    }
-}
-
-
-void print_cells_with_ptr(vector<int> cells, int ptr) {
-    cout << "\033[2K\r" << flush;
-    int i;
-    string to_cout;
-    for (auto it = cells.begin(); it != cells.end(); it++) {
-        i = distance(cells.begin(), it);
-        if (i == ptr) {
-            to_cout = '(' + to_string(cells.at(i));
-            while (to_cout.length() < 4)
-                to_cout += ' ';
-            to_cout += ") ";
-        } else {
-            to_cout = ' ' + to_string(cells.at(i));
-            while (to_cout.length() < 6)
-                to_cout += ' ';
-        }
-        cout<< to_cout << flush;
-    }
-}
-
-
 void err_out(string err) {
     cerr << "brainfuck: " << err << endl;
     exit(1);
+}
+
+
+int print_cells(vector<int> raw_cells) {
+    vector<string> cells;
+    for (int cell : raw_cells)
+        cells.push_back(to_string(cell));
+
+    // Format cells
+    int i;
+    for (auto it = cells.begin(); it != cells.end(); it++) {
+        i = distance(cells.begin(), it);
+        cells[i] = ' ' + cells[i];
+        while (cells[i].length() < 5)
+            cells[i] += ' ';
+    }
+
+    // Get terminal cols, default to 80
+    string out;
+    array<char, 128> buffer;
+    shared_ptr<FILE> pipe(popen("tput cols", "r"), pclose);
+    int cols;
+    if (pipe) {
+        while (!feof(pipe.get())) {
+            if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
+                out += buffer.data();
+        }
+        cols = stoi(out);
+    } else {
+        cols = 80;
+    }
+
+    if (cols < 6)
+        err_out("terminal width is too small");
+
+    // Number of cells per line
+    int nc = (cols+1) / 6;
+
+    // Split cells into lines with a max of nc cells per line
+    vector<string> lines;
+    string l;
+    for (int i=0; i<(int)cells.size();) {
+        l = "";
+        for (int j=0; j<nc; j++) {
+            if (i == (int)cells.size()) break;
+            if (j != 0) l += ' ';
+            l += cells[i];
+            i++;
+        }
+        lines.push_back(l);
+    }
+
+    // Output lines
+    for (string l : lines) {
+        cout << "\r\033[K";  // Clear line
+        cout << l << endl << flush;
+    }
+
+    // Return number of lines so the cursor can be reset at the top
+    return lines.size();
+}
+
+
+int print_cells(vector<int> raw_cells, int ptr) {
+    vector<string> cells;
+    for (int cell : raw_cells)
+        cells.push_back(to_string(cell));
+
+    // Format cells
+    int i;
+    for (auto it = cells.begin(); it != cells.end(); it++) {
+        i = distance(cells.begin(), it);
+        if (i == ptr) {
+            cells[i] = '(' + cells[i];
+            while (cells[i].length() < 4)
+                cells[i] += ' ';
+            cells[i] += ')';
+        } else {
+            cells[i] = ' ' + cells[i];
+            while (cells[i].length() < 5)
+                cells[i] += ' ';
+        }
+    }
+
+    // Get terminal cols, default to 80
+    string out;
+    array<char, 128> buffer;
+    shared_ptr<FILE> pipe(popen("tput cols", "r"), pclose);
+    int cols;
+    if (pipe) {
+        while (!feof(pipe.get())) {
+            if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
+                out += buffer.data();
+        }
+        cols = stoi(out);
+    } else {
+        cols = 80;
+    }
+
+    if (cols < 6)
+        err_out("terminal width is too small");
+
+    // Number of cells per line
+    int nc = (cols+1) / 6;
+
+    // Split cells into lines with a max of nc cells per line
+    vector<string> lines;
+    string l;
+    for (int i=0; i<(int)cells.size();) {
+        l = "";
+        for (int j=0; j<nc; j++) {
+            if (i == (int)cells.size()) break;
+            if (j != 0) l += ' ';
+            l += cells[i];
+            i++;
+        }
+        lines.push_back(l);
+    }
+
+    // Output lines
+    for (string l : lines) {
+        cout << "\r\033[K";  // Clear line
+        cout << l << endl << flush;
+    }
+
+    // Return number of lines so the cursor can be reset at the top
+    return lines.size();
 }
 
 
@@ -100,8 +198,13 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
     int cellptr = 0;
 
     char cmd;
+    int n_lines;
     while (codeptr < (int) code.size()) {
-        if (show_tape) print_cells_with_ptr(cells, cellptr);
+        if (show_tape) {
+            n_lines = print_cells(cells, cellptr);
+            for (int i=0; i<n_lines; i++)
+                cout << "\033[A";
+        }
 
         cmd = code.at(codeptr);
         switch (cmd) {
@@ -156,13 +259,10 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
         this_thread::sleep_for(chrono::milliseconds(delay));
     }
 
-    if (dump_tape) {
+    if (dump_tape)
         print_cells(cells);
-        cout << endl;
-    } else if (show_tape) {
-        print_cells_with_ptr(cells, cellptr);
-        cout << endl;
-    }
+    else if (show_tape)
+        print_cells(cells, cellptr);
 
     if (output.size() > 0 && (dump_tape || show_tape))
         cout << output;
