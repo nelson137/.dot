@@ -17,67 +17,6 @@ void err_out(string err) {
 }
 
 
-int print_cells(vector<int> raw_cells) {
-    vector<string> cells;
-    for (int cell : raw_cells)
-        cells.push_back(to_string(cell));
-
-    // Format cells
-    int i;
-    for (auto it = cells.begin(); it != cells.end(); it++) {
-        i = distance(cells.begin(), it);
-        cells[i] = ' ' + cells[i];
-        while (cells[i].length() < 5)
-            cells[i] += ' ';
-    }
-
-    // Get terminal cols, default to 80
-    string out;
-    array<char, 128> buffer;
-    shared_ptr<FILE> pipe(popen("tput cols", "r"), pclose);
-    int cols;
-    if (pipe) {
-        while (!feof(pipe.get())) {
-            if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
-                out += buffer.data();
-        }
-        cols = stoi(out);
-    } else {
-        cols = 80;
-    }
-    cols -= 2;
-
-    if (cols < 7)
-        err_out("terminal is not wide enough");
-
-    // Number of cells per line
-    int nc = (cols+1) / 6;
-
-    // Split cells into lines with a max of nc cells per line
-    vector<string> lines;
-    string l;
-    for (int i=0; i<(int)cells.size();) {
-        l = "";
-        for (int j=0; j<nc; j++) {
-            if (i == (int)cells.size()) break;
-            if (j != 0) l += ' ';
-            l += cells[i];
-            i++;
-        }
-        lines.push_back(l);
-    }
-
-    // Output lines
-    for (string l : lines) {
-        cout << "\r\033[K";  // Clear line
-        cout << ' ' << l << endl << flush;
-    }
-
-    // Return number of lines so the cursor can be reset at the top
-    return lines.size();
-}
-
-
 int print_cells(vector<int> raw_cells, int ptr) {
     vector<string> cells;
     for (int cell : raw_cells)
@@ -87,7 +26,7 @@ int print_cells(vector<int> raw_cells, int ptr) {
     int i;
     for (auto it = cells.begin(); it != cells.end(); it++) {
         i = distance(cells.begin(), it);
-        if (i == ptr) {
+        if (i != -1 && i == ptr) {
             cells[i] = '(' + cells[i];
             while (cells[i].length() < 4)
                 cells[i] += ' ';
@@ -262,7 +201,8 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
     }
 
     if (dump_tape)
-        print_cells(cells);
+        // Pass illegal value -1 as ptr because ptr is not needed here
+        print_cells(cells, -1);
     else if (show_tape)
         print_cells(cells, cellptr);
 
