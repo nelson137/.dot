@@ -3,8 +3,8 @@
 
 
 
-behead_help() {
-    echo 'Usage: behead <cmd>'
+headless_help() {
+    echo 'Usage: headless <cmd>'
     echo
     echo 'Make this system headless or not headless.'
     echo
@@ -21,17 +21,17 @@ behead_help() {
 
 
 
-behead_err() {
+headless_err() {
     [[ "$1" == help ]] &&
-        behead_help >&2
+        headless_help >&2
 
-    echo "behead: $1" >&2
+    echo "headless: $1" >&2
     exit 1
 }
 
 
 
-behead_reboot() {
+headless_reboot() {
     local response
     read -rp 'Would you like to reboot now (yes/no)? ' response
 
@@ -41,7 +41,7 @@ behead_reboot() {
 
 
 
-behead_yes() {
+headless_yes() {
     sudo sed -ri 's/^(GRUB_CMDLINE_LINUX_DEFAULT=).*$/\1"text"/' \
         /etc/default/grub
     sudo sed -ri 's/^#(GRUB_TERMINAL=.*)$/\1/' \
@@ -50,12 +50,12 @@ behead_yes() {
     sudo update-grub 2>/dev/null
     sudo systemctl set-default multi-user.target 2>/dev/null
 
-    behead_reboot
+    headless_reboot
 }
 
 
 
-behead_no() {
+headless_no() {
     sudo sed -ri 's/^(GRUB_CMDLINE_LINUX_DEFAULT=).*$/\1"quiet splash"/' \
         /etc/default/grub
     sudo sed -ri 's/^(GRUB_TERMINAL=.*)$/#\1/' \
@@ -64,14 +64,14 @@ behead_no() {
     sudo update-grub 2>/dev/null
     sudo systemctl set-default graphical.target 2>/dev/null
 
-    behead_reboot
+    headless_reboot
 }
 
 
 
-behead() {
+headless() {
     [[ $# == 0 ]] &&
-        behead_err help
+        headless_err help
 
     # Parse arguments
     local help yes no
@@ -84,27 +84,27 @@ behead() {
             n|no)
                 no=1 ;;
             *)
-                behead_err "argument not recognized: $1"
+                headless_err "argument not recognized: $1"
         esac
         shift
     done
 
     [[ $help == 1 ]] &&
-        behead_help
+        headless_help
 
     [[ $yes == 1 && $no == 1 ]] &&
-        behead_err help
+        headless_err help
 
     # Only continue if the sudo password gets cached
     sudo echo >/dev/null || exit 1
 
     [[ $yes == 1 ]] &&
-        behead_yes
+        headless_yes
 
     [[ $no == 1 ]] &&
-        behead_no
+        headless_no
 }
 
 
 
-behead "$@"
+headless "$@"
