@@ -76,7 +76,7 @@ int print_cells(vector<int> raw_cells, int ptr) {
 
     // Output lines
     for (string l : lines) {
-        cout << "\r\033[K";  // Clear line
+        cout << "\r\33[K";  // Clear line
         cout << ' ' << l << endl << flush;
     }
 
@@ -105,7 +105,7 @@ char getch() {
     streambuf *pbuf = cin.rdbuf();
     c = pbuf->sbumpc();
 
-    cout << "\r\033[K";  // Clear line
+    cout << "\r\33[K";  // Clear line
 
     // Restore terminal mode
     if (tcsetattr(fileno(stdin), TCSANOW, &t_saved) < 0)
@@ -197,7 +197,7 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
 
         if (show_tape)
             for (int i=0; i<n_lines; i++)
-                cout << "\033[A";
+                cout << "\33[A";
 
         codeptr++;
         this_thread::sleep_for(chrono::milliseconds(delay));

@@ -32,7 +32,7 @@ class _Getch:
             tty.setraw(fd)
             print('Input: ', end='', flush=True)
             char = sys.stdin.read(1)
-            print('\r\033[K', end='')
+            print('\r\33[K', end='')
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return char
@@ -80,7 +80,7 @@ def _print_cells(cells, ptr=None):
 
     # Output lines
     for l in lines:
-        print('\r\033[K', end='')  # Clear line
+        print('\r\33[K', end='')  # Clear line
         print(' ' + l, flush=True)
 
     # Return number of lines so the cursor can be reset at the top
@@ -148,7 +148,7 @@ def evaluate(code, dump_tape, show_tape, use_input, user_in, delay):
                     _err_out(msg)
 
         if show_tape:
-            print('\033[A'*n_lines, end='')
+            print('\33[A'*n_lines, end='')
 
         codeptr += 1
         sleep(delay/1000.)
