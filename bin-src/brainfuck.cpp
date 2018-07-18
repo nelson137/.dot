@@ -98,10 +98,14 @@ char getch() {
     if (tcsetattr(fileno(stdin), TCSANOW, &t) < 0)
         err_out("unable to set terminal to single character mode");
 
+    cout << "Input: ";
+
     // Read single character from cin
     char c;
     streambuf *pbuf = cin.rdbuf();
     c = pbuf->sbumpc();
+
+    cout << "\r\033[K";  // Clear line
 
     // Restore terminal mode
     if (tcsetattr(fileno(stdin), TCSANOW, &t_saved) < 0)
@@ -130,7 +134,7 @@ map<int, int> build_bracemap(vector<char> code) {
 
 
 void evaluate(vector<char> code, bool dump_tape, bool show_tape,
-              vector<char> input, int delay) {
+              bool use_input, vector<char> input, int delay) {
     string output;
     map<int, int> bracemap = build_bracemap(code);
     vector<int> cells;
@@ -141,11 +145,8 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
     char cmd;
     int n_lines;
     while (codeptr < (int) code.size()) {
-        if (show_tape) {
+        if (show_tape)
             n_lines = print_cells(cells, cellptr);
-            for (int i=0; i<n_lines; i++)
-                cout << "\033[A";
-        }
 
         cmd = code.at(codeptr);
         switch (cmd) {
@@ -183,11 +184,9 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
                     cout << (char)cells.at(cellptr) << flush;
                 break;
             case ',':
-                if (show_tape) {
-                    if (input.size() == 0) {
-                        cout << endl;
+                if (use_input) {
+                    if (input.size() == 0)
                         err_out("runtime error: not enough input was given");
-                    }
                     cells.at(cellptr) = (int)input.at(0);
                     input.erase(input.begin());
                 } else {
@@ -195,6 +194,10 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
                 }
                 break;
         }
+
+        if (show_tape)
+            for (int i=0; i<n_lines; i++)
+                cout << "\033[A";
 
         codeptr++;
         this_thread::sleep_for(chrono::milliseconds(delay));
@@ -278,6 +281,7 @@ int main(int argc, char** argv) {
     bool delay_changed = false;
     bool dump_tape = false;
     bool show_tape = false;
+    bool use_input = false;
     vector<char> input;
 
     string cmd;
@@ -305,6 +309,7 @@ int main(int argc, char** argv) {
             } else if (cmd == "--show-tape") {
                 show_tape = true;
             } else if (cmd == "-i" || cmd == "--input") {
+                use_input = true;
                 if (++i == argc)
                     err_out("-i/--input requires a value");
                 else {
@@ -330,8 +335,8 @@ int main(int argc, char** argv) {
         err_out("arguments --dump-tape and --show-tape" \
                 " cannot be used together");
 
-    // -i without --show-tape
-    if (input.size() > 0 && !show_tape)
+    // -i/--input without --show-tape
+    if (use_input && !show_tape)
         err_out("-i/--input can only be used with --show-tape");
 
     // Auto set delay if --show-tape && delay wasn't changed by user
@@ -372,7 +377,7 @@ int main(int argc, char** argv) {
 
     // Evaluate all code
     for (vector<char> code : to_eval)
-        evaluate(code, dump_tape, show_tape, input, delay);
+        evaluate(code, dump_tape, show_tape, use_input, input, delay);
 
     return 0;
 }
