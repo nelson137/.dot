@@ -45,9 +45,10 @@ int print_cells(vector<int> raw_cells) {
     } else {
         cols = 80;
     }
+    cols -= 2;
 
-    if (cols < 6)
-        err_out("terminal width is too small");
+    if (cols < 7)
+        err_out("terminal is not wide enough");
 
     // Number of cells per line
     int nc = (cols+1) / 6;
@@ -69,7 +70,7 @@ int print_cells(vector<int> raw_cells) {
     // Output lines
     for (string l : lines) {
         cout << "\r\033[K";  // Clear line
-        cout << l << endl << flush;
+        cout << ' ' << l << endl << flush;
     }
 
     // Return number of lines so the cursor can be reset at the top
@@ -112,9 +113,10 @@ int print_cells(vector<int> raw_cells, int ptr) {
     } else {
         cols = 80;
     }
+    cols -= 2;
 
-    if (cols < 6)
-        err_out("terminal width is too small");
+    if (cols < 7)
+        err_out("terminal is not wide enough");
 
     // Number of cells per line
     int nc = (cols+1) / 6;
@@ -136,7 +138,7 @@ int print_cells(vector<int> raw_cells, int ptr) {
     // Output lines
     for (string l : lines) {
         cout << "\r\033[K";  // Clear line
-        cout << l << endl << flush;
+        cout << ' ' << l << endl << flush;
     }
 
     // Return number of lines so the cursor can be reset at the top

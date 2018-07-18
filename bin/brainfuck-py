@@ -65,9 +65,10 @@ def _print_cells(cells, ptr=None):
         cols = int(check_output(['tput', 'cols'], stderr=DEVNULL))
     except CalledProcessError:
         cols = 80
+    cols -= 2
 
-    if cols < 6:
-        _err_out('terminal width is too small')
+    if cols < 7:
+        _err_out('terminal is not wide enough')
 
     # Number of cells per line
     nc = int((cols+1)/6)
@@ -78,7 +79,7 @@ def _print_cells(cells, ptr=None):
     # Output lines
     for l in lines:
         print('\r\033[K', end='')  # Clear line
-        print(l, flush=True)
+        print(' ' + l, flush=True)
 
     # Return number of lines so the cursor can be reset at the top
     return len(lines)
