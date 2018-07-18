@@ -283,9 +283,10 @@ vector<char> cleanup(string dirty_code) {
 
 
 void help() {
-    string help[21] {
-        "usage: brainfuck [-h] [-c | -f] [-d DELAY] [--dump-tape | --show-tape]",
-        "                 [-i INPUT] [FILE [FILE ...]]",
+    string help[22] {
+        "usage: brainfuck-py [-h] [-c | -f] [-d DELAY] [--dump-tape | --show-tape]",
+        "                    [-i INPUT]",
+        "                    [FILE [FILE ...]]",
         "",
         "Executes one or more scripts written in Brainfuck.",
         "",
