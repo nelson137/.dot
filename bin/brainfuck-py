@@ -39,7 +39,7 @@ class _Getch:
         return self.impl()
 
 
-class DelayAction(Action):
+class _DelayAction(Action):
     """Set namespace.delay and namespace.delay_changed."""
 
     def __init__(self, option_strings, dest, nargs=None, **kwargs):
@@ -228,8 +228,8 @@ if __name__ == '__main__':
                             help=c_help)
     stdin_type.add_argument('-f', '--stdin-filenames', action='store_true',
                             help=f_help)
-    # Use DelayAction to set delay and delay_changed when -d/--delay is used
-    parser.add_argument('-d', '--delay', action=DelayAction, type=int,
+    # Use _DelayAction to set delay and delay_changed when -d/--delay is used
+    parser.add_argument('-d', '--delay', action=_DelayAction, type=int,
                         default=0, help=d_help)
     tape_g = parser.add_mutually_exclusive_group()
     tape_g.add_argument('--dump-tape', action='store_true', help=dump_help)
