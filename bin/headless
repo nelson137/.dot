@@ -11,11 +11,11 @@ headless_help() {
     echo -n 'This script modifies the GRUB_CMDLINE_LINUX_DEFAULT and '
     echo 'GRUB_TERMINAL'
     echo 'variables in /etc/default/grub, then runs `systemctl set-default` in'
-    echo 'order to either make this system "headless" or not.'
+    echo 'order to either make this system headless or not.'
     echo
     echo 'Commands:'
-    echo '  y[es]  Make the necessary changes to boot directly to the console'
-    echo '  n[o]   Make the necessary changes to boot to the GUI'
+    echo '  y[es]  Turn off the GUI -- boot to a tty'
+    echo '  n[o]   Turn on the GUI -- boot to your desktop environment'
     exit 0
 }
 
