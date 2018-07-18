@@ -244,7 +244,7 @@ if __name__ == '__main__':
     tape_g = parser.add_mutually_exclusive_group()
     tape_g.add_argument('--dump-tape', action='store_true', help=dump_help)
     tape_g.add_argument('--show-tape', action='store_true', help=show_help)
-    parser.add_argument('-i', '--input', default=None, help=i_help)
+    parser.add_argument('-i', '--input', help=i_help)
     # nargs='*' so that filenames or code can be read from stdin
     parser.add_argument('infiles', nargs='*', default=[], metavar='FILE',
                         help=file_help)
