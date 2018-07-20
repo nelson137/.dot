@@ -65,7 +65,7 @@ lum_set_s_b() {
         lum_err "cannot set brightness to $1"
     # Check if brightness exceeds max
     # - Use bc to compare floats
-    (( $(echo "$1 > $s_b_max" | bc -l) )) &&
+    (( $(bc -l <<< "$1 > $s_b_max") )) &&
         lum_err "max screen brightness is $s_b_max"
 
     # Try to change screen brightness, print error if it fails
@@ -78,7 +78,7 @@ lum_set_s_b() {
 lum_set_d_b() {
     # Check if brightness exceeds max
     # - Use bc to compare floats
-    (( $(echo "$1 > $d_b_max" | bc -l) )) &&
+    (( $(bc -l <<< "$1 > $d_b_max") )) &&
         lum_err "max display brightness is $d_b_max"
 
     local outputs=( $(xrandr | awk '/ connected/ {print $1}') )
@@ -147,7 +147,7 @@ lum() {
     done
 
     # Parse arguments
-    local arg help set_s s_b set_d d_b reset_both
+    local arg help set_s set_s_b set_d set_d_b reset_both
     for (( i=0; i<${#argv[@]}; i++ )); do
         arg="${argv[i]}"
         case "$arg" in
@@ -156,11 +156,11 @@ lum() {
             -s|--screen)
                 set_s=1
                 ((i++))
-                s_b="${argv[i]}" ;;
+                set_s_b="${argv[i]}" ;;
             -d|--display)
                 set_d=1
                 ((i++))
-                d_b="${argv[i]}" ;;
+                set_d_b="${argv[i]}" ;;
             -*|--*)
                 lum_err "option not recognized: $arg" ;;
             *)
@@ -182,11 +182,11 @@ lum() {
         lum_err 'cannot get or set display brightness'
 
     # -s/--screen was given without a brightness
-    [[ "$set_s" && ! "$s_b" ]] &&
+    [[ "$set_s" && ! "$set_s_b" ]] &&
         lum_err help
 
     # -d/--display was given without a brightness
-    [[ "$set_d" && ! "$d_b" ]] &&
+    [[ "$set_d" && ! "$set_d_b" ]] &&
         lum_err help
 
     # User tried to set screen and/or display brightness and reset both
@@ -219,23 +219,23 @@ lum() {
 
     # Set screen brightness
     if [[ "$set_s" ]]; then
-        if [[ "$s_b" == reset ]]; then
+        if [[ "$set_s_b" == reset ]]; then
             # Reset screen brightness
             lum_set_s_b "$s_b_default"
         else
             # Set screen brightness to $s_b
-            lum_set_s_b "$s_b"
+            lum_set_s_b "$set_s_b"
         fi
     fi
 
     # Set display brightness
     if [[ "$set_d" ]]; then
-        if [[ "$d_b" == reset ]]; then
+        if [[ "$set_d_b" == reset ]]; then
             # Reset display brightness
             lum_set_d_b "$d_b_default"
         else
             # Set display brightness to $d_b
-            lum_set_d_b "$d_b"
+            lum_set_d_b "$set_d_b"
         fi
     fi
 }
