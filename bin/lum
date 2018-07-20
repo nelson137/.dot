@@ -164,7 +164,7 @@ lum() {
             -*|--*)
                 lum_err "option not recognized: $arg" ;;
             *)
-                [[ "$arg" != reset ]] &&
+                [[ "$reset_both" || "$arg" != reset ]] &&
                     lum_err help
                 reset_both=1 ;;
         esac
