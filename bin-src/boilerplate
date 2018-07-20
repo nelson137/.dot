@@ -48,6 +48,7 @@ s() {
 
     # Parse arguments
     local arg help
+    # for arg in "${argv[@]}"; do
     for (( i=0; i<${#argv}; i++ )); do
         arg="${argv[i]}"
         case "$arg" in
