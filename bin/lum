@@ -21,14 +21,13 @@ xrandr -d :0 &>/dev/null ||
 lum_help() {
     echo 'Usage: lum [-h|--help]'
     echo '       lum reset'
-    echo '       lum [-v|--verbose] {-s|--screen} {<brightness>|reset}'
-    echo '       lum [-v|--verbose] {-d|--display} {<brightness>|reset}'
+    echo '       lum {-s|--screen} {<brightness>|reset}'
+    echo '       lum {-d|--display} {<brightness>|reset}'
     echo
     echo 'Get or set the brightness of the screen or display.'
     echo
     echo 'Options:'
     echo '  -h, --help     Print this help message and exit'
-    echo '  -v, --verbose  Print warnings'
     echo '  -s, --screen   Set the screen brightness to <brightness>'
     echo '  -d, --display  Set the display brightness to <brightness>'
     echo
@@ -56,22 +55,6 @@ lum_err() {
 
     echo "lum: $1" >&2
     exit 1
-}
-
-
-
-lum_warn() {
-    echo "lum: warn: $1" >&2
-}
-
-
-
-lum_warn_disabled() {
-    # Print disabled warnings
-    [[ "$s_b_disabled" ]] &&
-        lum_warn 'cannot get or set screen brightness'
-    [[ "$d_b_disabled" ]] &&
-        lum_warn 'cannot get or set display brightness'
 }
 
 
@@ -149,14 +132,12 @@ lum() {
     done
 
     # Parse arguments
-    local arg help verbose set_s s_b set_d d_b reset_both
+    local arg help set_s s_b set_d d_b reset_both
     for (( i=0; i<${#argv[@]}; i++ )); do
         arg="${argv[i]}"
         case "$arg" in
             -h|--help)
                 help=1 ;;
-            -v|--verbose)
-                verbose=1 ;;
             -s|--screen)
                 [[ "$s_b_disabled" == 1 ]] &&
                     lum_err 'cannot get or set screen brightness'
@@ -197,9 +178,6 @@ lum() {
     if [[ -z "$set_s" && -z "$set_d" && -z "$reset_both" ]]; then
         lum_show_current
 
-        [[ "$verbose" ]] &&
-            lum_warn_disabled
-
         exit 0
     fi
 
@@ -216,10 +194,6 @@ lum() {
         # Reset display brightness
         [[ ! "$d_b_disabled" ]] &&
             lum_set_d_b "$d_b_default"
-
-        # Print disabled warnings if verbose
-        [[ "$verbose" ]] &&
-            lum_warn_disabled
 
         exit 0
     fi
