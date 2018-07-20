@@ -268,7 +268,7 @@ vector<string> split_options(vector<string> args) {
     for (string arg : args) {
         if (arg.substr(0,2) == "--")
             split.push_back(arg);
-        else if (arg[0] == '-')
+        else if (arg[0] == '-' && arg.length() > 1)
             for (int j=1; j<(int)arg.length(); j++)
                 split.push_back('-' + string(1, arg[j]));
         else
@@ -298,7 +298,7 @@ int main(int argc, char** argv) {
     string cmd;
     for (int i=1; i<(int)args.size(); i++) {
         cmd = args[i];
-        if (cmd[0] == '-') {
+        if (cmd[0] == '-' && cmd.length() > 1) {
             if (cmd == "-h" || cmd == "--help") {
                 help();
             } else if (cmd == "-c" || cmd == "--stdin-code") {
