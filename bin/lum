@@ -1,5 +1,5 @@
 #!/bin/bash
-# Get or set the brightness of the screen and/or the physical display
+# Get or set the brightness of the screen and/or the display
 
 # Screen brightness directory
 s_b_dir='/sys/class/backlight/intel_backlight'
@@ -8,28 +8,43 @@ s_b_dir='/sys/class/backlight/intel_backlight'
 s_b_max="$(cat "${s_b_dir}/max_brightness")"
 d_b_max='2'
 
-# Disable -s/--screen if cannot get or modify screen brightness
+# Disable -s/--screen if cannot get or set screen brightness
 [[ ! -f "${s_b_dir}/brightness" ]] &&
     s_b_disabled=1
 
-# Disable -d/--display if cannot get or modify display brightness
+# Disable -d/--display if cannot get or set display brightness
 xrandr -d :0 &>/dev/null ||
     d_b_disabled=1
 
 
 
 lum_help() {
-    echo 'Usage: lum -h'
+    echo 'Usage: lum [-h|--help]'
     echo '       lum reset'
-    echo '       lum [-v] {-s|-d} <brightness>'
+    echo '       lum [-v|--verbose] {-s|--screen} {<brightness>|reset}'
+    echo '       lum [-v|--verbose] {-d|--display} {<brightness>|reset}'
     echo
-    echo 'Get or set the brightness of the screen or physical display.'
+    echo 'Get or set the brightness of the screen or display.'
     echo
     echo 'Options:'
     echo '  -h, --help     Print this help message and exit'
     echo '  -v, --verbose  Print warnings'
     echo '  -s, --screen   Set the screen brightness to <brightness>'
-    echo '  -d, --display  Set the physical display brightness to <brightness>'
+    echo '  -d, --display  Set the display brightness to <brightness>'
+    echo
+    echo 'Description:'
+    echo
+    echo '  If invoked without any arguments, the current screen and display'
+    echo '  brightness values are printed out.'
+    echo
+    echo '  The default screen brightness is 61.'
+    echo '  The default display brightness is 1.'
+    echo
+    echo '  The screen and display brightness values have a maximum which'
+    echo '  cannot be exceeded.'
+    echo
+    echo '  The maximum screen brightness is 416.'
+    echo '  The maximum display brightness is 2.'
     exit 0
 }
 
@@ -54,9 +69,9 @@ lum_warn() {
 lum_warn_disabled() {
     # Print disabled warnings
     [[ "$s_b_disabled" ]] &&
-        lum_warn 'cannot get or modify screen brightness'
+        lum_warn 'cannot get or set screen brightness'
     [[ "$d_b_disabled" ]] &&
-        lum_warn 'cannot get or modify display brightness'
+        lum_warn 'cannot get or set display brightness'
 }
 
 
@@ -144,13 +159,13 @@ lum() {
                 verbose=1 ;;
             -s|--screen)
                 [[ "$s_b_disabled" == 1 ]] &&
-                    lum_err 'cannot get or modify screen brightness'
+                    lum_err 'cannot get or set screen brightness'
                 set_s=1
                 ((i++))
                 s_b="${argv[i]}" ;;
             -d|--display)
                 [[ "$d_b_disabled" == 1 ]] &&
-                    lum_err 'cannot get or modify display brightness'
+                    lum_err 'cannot get or set display brightness'
                 set_d=1
                 ((i++))
                 d_b="${argv[i]}" ;;
