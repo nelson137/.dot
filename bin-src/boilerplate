@@ -1,5 +1,6 @@
 #!/bin/bash
-# 
+#
+# Short description.
 
 
 
@@ -31,16 +32,31 @@ s() {
     [[ $# == 0 ]] &&
         s_err help
 
-    # Parse arguments
-    local help
+    # Split options
+    # Ex: -abc becomes -a -b -c
+    local argv=()
     while (( $# > 0 )); do
-        case $1 in
+        if [[ "$1" =~ ^-[^\-]{2,}$ ]]; then
+            for (( i=1; i<${#1}; i++ )); do
+                argv+=( "-${1:i:1}" )
+            done
+        else
+            argv+=( "$1" )
+        fi
+        shift
+    done
+
+    # Parse arguments
+    local arg help
+    for (( i=0; i<${#argv}; i++ )); do
+        arg="${argv[i]}"
+        case "$arg" in
             -h|--help)
                 help=1 ;;
             -*|--*)
-                s_err "option not recognized: $1" ;;
+                s_err "option not recognized: $arg" ;;
             *)
-                s_err "argument not recognized: $1" ;;
+                s_err "argument not recognized: $arg" ;;
         esac
         shift
     done
