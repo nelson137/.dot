@@ -263,19 +263,26 @@ void help() {
 }
 
 
+vector<string> split_options(vector<string> args) {
+    vector<string> split;
+    for (string arg : args) {
+        if (arg.substr(0,2) == "--")
+            split.push_back(arg);
+        else if (arg[0] == '-')
+            for (int j=1; j<(int)arg.length(); j++)
+                split.push_back('-' + string(1, arg[j]));
+        else
+            split.push_back(arg);
+    }
+
+    return split;
+}
+
+
 int main(int argc, char** argv) {
     // Split options -abc into -a -b -c
     vector<string> orig_args(argv, argv+argc);
-    vector<string> args;
-    for (string arg : orig_args) {
-        if (arg.substr(0,2) == "--")
-            args.push_back(arg);
-        else if (arg[0] == '-')
-            for (int j=1; j<(int)arg.length(); j++)
-                args.push_back("-" + string(1, arg[j]));
-        else
-            args.push_back(arg);
-    }
+    vector<string> args = split_options(orig_args);
 
     vector<string> infiles;
     bool stdin_code = false;
