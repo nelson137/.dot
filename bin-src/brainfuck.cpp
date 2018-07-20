@@ -17,7 +17,7 @@ void err_out(string err) {
 }
 
 
-int print_cells(vector<int> raw_cells, int ptr) {
+int print_cells(vector<int> raw_cells, int width, int ptr) {
     vector<string> cells;
     for (int cell : raw_cells)
         cells.push_back(to_string(cell));
@@ -38,27 +38,8 @@ int print_cells(vector<int> raw_cells, int ptr) {
         }
     }
 
-    // Get terminal cols, default to 80
-    string out;
-    array<char, 128> buffer;
-    shared_ptr<FILE> pipe(popen("tput cols", "r"), pclose);
-    int cols;
-    if (pipe) {
-        while (!feof(pipe.get())) {
-            if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
-                out += buffer.data();
-        }
-        cols = stoi(out);
-    } else {
-        cols = 80;
-    }
-    cols -= 2;
-
-    if (cols < 7)
-        err_out("terminal is not wide enough");
-
     // Number of cells per line
-    int nc = (cols+1) / 6;
+    int nc = (width+1) / 6;
 
     // Split cells into lines with a max of nc cells per line
     vector<string> lines;
@@ -133,8 +114,8 @@ map<int, int> build_bracemap(vector<char> code) {
 }
 
 
-void evaluate(vector<char> code, bool dump_tape, bool show_tape,
-              bool use_input, vector<char> input, int delay) {
+void evaluate(vector<char> code, int width, int delay, bool dump_tape,
+              bool show_tape, bool use_input, vector<char> input) {
     string output;
     map<int, int> bracemap = build_bracemap(code);
     vector<int> cells;
@@ -146,7 +127,7 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
     int n_lines;
     while (codeptr < (int) code.size()) {
         if (show_tape)
-            n_lines = print_cells(cells, cellptr);
+            n_lines = print_cells(cells, width, cellptr);
 
         cmd = code.at(codeptr);
         switch (cmd) {
@@ -205,9 +186,9 @@ void evaluate(vector<char> code, bool dump_tape, bool show_tape,
 
     if (dump_tape)
         // Pass illegal value -1 as ptr because ptr is not needed here
-        print_cells(cells, -1);
+        print_cells(cells, width, -1);
     else if (show_tape)
-        print_cells(cells, cellptr);
+        print_cells(cells, width, cellptr);
 
     if (output.size() > 0 && (dump_tape || show_tape))
         cout << output;
@@ -227,10 +208,30 @@ vector<char> cleanup(string dirty_code) {
 }
 
 
+int get_term_width() {
+    // Get terminal cols, default to 80
+    int width;
+    string out;
+    array<char, 128> buffer;
+    shared_ptr<FILE> pipe(popen("tput cols", "r"), pclose);
+    if (pipe) {
+        while (!feof(pipe.get())) {
+            if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
+                out += buffer.data();
+        }
+        width = stoi(out);
+    } else {
+        width = 80;
+    }
+
+    return width - 2;
+}
+
+
 void help() {
-    string help[22] {
+    string help[24] {
         "usage: brainfuck-py [-h] [-c | -f] [-d DELAY] [--dump-tape | --show-tape]",
-        "                    [-i INPUT]",
+        "                    [-i INPUT] [-w WIDTH]",
         "                    [FILE [FILE ...]]",
         "",
         "Executes one or more scripts written in Brainfuck.",
@@ -250,7 +251,9 @@ void help() {
         "  --dump-tape           Output the tape after script execution.",
         "  --show-tape           Show the tape during script execution.",
         "  -i INPUT, --input INPUT",
-        "                        The input for Brainfuck's , command."
+        "                        The input for Brainfuck's , command.",
+        "  -w WIDTH, --width WIDTH",
+        "                        The maximum width for the output."
     };
 
     for (string line : help)
@@ -283,6 +286,7 @@ int main(int argc, char** argv) {
     bool show_tape = false;
     bool use_input = false;
     vector<char> input;
+    int width = get_term_width();
 
     string cmd;
     for (int i=1; i<(int)args.size(); i++) {
@@ -318,6 +322,15 @@ int main(int argc, char** argv) {
                     for (int j=0; arg_i[j] != '\0'; j++)
                         input.push_back(arg_i[j]);
                 }
+            } else if (cmd == "-w" || cmd == "--width") {
+                string err = "-w/--width requires an integer";
+                if (++i == argc) {
+                    err_out(err);
+                } else {
+                    istringstream ss(argv[i]);
+                    if (! (ss >> width))
+                        err_out(err);
+                }
             } else {
                 err_out("unknown option: " + cmd);
             }
@@ -325,6 +338,10 @@ int main(int argc, char** argv) {
             infiles.push_back(cmd);
         }
     }
+
+    // Terminal width is too small for even 1 cell
+    if (width < 7)
+        err_out("terminal is not wide enough");
 
     if (stdin_code && stdin_filenames)
         err_out("arguments -c/--stdin-code and -f/--stdin-filenames" \
@@ -377,7 +394,7 @@ int main(int argc, char** argv) {
 
     // Evaluate all code
     for (vector<char> code : to_eval)
-        evaluate(code, dump_tape, show_tape, use_input, input, delay);
+        evaluate(code, width, delay, dump_tape, show_tape, use_input, input);
 
     return 0;
 }

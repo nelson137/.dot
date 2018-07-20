@@ -52,7 +52,7 @@ class _DelayAction(Action):
         setattr(namespace, 'delay_changed', True)
 
 
-def _print_cells(cells, ptr=None):
+def _print_cells(cells, width, ptr=None):
     cells = cells[:]
 
     # Format cells
@@ -62,18 +62,8 @@ def _print_cells(cells, ptr=None):
         else:
             cells[n] = ' ' + str(cells[n]).ljust(4)
 
-    # Get terminal cols, default to 80
-    try:
-        cols = int(check_output(['tput', 'cols'], stderr=DEVNULL))
-    except CalledProcessError:
-        cols = 80
-    cols -= 2
-
-    if cols < 7:
-        _err_out('terminal is not wide enough')
-
     # Number of cells per line
-    nc = int((cols+1)/6)
+    nc = int((width+1)/6)
 
     # Split cells into lines with a max of nc cells per line
     lines = [' '.join(cells[i:i+nc]) for i in range(0, len(cells), nc)]
@@ -104,7 +94,7 @@ def _build_bracemap(code):
     return bracemap
 
 
-def evaluate(code, dump_tape, show_tape, use_input, user_in, delay):
+def evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in):
     output = ''
     bracemap = _build_bracemap(code)
     cells = [0]
@@ -113,7 +103,7 @@ def evaluate(code, dump_tape, show_tape, use_input, user_in, delay):
 
     while codeptr < len(code):
         if show_tape:
-            n_lines = _print_cells(cells, ptr=cellptr)
+            n_lines = _print_cells(cells, width, ptr=cellptr)
 
         command = code[codeptr]
         if command == '>':
@@ -154,9 +144,9 @@ def evaluate(code, dump_tape, show_tape, use_input, user_in, delay):
         sleep(delay/1000.)
 
     if dump_tape:
-        _print_cells(cells)
+        _print_cells(cells, width)
     elif show_tape:
-        _print_cells(cells, ptr=cellptr)
+        _print_cells(cells, width, ptr=cellptr)
 
     if (dump_tape or show_tape) and output:
         print(output, end='')
@@ -166,6 +156,17 @@ def cleanup(code):
     """Return code with all non-Brainfuck command characters removed."""
     bf_chars = ['>', '<', '+', '-', '[', ']', '.', ',']
     return list(filter(lambda c: c in bf_chars, code))
+
+
+def get_term_width():
+    """Get terminal width, default to 80."""
+    try:
+        width = int(check_output(['tput', 'cols'], stderr=DEVNULL))
+    except CalledProcessError:
+        width = 80
+
+    # Subtract 2 for padding
+    return width - 2
 
 
 def main(args):
@@ -183,7 +184,14 @@ def main(args):
         use_input = True
         user_in = list(args.input)
 
-    if use_input and not show_tape:  # -i without --show-tape
+    width = args.width
+
+    # Error out if terminal width is too small for even 1 cell
+    if width < 7:
+        _err_out('terminal is not wide enough')
+
+    # -i/--input without --show-tape
+    if use_input and not show_tape:
         _err_out('-i/--input can only be used with --show-tape')
 
     # Auto set delay if --show-tape && delay wasn't changed by user
@@ -214,7 +222,7 @@ def main(args):
         _err_out('no input given')
     # Evaluate all code
     for code in to_eval:
-        evaluate(code, dump_tape, show_tape, use_input, user_in, delay)
+        evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in)
 
 
 if __name__ == '__main__':
@@ -227,6 +235,7 @@ if __name__ == '__main__':
     dump_help = 'Output the tape after script execution.'
     show_help = "Show the tape during script execution."
     i_help = "The input for Brainfuck's , command."
+    w_help = 'The maximum width for the output.'
     file_help = 'One or more names of Brainfuck scripts. Filenames are ' + \
                 'read from both the command line and from stdin.'
 
@@ -245,6 +254,8 @@ if __name__ == '__main__':
     tape_g.add_argument('--dump-tape', action='store_true', help=dump_help)
     tape_g.add_argument('--show-tape', action='store_true', help=show_help)
     parser.add_argument('-i', '--input', help=i_help)
+    parser.add_argument('-w', '--width', type=int, default=get_term_width(),
+                        help=w_help)
     # nargs='*' so that filenames or code can be read from stdin
     parser.add_argument('infiles', nargs='*', default=[], metavar='FILE',
                         help=file_help)
