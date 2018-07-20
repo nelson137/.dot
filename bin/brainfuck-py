@@ -127,7 +127,7 @@ def evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in):
         elif command == ',':
             if use_input:
                 if len(user_in) == 0:
-                    _err_out("runtime error: not enough input was given")
+                    _err_out('runtime error: not enough input was given')
                 cells[cellptr] = ord(user_in.pop(0))
             else:
                 try:
@@ -233,7 +233,7 @@ if __name__ == '__main__':
     d_help = 'The delay, in milliseconds, between the execution of each ' + \
              'Brainfuck command.'
     dump_help = 'Output the tape after script execution.'
-    show_help = "Show the tape during script execution."
+    show_help = 'Show the tape during script execution.'
     i_help = "The input for Brainfuck's , command."
     w_help = 'The maximum width for the output.'
     file_help = 'One or more names of Brainfuck scripts. Filenames are ' + \
