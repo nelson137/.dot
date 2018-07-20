@@ -43,8 +43,8 @@ HIST_STAMPS="yyyy-mm-dd"
 ZSH_CUSTOM="$HOME/Projects/Git/dot/zsh-custom"
 
 plugins=(
-    c++-utils
     colored-man-pages
+    cpp-utils
     git
     git-prompt
     git-prompt-custom
