@@ -6,7 +6,7 @@ set backspace=indent,eol,start
 set encoding=utf-8
 set history=500             " Remember 500 ex commands
 set nocompatible            " Be iMproved
-set noswapfile
+set noswapfile              " I like to live dangerously
 set scrolloff=4             " Keep cursor 4 lines from top & bot when scrolling
 set shell=zsh               " Shell to use for !
 set showmode                " Show current mode (normal|visual|insert|...)
