@@ -95,23 +95,38 @@ lum_show_current() {
     # Current screen brightness
     local s_b="$(cat "${s_b_dir}/brightness")"
 
-    # Calculate brightness percent
-    # - Get percent with 2 decimal places
-    # - Remove trailing zeros
-    # - Remove trailling .
-    local s_b_percent="$(
-        echo "scale=2; 100*${s_b}/${s_b_max}" | bc |
-        sed -r 's/0+$//' |
-        sed -r 's/\.$//'
-    )"
+    if [[ "${s_b}" ]]; then
+        # Calculate screen brightness percent
+        # - Get percent with 2 decimal places
+        # - Remove trailing zeros
+        # - Remove trailling .
+        local s_b_percent="$(
+            bc <<< "scale=2; 100*${s_b}/${s_b_max}" |
+            sed -r 's/0+$//' |
+            sed -r 's/\.$//'
+        )"
+    fi
 
     # Current display brightness
     local d_b="$(
         xrandr -d :0 --verbose 2>/dev/null | awk '/Brightness/ {print $2}'
     )"
 
-    echo "Screen:  ${s_b}/${s_b_max} (${s_b_percent}%)"
-    echo "Display: $d_b"
+    if [[ "${d_b}" ]]; then
+        # Calculate display brightness percent
+        # - Get percent with 2 decimal places
+        # - Remove trailing zeros
+        # - Remove trailling .
+        local d_b_percent="$(
+            bc <<< "scale=2; 100*${d_b}/${d_b_max}" |
+            sed -r 's/0+$//' |
+            sed -r 's/\.$//'
+        )"
+    fi
+
+    # Show "value/max (percent%)" if value is not null
+    echo "Screen:  ${s_b:+$s_b/$s_b_max ($s_b_percent%)}"
+    echo "Display: ${d_b:+$d_b/$d_b_max ($d_b_percent%)}"
 }
 
 
