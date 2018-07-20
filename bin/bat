@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Get battery stats
+
+
+
+bat() {
+    upower -i "$(upower -e | grep BAT)" |
+        grep -E --color=never 'state|to empty|percentage'
+}
+
+
+
+bat "$@"

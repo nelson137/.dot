@@ -4,14 +4,6 @@ unsetopt aliases  # Turn aliases off while defining functions
 
 
 
-bat() {
-    # Get battery stats
-    upower -i "$(upower -e | grep BAT)" |
-        grep -E --color=never 'state|to empty|percentage'
-}
-
-
-
 chhn() {
     # Change hostname
 
