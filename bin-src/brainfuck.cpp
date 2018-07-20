@@ -343,39 +343,41 @@ int main(int argc, char** argv) {
     if (width < 7)
         err_out("terminal is not wide enough");
 
+    // -c/--stdin-code and -f/--stdin-filenames were both given
     if (stdin_code && stdin_filenames)
         err_out("arguments -c/--stdin-code and -f/--stdin-filenames" \
                 " cannot be used together");
 
-    // --dump-tape and --show-tape were both passed
+    // --dump-tape and --show-tape were both given
     if (dump_tape && show_tape)
         err_out("arguments --dump-tape and --show-tape" \
                 " cannot be used together");
 
-    // -i/--input without --show-tape
+    // -i/--input was given without --show-tape
     if (use_input && !show_tape)
         err_out("-i/--input can only be used with --show-tape");
 
-    // Auto set delay if --show-tape && delay wasn't changed by user
+    // Auto set delay if --show-tape and delay wasn't changed by user
     if (show_tape && !delay_changed)
         delay = 125;
 
     // All code to evaluate
     vector<vector<char>> to_eval;
 
-    // Read code or filenames from stdin
     if (stdin_code) {
+        // Read code from stdin into in_code
         string in_code;
         for (string in_line; getline(cin, in_line);)
             in_code += in_line;
         if (in_code.size())
             to_eval.push_back(cleanup(in_code));
     } else if (stdin_filenames) {
+        // Read filenames from stdin into infiles
         for (string in_line; getline(cin, in_line);)
             infiles.push_back(in_line);
     }
 
-    // Add code from each Brainfuck script to to_eval
+    // Append code from each file in infiles to to_eval
     for (string fn : infiles) {
         ifstream bf_script(fn);
         if (bf_script.is_open()) {
@@ -389,6 +391,7 @@ int main(int argc, char** argv) {
         }
     }
 
+    // No code or filenames were given
     if (!to_eval.size())
         err_out("no input given");
 

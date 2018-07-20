@@ -11,7 +11,7 @@ from time import sleep
 
 
 class _Getch:
-    """Read only one character from stdin."""
+    """Read one character from stdin."""
 
     def __init__(self):
         try:
@@ -186,7 +186,7 @@ def main(args):
 
     width = args.width
 
-    # Error out if terminal width is too small for even 1 cell
+    # Terminal width is too small for even 1 cell
     if width < 7:
         _err_out('terminal is not wide enough')
 
@@ -194,7 +194,7 @@ def main(args):
     if use_input and not show_tape:
         _err_out('-i/--input can only be used with --show-tape')
 
-    # Auto set delay if --show-tape && delay wasn't changed by user
+    # Auto set delay if --show-tape and delay wasn't changed by user
     if show_tape and not delay_changed:
         delay = 125
 
