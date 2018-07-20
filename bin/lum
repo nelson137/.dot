@@ -2,11 +2,11 @@
 # Get or set the brightness of the screen and/or the display
 
 # Screen brightness directory
-s_b_dir='/sys/class/backlight/intel_backlight'
+s_b_dir=/sys/class/backlight/intel_backlight
 
 # Max screen and display brightnesses
 s_b_max="$(cat "${s_b_dir}/max_brightness")"
-d_b_max='2'
+d_b_max=2
 
 # Disable -s/--screen if cannot get or set screen brightness
 [[ ! -f "${s_b_dir}/brightness" ]] &&
@@ -139,14 +139,10 @@ lum() {
             -h|--help)
                 help=1 ;;
             -s|--screen)
-                [[ "$s_b_disabled" == 1 ]] &&
-                    lum_err 'cannot get or set screen brightness'
                 set_s=1
                 ((i++))
                 s_b="${argv[i]}" ;;
             -d|--display)
-                [[ "$d_b_disabled" == 1 ]] &&
-                    lum_err 'cannot get or set display brightness'
                 set_d=1
                 ((i++))
                 d_b="${argv[i]}" ;;
@@ -159,15 +155,23 @@ lum() {
         esac
     done
 
-    [[ "$help" == 1 ]] &&
+    [[ "$help" ]] &&
         lum_help
 
+    # Cannot get or set screen brightness
+    [[ "$s_b_disabled" ]] &&
+        lum_err 'cannot get or set screen brightness'
+
+    # Cannot get or set display brightness
+    [[ "$d_b_disabled" ]] &&
+        lum_err 'cannot get or set display brightness'
+
     # -s/--screen was given without a brightness
-    [[ "$set_s" && -z "$s_b" ]] &&
+    [[ "$set_s" && ! "$s_b" ]] &&
         lum_err help
 
     # -d/--display was given without a brightness
-    [[ "$set_d" && -z "$d_b" ]] &&
+    [[ "$set_d" && ! "$d_b" ]] &&
         lum_err help
 
     # User tried to set screen and/or display brightness and reset both
@@ -175,15 +179,15 @@ lum() {
         lum_err help
 
     # Print current screen and display brightnesses
-    if [[ -z "$set_s" && -z "$set_d" && -z "$reset_both" ]]; then
+    if [[ ! "$set_s" && ! "$set_d" && ! "$reset_both" ]]; then
         lum_show_current
 
         exit 0
     fi
 
     # Default brightness values
-    local s_b_default='61'
-    local d_b_default='1'
+    local s_b_default=61
+    local d_b_default=1
 
     # Reset both screen and display brightnesses
     if [[ "$reset_both" ]]; then
