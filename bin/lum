@@ -159,11 +159,11 @@ lum() {
         lum_help
 
     # Cannot get or set screen brightness
-    [[ "$s_b_disabled" ]] &&
+    [[ "$set_s" && "$s_b_disabled" ]] &&
         lum_err 'cannot get or set screen brightness'
 
     # Cannot get or set display brightness
-    [[ "$d_b_disabled" ]] &&
+    [[ "$set_d" && "$d_b_disabled" ]] &&
         lum_err 'cannot get or set display brightness'
 
     # -s/--screen was given without a brightness
