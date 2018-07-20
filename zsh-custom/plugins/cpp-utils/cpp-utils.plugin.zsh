@@ -32,6 +32,6 @@ brr() {
     else
         src="$1"
         shift
-        bar "$src" "$@" && rm "./${src%.cpp}"
+        bar "$src" "$@"; rm "./${src%.cpp}"
     fi
 }
