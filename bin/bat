@@ -5,13 +5,15 @@
 
 
 bat_help() {
-    echo 'Usage: bat [-h|--help]'
+    echo 'Usage: bat [-h|--help] [-p|-s]'
     echo
     echo 'Get battery stats.'
     echo
     echo 'Options:'
-    echo '  -h, --help  Print this help message and exit'
-    echo '  --dry-run   Check that upower is installed'
+    echo '  -h, --help    Print this help message and exit'
+    echo '  -p, --percent Print only the battery percent'
+    echo '  -s, --state   Print only the battery state'
+    echo '  --dry-run     Check that upower is installed'
     exit
 }
 
@@ -43,11 +45,15 @@ bat() {
     done
 
     # Parse arguments
-    local help dry_run
+    local help show_percent show_state dry_run
     for arg in "${argv[@]}"; do
         case "$arg" in
             -h|--help)
                 help=1 ;;
+            -p|--percent)
+                show_percent=1 ;;
+            -s|--state)
+                show_state=1 ;;
             --dry-run)
                 dry_run=1 ;;
             -*|--*)
@@ -61,12 +67,22 @@ bat() {
     [[ "$help" == 1 ]] &&
         bat_help
 
+    # Both -p/--percent and -s/--state were given
+    [[ "$show_percent" && "$show_state" ]] &&
+        bat_err help
+
     if [[ "$dry_run" == 1 ]]; then
         which upower >/dev/null && exit 0 || exit 1
     fi
 
-    upower -i "$(upower -e | grep BAT)" |
-        grep -E --color=never 'state|to empty|percentage'
+    local stats="$(upower -i "$(upower -e | grep BAT)")"
+    if [[ "$show_percent" == 1 ]]; then
+        awk '/percentage/ {print $2}' <<< "$stats" | sed 's/%//'
+    elif [[ "$show_state" == 1 ]]; then
+        awk '/state/ {print $2}' <<< "$stats"
+    else
+        grep -E --color=never 'state|to empty|percentage' <<< "$stats"
+    fi
 }
 
 
