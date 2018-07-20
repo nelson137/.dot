@@ -11,6 +11,7 @@ bat_help() {
     echo
     echo 'Options:'
     echo '  -h, --help  Print this help message and exit'
+    echo '  --dry-run   Check that upower is installed'
     exit
 }
 
@@ -42,11 +43,13 @@ bat() {
     done
 
     # Parse arguments
-    local help
+    local help dry_run
     for arg in "${argv[@]}"; do
         case "$arg" in
             -h|--help)
                 help=1 ;;
+            --dry-run)
+                dry_run=1 ;;
             -*|--*)
                 bat_err "option not recognized: $arg" ;;
             *)
@@ -58,8 +61,8 @@ bat() {
     [[ "$help" == 1 ]] &&
         bat_help
 
-    if ! which upower >/dev/null; then
-        bat_err 'upower is not installed'
+    if [[ "$dry_run" == 1 ]]; then
+        which upower >/dev/null && exit 0 || exit 1
     fi
 
     upower -i "$(upower -e | grep BAT)" |
