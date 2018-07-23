@@ -1,5 +1,5 @@
 #!/bin/bash
-# Create a git repository on Github and pull it
+# Create a git repository on Github and clone it
 
 attrs=(user "$USER" application gir)
 
@@ -8,10 +8,10 @@ attrs=(user "$USER" application gir)
 gir_help() {
     echo 'Usage: gir [-h|--help] <directory>'
     echo
-    echo 'Create a Github repository and pull it.'
+    echo 'Create a Github repository and clone it.'
     echo
     echo 'Uses the Github API to create a repository with a README.md file,'
-    echo 'then pulls it.'
+    echo 'then clones it.'
     echo
     echo 'Arguments:'
     echo '  -h, --help   Print this help message and exit'
@@ -71,8 +71,9 @@ gir() {
     local passwd="$(secret-tool lookup "${attrs[@]}" || gir_store_passwd)"
     local auth="nelson137:$passwd"
     local data='{ "name": "'"$repo"'", "auto_init": true }'
-    curl -sSLu "$auth" -d "$data" "https://api.github.com/user/repos" && {
-        git pull "git@github.com:nelson137/${repo}.git"
+    local url='https://api.github.com/user/repos'
+    curl -sSLu "$auth" -d "$data" "$url" >/dev/null && {
+        git clone "git@github.com:nelson137/${repo}.git"
         exit
     }
 
