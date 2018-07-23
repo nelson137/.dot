@@ -240,6 +240,9 @@ inoremap   <C-p>   <C-r>"
 " Thank you Derek Wyatt
 inoremap   jj   <Esc>
 
+" Quickly save without leaving insert mode
+inoremap   jw   <Esc>:w<CR>li
+
 " Make {<CR> set up brackets like an IDE would
 imap   {<CR>   {<CR>}<Esc>ko
 
