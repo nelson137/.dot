@@ -256,7 +256,7 @@ noremap <silent>   <Leader>n   :set nu!<CR>
 xnoremap   p   pgvy
 
 " Pymode lint
-noremap <silent>   ,pl   :call pymode#debug('check code')<CR>:call pymode#lint#check()<CR>
+noremap <silent>   <Leader>pl   :call pymode#debug('check code')<CR>:call pymode#lint#check()<CR>
 
 " Show map-modes
 noremap <silent>   <Leader>mm   :h map-modes<CR>
