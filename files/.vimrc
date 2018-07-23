@@ -217,18 +217,18 @@ noremap   <C-w><C-l>   <C-w>>
 noremap <silent>   <Leader><F2>   :set invpaste<CR>
 
 " ,m Open man page for word under cursor
-nnoremap   <Leader>m   :Man <cword><CR>
+noremap   <Leader>m   :Man <cword><CR>
 
 " ,ev or ,sv Opens or sources .vimrc
 " Thank you Derek Wyatt
-nnoremap <silent>   <Leader>ev   :call OpenVimrc()<CR>
-nnoremap <silent>   <Leader>sv   :so $MYVIMRC<CR>:call Info('Done')<CR>
+noremap <silent>   <Leader>ev   :call OpenVimrc()<CR>
+noremap <silent>   <Leader>sv   :so $MYVIMRC<CR>:call Info('Done')<CR>
 
 " AsyncRun file
-nnoremap <silent>   <Leader>r   :call CompileAndRun()<CR>
+noremap <silent>   <Leader>r   :call CompileAndRun()<CR>
 
 " Open todo
-nnoremap   <Leader>t   :call ToggleTodo()<CR>
+noremap   <Leader>t   :call ToggleTodo()<CR>
 
 " ,64 Base64 decodes selected text and replaces it
 vnoremap   <Leader>64   c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
@@ -243,16 +243,16 @@ inoremap   jj   <Esc>
 imap   {<CR>   {<CR>}<Esc>ko
 
 " Gundo mapping
-nnoremap   <Leader>u   :GundoToggle<CR>
+noremap   <Leader>u   :GundoToggle<CR>
 
 " Toggle line numbers
-nnoremap <silent>   <Leader>n   :set nu!<CR>
+noremap <silent>   <Leader>n   :set nu!<CR>
 
 " Don't swap selection and register " when pasting
 xnoremap   p   pgvy
 
 " Pymode lint
-nnoremap <silent>   ,pl   :call pymode#debug('check code')<CR>:call pymode#lint#check()<CR>
+noremap <silent>   ,pl   :call pymode#debug('check code')<CR>:call pymode#lint#check()<CR>
 
 
 
