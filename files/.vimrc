@@ -251,6 +251,9 @@ nnoremap <silent>   <Leader>n   :set nu!<CR>
 " Don't swap selection and register " when pasting
 xnoremap   p   pgvy
 
+" Pymode lint
+nnoremap <silent>   ,pl   :call pymode#debug('check code')<CR>:call pymode#lint#check()<CR>
+
 
 
 " Vundle
