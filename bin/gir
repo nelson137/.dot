@@ -31,15 +31,15 @@ gir_err() {
 
 
 
-gir_store_passwd() {
-    read -rsp 'Github Password: ' gh_passwd
+gir_store_token() {
+    read -rp 'Github Token: ' gh_token
     echo
 
-    [[ -z "$gh_passwd" ]] &&
-        gir_err 'github password cannot be blank'
+    [[ -z "$gh_token" ]] &&
+        gir_err 'github token cannot be blank'
 
-    # Store password
-    secret-tool store --label 'Github Password' "${attrs[@]}" <<< "$gh_passwd"
+    # Store token
+    secret-tool store --label 'Github API Token' "${attrs[@]}" <<< "$gh_token"
 }
 
 
@@ -51,7 +51,7 @@ gir() {
     # Parse arguments
     local help repo
     while (( $# > 0 )); do
-        case $1 in
+        case "$1" in
             -h|--help)
                 help=1 ;;
             -*|--*)
@@ -68,23 +68,22 @@ gir() {
         gir_help
 
     # Use Github API to create repo
-    local passwd="$(secret-tool lookup "${attrs[@]}" || gir_store_passwd)"
-    local auth="nelson137:$passwd"
-    local data='{ "name": "'"$repo"'", "auto_init": true }'
-    local url='https://api.github.com/user/repos'
-    curl -sSLu "$auth" -d "$data" "$url" >/dev/null && {
+    local data="{ \"name\": \"$repo\", \"auto_init\": true }"
+    local token="$(secret-tool lookup "${attrs[@]}" || gir_store_token)"
+    local url="https://api.github.com/user/repos?access_token=$token"
+    curl -sSL -d "$data" "$url" >/dev/null && {
         git clone "git@github.com:nelson137/${repo}.git"
         exit
     }
 
     # Curl POST failed
     echo 'Could not create Github repo.'
-    read -rp 'Would you like to re-cache the password (yes/no)? ' response
+    read -rp 'Would you like to re-cache the token (yes/no)? ' response
     if [[ "$response" =~ ^[Yy]([Ee][Ss])?$ ]]; then
         gir_store_passwd
         gir "$@"
     else
-        gir_err 'not re-caching github password'
+        gir_err 'not re-caching Github token'
     fi
 }
 
