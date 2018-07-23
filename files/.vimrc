@@ -88,8 +88,6 @@ function! CompileAndRun()
     if l:filetype == 'cpp'
         " % = filename, %< = filename sans extension
         exe 'AsyncRun g++ % -o %<; ./%<'
-    elseif l:filetype == 'python'
-        exe 'AsyncRun python3 %'
     elseif l:filetype == 'sh' || l:filetype == 'zsh'
         if !IsX()
             let l:prompt = '"Do you want to make this file executable [y/n]? "'
