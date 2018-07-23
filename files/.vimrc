@@ -293,7 +293,7 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/
 " python-mode
 highlight pythonSelf ctermfg=68 guifg=#5f87d7 cterm=bold gui=bold
 " TODO: add more python highlighting
-let g:pymode_doc_bind = ''
+let g:pymode_doc_bind = 'pd'
 let g:pymode_lint_on_write = 0  " Don't lint on write
 " Linter ignore:
 "   E265: block comment should start with "# "
