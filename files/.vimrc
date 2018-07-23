@@ -291,8 +291,6 @@ filetype plugin indent on
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 
 " python-mode
-highlight pythonSelf ctermfg=68 guifg=#5f87d7 cterm=bold gui=bold
-" TODO: add more python highlighting
 let g:pymode_doc_bind = 'pd'
 let g:pymode_lint_on_write = 0  " Don't lint on write
 " Linter ignore:
