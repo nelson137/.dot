@@ -230,13 +230,14 @@ noremap <silent>   <Leader>r   :call CompileAndRun()<CR>
 " Open todo
 noremap   <Leader>t   :call ToggleTodo()<CR>
 
-" ,64 Base64 decodes selected text and replaces it
+" Encodes selected text in Base64 and replaces it
 vnoremap   <Leader>64   c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
 
 " Better paste in insert mode
 inoremap   <C-p>   <C-r>"
 
 " jj == <Esc> in insert mode
+" Thank you Derek Wyatt
 inoremap   jj   <Esc>
 
 " Make {<CR> set up brackets like an IDE would
