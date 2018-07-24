@@ -174,12 +174,37 @@ endfunction
 
 let mapleader = ','
 
+" Because holding shift is sooo annoying
+nnoremap   ;   :
+
 " For when I forget to open a file with sudo
 " Thank you Steve Losh
 cnoremap   w!!   w !sudo tee >/dev/null %<CR>
 
-" Because holding shift is sooo annoying
-nnoremap   ;   :
+" Better window nav
+inoremap   <C-h>   <Esc><C-w>h
+inoremap   <C-j>   <Esc><C-w>j
+inoremap   <C-k>   <Esc><C-w>k
+inoremap   <C-l>   <Esc><C-w>l
+
+" jj == <Esc> in insert mode
+" Thank you Derek Wyatt
+inoremap   jj   <Esc>
+
+" Quickly save without leaving insert mode
+inoremap   jw   <Esc>:w<CR>li
+
+" Better paste in insert mode
+inoremap   <C-p>   <C-r>"
+
+" Make {<CR> set up brackets like an IDE would
+imap   {<CR>   {<CR>}<Esc>ko
+
+" Encodes selected text in Base64 and replaces it
+vnoremap   <Leader>64   c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
+
+" Don't swap selection and register " when pasting
+xnoremap   p   pgvy
 
 " Move down/up rows in buffer, not up/down lines
 noremap   j   gj
@@ -199,13 +224,9 @@ noremap   L   $
 
 " Better window nav
 noremap   <C-h>   <C-w>h
-inoremap   <C-h>   <Esc><C-w>h
 noremap   <C-j>   <C-w>j
-inoremap   <C-j>   <Esc><C-w>j
 noremap   <C-k>   <C-w>k
-inoremap   <C-k>   <Esc><C-w>k
 noremap   <C-l>   <C-w>l
-inoremap   <C-l>   <Esc><C-w>l
 
 " Better window resizing
 noremap   <C-w><C-h>   <C-w><
@@ -213,53 +234,34 @@ noremap   <C-w><C-j>   <C-w>-
 noremap   <C-w><C-k>   <C-w>+
 noremap   <C-w><C-l>   <C-w>>
 
+" Toggle line numbers
+noremap <silent>   <Leader>n   :set nu!<CR>
+
 " ,<F2> Don't fuck up indentation when pasting
 noremap <silent>   <Leader><F2>   :set invpaste<CR>
 
 " ,m Open man page for word under cursor
-noremap   <Leader>m   :Man <cword><CR>
+noremap <silent>   <Leader>m   :Man <cword><CR>
+
+" Gundo mapping
+noremap <silent>   <Leader>u   :GundoToggle<CR>
 
 " ,ev or ,sv Opens or sources .vimrc
 " Thank you Derek Wyatt
 noremap <silent>   <Leader>ev   :call OpenVimrc()<CR>
 noremap <silent>   <Leader>sv   :so $MYVIMRC<CR>:call Info('Done')<CR>
 
-" AsyncRun file
-noremap <silent>   <Leader>r   :call CompileAndRun()<CR>
-
 " Open todo
-noremap   <Leader>t   :call ToggleTodo()<CR>
-
-" Encodes selected text in Base64 and replaces it
-vnoremap   <Leader>64   c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
-
-" Better paste in insert mode
-inoremap   <C-p>   <C-r>"
-
-" jj == <Esc> in insert mode
-" Thank you Derek Wyatt
-inoremap   jj   <Esc>
-
-" Quickly save without leaving insert mode
-inoremap   jw   <Esc>:w<CR>li
-
-" Make {<CR> set up brackets like an IDE would
-imap   {<CR>   {<CR>}<Esc>ko
-
-" Gundo mapping
-noremap   <Leader>u   :GundoToggle<CR>
-
-" Toggle line numbers
-noremap <silent>   <Leader>n   :set nu!<CR>
-
-" Don't swap selection and register " when pasting
-xnoremap   p   pgvy
-
-" Pymode lint
-noremap <silent>   <Leader>pl   :call pymode#debug('check code')<CR>:call pymode#lint#check()<CR>
+noremap <silent>   <Leader>t   :call ToggleTodo()<CR>
 
 " Show map-modes
 noremap <silent>   <Leader>mm   :h map-modes<CR>
+
+" AsyncRun file
+noremap <silent>   <Leader>r   :call CompileAndRun()<CR>
+
+" Pymode lint
+noremap <silent>   <Leader>pl   :call pymode#debug('check code')<CR>:call pymode#lint#check()<CR>
 
 
 
