@@ -82,6 +82,9 @@ setopt HIST_EXPIRE_DUPS_FIRST
 # Don't add commands to history if they have a leading space
 setopt HIST_IGNORE_SPACE
 
+# echo 'ab''c'  # output: ab'c
+setopt RC_QUOTES
+
 # awscli completions
 [[ -d /opt/aws-cli ]] && source /opt/aws-cli/bin/aws_zsh_completer.sh
 
