@@ -71,9 +71,11 @@ bat() {
     [[ "$show_percent" && "$show_state" ]] &&
         bat_err help
 
-    if [[ "$dry_run" == 1 ]]; then
-        which upower >/dev/null && exit 0 || exit 1
-    fi
+    # Check that upower is installed
+    which upower >/dev/null || bat_err 'upower is not installed'
+
+    # Exit right after checking upower is installed if --dry-run was given
+    [[ "$dry_run" == 1 ]] && exit
 
     local stats="$(upower -i "$(upower -e | grep BAT)")"
     if [[ "$show_percent" == 1 ]]; then
