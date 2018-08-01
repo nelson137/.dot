@@ -29,6 +29,15 @@ chhn() {
 
 
 
+ckeys() {
+    # Run xev but show only key presses
+    local regex='^.+(keycode) ([0-9]+) \((keysym) ([^,]+), ([^\)]+)\).+$'
+    local replace='key: \5   \1: \2   \3: \4'
+    xev -event keyboard | sed -rn "/keysym/ s/$regex/$replace/p"
+}
+
+
+
 cpstat() {
     # Use rsync to cp and show progress
     rsync -r --info=progress2 "$@"
