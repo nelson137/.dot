@@ -38,7 +38,7 @@ cpstat() {
 
 dc() {
     # Execute arguments completely disconnect from this terminal
-    nohup "$@" &>!/dev/null &!
+    nohup "$@" &>/dev/null &!
 }
 
 
