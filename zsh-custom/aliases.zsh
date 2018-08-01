@@ -21,7 +21,6 @@ alias lla='ls -pAohv --color --time-style=long-iso'
 
 # git aliases
 alias glop='git log -p'
-alias gc='git commit'
 alias gcam='git add -A; git commit -m'
 
 # My aliases
@@ -33,6 +32,7 @@ alias rainbow='cat /dev/urandom | base64 | figlet -ctf term | lolcat -fad 1 -s 7
 alias socwd='command du -csh . | tail -1'
 # alias suspend='sudo systemctl suspend'
 alias vimrc='vim ~/.vimrc'
+alias zshhist='vim ~/.zsh_history'
 alias zshrc='vim ~/.zshrc'
 
 # System-specific aliases
