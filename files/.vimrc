@@ -40,7 +40,7 @@ set indentkeys-=0#  " /
 
 syntax on
 colorscheme default
-set number
+set number         " Turn on line numbers
 set laststatus=2   " Always show status line
 
 
@@ -69,6 +69,7 @@ augroup end
 
 " Filetype Configs
 
+" Set indentation rules for HTML files
 au BufRead,BufNewFile *.html set ts=2 sw=2 sts=2
 
 " Show ruler for specific filetypes
@@ -245,26 +246,27 @@ filetype off
 if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     set runtimepath+=~/.vim/bundle/Vundle.vim
     call vundle#begin()
+    " Enable YouCompleteMe if architecture isn't arm
     if empty(matchstr(system('uname -m'), '\varmv\dl'))
-        " Enable YouCompleteMe if architecture isn't arm
-        Plugin 'Valloric/YouCompleteMe'
+        Plugin 'Valloric/YouCompleteMe'    " Completion engine
     endif
-    Plugin 'Raimondi/delimitMate'
-    Plugin 'VundleVim/Vundle.vim'
-    Plugin 'apeschel/vim-syntax-apache'
-    Plugin 'elzr/vim-json'
-    Plugin 'godlygeek/tabular'
-    Plugin 'itchyny/lightline.vim'
-    Plugin 'python-mode/python-mode'
-    Plugin 'scrooloose/nerdtree'
-    Plugin 'scrooloose/nerdcommenter'
-    Plugin 'sjl/gundo.vim'
-    Plugin 'skammer/vim-css-color'
-    Plugin 'skywind3000/asyncrun.vim'
-    Plugin 'suan/vim-instant-markdown'
-    Plugin 'terryma/vim-multiple-cursors'
-    Plugin 'tpope/vim-fugitive'
-    Plugin 'tpope/vim-surround'
+    Plugin 'Raimondi/delimitMate'          " Auto-closes quotes, parens, etc.
+    Plugin 'VundleVim/Vundle.vim'          " Package manager
+    Plugin 'apeschel/vim-syntax-apache'    " Syntax highlighting for apache
+    Plugin 'elzr/vim-json'                 " JSON highlighting and quote hiding
+    Plugin 'godlygeek/tabular'             " Handles md tables for you
+    Plugin 'itchyny/lightline.vim'         " The pretty statusline
+    Plugin 'neovimhaskell/haskell-vim'     " Haskell highlighting & indentation
+    Plugin 'python-mode/python-mode'       " Python IDE
+    Plugin 'scrooloose/nerdtree'           " File system explorer
+    Plugin 'scrooloose/nerdcommenter'      " Quickly (un)comment lines
+    Plugin 'sjl/gundo.vim'                 " Vim undo tree viewer
+    Plugin 'skammer/vim-css-color'         " Show colors of CSS color codes
+    Plugin 'skywind3000/asyncrun.vim'      " Run/Execute files in vim
+    Plugin 'suan/vim-instant-markdown'     " Preview markdown files live
+    Plugin 'terryma/vim-multiple-cursors'  " I think this one's pretty obvious
+    Plugin 'tpope/vim-fugitive'            " Git wrapper
+    Plugin 'tpope/vim-surround'            " Surrounds selected text for you
     call vundle#end()
 endif
 filetype plugin indent on
