@@ -212,8 +212,8 @@ noremap   <C-w><C-l>   <C-w>>
 " Toggle line numbers
 noremap <silent>   <Leader>n   :set nu!<CR>
 
-" ,<F2> Don't fuck up indentation when pasting
-noremap <silent>   <Leader><F2>   :set invpaste<CR>
+" Don't fuck up indentation when pasting
+noremap <silent>   <F2>   :set invpaste<CR>
 
 " ,m Open man page for word under cursor
 noremap <silent>   <Leader>m   :Man <cword><CR>
