@@ -258,6 +258,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     endif
     Plugin 'Raimondi/delimitMate'          " Auto-closes quotes, parens, etc.
     Plugin 'VundleVim/Vundle.vim'          " Package manager
+    Plugin 'ap/vim-css-color'              " Show colors of CSS color codes
     Plugin 'apeschel/vim-syntax-apache'    " Syntax highlighting for apache
     Plugin 'elzr/vim-json'                 " JSON highlighting and quote hiding
     Plugin 'godlygeek/tabular'             " Handles md tables for you
@@ -268,7 +269,6 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'scrooloose/nerdtree'           " File system explorer
     Plugin 'scrooloose/nerdcommenter'      " Quickly (un)comment lines
     Plugin 'sjl/gundo.vim'                 " Vim undo tree viewer
-    Plugin 'skammer/vim-css-color'         " Show colors of CSS color codes
     Plugin 'skywind3000/asyncrun.vim'      " Run/Execute files in vim
     Plugin 'terryma/vim-multiple-cursors'  " I think this one's pretty obvious
     Plugin 'tpope/vim-fugitive'            " Git wrapper
