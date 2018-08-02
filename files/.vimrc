@@ -71,7 +71,7 @@ augroup end
 
 " Filetype Configs
 
-au BufRead,BufNewFile *.html set et ts=2 sw=2 sts=2 si ai
+au BufRead,BufNewFile *.html set ts=2 sw=2 sts=2
 
 
 
