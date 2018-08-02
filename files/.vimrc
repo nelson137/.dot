@@ -213,7 +213,7 @@ noremap   <C-w><C-l>   <C-w>>
 noremap <silent>   <Leader>n   :set nu!<CR>
 
 " Don't fuck up indentation when pasting
-noremap <silent>   <F2>   :set invpaste<CR>
+noremap <silent>   <F2>   :set paste!<CR>
 
 " ,m Open man page for word under cursor
 noremap <silent>   <Leader>m   :Man <cword><CR>
