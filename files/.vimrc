@@ -63,7 +63,7 @@ augroup vimleave
     au!
     au VimLeave *
         \ if filereadable('$HOME/.vim/.netrwhist') |
-        \     call delete('$HOME/.vim/.netrwhist')
+        \     call delete('$HOME/.vim/.netrwhist') |
         \ endif  
 augroup end
 
@@ -123,13 +123,7 @@ endfunction
 function! IsX()
     silent exe '!test -x' expand('%:p')
     silent exe 'redraw!'
-    if v:shell_error
-        " Return status was non-zero
-        return 0
-    else
-        " Return status was zero
-        return 1
-    endif
+    return v:shell_error ? 0 : 1
 endfunction
 
 function! OnExitVimrm(...)
@@ -278,7 +272,8 @@ filetype plugin indent on
 " Plugin Configs
 
 " YouCompleteMe
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/' .
+\    'ycmd/cpp/ycm/.ycm_extra_conf.py'
 
 " python-mode
 let g:pymode_doc_bind = 'pd'
