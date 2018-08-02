@@ -30,6 +30,7 @@ set tabstop=4       " Tab width = 4
 set shiftwidth=4    " Indentation size = 4
 set autoindent      " Fix indentation
 set copyindent      " Use previous line's indentation
+set smartindent     " Let's try smartindent again
 set softtabstop=4   " Backspace deletes 4 spaces
 set cindent         " \
 set cinkeys-=0#     "  > Don't eat spaces before #
