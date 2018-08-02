@@ -238,6 +238,12 @@ noremap <silent>   <Leader>r   :call CompileAndRun()<CR>
 " Pymode lint
 noremap <silent>   <Leader>pl   :call pymode#debug('check code')<CR>:call pymode#lint#check()<CR>
 
+" Preview markdown file
+noremap <silent>   <Leader>mp   :MarkdownPreview<CR>
+
+" Stop previewing markdown file
+noremap <silent>   <Leader>ms   :MarkdownPreviewStop<CR>
+
 
 
 " Vundle
@@ -255,6 +261,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'apeschel/vim-syntax-apache'    " Syntax highlighting for apache
     Plugin 'elzr/vim-json'                 " JSON highlighting and quote hiding
     Plugin 'godlygeek/tabular'             " Handles md tables for you
+    Plugin 'iamcco/markdown-preview.vim'   " Preview markdown files live
     Plugin 'itchyny/lightline.vim'         " The pretty statusline
     Plugin 'neovimhaskell/haskell-vim'     " Haskell highlighting & indentation
     Plugin 'python-mode/python-mode'       " Python IDE
@@ -263,7 +270,6 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'sjl/gundo.vim'                 " Vim undo tree viewer
     Plugin 'skammer/vim-css-color'         " Show colors of CSS color codes
     Plugin 'skywind3000/asyncrun.vim'      " Run/Execute files in vim
-    Plugin 'suan/vim-instant-markdown'     " Preview markdown files live
     Plugin 'terryma/vim-multiple-cursors'  " I think this one's pretty obvious
     Plugin 'tpope/vim-fugitive'            " Git wrapper
     Plugin 'tpope/vim-surround'            " Surrounds selected text for you
@@ -278,6 +284,9 @@ filetype plugin indent on
 " YouCompleteMe
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/' .
 \    'ycmd/cpp/ycm/.ycm_extra_conf.py'
+
+" markdown-preview.vim
+let g:mkdp_path_to_chrome = 'google-chrome --new-window'
 
 " python-mode
 let g:pymode_doc_bind = 'pd'
