@@ -1,7 +1,6 @@
 " General
 
 set autoread                " Automatically read changes made on disk
-set colorcolumn=+1          " Enable the ruler
 set backspace=indent,eol,start
 set encoding=utf-8
 set history=500             " Remember 500 ex commands
@@ -12,7 +11,6 @@ set shell=zsh               " Shell to use for !
 set showmode                " Show current mode (normal|visual|insert|...)
 set splitbelow              " Open horizontal splits below
 set splitright              " Open vertical splits to the right
-set textwidth=79            " Where to put the ruler
 set timeoutlen=500          " Max period of 500ms between keystrokes
 set undodir=~/.vim/undodir  " Put undo files in ~/.vim/undodir
 set undofile                " Persistent file history
@@ -72,6 +70,10 @@ augroup end
 " Filetype Configs
 
 au BufRead,BufNewFile *.html set ts=2 sw=2 sts=2
+
+" Show ruler for specific filetypes
+autocmd FileType cpp,haskell,javascript,python,vim
+    \ setlocal colorcolumn=+1 textwidth=79
 
 
 
