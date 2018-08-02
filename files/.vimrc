@@ -144,26 +144,6 @@ function! OnExitChhn()
     silent exe ':xa'
 endfunction
 
-function! ToggleTodo()
-    let l:todo = GetTodo()
-    if empty(l:todo)
-        echo 'No todo file found'
-        return
-    endif
-
-    let l:last = winnr()
-    100 wincmd h
-    if expand('%:t') == 'todo'
-        exe 'x'
-        let l:last -= 1
-    else
-        exe 'topleft vnew' l:todo
-        vertical resize 50
-        let l:last += 1
-    endif
-    exe l:last 'wincmd w'
-endfunction
-
 function! OpenVimrc()
     topleft new
     edit $MYVIMRC
@@ -251,9 +231,6 @@ noremap <silent>   <Leader>u   :GundoToggle<CR>
 " Thank you Derek Wyatt
 noremap <silent>   <Leader>ev   :call OpenVimrc()<CR>
 noremap <silent>   <Leader>sv   :so $MYVIMRC<CR>:call Info('Done')<CR>
-
-" Open todo
-noremap <silent>   <Leader>t   :call ToggleTodo()<CR>
 
 " Show map-modes
 noremap <silent>   <Leader>mm   :h map-modes<CR>
