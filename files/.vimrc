@@ -215,13 +215,13 @@ noremap <silent>   <Leader>n   :set nu!<CR>
 " Don't fuck up indentation when pasting
 noremap <silent>   <F2>   :set paste!<CR>
 
-" ,m Open man page for word under cursor
+" Open man page for word under cursor
 noremap <silent>   <Leader>m   :Man <cword><CR>
 
 " Gundo mapping
 noremap <silent>   <Leader>u   :GundoToggle<CR>
 
-" ,ev or ,sv Opens or sources .vimrc
+" Opens and sources .vimrc
 " Thank you Derek Wyatt
 noremap <silent>   <Leader>ev   :call OpenVimrc()<CR>
 noremap <silent>   <Leader>sv   :so $MYVIMRC<CR>:call Info('Done')<CR>
@@ -232,7 +232,7 @@ noremap <silent>   <Leader>mm   :h map-modes<CR>
 " AsyncRun file
 noremap <silent>   <Leader>r   :call CompileAndRun()<CR>
 
-" Pymode lint
+" Python-mode lint
 noremap <silent>   <Leader>pl   :call pymode#lint#check()<CR>
 
 " Preview markdown file
@@ -252,7 +252,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'VundleVim/Vundle.vim'          " Package manager
     " Enable YouCompleteMe if architecture isn't arm
     if empty(matchstr(system('uname -m'), '\varmv\dl'))
-        Plugin 'Valloric/YouCompleteMe'    " Completion engine
+        Plugin 'Valloric/YouCompleteMe'    " Code completion engine
     endif
     Plugin 'ap/vim-css-color'              " Show colors of CSS color codes
     Plugin 'apeschel/vim-syntax-apache'    " Syntax highlighting for apache
