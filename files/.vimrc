@@ -256,7 +256,6 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     if empty(matchstr(system('uname -m'), '\varmv\dl'))
         Plugin 'Valloric/YouCompleteMe'    " Completion engine
     endif
-    Plugin 'Raimondi/delimitMate'          " Auto-closes quotes, parens, etc.
     Plugin 'VundleVim/Vundle.vim'          " Package manager
     Plugin 'ap/vim-css-color'              " Show colors of CSS color codes
     Plugin 'apeschel/vim-syntax-apache'    " Syntax highlighting for apache
@@ -264,6 +263,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'godlygeek/tabular'             " Handles md tables for you
     Plugin 'iamcco/markdown-preview.vim'   " Preview markdown files live
     Plugin 'itchyny/lightline.vim'         " The pretty statusline
+    Plugin 'jiangmiao/auto-pairs'          " Manage quotes, parens, etc in pair
     Plugin 'neovimhaskell/haskell-vim'     " Haskell highlighting & indentation
     Plugin 'python-mode/python-mode'       " Python IDE
     Plugin 'scrooloose/nerdtree'           " File system explorer
