@@ -175,9 +175,6 @@ inoremap   jw   <Esc>:w<CR>li
 " Better paste in insert mode
 inoremap   <C-p>   <C-r>"
 
-" Make {<CR> set up brackets like an IDE would
-imap   {<CR>   {<CR>}<Esc>ko
-
 " Encodes selected text in Base64 and replaces it
 vnoremap   <Leader>64   c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
 
