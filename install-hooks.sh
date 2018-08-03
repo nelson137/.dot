@@ -10,6 +10,8 @@ rm -f ${hooks}/*.sample
 sed -r 's/^ {4}//' > "${hooks}/cpp-compile.sh" <<'EOF'
     #!/bin/bash
 
+    mkdir -p bin/compiled
+
     # <git dir>/hooks
     hooks="$(dirname "$0")"
 
