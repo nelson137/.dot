@@ -236,7 +236,7 @@ noremap <silent>   <Leader>mm   :h map-modes<CR>
 noremap <silent>   <Leader>r   :call CompileAndRun()<CR>
 
 " Pymode lint
-noremap <silent>   <Leader>pl   :call pymode#debug('check code')<CR>:call pymode#lint#check()<CR>
+noremap <silent>   <Leader>pl   :call pymode#lint#check()<CR>
 
 " Preview markdown file
 noremap <silent>   <Leader>mp   :MarkdownPreview<CR>
