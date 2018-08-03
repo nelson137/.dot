@@ -249,11 +249,11 @@ filetype off
 if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     set runtimepath+=~/.vim/bundle/Vundle.vim
     call vundle#begin()
+    Plugin 'VundleVim/Vundle.vim'          " Package manager
     " Enable YouCompleteMe if architecture isn't arm
     if empty(matchstr(system('uname -m'), '\varmv\dl'))
         Plugin 'Valloric/YouCompleteMe'    " Completion engine
     endif
-    Plugin 'VundleVim/Vundle.vim'          " Package manager
     Plugin 'ap/vim-css-color'              " Show colors of CSS color codes
     Plugin 'apeschel/vim-syntax-apache'    " Syntax highlighting for apache
     Plugin 'elzr/vim-json'                 " JSON highlighting and quote hiding
@@ -263,8 +263,8 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'jiangmiao/auto-pairs'          " Manage quotes, parens, etc in pair
     Plugin 'neovimhaskell/haskell-vim'     " Haskell highlighting & indentation
     Plugin 'python-mode/python-mode'       " Python IDE
-    Plugin 'scrooloose/nerdtree'           " File system explorer
     Plugin 'scrooloose/nerdcommenter'      " Quickly (un)comment lines
+    Plugin 'scrooloose/nerdtree'           " File system explorer
     Plugin 'sjl/gundo.vim'                 " Vim undo tree viewer
     Plugin 'skywind3000/asyncrun.vim'      " Run/Execute files in vim
     Plugin 'terryma/vim-multiple-cursors'  " I think this one's pretty obvious
