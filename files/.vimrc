@@ -285,6 +285,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'terryma/vim-multiple-cursors'  " I think this one's pretty obvious
     Plugin 'tpope/vim-fugitive'            " Git wrapper
     Plugin 'tpope/vim-surround'            " Surrounds selected text for you
+    Plugin 'w0rp/ale'                      " Asynchronous Lint Engine
     call vundle#end()
 endif
 filetype plugin indent on
@@ -323,3 +324,23 @@ let g:gundo_prefer_python3 = 1
 
 " AsyncRun
 let g:asyncrun_open = 8
+
+" ALE
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_change = 'never'
+let g:ale_linters = { 'python': ['flake8', 'pycodestyle', 'pylint', 'pyls'] }
+let g:ale_use_global_executables = 1
+let g:ale_command_wrapper = 'nice -n 3'
+let g:ale_echo_msg_format = '%linter%: %code: %%s'
+let g:ale_loclist_msg_format = g:ale_echo_msg_format
+let g:ale_python_pylint_options = '--disable=invalid-name,no-else-return,' .
+\    'missing-docstring,redefined-outer-name'
+" The first line of errors and warnings is what is ignored by default,
+" however, --ignore overrides the default
+let g:ale_python_flake8_options = '--ignore=' .
+\    'E121,E123,E126,E226,E24,E704,W503,W504,' .
+\    'E116'
+let g:ale_fixers = { 'python': ['remove_trailing_lines', 'trim_whitespace'] }
+let g:ale_fix_on_save = 1
+let g:ale_sign_column_always = 1
+let g:ale_change_sign_column_color = 1
