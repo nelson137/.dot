@@ -303,7 +303,7 @@ let g:mkdp_path_to_chrome = 'google-chrome --new-window'
 
 " python-mode
 let g:pymode_doc_bind = 'pd'
-let g:pymode_lint_on_write = 0  " Don't lint on write
+let g:pymode_lint = 0
 " Linter ignore:
 "   E265: block comment should start with "# "
 "   E401: multiple imports on one line
