@@ -7,20 +7,9 @@ Copyright 2011 Sebastian Kaspari
 
 
 import sys
-from argparse import ArgumentParser, Namespace, Action, SUPPRESS
+from argparse import ArgumentParser, Namespace, SUPPRESS
 from subprocess import check_output, DEVNULL, CalledProcessError
 from time import sleep
-
-
-class DelayAction(Action):
-    """Set namespace.delay and namespace.delay_changed."""
-
-    def __init__(self, option_strings, dest, nargs=None, **kwargs):
-        super().__init__(option_strings, dest, **kwargs)
-
-    def __call__(self, _, namespace, value, option_string=None):
-        setattr(namespace, self.dest, value)
-        setattr(namespace, 'delay_changed', True)
 
 
 class Tape:
@@ -39,9 +28,10 @@ class Tape:
     cell.
     """
 
-    def __init__(self):
+    def __init__(self, term_width):
         self.cells = [0]
         self.ptr = 0
+        self.term_width = term_width
 
     @property
     def current_cell(self):
@@ -77,7 +67,7 @@ class Tape:
         """
         self.current_cell -= 1 if self.current_cell > 0 else -255
 
-    def print_cells(self, width, show_ptr=False):
+    def print_cells(self, show_ptr=False):
         """Output the tape.
 
         Respect the width of the terminal and put parentheses around the
@@ -89,7 +79,7 @@ class Tape:
             for_out[self.ptr] = '(%s)' % str(self.cells[self.ptr]).ljust(3)
 
         # Number of cells per line
-        nc = int((width+1)/6)
+        nc = int((self.term_width+1)/6)
 
         # Split cells into lines with a max of nc cells per line
         lines = [' '.join(for_out[i:i+nc]) for i in range(0, len(for_out), nc)]
@@ -145,7 +135,7 @@ def build_bracemap(code):
     return bracemap
 
 
-def evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in):
+def evaluate(code, user_in, config):
     """Interpret the Brainfuck code.
 
     Interprets the Brainfuck code, character by character, pausing for delay
@@ -169,11 +159,11 @@ def evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in):
     output = ''
     bracemap = build_bracemap(code)
     codeptr = 0
-    tape = Tape()
+    tape = Tape(config.width)
 
     while codeptr < len(code):
-        if show_tape:
-            n_lines = tape.print_cells(width, show_ptr=True)
+        if config.show_tape:
+            n_lines = tape.print_cells(show_ptr=True)
 
         command = code[codeptr]
         if command == '>':
@@ -189,12 +179,12 @@ def evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in):
         elif command == ']' and tape.current_cell != 0:
             codeptr = bracemap[codeptr]
         elif command == '.':
-            if dump_tape or show_tape:
+            if config.dump_tape or config.show_tape:
                 output += chr(tape.current_cell)
             else:
                 print(chr(tape.current_cell), end='', flush=True)
         elif command == ',':
-            if use_input:
+            if config.use_user_in:
                 if not user_in:
                     err_out('runtime error: not enough input was given')
                 tape.current_cell = ord(user_in.pop(0))
@@ -207,18 +197,18 @@ def evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in):
                 else:
                     tape.current_cell = ord(char)
 
-        if show_tape:
+        if config.show_tape:
             print('\33[A'*n_lines, end='')
 
         codeptr += 1
-        sleep(delay/1000.)
+        sleep(config.delay/1000.)
 
-    if dump_tape:
-        tape.print_cells(width)
-    elif show_tape:
-        tape.print_cells(width, show_ptr=True)
+    if config.dump_tape:
+        tape.print_cells()
+    elif config.show_tape:
+        tape.print_cells(show_ptr=True)
 
-    if (dump_tape or show_tape) and output:
+    if (config.dump_tape or config.show_tape) and output:
         print(output, end='')
 
 
@@ -241,43 +231,30 @@ def get_term_width():
 
 def main(args):
     """Do some error checking, then interpret all Brainfuck code."""
-    stdin_code = args.stdin_code
-    stdin_filenames = args.stdin_filenames
-    delay = args.delay
-    delay_changed = args.delay_changed
-    dump_tape = args.dump_tape
-    show_tape = args.show_tape
-
-    if args.input is None:
-        use_input = False
-        user_in = args.input
-    else:
-        use_input = True
-        user_in = list(args.input)
-
-    width = args.width
+    use_user_in = False if args.input is None else True
+    user_in = [] if args.input is None else list(args.input)
 
     # Terminal width is too small for even 1 cell
-    if width < 7:
+    if args.width < 7:
         err_out('terminal is not wide enough')
 
     # -i/--input without --show-tape
-    if use_input and not show_tape:
+    if use_user_in and not args.show_tape:
         err_out('-i/--input can only be used with --show-tape')
 
     # Auto set delay if --show-tape and delay wasn't changed by user
-    if show_tape and not delay_changed:
-        delay = 125
+    if args.delay is None:
+        args.delay = 125 if args.show_tape else 0
 
     infiles = args.infiles  # Filenames passed as arguments
     to_eval = []
 
     # Read from stdin
     if not sys.stdin.isatty():  # If stdin is not empty
-        if stdin_code:
+        if args.stdin_code:
             # Read Brainfuck code
             to_eval.append(cleanup(sys.stdin.read()))
-        elif stdin_filenames:
+        elif args.stdin_filenames:
             # Read filenames
             infiles.extend([l.strip() for l in sys.stdin.readlines()])
 
@@ -291,9 +268,15 @@ def main(args):
 
     if not to_eval:
         err_out('no input given')
+
+    # Combine config variables into one namespace
+    config = Namespace(width=args.width, delay=args.delay,
+                       dump_tape=args.dump_tape, show_tape=args.show_tape,
+                       use_user_in=use_user_in)
+
     # Evaluate all code
     for code in to_eval:
-        evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in)
+        evaluate(code, user_in, config)
 
 
 if __name__ == '__main__':
@@ -318,13 +301,11 @@ if __name__ == '__main__':
                             help=c_help)
     stdin_type.add_argument('-f', '--stdin-filenames', action='store_true',
                             help=f_help)
-    # Use DelayAction to set delay and delay_changed when -d/--delay is used
-    parser.add_argument('-d', '--delay', action=DelayAction, type=int,
-                        default=0, help=d_help)
+    parser.add_argument('-d', '--delay', type=int, default=None, help=d_help)
     tape_g = parser.add_mutually_exclusive_group()
     tape_g.add_argument('--dump-tape', action='store_true', help=dump_help)
     tape_g.add_argument('--show-tape', action='store_true', help=show_help)
-    parser.add_argument('-i', '--input', help=i_help)
+    parser.add_argument('-i', '--input', default=None, help=i_help)
     parser.add_argument('-w', '--width', type=int, default=get_term_width(),
                         help=w_help)
     # nargs='*' so that filenames or code can be read from stdin
@@ -332,5 +313,4 @@ if __name__ == '__main__':
                         help=file_help)
 
     # Set delay_changed to False by default
-    ns = Namespace(delay_changed=False)
-    main(parser.parse_args(namespace=ns))
+    main(parser.parse_args())
