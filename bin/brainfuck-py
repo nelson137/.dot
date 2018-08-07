@@ -18,14 +18,14 @@ class Tape:
     The tape is represented by a list of integers, or "cells". Each cell has
     a minimum value of 0 and a maximum value of 255 that wraps. Meaning that if
     a cell's value is 0 and Brainfuck attempts to decrease the value of that
-    cell, its new value will be 255. If a cell's value is 255 and Brainfuck
-    attempts to increase the value of that cell, its new value will be 0. The
-    tape does not wrap. Meaning that if Brainfuck attempts to move the pointer
-    to the left and it is pointing at the first , or left-most cell, the
-    pointer will not move. However, if Brainfuck attempts to move the pointer
-    to the right and is pointing at the last, or right-most cell, a cell will
-    be appended to the tape and the pointer will then be pointing at the new
-    cell.
+    cell, its new value will be 255. Contrarily, if a cell's value is 255 and
+    Brainfuck attempts to increase the value of that cell, its new value will
+    be 0. The tape does not wrap. Meaning that if Brainfuck attempts to move
+    the pointer to the left and it is pointing at the first, or left-most cell,
+    the pointer will not move. However, if Brainfuck attempts to move the
+    pointer to the right and is pointing at the last, or right-most cell, a
+    cell will be appended to the tape and the pointer will then be pointing at
+    the new cell.
     """
 
     def __init__(self, term_width):
@@ -70,8 +70,8 @@ class Tape:
     def print_cells(self, show_ptr=False):
         """Output the tape.
 
-        Respect the width of the terminal and put parentheses around the
-        current_cell.
+        Take into account the terminal width when formatting output. Also, show
+        where the pointer is by surrounding current_cell with parentheses.
         """
         # Format cells
         for_out = [' %s ' % str(c).ljust(3) for c in self.cells]
@@ -101,7 +101,9 @@ def err_out(err):
 
 def getch():
     """Read one character from stdin."""
+    # Prompt for input
     print('Input: ', end='', flush=True)
+
     try:
         import msvcrt
         char = msvcrt.getch()
@@ -109,14 +111,14 @@ def getch():
         import tty
         from termios import error, tcgetattr, tcsetattr, TCSADRAIN
         fd = sys.stdin.fileno()
-        old_settings = tcgetattr(fd)
+        old_settings = tcgetattr(fd)  # save tty settings
         try:
             tty.setraw(fd)
             char = sys.stdin.read(1)
         except error:
             char = None
         finally:
-            tcsetattr(fd, TCSADRAIN, old_settings)
+            tcsetattr(fd, TCSADRAIN, old_settings)  # restore tty settings
     finally:
         if char is None:
             msg = 'runtime error: stdin is already in use.' + \
@@ -125,11 +127,21 @@ def getch():
 
     # Clear the prompt and echo'd input
     print('\r\33[K', end='')
+
     return char
 
 
 def build_bracemap(code):
-    """Return a dict ."""
+    """Return a dict linking opening and closing square brackets.
+
+    Example:
+        >>> build_bracemap('++[>++<-]')
+        {2: 8, 8: 2}
+
+    Therefore, when querying a bracemap with the index of the opening square
+    bracket in the code, the index of its matching closing square bracket is
+    returned. Nested square brackets are handled properly.
+    """
     temp_bracestack, bracemap = [], {}
     for pos, cmd in enumerate(code):
         if cmd == '[':
@@ -152,13 +164,18 @@ def evaluate(code, user_in, config):
     printed out as the program is being interpreted.
 
     Args:
-        code: A list of Brainfuck-only characters to be executed.
-        width: The width of the terminal.
-        delay: The delay between each Brainfuck character's execution.
-        dump_tape: Whether or not the tape should be shown after execution.
-        show_tape: Whether or not the tape should be shown during execution.
-        use_input: Whether or not the
+        code: A list of Brainfuck commands to be executed for one program.
         user_in: A string of input to be passed to the Brainfuck program.
+        config: A Namespace object of variables that modify the interpretation
+            and output of Brainfuck programs.
+            It contains:
+            width: The width of the terminal.
+            delay: The delay after each Brainfuck command is processed.
+            dump_tape: Whether or not the tape should be shown after
+                interpretation.
+            show_tape: Whether or not the tape should be shown during
+                interpretation.
+            use_user_in: Whether input should be taken from user_in or stdin.
 
     Returns:
         Nothing.
@@ -182,8 +199,10 @@ def evaluate(code, user_in, config):
         elif cmd == '-':
             tape.dec_cell()
         elif cmd == '[' and tape.current_cell == 0:
+            # Jump to the matching ']' for this '['
             codeptr = bracemap[codeptr]
         elif cmd == ']' and tape.current_cell != 0:
+            # Jump back to the matching '[' for this ']'
             codeptr = bracemap[codeptr]
         elif cmd == '.':
             if config.dump_tape or config.show_tape:
@@ -191,13 +210,14 @@ def evaluate(code, user_in, config):
             else:
                 print(chr(tape.current_cell), end='', flush=True)
         elif cmd == ',':
-            if config.use_user_in:
+            if config.use_user_in:  # -i/--input was given
                 if not user_in:
                     err_out('runtime error: not enough input was given')
                 tape.current_cell = ord(user_in.pop(0))
             else:
                 tape.current_cell = ord(getch())
 
+        # Clear all of the tape output from the temrinal
         if config.show_tape:
             print('\33[A'*n_lines, end='')
 
@@ -226,7 +246,7 @@ def get_term_width():
     except CalledProcessError:
         width = 80
 
-    # Subtract 2 for padding
+    # Subtract 2 for 1 column padding on either side
     return width - 2
 
 
