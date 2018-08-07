@@ -165,25 +165,25 @@ def evaluate(code, user_in, config):
         if config.show_tape:
             n_lines = tape.print_cells(show_ptr=True)
 
-        command = code[codeptr]
-        if command == '>':
+        cmd = code[codeptr]
+        if cmd == '>':
             tape.move_right()
-        elif command == '<':
+        elif cmd == '<':
             tape.move_left()
-        elif command == '+':
+        elif cmd == '+':
             tape.inc_cell()
-        elif command == '-':
+        elif cmd == '-':
             tape.dec_cell()
-        elif command == '[' and tape.current_cell == 0:
+        elif cmd == '[' and tape.current_cell == 0:
             codeptr = bracemap[codeptr]
-        elif command == ']' and tape.current_cell != 0:
+        elif cmd == ']' and tape.current_cell != 0:
             codeptr = bracemap[codeptr]
-        elif command == '.':
+        elif cmd == '.':
             if config.dump_tape or config.show_tape:
                 output += chr(tape.current_cell)
             else:
                 print(chr(tape.current_cell), end='', flush=True)
-        elif command == ',':
+        elif cmd == ',':
             if config.use_user_in:
                 if not user_in:
                     err_out('runtime error: not enough input was given')
