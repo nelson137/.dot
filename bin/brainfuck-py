@@ -10,35 +10,28 @@ from subprocess import check_output, DEVNULL, CalledProcessError
 from time import sleep
 
 
-class Getch:
+def getch():
     """Read one character from stdin."""
-
-    def __init__(self):
-        try:
-            import msvcrt
-            self.impl = self.getch_windows
-        except ImportError:
-            self.impl = self.getch_unix
-
-    def getch_windows(self):
+    print('Input: ', end='', flush=True)
+    try:
         import msvcrt
-        return msvcrt.getch()
-
-    def getch_unix(self):
-        import tty, termios
+        char = msvcrt.getch()
+    except ImportError:
+        import tty
+        from termios import error, tcgetattr, tcsetattr, TCSADRAIN
         fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
+        old_settings = tcgetattr(fd)
         try:
             tty.setraw(fd)
             print('Input: ', end='', flush=True)
             char = sys.stdin.read(1)
             print('\r\33[K', end='')
+        except error:
+            char = None
         finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return char
-
-    def __call__(self):
-        return self.impl()
+            tcsetattr(fd, TCSADRAIN, old_settings)
+    print('\r\33[K', end='')
+    return char
 
 
 class DelayAction(Action):
@@ -99,7 +92,6 @@ def evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in):
     bracemap = build_bracemap(code)
     cells = [0]
     codeptr, cellptr = 0, 0
-    getch = Getch()
 
     while codeptr < len(code):
         if show_tape:
@@ -130,12 +122,13 @@ def evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in):
                     err_out('runtime error: not enough input was given')
                 cells[cellptr] = ord(user_in.pop(0))
             else:
-                try:
-                    cells[cellptr] = ord(getch())
-                except:
+                char = getch()
+                if char is None:
                     msg = 'runtime error: stdin is already in use.' + \
                           '\nmake sure nothing is being piped in'
                     err_out(msg)
+                else:
+                    cells[cellptr] = ord(char)
 
         if show_tape:
             print('\33[A'*n_lines, end='')
