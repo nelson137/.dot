@@ -344,7 +344,7 @@ let g:ale_python_pylint_options = '--disable=invalid-name,line-too-long,' .
 " however, --ignore overrides the default
 let g:ale_python_flake8_options = '--ignore=' .
 \    'E121,E123,E126,E226,E24,E704,W503,W504,' .
-\    'E116,D413,D107'
+\    'E116,D413,D107,E115'
 let g:ale_fixers = { 'python': ['remove_trailing_lines', 'trim_whitespace'] }
 let g:ale_fix_on_save = 1
 let g:ale_sign_column_always = 1
