@@ -283,6 +283,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'sjl/gundo.vim'                 " Vim undo tree viewer
     Plugin 'skywind3000/asyncrun.vim'      " Run/Execute files in vim
     Plugin 'terryma/vim-multiple-cursors'  " I think this one's pretty obvious
+    Plugin 'tommcdo/vim-exchange'          " Easily swap 2 regions of text
     Plugin 'tpope/vim-fugitive'            " Git wrapper
     Plugin 'tpope/vim-surround'            " Surrounds selected text for you
     Plugin 'w0rp/ale'                      " Asynchronous Lint Engine
