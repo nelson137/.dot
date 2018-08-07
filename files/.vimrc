@@ -335,7 +335,8 @@ let g:ale_command_wrapper = 'nice -n 3'
 let g:ale_echo_msg_format = '%linter%: %code: %%s'
 let g:ale_loclist_msg_format = g:ale_echo_msg_format
 let g:ale_python_pylint_options = '--disable=invalid-name,no-else-return,' .
-\    'missing-docstring,redefined-outer-name'
+\    'missing-docstring,redefined-outer-name,too-many-branches,' .
+\    'multiple-imports'
 " The first line of errors and warnings is what is ignored by default,
 " however, --ignore overrides the default
 let g:ale_python_flake8_options = '--ignore=' .
