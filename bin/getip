@@ -32,6 +32,10 @@ getip_err() {
 
 
 getip_int_ips() {
+    # If an argument is passed, it is the number of calumns all but
+    # the first line should be indented by
+    [[ "$1" ]] && local indent_cols="$1"
+
     local all_ifaces=(
         $(ip link | awk '/^[0-9]/ {print $2}' | tr -d : | grep -v '^lo$')
     )
@@ -52,10 +56,10 @@ getip_int_ips() {
     # If there are multiple ips label each one with its iface name
     for i in "${!ips[@]}"; do
         (( "$i" > 0 )) &&
-            echo '\n             '
+            printf "\n%${indent_cols}s"
         (( "${#ips[@]}" > 1 )) &&
-            echo "${has_ip[i]}: "
-        echo "${ips[i]}"
+            echo -n "${has_ip[i]}: "
+        echo -n "${ips[i]}"
     done
 }
 
@@ -120,7 +124,7 @@ getip() {
     elif [[ "$show_ext" ]]; then
         echo "$(getip_ext_ip)"
     else
-        echo "${labels:+Internal: }$(getip_int_ips)"
+        echo "${labels:+Internal: }$(getip_int_ips 10)"
         echo "${labels:+External: }$(getip_ext_ip)"
     fi
 }
