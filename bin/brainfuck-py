@@ -12,6 +12,23 @@ from subprocess import check_output, DEVNULL, CalledProcessError
 from time import sleep
 
 
+class DelayAction(Action):
+    """Set namespace.delay and namespace.delay_changed."""
+
+    def __init__(self, option_strings, dest, nargs=None, **kwargs):
+        super().__init__(option_strings, dest, **kwargs)
+
+    def __call__(self, _, namespace, value, option_string=None):
+        setattr(namespace, self.dest, value)
+        setattr(namespace, 'delay_changed', True)
+
+
+def err_out(err):
+    """Output err to stderr and exit with an error code of 1."""
+    print('brainfuck-py:', err, file=sys.stderr)
+    sys.exit(1)
+
+
 def getch():
     """Read one character from stdin."""
     print('Input: ', end='', flush=True)
@@ -36,17 +53,6 @@ def getch():
     return char
 
 
-class DelayAction(Action):
-    """Set namespace.delay and namespace.delay_changed."""
-
-    def __init__(self, option_strings, dest, nargs=None, **kwargs):
-        super().__init__(option_strings, dest, **kwargs)
-
-    def __call__(self, _, namespace, value, option_string=None):
-        setattr(namespace, self.dest, value)
-        setattr(namespace, 'delay_changed', True)
-
-
 def print_cells(cells, width, ptr=None):
     cells = cells[:]
 
@@ -68,12 +74,6 @@ def print_cells(cells, width, ptr=None):
 
     # Return number of lines so the cursor can be reset at the top
     return len(lines)
-
-
-def err_out(err):
-    """Output err to stderr and exit with an error code of 1."""
-    print('brainfuck-py:', err, file=sys.stderr)
-    sys.exit(1)
 
 
 def build_bracemap(code):
