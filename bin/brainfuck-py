@@ -117,6 +117,13 @@ def getch():
             char = None
         finally:
             tcsetattr(fd, TCSADRAIN, old_settings)
+    finally:
+        if char is None:
+            msg = 'runtime error: stdin is already in use.' + \
+                  '\nmake sure nothing is being piped in'
+            err_out(msg)
+
+    # Clear the prompt and echo'd input
     print('\r\33[K', end='')
     return char
 
@@ -189,13 +196,7 @@ def evaluate(code, user_in, config):
                     err_out('runtime error: not enough input was given')
                 tape.current_cell = ord(user_in.pop(0))
             else:
-                char = getch()
-                if char is None:
-                    msg = 'runtime error: stdin is already in use.' + \
-                          '\nmake sure nothing is being piped in'
-                    err_out(msg)
-                else:
-                    tape.current_cell = ord(char)
+                tape.current_cell = ord(getch())
 
         if config.show_tape:
             print('\33[A'*n_lines, end='')
