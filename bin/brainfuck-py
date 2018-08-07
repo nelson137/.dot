@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-#
-# Brainfuck Interpreter
-# Copyright 2011 Sebastian Kaspari
+
+"""Interpret Brainfuck programs.
+
+Copyright 2011 Sebastian Kaspari
+"""
 
 
 import sys
@@ -40,7 +42,7 @@ class DelayAction(Action):
     def __init__(self, option_strings, dest, nargs=None, **kwargs):
         super().__init__(option_strings, dest, **kwargs)
 
-    def __call__(self, parser, namespace, value, option_string=None):
+    def __call__(self, _, namespace, value, option_string=None):
         setattr(namespace, self.dest, value)
         setattr(namespace, 'delay_changed', True)
 
@@ -49,11 +51,9 @@ def print_cells(cells, width, ptr=None):
     cells = cells[:]
 
     # Format cells
-    for n in range(len(cells)):
-        if ptr is not None and n == ptr:
-            cells[n] = '(%s)' % str(cells[n]).ljust(3)
-        else:
-            cells[n] = ' ' + str(cells[n]).ljust(4)
+    for i, value in enumerate(cells):
+        format_str = '(%s)' if ptr is not None and i == ptr else ' %s '
+        cells[i] = format_str % str(value).ljust(3)
 
     # Number of cells per line
     nc = int((width+1)/6)
@@ -71,14 +71,17 @@ def print_cells(cells, width, ptr=None):
 
 
 def err_out(err):
+    """Output err to stderr and exit with an error code of 1."""
     print('brainfuck:', err, file=sys.stderr)
     sys.exit(1)
 
 
 def build_bracemap(code):
+    """Return a dict ."""
     temp_bracestack, bracemap = [], {}
     for pos, cmd in enumerate(code):
-        if cmd == '[': temp_bracestack.append(pos)
+        if cmd == '[':
+            temp_bracestack.append(pos)
         if cmd == ']':
             start = temp_bracestack.pop()
             bracemap[start] = pos
@@ -88,6 +91,26 @@ def build_bracemap(code):
 
 
 def evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in):
+    """Interpret the Brainfuck code.
+
+    Interprets the Brainfuck code, character by character, pausing for delay
+    milliseconds after each command is processed. If the user requested the
+    tape be shown live, while the program is being executed, the output is not
+    printed until after the program has terminated. Otherwise, the output is
+    printed out as the program is being interpreted.
+
+    Args:
+        code: A list of Brainfuck-only characters to be executed.
+        width: The width of the terminal.
+        delay: The delay between each Brainfuck character's execution.
+        dump_tape: Whether or not the tape should be shown after execution.
+        show_tape: Whether or not the tape should be shown during execution.
+        use_input: Whether or not the
+        user_in: A string of input to be passed to the Brainfuck program.
+
+    Returns:
+        Nothing.
+    """
     output = ''
     bracemap = build_bracemap(code)
     cells = [0]
@@ -100,7 +123,8 @@ def evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in):
         command = code[codeptr]
         if command == '>':
             cellptr += 1
-            if cellptr == len(cells): cells.append(0)
+            if cellptr == len(cells):
+                cells.append(0)
         elif command == '<':
             cellptr = 0 if cellptr <= 0 else cellptr - 1
         elif command == '+':
@@ -118,7 +142,7 @@ def evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in):
                 print(chr(cells[cellptr]), end='', flush=True)
         elif command == ',':
             if use_input:
-                if len(user_in) == 0:
+                if not user_in:
                     err_out('runtime error: not enough input was given')
                 cells[cellptr] = ord(user_in.pop(0))
             else:
@@ -163,6 +187,7 @@ def get_term_width():
 
 
 def main(args):
+    """Do some error checking, then interpret all Brainfuck code."""
     stdin_code = args.stdin_code
     stdin_filenames = args.stdin_filenames
     delay = args.delay
