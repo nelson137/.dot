@@ -72,7 +72,7 @@ def print_cells(cells, width, ptr=None):
 
 def err_out(err):
     """Output err to stderr and exit with an error code of 1."""
-    print('brainfuck:', err, file=sys.stderr)
+    print('brainfuck-py:', err, file=sys.stderr)
     sys.exit(1)
 
 
