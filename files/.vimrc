@@ -209,6 +209,21 @@ noremap   <C-w><C-j>   <C-w>-
 noremap   <C-w><C-k>   <C-w>+
 noremap   <C-w><C-l>   <C-w>>
 
+" New tab
+noremap <silent>   <Leader>t   :tabnew<CR>
+
+" Tab next
+noremap <silent>   <Leader>tn   :tabn<CR>
+
+" Tab previous
+noremap <silent>   <Leader>tp   :tabp<CR>
+
+" New window below
+noremap <silent>   <Leader>wn   :new<CR>
+
+" New window to the right
+noremap <silent>   <Leader>wv   :vnew<CR>
+
 " Toggle line numbers
 noremap <silent>   <Leader>n   :set nu!<CR>
 
