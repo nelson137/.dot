@@ -300,9 +300,7 @@ let NERDRemoveExtraSpaces = 1
 let NERDSpaceDelims = 1
 let NERDTrimTrailingWhitespace = 1
 " Only put 1 space between # and comment content
-let g:NERDCustomDelimiters = {
-    \ 'python': { 'left': '#' },
-\ }
+let g:NERDCustomDelimiters = { 'python': {'left': '#'} }
 
 " Gundo
 let g:gundo_help = 0
