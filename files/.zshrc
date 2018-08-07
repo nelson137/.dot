@@ -49,6 +49,7 @@ plugins=(
     git-prompt
     git-prompt-custom
     java-utils
+    listbox
     ssh
     web-search
     zsh-autosuggestions
