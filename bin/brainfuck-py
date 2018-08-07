@@ -172,7 +172,7 @@ def evaluate(code, width, delay, dump_tape, show_tape, use_input, user_in):
 def cleanup(code):
     """Return code with all non-Brainfuck command characters removed."""
     bf_chars = ['>', '<', '+', '-', '[', ']', '.', ',']
-    return list(filter(lambda c: c in bf_chars, code))
+    return [c for c in code if c in bf_chars]
 
 
 def get_term_width():
