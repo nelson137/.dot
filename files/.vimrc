@@ -342,9 +342,14 @@ let g:ale_python_pylint_options = '--disable=invalid-name,line-too-long,' .
 \    'redefined-outer-name,too-many-branches'
 " The first line of errors and warnings is what is ignored by default,
 " however, --ignore overrides the default
+" My flake8 ignores:
+"     D107: missing docstring in __init__
+"     D413: missing blank line after last section
+"     E115: expected an indented block (comment)
+"     E116: unexpected indentation (comment)
 let g:ale_python_flake8_options = '--ignore=' .
 \    'E121,E123,E126,E226,E24,E704,W503,W504,' .
-\    'E116,D413,D107,E115'
+\    'D107,D413,E115,E116'
 let g:ale_fixers = { 'python': ['remove_trailing_lines', 'trim_whitespace'] }
 let g:ale_fix_on_save = 1
 let g:ale_sign_column_always = 1
