@@ -256,6 +256,9 @@ noremap <silent>   <Leader>mp   :MarkdownPreview<CR>
 " Stop previewing markdown file
 noremap <silent>   <Leader>ms   :MarkdownPreviewStop<CR>
 
+" Toggle ALE linting
+noremap <silent>   <Leader>at   :ALEToggle<CR>
+
 
 
 " Vundle
@@ -328,7 +331,7 @@ let g:asyncrun_open = 8
 
 " ALE
 let g:ale_lint_on_save = 1
-let g:ale_lint_on_text_change = 'never'
+let g:ale_lint_on_text_change = 'always'
 let g:ale_linters = { 'python': ['flake8', 'pycodestyle', 'pylint', 'pyls'] }
 let g:ale_use_global_executables = 1
 let g:ale_command_wrapper = 'nice -n 3'
