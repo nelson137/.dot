@@ -142,6 +142,7 @@ sed -r 's/^ {4}//' > "${hooks}/update-vim-plugins.sh" <<'EOF'
         if [[ $? == 0 ]]; then
             echo 'Updating Vundle plugins ...'
             vim +PluginClean! +PluginInstall +qall
+            echo
         fi
     fi
 
