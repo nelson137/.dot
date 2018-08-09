@@ -29,35 +29,35 @@ lb_draw() {
 
 
 listbox() {
-    unset title opts arrow
-
+    local title OIFS arrow
     while (( $# > 0 )); do
         case "$1" in
             -t|--title)
-                local title="$2"
+                title="$2"
                 shift ;;
             -o|--options)
-                local OIFS="$IFS"
+                OIFS="$IFS"
                 IFS=$'\n'
                 opts=( $(tr '|' '\n' <<< "$2") )
                 IFS="$OIFS"
                 shift ;;
             -a|--arrow)
-                local arrow="$2"
+                arrow="$2"
                 shift ;;
             *)
         esac
         shift
     done
 
-    if [[ -n $title ]]; then
+    [[ ! $arrow ]] && arrow='>'
+
+    if [[ $title ]]; then
         local Lspace=" $(printf %${#arrow}s)"
         printf "\n${Lspace}${title}\n${Lspace}"
         printf "%${#title}s" | tr ' ' '-'
         echo
     fi
 
-    [[ -z $arrow ]] && arrow='>'
     local len="${#opts[@]}"
     local choice=1
     local will_redraw
@@ -65,7 +65,7 @@ listbox() {
     lb_draw
 
     while true; do
-        key="$(bash -c 'read -n 1 -s key; echo $key')"
+        key="$(bash -c 'read -sn 1 key; echo "$key"')"
         will_redraw=1
 
         case "$key" in
