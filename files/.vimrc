@@ -4,6 +4,7 @@ set autoread                " Automatically read changes made on disk
 set backspace=indent,eol,start
 set encoding=utf-8
 set history=500             " Remember 500 ex commands
+set incsearch               " Highlight search matches while typing
 set nocompatible            " Be iMproved
 set noswapfile              " I like to live dangerously
 set scrolloff=4             " Keep cursor 4 lines from top & bot when scrolling
