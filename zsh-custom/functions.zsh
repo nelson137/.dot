@@ -128,6 +128,25 @@ newscript() {
 
 
 
+swap() {
+    # Swap the names of 2 files or directories
+    swap_err() { echo "$1" >&2; exit 1 }
+
+    (( $# != 2 )) && echo "Usage: swap {file or dir} {file or dir}"
+    [[ ! -e "$1" ]] && swap_err "swap: file or directory does not exists: $1"
+    [[ ! -e "$2" ]] && swap_err "swap: file or directory does not exists: $2"
+    [[ ! -w "$1" ]] && swap_err "swap: permission denied: $1"
+    [[ ! -w "$2" ]] && swap_err "swap: permission denied: $2"
+    local name1="$1"
+    local name2="$2"
+    local tmp_name="swap_tmp.$$"
+    mv "$1" "$tmp_name"
+    mv "$2" "$1"
+    mv "$tmp_name" "$2"
+}
+
+
+
 vimrm() {
     # vim a file, prompting to rm it when the user exits
     vim -c 'set nomodifiable' -c 'autocmd QuitPre * call OnExitVimrm()' "$@"
