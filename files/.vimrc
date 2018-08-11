@@ -72,6 +72,12 @@ augroup no_lint_zshhist
     au BufEnter .zsh_history call ale#toggle#Disable()
 augroup end
 
+" Close the quickfix window when exiting
+augroup close_qf_win
+    au!
+    au BufUnload * if getqflist() != [] | exe ':cclose' | endif
+augroup end
+
 
 
 " Filetype Configs
