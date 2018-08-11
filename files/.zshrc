@@ -45,6 +45,8 @@ ZSH_CUSTOM="$HOME/Projects/Git/dot/zsh-custom"
 plugins=(
     colored-man-pages
     cpp-utils
+    debian
+    extract
     git
     git-prompt
     git-prompt-custom
