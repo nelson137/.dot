@@ -66,6 +66,12 @@ augroup vimleave
         \ endif  
 augroup end
 
+" Disable ALE in ~/.zsh_history
+augroup no_lint_zshhist
+    au!
+    au BufEnter .zsh_history call ale#toggle#Disable()
+augroup end
+
 
 
 " Filetype Configs
