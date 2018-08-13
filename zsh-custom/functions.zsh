@@ -105,8 +105,10 @@ newscript() {
     # Make a new script with boilerplate code and make it executable
     # if necessary
     [[ $# == 0 ]] && files=( t.sh ) || files=( $@ )
-    touch $files
     for f in $files; do
+        [[ -e $f ]] && echo "script already exists: $f" >&2 && continue
+
+        touch $f
         print -s "vim $f"
         if [[ $f =~ \..cpp ]]; then
             echo -ne "#include <iostream>\nusing namespace std;\n\nint" > "$f"
