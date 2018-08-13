@@ -67,13 +67,11 @@ lum_set_s_b() {
         lum_err "cannot set brightness to $1"
 
     # Check if $brightness is greater than max
-    # - Use bc to compare floats
-    (( $(bc -l <<< "$1 > $s_b_max") )) &&
+    (( $1 > $s_b_max )) &&
         lum_err "max screen brightness is $s_b_max"
 
     # Check if $brightness is less than min
-    # - Use bc to compare floats
-    (( $(bc -l <<< "$1 < $s_b_min") )) &&
+    (( $1 < $s_b_min )) &&
         lum_err "min screen brightness is $s_b_min"
 
     # Try to change screen brightness, print error if it fails
