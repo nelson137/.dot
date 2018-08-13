@@ -6,7 +6,9 @@ s_b_dir=/sys/class/backlight/intel_backlight
 
 # Max screen and display brightnesses
 s_b_max="$(cat "${s_b_dir}/max_brightness")"
-d_b_max=2
+s_b_min=1
+d_b_max=1.5
+d_b_min=.5
 
 # Disable -s/--screen if cannot get or set screen brightness
 [[ ! -f "${s_b_dir}/brightness" ]] &&
@@ -63,10 +65,16 @@ lum_set_s_b() {
     # Print error if brightness is not an integer
     [[ "$1" =~ ^[0-9]+$ ]] ||
         lum_err "cannot set brightness to $1"
-    # Check if brightness exceeds max
+
+    # Check if $brightness is greater than max
     # - Use bc to compare floats
     (( $(bc -l <<< "$1 > $s_b_max") )) &&
         lum_err "max screen brightness is $s_b_max"
+
+    # Check if $brightness is less than min
+    # - Use bc to compare floats
+    (( $(bc -l <<< "$1 < $s_b_min") )) &&
+        lum_err "min screen brightness is $s_b_min"
 
     # Try to change screen brightness, print error if it fails
     sudo tee "${s_b_dir}/brightness" >/dev/null <<< "$1" ||
@@ -76,10 +84,15 @@ lum_set_s_b() {
 
 
 lum_set_d_b() {
-    # Check if brightness exceeds max
+    # Check if brightness is greater than max
     # - Use bc to compare floats
     (( $(bc -l <<< "$1 > $d_b_max") )) &&
         lum_err "max display brightness is $d_b_max"
+
+    # Check if brightness is less than min
+    # - Use bc to compare floats
+    (( $(bc -l <<< "$1 < $d_b_min") )) &&
+        lum_err "min display brightness is $d_b_min"
 
     local outputs=( $(xrandr | awk '/ connected/ {print $1}') )
     outputs="$(for o in "${outputs[@]}"; do echo -n " --output $o"; done)"
