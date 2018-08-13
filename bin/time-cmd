@@ -1,0 +1,26 @@
+#!/bin/zsh
+
+
+execute() {
+    tmp="$(mktemp)"
+    trap "rm -f '$tmp'" EXIT KILL SIGTERM SIGINT
+
+    local n_times="$1"; shift
+
+    for _ in {1..$n_times}; do
+        2>>"$tmp" time "$@" >/dev/null
+    done
+
+    # Get only the total runtime from `time` output
+    sed -r 's/^.*([0-9]+\.[0-9]+) total$/\1/' "$tmp"
+}
+
+
+# The time it takes to execute the arguments once
+one_exe_time="$(execute 1 "$@")"
+# The number of times the arguments can be executed in 10 seconds
+typeset -i n_times=$(( 10 / one_exe_time ))
+
+# Get the average runtime
+runtimes=( $(execute "$n_times" "$@") )
+echo "$(( (${(@j:+:)runtimes}) / $#runtimes ))"
