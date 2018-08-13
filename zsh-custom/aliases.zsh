@@ -1,9 +1,11 @@
 #!/bin/zsh
 
+D='DISPLAY=:0'
+
 # Command aliases
 alias cp='cp -ir'
 alias du='du -h --max-depth=1'
-alias feh='DISPLAY=:0 feh -x.'
+alias feh="$D feh -x."
 alias grep='grep -E'
 alias md='mkdir -p'
 alias mkx='chmod +x'
@@ -32,7 +34,7 @@ alias funcs='vim ~/Projects/Git/dot/zsh-custom/functions.zsh'
 alias r='exec zsh'
 alias rainbow='cat /dev/urandom | base64 | figlet -ctf term | lolcat -fad 1 -s 75 -p 5'
 alias socwd='command du -csh . | tail -1'
-alias setbg='DISPLAY=:0 nitrogen --set-zoom-fill --random ~/.xmonad/backgrounds/'
+alias setbg="$D nitrogen --set-zoom-fill --random ~/.xmonad/backgrounds/"
 alias vimrc='vim ~/.vimrc'
 alias zshhist='vim ~/.zsh_history'
 alias zshrc='vim ~/.zshrc'
