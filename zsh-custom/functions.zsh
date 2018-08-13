@@ -108,19 +108,32 @@ newscript() {
     for f in $files; do
         [[ -e $f ]] && echo "script already exists: $f" >&2 && continue
 
-        touch $f
+        touch "$f"
         print -s "vim $f"
         if [[ $f =~ \..cpp ]]; then
-            echo -ne "#include <iostream>\nusing namespace std;\n\nint" > "$f"
-            echo -e " main(int argc, char** argv) {\n    return 0;\n}" >> "$f"
+            cat <<'EOF' > "$f"
+#include <iostream>
+using namespace std;
+
+int main(int argc, char** argv) {
+    return 0;
+}
+EOF
             vim +4 "$f"
         else
             if [[ $f =~ \..py ]]; then
-                echo '#!/usr/bin/env python3\n\n"""Test."""\n\n\n' > "$f"
+                cat <<'EOF' > "$f"
+#!/usr/bin/env python3
+
+"""Test."""
+
+
+
+EOF
             elif [[ $f =~ \..zsh ]]; then
-                echo -e "#!/bin/zsh\n\n" > "$f"
+                echo '#!/bin/zsh\n\n\n' > "$f"
             else
-                echo -e "#!/bin/bash\n\n" > "$f"
+                echo '#!/bin/bash\n\n\n' > "$f"
             fi
             vim + +startinsert "$f"  # "+" puts cursor at bottom of file
             chmod +x "$f"
