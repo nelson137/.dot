@@ -114,7 +114,7 @@ newscript() {
             vim +4 "$f"
         else
             if [[ $f =~ \..py ]]; then
-                echo -e "#!/usr/bin/env python3\n\n" > "$f"
+                echo '#!/usr/bin/env python3\n\n"""Test."""\n\n\n' > "$f"
             elif [[ $f =~ \..zsh ]]; then
                 echo -e "#!/bin/zsh\n\n" > "$f"
             else
