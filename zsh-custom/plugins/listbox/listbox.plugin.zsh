@@ -1,9 +1,12 @@
 #!/bin/zsh
 
+nl='
+'
+
 
 
 lb_move() {
-    for opt in "${opts[@]}"; do
+    for n in {1..$1}; do
         tput cuu1
     done
     tput el1
@@ -12,17 +15,16 @@ lb_move() {
 
 
 lb_draw() {
-    local idx=1
-    local prefix
-    for opt in "${opts[@]}"; do
+    local choice="$1"; shift
+    local arrow="$1"; shift
+    for (( i=1; i<=$#; i++ )); do
         prefix=''
-        if [[ $idx == $choice ]]; then
+        if [[ $i == $choice ]]; then
             prefix+="$arrow"
         else
-            prefix+="$(printf %${#arrow}s)"
+            prefix+="$(printf "%${#arrow}s")"
         fi
-        echo "$prefix $opt"
-        ((idx++))
+        eval "echo \$prefix \$opts[$i]"
     done
 }
 
@@ -30,6 +32,7 @@ lb_draw() {
 
 listbox() {
     local title OIFS arrow
+    local -a opts
     while (( $# > 0 )); do
         case "$1" in
             -t|--title)
@@ -59,31 +62,30 @@ listbox() {
     fi
 
     local len="${#opts[@]}"
-    local choice=1
-    local will_redraw
+    local key will_redraw choice=1
 
-    lb_draw
+    lb_draw "$choice" "$arrow" "$opts[@]"
 
     while true; do
-        key="$(bash -c 'read -sn 1 key; echo "$key"')"
+        read -sk key
         will_redraw=1
 
         case "$key" in
             q)
                 echo
                 return 1 ;;
-            '')
+            $nl)
                 echo
-                export LISTBOX_CHOICE="${opts[choice]}"
+                export LISTBOX_CHOICE="$opts[choice]"
                 break ;;
             k|A)
-                if (( $choice > 1 )); then
+                if (( choice > 1 )); then
                     ((choice--))
                 else
                     will_redraw=0
                 fi ;;
             j|B)
-                if (( $choice < $len )); then
+                if (( choice < len )); then
                     ((choice++))
                 else
                     will_redraw=0
@@ -97,10 +99,8 @@ listbox() {
         esac
 
         if [[ "$will_redraw" ]]; then
-            lb_move
-            lb_draw
+            lb_move "$len"
+            lb_draw "$choice" "$arrow" "$opts[@]"
         fi
     done
-
-    unset opts
 }
