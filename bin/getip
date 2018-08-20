@@ -37,7 +37,7 @@ getip_int_ips() {
     [[ "$1" ]] && local indent_cols="$1"
 
     local all_ifaces=(
-        $(ip link | awk '/^[0-9]/ {print $2}' | tr -d : | grep -v '^lo$')
+        $(ls /sys/class/net | grep -v lo)
     )
 
     # Attempt to get the internal ip of each network interface
