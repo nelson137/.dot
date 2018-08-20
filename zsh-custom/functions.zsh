@@ -143,6 +143,14 @@ EOF
 
 
 
+ping() {
+    [[ $# == 1 && $1 == gateway ]] &&
+        # Ping the default gateway
+        command ping $(ip route | awk '/default/ {print $3}')
+}
+
+
+
 swap() {
     # Swap the names of 2 files or directories
     swap_err() { echo "$1" >&2; exit 1 }
