@@ -1,5 +1,5 @@
 #!/bin/bash
-# Print the internal and external ip addresses of this machine
+# Print the external and internal ip addresses as well as the default gateway.
 
 
 
@@ -13,8 +13,8 @@ getip_help() {
     echo
     echo 'Options:'
     echo '  -h, --help       Print this help message and exit'
-    echo '  -i, --internal   Print only the internal ip address'
     echo '  -e, --external   Print only the external ip address'
+    echo '  -i, --internal   Print only the internal ip address'
     echo '  -g, --gateway    Print the default gateway'
     echo '  -n, --no-labels  Do not print labels with the output'
     exit
@@ -28,6 +28,16 @@ getip_err() {
 
     echo "getip: $1" >&2
     exit 1
+}
+
+
+
+get_ext_ip() {
+    if which dig >/dev/null; then
+        dig +short myip.opendns.com @resolver1.opendns.com 2>/dev/null
+    else
+        curl -s http://icanhazip.com
+    fi
 }
 
 
@@ -68,16 +78,6 @@ get_int_ips() {
 
 
 
-get_ext_ip() {
-    if which dig >/dev/null; then
-        dig +short myip.opendns.com @resolver1.opendns.com 2>/dev/null
-    else
-        curl -s http://icanhazip.com
-    fi
-}
-
-
-
 get_gateway() {
     ip route | awk '/default/ {print $3}'
 }
@@ -104,10 +104,10 @@ for (( i=0; i<${#argv[@]}; i++ )); do
     case "$arg" in
         -h|--help)
             help=1 ;;
-        -i|--internal)
-            show_int=1 ;;
         -e|--external)
             show_ext=1 ;;
+        -i|--internal)
+            show_int=1 ;;
         -g|--gateway)
             show_gateway=1 ;;
         -n|--no-labels)
@@ -123,14 +123,14 @@ done
 [[ "$help" == 1 ]] &&
     getip_help
 
-if [[ "$show_int" ]]; then
-    get_int_ips
-elif [[ "$show_ext" ]]; then
+if [[ "$show_ext" ]]; then
     get_ext_ip
+elif [[ "$show_int" ]]; then
+    get_int_ips
 elif [[ "$show_gateway" ]]; then
     get_gateway
 else
-    echo "${labels:+Internal: }$(get_int_ips 10)"
     echo "${labels:+External: }$(get_ext_ip)"
+    echo "${labels:+Internal: }$(get_int_ips 10)"
     echo "${labels:+Gateway: }$(get_gateway)"
 fi
