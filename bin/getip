@@ -117,10 +117,6 @@ getip() {
     [[ "$help" == 1 ]] &&
         getip_help
 
-    # Both -i/--internal and -e/--external were given
-    [[ "$show_int" && "$show_ext" ]] &&
-        getip_err help
-
     if [[ "$show_int" ]]; then
         getip_int_ips
     elif [[ "$show_ext" ]]; then
