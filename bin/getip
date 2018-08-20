@@ -17,7 +17,7 @@ getip_help() {
     echo '  -i, --internal   Print only the internal ip address'
     echo '  -g, --gateway    Print the default gateway'
     echo '  -n, --no-labels  Do not print labels with the output'
-    exit
+    exit 0
 }
 
 
