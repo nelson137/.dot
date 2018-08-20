@@ -64,10 +64,6 @@ done
 [[ "$help" == 1 ]] &&
     bat_help
 
-# Both -p/--percent and -s/--state were given
-[[ "$show_percent" && "$show_state" ]] &&
-    bat_err help
-
 # Check that upower is installed
 which upower >/dev/null || bat_err 'upower is not installed'
 
