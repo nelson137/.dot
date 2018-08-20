@@ -14,15 +14,12 @@ bat_help() {
     echo '  -p, --percent Print only the battery percent'
     echo '  -s, --state   Print only the battery state'
     echo '  --dry-run     Check that upower is installed'
-    exit
+    exit 0
 }
 
 
 
 bat_err() {
-    [[ "$1" == help ]] &&
-        bat_help >&2
-
     echo "bat: $1" >&2
     exit 1
 }
