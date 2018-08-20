@@ -40,7 +40,7 @@ export ZSH_DISABLE_COMPFIX=true
 HIST_STAMPS="yyyy-mm-dd"
 
 # Would you like to use another custom folder than $ZSH/custom?
-ZSH_CUSTOM="$HOME/Projects/Git/dot/zsh-custom"
+ZSH_CUSTOM="$HOME/.dot/zsh-custom"
 
 plugins=(
     colored-man-pages

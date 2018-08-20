@@ -218,7 +218,7 @@ update() {
 
     case "$1" in
         dot)
-            git -C ~/Projects/Git/dot/pull ;;
+            git -C ~/.dot/pull ;;
         system)
             sudo apt update && sudo apt upgrade -y ;;
         *)
