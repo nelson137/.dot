@@ -47,7 +47,7 @@ getip_int_ips() {
             ip -4 -o a show "$iface" |
             grep -Po '(?<=inet )[0-9]+(\.[0-9]+){3}/[0-9]+'
         )"
-        if [[ -n "$ip" ]]; then
+        if [[ "$ip" ]]; then
             has_ip+=( "$iface" )
             ips+=( "$ip" )
         fi
