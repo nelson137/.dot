@@ -15,6 +15,7 @@ getip_help() {
     echo '  -h, --help       Print this help message and exit'
     echo '  -i, --internal   Print only the internal ip address'
     echo '  -e, --external   Print only the external ip address'
+    echo '  -g, --gateway    Print the default gateway'
     echo '  -n, --no-labels  Do not print labels with the output'
     exit
 }
@@ -77,6 +78,12 @@ getip_ext_ip() {
 
 
 
+getip_gateway() {
+    ip route | awk '/default/ {print $3}'
+}
+
+
+
 getip() {
     # Split options
     # Ex: -abc becomes -a -b -c
@@ -93,7 +100,7 @@ getip() {
     done
 
     # Parse arguments
-    local arg help show_int show_ext
+    local arg help show_int show_ext show_gateway
     local labels=1
     for (( i=0; i<${#argv[@]}; i++ )); do
         arg="${argv[i]}"
@@ -104,6 +111,8 @@ getip() {
                 show_int=1 ;;
             -e|--external)
                 show_ext=1 ;;
+            -g|--gateway)
+                show_gateway=1 ;;
             -n|--no-labels)
                 unset labels ;;
             -*|--*)
@@ -121,9 +130,12 @@ getip() {
         getip_int_ips
     elif [[ "$show_ext" ]]; then
         getip_ext_ip
+    elif [[ "$show_gateway" ]]; then
+        getip_gateway
     else
         echo "${labels:+Internal: }$(getip_int_ips 10)"
         echo "${labels:+External: }$(getip_ext_ip)"
+        echo "${labels:+Gateway: }$(getip_gateway)"
     fi
 }
 
