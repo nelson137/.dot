@@ -13,6 +13,7 @@ bat_help() {
     echo '  -h, --help    Print this help message and exit'
     echo '  -p, --percent Print only the battery percent'
     echo '  -s, --state   Print only the battery state'
+    echo '  -t, --time    Print the estimated time until empty'
     echo '  --dry-run     Check that upower is installed'
     exit 0
 }
@@ -48,6 +49,8 @@ for arg in "${argv[@]}"; do
             show_percent=1 ;;
         -s|--state)
             show_state=1 ;;
+        -t|--time)
+            show_time=1 ;;
         --dry-run)
             dry_run=1 ;;
         -*|--*)
@@ -72,6 +75,8 @@ if [[ "$show_percent" == 1 ]]; then
     awk '/percentage/ {print $2}' <<< "$stats" | sed 's/%//'
 elif [[ "$show_state" == 1 ]]; then
     awk '/state/ {print $2}' <<< "$stats"
+elif [[ "$show_time" == 1 ]]; then
+    sed -nr 's/^\s*time to empty:\s*([0-9]+.*)$/\1/p' <<< "$stats"
 else
-    grep -E --color=never 'state|to empty|percentage' <<< "$stats"
+    grep -E --color=never 'percentage|state|to empty' <<< "$stats"
 fi
