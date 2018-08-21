@@ -94,6 +94,12 @@ gp() {
 
 
 
+is_wsl() {
+    grep -qE '(Microsoft|WSL)' /proc/version 2>/dev/null
+}
+
+
+
 mkcd() {
     # Make then cd into a directory
     mkdir "$1" && cd "$1"
