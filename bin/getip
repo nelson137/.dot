@@ -12,11 +12,12 @@ getip_help() {
     echo 'and external ip addresses with labels.'
     echo
     echo 'Options:'
-    echo '  -h, --help       Print this help message and exit'
-    echo '  -e, --external   Print only the external ip address'
-    echo '  -i, --internal   Print only the internal ip address'
-    echo '  -g, --gateway    Print the default gateway'
-    echo '  -n, --no-labels  Do not print labels with the output'
+    echo '  -h, --help         Print this help message and exit'
+    echo '  -e, --external     Print only the external ip address'
+    echo '  -i, --internal     Print only the internal ip address'
+    echo "  -s, --subnet-mask  Show the internal ip address's subnet mask"
+    echo '  -g, --gateway      Print the default gateway'
+    echo '  -n, --no-labels    Do not print labels with the output'
     exit 0
 }
 
@@ -40,16 +41,20 @@ get_ext_ip() {
 
 
 get_int_ips() {
-    # If an argument is passed, it is the number of calumns all but
-    # the first line should be indented by
-    [[ "$1" ]] && local indent_cols="$1"
+    # Whether or not to show the subnet mask
+    [[ "$1" == 1 ]] &&
+        local show_mask=1
+
+    # The number of columns that all but the first line should be indented by
+    [[ "$2" ]] &&
+        local indent_cols="$2"
 
     local all_ifaces=(
         $(ls /sys/class/net | grep -v lo)
     )
 
     # Attempt to get the internal ip of each network interface
-    local -a has_ip int_ips
+    local -a has_ip int_ips masks
     for iface in "${all_ifaces[@]}"; do
         ip="$(
             ip -4 -o a show "$iface" |
@@ -57,19 +62,17 @@ get_int_ips() {
         )"
         if [[ "$ip" ]]; then
             has_ip+=( "$iface" )
-            int_ips+=( "$ip" )
+            int_ips+=( $(cut -d '/' -f 1 <<< "$ip") )
+            masks+=( $(cut -d '/' -f 2 <<< "$ip") )
         fi
     done
 
-    if (( ${#int_ips[@]} == 1 )); then
-        echo "${int_ips[0]}"
-        return
-    fi
-
     # If there are multiple ips label each one with its iface name
-    echo "${has_ip[0]}: ${int_ips[0]}"
-    for (( i=1; i<$((${#int_ips[@]})); i++ )); do
-        printf "%${indent_cols}s${has_ip[i]}: ${int_ips[i]}\n"
+    local label='$( (( ${#has_ip[@]} > 1 )) && echo "${has_ip[i]}: " )'
+    for (( i=0; i<${#has_ip[@]}; i++ )); do
+        (( i > 0 )) &&
+            printf "%${indent_cols}s"
+        eval "echo ${label}${int_ips[i]}${show_mask:+/${masks[i]}}"
     done
 }
 
@@ -105,6 +108,8 @@ for (( i=0; i<${#argv[@]}; i++ )); do
             show_ext=1 ;;
         -i|--internal)
             show_int=1 ;;
+        -s|--subnet-mask)
+            show_mask=1 ;;
         -g|--gateway)
             show_gateway=1 ;;
         -n|--no-labels)
@@ -128,6 +133,6 @@ elif [[ "$show_gateway" ]]; then
     get_gateway
 else
     echo "${labels:+External: }$(get_ext_ip)"
-    echo "${labels:+Internal: }$(get_int_ips 10)"
+    echo "${labels:+Internal: }$(get_int_ips "$show_mask" 10)"
     echo "${labels:+Gateway: }$(get_gateway)"
 fi
