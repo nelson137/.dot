@@ -9,50 +9,61 @@ font pango:monospace 12
 # Use Mouse+$mod to drag floating windows around
 floating_modifier $mod
 
+set $wsMusic "1: Music"
+set $wsDev "2: Dev"
+set $wsWeb "3: Web"
+set $ws4 "4: 4"
+set $ws5 "5: 5"
+set $ws6 "6: 6"
+set $ws7 "7: 7"
+set $ws8 "8: 8"
+set $ws9 "9: 9"
+set $ws10 "10: 10"
+
 
 # Switch workspace
-bindsym $mod+1 workspace 1
-bindsym $mod+2 workspace 2
-bindsym $mod+3 workspace 3
-bindsym $mod+4 workspace 4
-bindsym $mod+5 workspace 5
-bindsym $mod+6 workspace 6
-bindsym $mod+7 workspace 7
-bindsym $mod+8 workspace 8
-bindsym $mod+9 workspace 9
-bindsym $mod+0 workspace 10
+bindsym $mod+1 workspace $wsMusic
+bindsym $mod+2 workspace $wsDev
+bindsym $mod+3 workspace $wsWeb
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
 
-bindsym $mod+KP_End workspace 1
-bindsym $mod+KP_Down workspace 2
-bindsym $mod+KP_Next workspace 3
-bindsym $mod+KP_Left workspace 4
-bindsym $mod+KP_Begin workspace 5
-bindsym $mod+KP_Right workspace 6
-bindsym $mod+KP_Home workspace 7
-bindsym $mod+KP_Up workspace 8
-bindsym $mod+KP_Prior workspace 9
+bindsym $mod+KP_End workspace $wsMusic
+bindsym $mod+KP_Down workspace $wsDev
+bindsym $mod+KP_Next workspace $wsWeb
+bindsym $mod+KP_Left workspace $ws4
+bindsym $mod+KP_Begin workspace $ws5
+bindsym $mod+KP_Right workspace $ws6
+bindsym $mod+KP_Home workspace $ws7
+bindsym $mod+KP_Up workspace $ws8
+bindsym $mod+KP_Prior workspace $ws9
 
 # Move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace 1
-bindsym $mod+Shift+2 move container to workspace 2
-bindsym $mod+Shift+3 move container to workspace 3
-bindsym $mod+Shift+4 move container to workspace 4
-bindsym $mod+Shift+5 move container to workspace 5
-bindsym $mod+Shift+6 move container to workspace 6
-bindsym $mod+Shift+7 move container to workspace 7
-bindsym $mod+Shift+8 move container to workspace 8
-bindsym $mod+Shift+9 move container to workspace 9
-bindsym $mod+Shift+0 move container to workspace 10
+bindsym $mod+Shift+1 move container to workspace $wsMusic
+bindsym $mod+Shift+2 move container to workspace $wsDev
+bindsym $mod+Shift+3 move container to workspace $wsWeb
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
 
-bindsym $mod+Shift+KP_End move container to workspace 1
-bindsym $mod+Shift+KP_Down move container to workspace 2
-bindsym $mod+Shift+KP_Next move container to workspace 3
-bindsym $mod+Shift+KP_Left move container to workspace 4
-bindsym $mod+Shift+KP_Begin move container to workspace 5
-bindsym $mod+Shift+KP_Right move container to workspace 6
-bindsym $mod+Shift+KP_Home move container to workspace 7
-bindsym $mod+Shift+KP_Up move container to workspace 8
-bindsym $mod+Shift+KP_Prior move container to workspace 9
+bindsym $mod+Shift+KP_End move container to workspace $wsMusic
+bindsym $mod+Shift+KP_Down move container to workspace $wsDev
+bindsym $mod+Shift+KP_Next move container to workspace $wsWeb
+bindsym $mod+Shift+KP_Left move container to workspace $ws4
+bindsym $mod+Shift+KP_Begin move container to workspace $ws5
+bindsym $mod+Shift+KP_Right move container to workspace $ws6
+bindsym $mod+Shift+KP_Home move container to workspace $ws7
+bindsym $mod+Shift+KP_Up move container to workspace $ws8
+bindsym $mod+Shift+KP_Prior move container to workspace $ws9
 
 # Change the focused window
 bindsym $mod+h focus left
@@ -136,8 +147,8 @@ mode "resize" {
 
 
 # Default workspaces for programs
-for_window [class="Spotify"] move to workspace 1
-assign [class="Google-chrome"] 3
+for_window [class="Spotify"] move to workspace $wsMusic
+assign [class="Google-chrome"] $wsWeb
 
 
 # i3blocks config
@@ -147,10 +158,10 @@ bar {
 
 
 # Start in workspace 2
-exec --no-startup-id i3-msg workspace 2
+exec --no-startup-id i3-msg workspace $wsDev
 
 # Startup programs
 exec compton
-exec --no-startup-id i3-msg 'workspace 2; exec gnome-terminal'
+exec --no-startup-id i3-msg 'workspace $wsDev; exec gnome-terminal'
 exec spotify
 exec google-chrome
