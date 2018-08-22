@@ -4,14 +4,14 @@ set $mod Mod4
 
 # Font for window titles and the status bar
 # Can be overridden in the bar {} block
-font pango:monospace 12
+font pango:monospace, FontAwesome 12
 
 # Use Mouse+$mod to drag floating windows around
 floating_modifier $mod
 
-set $wsMusic "1: Music"
-set $wsDev "2: Dev"
-set $wsWeb "3: Web"
+set $wsMusic "1: "
+set $wsDev "2: "
+set $wsWeb "3: "
 set $ws4 "4: 4"
 set $ws5 "5: 5"
 set $ws6 "6: 6"
