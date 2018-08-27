@@ -348,9 +348,10 @@ let g:ale_use_global_executables = 1
 let g:ale_command_wrapper = 'nice -n 3'
 let g:ale_echo_msg_format = '%linter%: %code: %%s'
 let g:ale_loclist_msg_format = g:ale_echo_msg_format
-let g:ale_python_pylint_options = '--disable=exec-used,invalid-name,' .
-\    'line-too-long,missing-docstring,multiple-imports,no-else-return,' .
-\    'possibly-unused-variable,redefined-outer-name,too-many-branches'
+let g:ale_python_pylint_options = '--disable=exec-used,eval-used,' .
+\    'invalid-name,line-too-long,missing-docstring,multiple-imports,' .
+\    'no-else-return,possibly-unused-variable,redefined-outer-name,' .
+\    'too-many-branches'
 " The first line of errors and warnings is what is ignored by default,
 " however, --ignore overrides the default
 " My flake8 ignores:
