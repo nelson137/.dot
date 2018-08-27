@@ -150,9 +150,13 @@ EOF
 
 
 ping() {
-    [[ $# == 1 && $1 == gateway ]] &&
-        # Ping the default gateway
+    if [[ $# == 1 && $1 == gateway ]]; then
+        # Ping the default gateway if the only argument is "gateway"
         command ping $(ip route | awk '/default/ {print $3}')
+    else
+        # Run ping with the passed arguments
+        command ping "$@"
+    fi
 }
 
 
