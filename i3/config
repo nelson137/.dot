@@ -135,10 +135,14 @@ bindsym $mod+Shift+z exec --no-startup-id i3lock -ec 90a4ae
 # Resize the focused window
 bindsym $mod+r mode "resize"
 mode "resize" {
-    bindsym h resize shrink width 10 px or 10 ppt  # Decrease width
-    bindsym j resize grow height 10 px or 10 ppt  # Increase width
-    bindsym k resize shrink height 10 px or 10 ppt  # Decrease height
-    bindsym l resize grow width 10 px or 10 ppt  # Increase height
+    # h: Decrease width
+    # j: Increase width
+    # k: Decrease height
+    # l: Increase height
+    bindsym h resize shrink width 10 px or 10 ppt
+    bindsym j resize grow height 10 px or 10 ppt
+    bindsym k resize shrink height 10 px or 10 ppt
+    bindsym l resize grow width 10 px or 10 ppt
 
     # Enter or Escape exits resize mode
     bindsym Return mode "default"
