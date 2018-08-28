@@ -38,6 +38,7 @@ alias rainbow='cat /dev/urandom | base64 | figlet -ctf term | lolcat -fad 1 -s 7
 alias socwd='command du -csh . | tail -1'
 alias setbg="$D nitrogen --set-zoom-fill --random ~/.xmonad/backgrounds/"
 alias vimrc='vim ~/.vimrc'
+alias wifi='nohup nm-connection-editor &>/dev/null &!'
 alias zshhist='vim ~/.zsh_history'
 alias zshrc='vim ~/.zshrc'
 
