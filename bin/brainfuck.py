@@ -259,10 +259,6 @@ def main(args):
     if args.width < 7:
         err_out('terminal is not wide enough')
 
-    # -i/--input without --show-tape
-    if use_user_in and not args.show_tape:
-        err_out('-i/--input can only be used with --show-tape')
-
     # Auto set delay if --show-tape and delay wasn't changed by user
     if args.delay is None:
         args.delay = 125 if args.show_tape else 0
