@@ -281,8 +281,9 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     set runtimepath+=~/.vim/bundle/Vundle.vim
     call vundle#begin()
     Plugin 'VundleVim/Vundle.vim'          " Package manager
-    " Enable YouCompleteMe if architecture isn't arm
-    if empty(matchstr(system('uname -m'), '\varmv\dl'))
+    " Enable YouCompleteMe if architecture isn't arm and version is 7.4.1578+
+    if empty(matchstr(system('uname -m'), '\varmv\dl')) &&
+    \    v:version >= 704 && has('patch1578')
         Plugin 'Valloric/YouCompleteMe'    " Code completion engine
     endif
     Plugin 'ap/vim-css-color'              " Show colors of CSS color codes
