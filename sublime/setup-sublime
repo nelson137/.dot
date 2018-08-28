@@ -42,7 +42,7 @@ install_pkg_ctl() {
 }
 
 pulse_subl() {
-    which xdotool >/dev/null || errexit "xdotool is not installed"
+    which xdotool &>/dev/null || errexit "xdotool is not installed"
 
     subl
     check_for_dir
@@ -60,7 +60,7 @@ pulse_subl() {
 
 unset subl repo attempt_install
 
-which subl >/dev/null || {
+which subl &>/dev/null || {
     echo "Sublime Text is not installed"
     read -p "Would you like to attempt the installation? [Y/n]" attempt_install
     if [[ $attempt_install == y || $attempt_install == Y ]]; then

@@ -16,7 +16,7 @@ _prompt_status() {
     local status_items=()
 
     # Battery percent
-    if which upower >/dev/null && bat &>/dev/null; then
+    if which upower &>/dev/null && bat &>/dev/null; then
         local state="$(bat | awk '/state/ {print $2}')"
         local percent="$(bat | awk '/percentage/ {print $2}' | tr -d '%')"
 

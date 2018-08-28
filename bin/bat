@@ -65,7 +65,7 @@ done
     bat_help
 
 # Check that upower is installed
-which upower >/dev/null || bat_err 'upower is not installed'
+which upower &>/dev/null || bat_err 'upower is not installed'
 
 # Exit right after checking upower is installed if --dry-run was given
 [[ "$dry_run" == 1 ]] && exit
