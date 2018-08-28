@@ -153,6 +153,7 @@ mode "resize" {
 # Default workspaces for programs
 for_window [class="Spotify"] move to workspace $wsMusic
 assign [class="Google-chrome"] $wsWeb
+for_window [class="Nm-connection-editor"] floating enable
 
 
 # i3blocks config
@@ -172,6 +173,9 @@ exec --no-startup-id i3-msg workspace $wsDev
 
 # Start the compositor
 exec compton
+
+# Start NetworkManager
+exec --no-startup-id nm-applet
 
 # Startup programs
 exec --no-startup-id i3-msg 'workspace $wsDev; exec gnome-terminal'
