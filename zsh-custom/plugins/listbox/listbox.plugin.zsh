@@ -52,9 +52,9 @@ listbox() {
         shift
     done
 
-    [[ ! $arrow ]] && arrow='>'
+    [[ -z $arrow ]] && arrow='>'
 
-    if [[ $title ]]; then
+    if [[ -n $title ]]; then
         local Lspace=" $(printf %${#arrow}s)"
         printf "\n${Lspace}${title}\n${Lspace}"
         printf "%${#title}s" | tr ' ' '-'
@@ -98,7 +98,7 @@ listbox() {
                 will_redraw=0 ;;
         esac
 
-        if [[ "$will_redraw" ]]; then
+        if [[ -n $will_redraw ]]; then
             lb_move "$len"
             lb_draw "$choice" "$arrow" "$opts[@]"
         fi
