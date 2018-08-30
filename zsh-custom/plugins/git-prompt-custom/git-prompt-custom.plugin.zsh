@@ -5,9 +5,9 @@
 _git_pd_status() {
     local git_dir="$(git rev-parse --git-dir)"
     local pd_status_file="${git_dir}/pd_status"
-    local local_="$(git rev-parse @)"
+    local local_="$(git rev-parse HEAD)"
     local remote="$(git ls-remote origin 2>/dev/null | awk '/HEAD/ {print $1}')"
-    local base="$(git merge-base @ @{u} 2>/dev/null)"
+    local base="$(git merge-base HEAD origin 2>/dev/null)"
 
     local pd_status
     if [[ -z $remote ]]; then
@@ -43,9 +43,10 @@ _git_prompt_custom() {
     local -a lines
     while read -r line; do
         lines+=( "$line" )
-    done < <(echo "$gss")
+    done <<< "$gss"
 
-    local pull_diverge_status=(
+    local -a pull_diverge_status
+    pull_diverge_status=(
         'local now="$(date +%s)"'
         'local git_dir="$(git rev-parse --git-dir)"'
         'local last_run_file="${git_dir}/pd_status.last-run"'
