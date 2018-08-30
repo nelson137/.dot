@@ -7,8 +7,9 @@ Copyright 2011 Sebastian Kaspari
 
 
 import sys
-from argparse import ArgumentParser, Namespace, SUPPRESS
-from subprocess import check_output, DEVNULL, CalledProcessError
+from argparse import SUPPRESS, ArgumentParser, Namespace
+from contextlib import contextmanager
+from subprocess import DEVNULL, CalledProcessError, check_output
 from time import sleep
 
 
@@ -250,6 +251,21 @@ def get_term_width():
     return width - 2
 
 
+@contextmanager
+def open_script(fn):
+    """Open file fn, opening sys.stdin for files named "-"."""
+    if fn == '-':
+        script = sys.stdin
+    else:
+        script = open(fn, 'r')
+
+    try:
+        yield script
+    finally:
+        if script is not sys.stdin:
+            script.close()
+
+
 def main(args):
     """Do some error checking, then interpret all Brainfuck code."""
     use_user_in = False if args.input is None else True
@@ -264,27 +280,21 @@ def main(args):
         args.delay = 125 if args.show_tape else 0
 
     infiles = args.infiles  # Filenames passed as arguments
-    to_eval = []
+    to_eval = []  # Code of each script to be executed
 
-    # Read from stdin
-    if not sys.stdin.isatty():  # If stdin is not empty
-        if args.stdin_code:
-            # Read Brainfuck code
-            to_eval.append(cleanup(sys.stdin.read()))
-        elif args.stdin_filenames:
-            # Read filenames
-            infiles.extend([l.strip() for l in sys.stdin.readlines()])
-
-    # Append code from each Brainfuck script to to_eval
     for fn in infiles:
+        # Read the contents of each file into to_eval
         try:
-            with open(fn, 'r') as script:
+            with open_script(fn) as script:
                 to_eval.append(cleanup(script.read()))
         except FileNotFoundError:
             err_out('cannot open file ' + fn)
 
     if not to_eval:
-        err_out('no input given')
+        if sys.stdin.isatty():
+            err_out('no input given')
+        # Read from stdin
+        to_eval.append(cleanup(sys.stdin.read()))
 
     # Combine config variables into one namespace
     config = Namespace(width=args.width, delay=args.delay,
