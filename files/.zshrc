@@ -101,4 +101,17 @@ export QT_QPA_FONTDIR=/usr/share/fonts
 # Create vim undodir if it doesn't exist
 [[ ! -d ~/.vim/undodir ]] && mkdir -p ~/.vim/undodir
 
+# Update ~/.aliases daily for use in bash
+now="$(date +%s)"
+lastrun_f=~/.bash_aliases.lastrun
+[[ ! -f $lastrun_f ]] && echo "$now" > "$lastrun_f"
+one_day_passed="$(( now - $(< "$lastrun_f") > 86400 ))"
+if [[ ! -f $lastrun_f || ! -f ~/.aliases || $one_day_passed == 1 ]]; then
+    date +%s > "$lastrun_f"
+    # sed scripts:
+    # - Ignore all lines starting with "-"
+    # - Put "alias" in front of each line
+    (alias | sed -r '/^(\-)/d; s/(.+)/alias \1/' > ~/.aliases &)
+fi
+
 true
