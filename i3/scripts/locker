@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Temporary screenshot filename
+ss="$(mktemp --suffix .png)"
+# Delete the ssshot when this script exits no matter the reason
+trap "rm '$ss'" EXIT KILL SIGTERM SIGINT
+# Icon made by Freepik from flaticon.com licensed by CC 3.0 BY
+icon="$(dirname "$(dirname "$0")")/assets/key.png"
+
+# Take ssshot
+scrot "$ss"
+# Blur the ssshot
+convert "$ss" -scale 10% -scale 1000% "$ss"
+# Put icon on the ssshot
+convert "$ss" "$icon" -gravity center -composite -matte "$ss"
+# Put prompt box on the ssshow
+w="$(file "$ss" | sed -r 's/.* ([0-9]+) x [0-9]+.*/\1/')"
+convert "$ss" -fill white -draw "fill-opacity .75 rectangle 0,785 $w,892" "$ss"
+# Put prompt on the ssshow
+convert "$ss" -pointsize 48 -fill 'rgba(0,0,0,.75)' -gravity center \
+    -annotate +0+300 'Type password' "$ss"
+# Pause Spotify
+dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.spotify \
+    /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause
+# Lock the ss
+i3lock -eui "$ss"
