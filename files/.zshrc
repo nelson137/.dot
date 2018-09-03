@@ -44,7 +44,7 @@ ZSH_CUSTOM="$HOME/.dot/zsh-custom"
 
 plugins=(
     colored-man-pages
-    cpp-utils
+    c-utils
     debian
     extract
     git
