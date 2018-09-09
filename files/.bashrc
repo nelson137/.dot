@@ -2,6 +2,10 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+re='tc-m[0-9]+-login-node[0-9]+'
+[[ "$(hostname)" =~ $re ]] && shopt -q login_shell &&
+    exec zsh
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
