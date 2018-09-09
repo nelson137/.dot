@@ -111,7 +111,7 @@ if [[ ! -f $lastrun_f || ! -f ~/.aliases || $one_day_passed == 1 ]]; then
     # sed scripts:
     # - Ignore all lines starting with "-"
     # - Put "alias" in front of each line
-    (alias | sed -r '/^(\-)/d; s/(.+)/alias \1/' > ~/.aliases &)
+    (alias | command sed -r '/^(\-)/d; s/(.+)/alias \1/' > ~/.aliases &)
 fi
 
 true
