@@ -13,6 +13,7 @@ update_help() {
     echo 'Targets:'
     echo '  system  Execute apt update && apt upgrade (default)'
     echo '  dot     Execute git pull on the dot repository'
+    echo '  zsh     Execute ~/.oh-my-zsh/tools/upgrade.sh'
     exit 0
 }
 
@@ -38,6 +39,8 @@ update() {
                 target='system' ;;
             dot)
                 target='dot' ;;
+            zsh)
+                target='zsh' ;;
             -*|--*)
                 update_err "option not recognized: $1" ;;
             *)
@@ -60,6 +63,8 @@ update() {
             sudo apt update &&
             sudo apt upgrade -y &&
             sudo apt autoremove -y ;;
+        zsh)
+            zsh ~/.oh-my-zsh/tools/upgrade.sh
     esac
 }
 
