@@ -293,6 +293,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'iamcco/markdown-preview.vim'   " Preview markdown files live
     Plugin 'itchyny/lightline.vim'         " The pretty statusline
     Plugin 'jiangmiao/auto-pairs'          " Manage quotes, parens, etc in pair
+    Plugin 'mhinz/vim-signify'             " Show added/modified/removed lines
     Plugin 'python-mode/python-mode'       " Python IDE
     Plugin 'scrooloose/nerdcommenter'      " Quickly (un)comment lines
     Plugin 'scrooloose/nerdtree'           " File system explorer
