@@ -165,9 +165,6 @@ endfunction
 
 let mapleader = ','
 
-" Because holding shift is sooo annoying
-nnoremap   ;   :
-
 " For when I forget to open a file with sudo
 " Thank you Steve Losh
 cnoremap   w!!   w !sudo tee >/dev/null %<CR>
