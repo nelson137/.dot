@@ -26,7 +26,7 @@ ce() {
         return 1
     fi
 
-    c "$1" && eval "./$(sed -r 's/\.(c|cpp)$//' <<< "$1") $@[2,$#]"
+    c "$1" && eval "./$(command sed -r 's/\.(c|cpp)$//' <<< "$1") $@[2,$#]"
 }
 
 
@@ -37,5 +37,5 @@ cer() {
         return 1
     fi
 
-    ce "$1" "$@[2,$#]"; rm -f "./$(sed -r 's/\.(c|cpp)$//' <<< "$1")"
+    ce "$1" "$@[2,$#]"; rm -f "./$(command sed -r 's/\.(c|cpp)$//' <<< "$1")"
 }
