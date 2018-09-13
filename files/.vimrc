@@ -302,6 +302,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'terryma/vim-multiple-cursors'  " I think this one's pretty obvious
     Plugin 'tommcdo/vim-exchange'          " Easily swap 2 regions of text
     Plugin 'tpope/vim-surround'            " Surrounds selected text for you
+    Plugin 'vim-scripts/a.vim'             " Switch between source/header files
     Plugin 'w0rp/ale'                      " Asynchronous Lint Engine
     call vundle#end()
 endif
