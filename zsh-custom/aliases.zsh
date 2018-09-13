@@ -28,6 +28,7 @@ alias lla='ls -pAohv --color --time-style=long-iso'
 alias glop='git log -p'
 alias gcam='git add -A; git commit -m'
 alias gcam!='git add -A; git commit -v --amend'
+alias gstu='git stash push'
 
 # My aliases
 alias aliases='vim ~/.dot/zsh-custom/aliases.zsh'
