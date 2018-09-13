@@ -11,7 +11,7 @@ c() {
     if [[ "${1%.cpp}" != "$1" ]]; then
         g++ -std=c++11 "$1" -o "${1%.cpp}"
     elif [[ "${1%.c}" != "$1" ]]; then
-        gcc -std=c11 -O3 -lm -Wall -Werror "$1" -o "${1%.c}"
+        gcc -std=gnu11 -O3 -lm -Wall -Werror "$1" -o "${1%.c}"
     else
         echo "File extension not recognized: $1" >&2
         return 1
