@@ -183,6 +183,14 @@ ping() {
 
 
 
+shutdown() {
+    pkill --oldest chrome &&
+    pkill --oldest spotify &&
+    sudo shutdown now
+}
+
+
+
 swap() {
     # Swap the names of 2 files or directories
     swap_err() { echo "$1" >&2; exit 1 }
