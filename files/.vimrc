@@ -219,6 +219,10 @@ noremap   <C-w><C-j>   <C-w>-
 noremap   <C-w><C-k>   <C-w>+
 noremap   <C-w><C-l>   <C-w>>
 
+" Replace f and F with sneak
+noremap   f   <Plug>Sneak_s
+noremap   F   <Plug>Sneak_S
+
 " New tab
 noremap <silent>   <Leader>t   :tabnew<CR>
 
