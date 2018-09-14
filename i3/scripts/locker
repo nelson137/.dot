@@ -23,4 +23,4 @@ convert "$ss" -pointsize 48 -fill 'rgba(0,0,0,.75)' -gravity center \
 dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.spotify \
     /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause
 # Lock the ss
-i3lock -eui "$ss"
+i3lock -ei "$ss"
