@@ -29,7 +29,7 @@ _git_pd_status() {
 
 
 # which git_super_status >/dev/null 2>&1 || return
-gss="$(which git_super_status)"
+gss="$(typeset -f | awk '/git_super_status/,/^}/')"
 
 # Line number of 'STATUS="$ZSH' in git_super_status()
 n="$(
