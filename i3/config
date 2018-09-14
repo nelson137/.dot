@@ -11,14 +11,14 @@ floating_modifier $mod
 
 set $wsDev "1: "
 set $wsWeb "2: "
-set $ws3 "3: 3"
-set $ws4 "4: 4"
-set $ws5 "5: 5"
-set $ws6 "6: 6"
-set $ws7 "7: 7"
-set $ws8 "8: 8"
-set $ws9 "9: 9"
-set $ws10 "10: 10"
+set $ws3   "3: 3"
+set $ws4   "4: 4"
+set $ws5   "5: 5"
+set $ws6   "6: 6"
+set $ws7   "7: 7"
+set $ws8   "8: 8"
+set $ws9   "9: 9"
+set $ws10  "10: 10"
 
 
 # Switch workspace
@@ -31,7 +31,7 @@ bindsym $mod+6 workspace $ws6
 bindsym $mod+7 workspace $ws7
 bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
-bindsym $mod+10 workspace $ws10
+bindsym $mod+0 workspace $ws10
 
 # Move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $wsDev
