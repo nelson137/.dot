@@ -113,7 +113,7 @@ bindsym XF86AudioMute exec $volumeCmd toggle
 bindsym XF86AudioPlay exec $audioCmd.PlayPause
 bindsym $mod+bracketright exec $audioCmd.Next
 bindsym $mod+bracketleft exec $audioCmd.Previous
-bindsym $mod+Shift+z exec --no-startup-id i3lock -ec 90a4ae
+bindsym $mod+Shift+z exec xautolock -locknow
 
 
 # Resize the focused window
