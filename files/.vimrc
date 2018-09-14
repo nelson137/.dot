@@ -41,8 +41,9 @@ set indentkeys-=0#  " /
 
 syntax on
 colorscheme default
-set number         " Turn on line numbers
 set laststatus=2   " Always show status line
+set nohlsearch     " Don't highlight all search matches
+set number         " Turn on line numbers
 
 
 
