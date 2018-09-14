@@ -58,7 +58,8 @@ update() {
 
     case "$target" in
         dot)
-            git -C ~/.dot pull ;;
+            cd ~/.dot
+            git pull ;;
         system)
             sudo apt update &&
             sudo apt upgrade -y &&
