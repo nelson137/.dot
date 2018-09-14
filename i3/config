@@ -9,9 +9,9 @@ font pango:monospace, FontAwesome 12
 # Use Mouse+$mod to drag floating windows around
 floating_modifier $mod
 
-set $wsMusic "1: "
-set $wsDev "2: "
-set $wsWeb "3: "
+set $wsDev "1: "
+set $wsWeb "2: "
+set $ws3 "3: 3"
 set $ws4 "4: 4"
 set $ws5 "5: 5"
 set $ws6 "6: 6"
@@ -22,20 +22,20 @@ set $ws10 "10: 10"
 
 
 # Switch workspace
-bindsym $mod+1 workspace $wsMusic
-bindsym $mod+2 workspace $wsDev
-bindsym $mod+3 workspace $wsWeb
+bindsym $mod+1 workspace $wsDev
+bindsym $mod+2 workspace $wsWeb
+bindsym $mod+3 workspace $ws3
 bindsym $mod+4 workspace $ws4
 bindsym $mod+5 workspace $ws5
 bindsym $mod+6 workspace $ws6
 bindsym $mod+7 workspace $ws7
 bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
-bindsym $mod+0 workspace $ws10
+bindsym $mod+10 workspace $ws10
 
-bindsym $mod+KP_End workspace $wsMusic
-bindsym $mod+KP_Down workspace $wsDev
-bindsym $mod+KP_Next workspace $wsWeb
+bindsym $mod+KP_End workspace $wsDev
+bindsym $mod+KP_Down workspace $wsWeb
+bindsym $mod+KP_Next workspace $ws3
 bindsym $mod+KP_Left workspace $ws4
 bindsym $mod+KP_Begin workspace $ws5
 bindsym $mod+KP_Right workspace $ws6
@@ -44,9 +44,9 @@ bindsym $mod+KP_Up workspace $ws8
 bindsym $mod+KP_Prior workspace $ws9
 
 # Move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace $wsMusic
-bindsym $mod+Shift+2 move container to workspace $wsDev
-bindsym $mod+Shift+3 move container to workspace $wsWeb
+bindsym $mod+Shift+1 move container to workspace $wsDev
+bindsym $mod+Shift+2 move container to workspace $wsWeb
+bindsym $mod+Shift+3 move container to workspace $ws3
 bindsym $mod+Shift+4 move container to workspace $ws4
 bindsym $mod+Shift+5 move container to workspace $ws5
 bindsym $mod+Shift+6 move container to workspace $ws6
@@ -55,15 +55,19 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
-bindsym $mod+Shift+KP_End move container to workspace $wsMusic
-bindsym $mod+Shift+KP_Down move container to workspace $wsDev
-bindsym $mod+Shift+KP_Next move container to workspace $wsWeb
+bindsym $mod+Shift+KP_End move container to workspace $wsDev
+bindsym $mod+Shift+KP_Down move container to workspace $wsWeb
+bindsym $mod+Shift+KP_Next move container to workspace $ws3
 bindsym $mod+Shift+KP_Left move container to workspace $ws4
 bindsym $mod+Shift+KP_Begin move container to workspace $ws5
 bindsym $mod+Shift+KP_Right move container to workspace $ws6
 bindsym $mod+Shift+KP_Home move container to workspace $ws7
 bindsym $mod+Shift+KP_Up move container to workspace $ws8
 bindsym $mod+Shift+KP_Prior move container to workspace $ws9
+
+# Spotify control
+for_window [class="Spotify"] move to scratchpad
+bindsym $mod+m [class="Spotify"] scratchpad show, resize set 1820 980, move position center
 
 # Change the focused window
 bindsym $mod+h focus left
@@ -151,7 +155,6 @@ mode "resize" {
 
 
 # Default workspaces for programs
-for_window [class="Spotify"] move to workspace $wsMusic
 assign [class="Google-chrome"] $wsWeb
 for_window [class="Nm-connection-editor"] floating enable
 
