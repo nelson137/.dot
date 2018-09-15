@@ -47,7 +47,7 @@ bindsym $mod+Shift+0 move container to workspace $ws10;  workspace $ws10
 
 # Spotify control
 for_window [class="Spotify"] move to scratchpad
-bindsym $mod+m [class="Spotify"] scratchpad show, resize set 1820 980, move position center
+bindsym $mod+m [class="Spotify"] scratchpad show, resize set 1770 930, move position center
 
 # Change the focused window
 bindsym $mod+h focus left
