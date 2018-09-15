@@ -92,6 +92,9 @@ bindsym $mod+Shift+c kill
 # Open a terminal
 bindsym $mod+Return exec gnome-terminal
 
+# Open chrome
+bindsym $mod+backslash exec google-chrome
+
 # Start dmenu
 bindsym $mod+p exec --no-startup-id i3-dmenu-desktop
 
