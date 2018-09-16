@@ -56,6 +56,10 @@ bindsym $mod+Shift+0 move container to workspace $ws10;  workspace $ws10
 for_window [class="Spotify"] move to scratchpad
 bindsym $mod+m [class="Spotify"] scratchpad show, resize set 1770 930, move position center
 
+# Nautilus control
+for_window [class="Nautilus"] move to scratchpad
+bindsym $mod+n [class="Nautilus"] scratchpad show, move position center
+
 # Change the focused window
 bindsym $mod+h focus left
 bindsym $mod+j focus down
@@ -177,4 +181,5 @@ exec --no-startup-id i3-msg workspace $wsDev
 # Startup programs
 exec --no-startup-id i3-msg 'workspace $wsDev; exec gnome-terminal'
 exec spotify
+exec nautilus
 exec google-chrome
