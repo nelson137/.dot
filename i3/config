@@ -179,7 +179,7 @@ exec --no-startup-id nm-applet
 exec --no-startup-id i3-msg workspace $wsDev
 
 # Kill programs
-exec --no-startup-id while pkill -9 gnome-screensaver; do sleep 1; done &
+exec --no-startup-id pkill -9 gnome-screensaver
 
 # Startup programs
 exec --no-startup-id i3-msg 'workspace $wsDev; exec gnome-terminal'
