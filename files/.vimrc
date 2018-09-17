@@ -192,6 +192,10 @@ vnoremap   <Leader>64   c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
 " Don't swap selection and register " when pasting
 xnoremap   p   pgvy
 
+" Replace f and F with sneak
+noremap   <Leader>f   <Plug>Sneak_s
+noremap   <Leader>F   <Plug>Sneak_S
+
 " Move down/up rows in buffer, not up/down lines
 noremap   j   gj
 noremap   k   gk
@@ -219,10 +223,6 @@ noremap   <C-w><C-h>   <C-w><
 noremap   <C-w><C-j>   <C-w>-
 noremap   <C-w><C-k>   <C-w>+
 noremap   <C-w><C-l>   <C-w>>
-
-" Replace f and F with sneak
-noremap   f   <Plug>Sneak_s
-noremap   F   <Plug>Sneak_S
 
 " New tab
 noremap <silent>   <Leader>t   :tabnew<CR>
