@@ -1,26 +1,111 @@
-#!/bin/bash
+#!/bin/sh
+# Original script:
+#     https://gist.github.com/ncoop/0fbe3d24b6c943cc8526fad75390df19
 
-# Temporary screenshot filename
-ss="$(mktemp --suffix .png)"
-# Delete the ssshot when this script exits no matter the reason
-trap "rm '$ss'" EXIT KILL SIGTERM SIGINT
-# Icon made by Freepik from flaticon.com licensed by CC 3.0 BY
-icon="$(dirname "$(dirname "$0")")/assets/key.png"
 
-# Take ssshot
-scrot "$ss"
-# Blur the ssshot
-convert "$ss" -scale 10% -scale 1000% "$ss"
-# Put icon on the ssshot
-convert "$ss" "$icon" -gravity center -composite -matte "$ss"
-# Put prompt box on the ssshow
-w="$(file "$ss" | sed -r 's/.* ([0-9]+) x [0-9]+.*/\1/')"
-convert "$ss" -fill white -draw "fill-opacity .75 rectangle 0,785 $w,892" "$ss"
-# Put prompt on the ssshow
-convert "$ss" -pointsize 48 -fill 'rgba(0,0,0,.75)' -gravity center \
-    -annotate +0+300 'Type password' "$ss"
-# Pause Spotify
-dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.spotify \
-    /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause
-# Lock the ss
-i3lock -ei "$ss"
+set -eu
+
+cmd="${1:-lock}"
+here="$(dirname "$0")"
+
+
+# Is the screen already locked?
+locked() {
+    pkill -0 --euid "$(id -u)" --exact i3lock
+}
+
+
+lock() {
+    # Temporary screenshot filename
+    ss="$(mktemp --suffix .png)"
+    # Delete the screenshot when this script exits no matter the reason
+    # trap "rm '$ss'" EXIT KILL SIGTERM SIGINT
+    trap "rm '$ss'" EXIT KILL
+
+    # Icon made by Freepik from flaticon.com (CC 3.0 BY)
+    icon="$here/../assets/key.png"
+
+    # Take screenshot
+    scrot "$ss"
+    # Blur the screenshot
+    convert "$ss" -scale 10% -scale 1000% "$ss"
+    # Put key icon on the screenshot
+    convert "$ss" "$icon" -gravity center -composite -matte "$ss"
+    # Pause Spotify
+    dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.spotify \
+        /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause
+    # Lock with screenshot as background
+    i3lock --ignore-empty-password --image="$ss" --nofork
+}
+
+
+# Print the given message with a timestamp.
+info() {
+    printf '%s\t%s\n' "$(date)" "$*"
+}
+
+
+# Output to $LOCK_LOG if it is set, otherwise, stdout
+log() {
+    if [ -n "${LOCK_LOG:-}" ]; then
+        info >>"$LOCK_LOG" "$@"
+    else
+        info "$@"
+    fi
+}
+
+
+# Control the dunst daemon, if it is running.
+dunst() {
+    # Return if dunst isn't running
+    pkill -0 --exact dunst || return 0
+
+    case "$1" in
+    pause)
+        log 'Stopping notifications and locking screen.'
+        pkill -USR1 --euid "$(id -u)" --exact dunst
+        ;;
+    resume)
+        log '...Resuming notifications.'
+        pkill -USR2 --euid "$(id -u)" --exact dunst
+        ;;
+    *)
+        echo 'dunst argument required: pause or resume'
+        return 1
+        ;;
+    esac
+}
+
+
+case "$cmd" in
+
+    lock)
+        dunst pause
+
+        lock &
+
+        pid="$!"
+        log "Waiting for PID $pid to end..."
+        while kill -0 "$pid" 2>/dev/null; do
+            sleep 1
+        done
+
+        dunst resume
+        ;;
+
+  notify)
+        # Don't notify while locked
+        locked && exit
+        log 'Sending notification.'
+        xset dpms force off
+        ;;
+
+  suspend)
+        log "Suspending system."
+        systemctl suspend
+        ;;
+
+  *)
+    log "Option not recognized: $1"
+
+esac

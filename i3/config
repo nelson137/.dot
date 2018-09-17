@@ -160,8 +160,7 @@ bar {
 
 
 # Start xautolock
-exec --no-startup-id xautolock -detectsleep -notify 10 -notifier 'xset dpms force off' -locker ~/.config/i3/scripts/locker 2>&1
-# -killtime 5 -killer 'systemctl hybrid-sleep'
+exec --no-startup-id xautolock -noclose -detectsleep -notify 10 -notifier 'xset dpms force off' -time 10 -locker "$HOME/.config/i3/scripts/locker lock" -killtime 10 -killer "$HOME/.config/i3/scripts/locker suspend"
 
 # Set the background
 exec_always nitrogen --set-zoom-fill --random ~/.config/i3/backgrounds/ &
