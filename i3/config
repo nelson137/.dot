@@ -159,8 +159,8 @@ bar {
 }
 
 
-# Start xautolock
-exec --no-startup-id xautolock -noclose -detectsleep -notify 10 -notifier 'xset dpms force off' -time 10 -locker "$HOME/.config/i3/scripts/locker lock" -killtime 10 -killer "$HOME/.config/i3/scripts/locker suspend"
+# Start xautolock, config in ~/.Xresource
+exec --no-startup-id xautolock
 
 # Set the background
 exec_always nitrogen --set-zoom-fill --random ~/.config/i3/backgrounds/ &
@@ -182,6 +182,7 @@ exec --no-startup-id pkill -9 gnome-screensaver
 exec --no-startup-id pkill -9 notify-osd
 
 # Startup programs
+exec --no-startup-id xrdb -merge ~/.Xresources
 exec --no-startup-id dunst -config ~/.dunstrc
 exec --no-startup-id i3-msg 'workspace $wsDev; exec gnome-terminal'
 exec spotify
