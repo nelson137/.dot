@@ -1,0 +1,13 @@
+XTerm*decTerminalID: vt340
+XTerm*numColorRegisters: 256
+
+# xautolock config
+! Xautolock.secure: true
+Xautolock.noclose: true
+Xautolock.detectsleep: true
+Xautolock.notify: 10
+Xautolock.notifier: $HOME/.config/i3/scripts/locker notify
+Xautolock.time: 1
+Xautolock.locker: $HOME/.config/i3/scripts/locker lock
+Xautolock.killtime: 10
+Xautolock.killer: $HOME/.config/i3/scripts/locker suspend
