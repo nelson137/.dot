@@ -1,6 +1,11 @@
 #!/bin/zsh
 
 
+no_ext() {
+    command sed -r 's/\.(c|cpp)$//' <<< "$1"
+}
+
+
 # Compile only
 c() {
     if [[ $# != 1 ]]; then
@@ -9,9 +14,9 @@ c() {
     fi
 
     if [[ "${1%.cpp}" != "$1" ]]; then
-        g++ -std=c++11 "$1" -o "${1%.cpp}"
+        g++ -std=c++11 "$1" -o "$(no_ext "$1")"
     elif [[ "${1%.c}" != "$1" ]]; then
-        gcc -std=gnu11 -O3 -lm -Wall -Werror "$1" -o "${1%.c}"
+        gcc -std=gnu11 -O3 -lm -Wall -Werror "$1" -o "$(no_ext "$1")"
     else
         echo "File extension not recognized: $1" >&2
         return 1
@@ -26,7 +31,12 @@ ce() {
         return 1
     fi
 
-    c "$1" && eval "./$(command sed -r 's/\.(c|cpp)$//' <<< "$1") $@[2,$#]"
+    # Surround each exec arg with single quotes if there are any args
+    exec_args="$@[2,$#]"
+    (( $# > 1 )) &&
+        exec_args="'${(j:' ':)exec_args}'"
+
+    c "$1" && eval "./$(no_ext "$1") $exec_args"
 }
 
 
@@ -37,5 +47,5 @@ cer() {
         return 1
     fi
 
-    ce "$1" "$@[2,$#]"; rm -f "./$(command sed -r 's/\.(c|cpp)$//' <<< "$1")"
+    ce "$1" "$@[2,$#]"; rm -f "./$(no_ext "$1")"
 }
