@@ -2,6 +2,7 @@
 	"close_windows_when_empty": false,
 	"color_scheme": "Packages/User/SublimeLinter/Flatland Dark (SL).tmTheme",
 	"copy_with_empty_selection": false,
+	"default_line_ending": "unix",
 	"detect_indentation": false,
 	"drag_text": false,
 	"ensure_newline_at_eof_on_save": true,
