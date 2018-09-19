@@ -5,7 +5,7 @@ XTerm*numColorRegisters: 256
 Xautolock.noclose: true
 Xautolock.notify: 10
 Xautolock.notifier: $HOME/.config/i3/scripts/locker notify
-Xautolock.time: 1
+Xautolock.time: 10
 Xautolock.locker: $HOME/.config/i3/scripts/locker lock
 Xautolock.killtime: 10
 Xautolock.killer: $HOME/.config/i3/scripts/locker suspend
