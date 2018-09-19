@@ -3,8 +3,10 @@
 # for examples
 
 re='tc-m[0-9]+-login-node[0-9]+'
-[[ "$(hostname)" =~ $re ]] && shopt -q login_shell &&
-    exec zsh
+if [[ "$(hostname)" =~ $re ]] && shopt -q login_shell; then
+    srun --pty /bin/zsh
+    exec -l zsh
+fi
 
 # If not running interactively, don't do anything
 case $- in
