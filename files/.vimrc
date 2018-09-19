@@ -114,6 +114,8 @@ function! CompileAndRun()
             silent exe 'redraw!'
         endif
         exe 'AsyncRun ./%'
+    elseif l:filetype == 'tex'
+        exe 'AsyncRun pdflatex %'
     else
         exe 'call Error("Error: I don''t know how to run' l:filetype 'files")'
     endif
