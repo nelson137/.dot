@@ -64,7 +64,7 @@ augroup vimleave
     au VimLeave *
         \ if filereadable('$HOME/.vim/.netrwhist') |
         \     call delete('$HOME/.vim/.netrwhist') |
-        \ endif  
+        \ endif
 augroup end
 
 " Disable ALE in ~/.zsh_history
