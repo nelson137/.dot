@@ -11,6 +11,7 @@ no_ext() {
 command ls -A "$here/files" | xargs -I % ln -fs "$HOME/.dot/files/%" "$HOME"
 
 # Make directories for custom c libraries
+rm -f "$HOME/.include"
 ln -fs "$HOME/.dot/include-src" "$HOME/.include"
 mkdir -p "$HOME/.lib"
 
