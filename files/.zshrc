@@ -75,6 +75,11 @@ export EDITOR='vim'
 # Fix zsh-autosuggestions plugin coloring in tmux
 export TERM=xterm-256color
 
+# C flags
+export CPATH=~/.include
+export LIBRARY_PATH=~/.lib
+export LD_LIBRARY_PATH=~/.lib
+
 # Fix nice error
 unsetopt BG_NICE
 
