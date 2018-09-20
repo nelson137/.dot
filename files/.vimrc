@@ -373,7 +373,8 @@ let g:ale_python_flake8_options = '--ignore=' .
 \    'E121,E123,E126,E226,E24,E704,W503,W504,' .
 \    'D107,D413,E114,E115,E116'
 let g:ale_fixers = {
-\    'python': ['remove_trailing_lines', 'trim_whitespace', 'isort']
+\    'python': ['isort', 'remove_trailing_lines', 'trim_whitespace'],
+\    '*': ['remove_trailing_lines', 'trim_whitespace']
 \}
 let g:ale_fix_on_save = 1
 let g:ale_sign_column_always = 1
