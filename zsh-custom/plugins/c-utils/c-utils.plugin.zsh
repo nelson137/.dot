@@ -47,5 +47,6 @@ cer() {
         return 1
     fi
 
-    ce "$1" "$@[2,$#]"; rm -f "./$(no_ext "$1")"
+    trap "rm -f './$(no_ext "$1")'" EXIT KILL SIGTERM SIGINT
+    ce "$1" "$@[2,$#]"
 }
