@@ -352,7 +352,9 @@ let g:asyncrun_open = 8
 " ALE
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_change = 'always'
-let g:ale_c_gcc_options = '-std=gnu11 -O3 -lm -Wall -Werror'
+let s:cflags = '-std=c11 -O3 -Wall -Werror'
+let s:ldflags='-I'.$HOME.'/.include -L'.$HOME.'/.lib -lm -lmylib'
+let g:ale_c_gcc_options = s:cflags . ' ' . s:ldflags
 let g:ale_linters = { 'python': ['flake8', 'pycodestyle', 'pylint', 'pyls'] }
 let g:ale_use_global_executables = 1
 let g:ale_command_wrapper = 'nice -n 3'
