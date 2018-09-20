@@ -28,7 +28,7 @@ lock() {
     # Take screenshot
     scrot "$ss"
     # Blur the screenshot
-    convert "$ss" -scale 10% -scale 1000% "$ss"
+    convert "$ss" -resize 20% -blur 4x2 -resize 500.5% "$ss"
     # Put key icon on the screenshot
     convert "$ss" "$icon" -gravity center -composite -matte "$ss"
     # Pause Spotify
