@@ -1,10 +1,10 @@
+[user]
+	email = nelson.earle137@gmail.com
+	name = Nelson Earle
 [core]
 	editor = vim
 [push]
 	default = simple
-[user]
-	email = nelson.earle137@gmail.com
-	name = Nelson Earle
 [color]
     diff = always
     status = always
