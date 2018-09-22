@@ -3,6 +3,8 @@
 	name = Nelson Earle
 [core]
 	editor = vim
+[init]
+    templateDir = ~/.git_templates
 [push]
 	default = simple
 [color]
