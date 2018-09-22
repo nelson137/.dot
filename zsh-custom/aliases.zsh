@@ -15,7 +15,6 @@ alias pip='pip3'
 alias play='dc play'
 alias python='python3'
 alias rm='rm -r'
-alias sed='sed -r'
 alias wget='wget --hsts-file /dev/null'
 alias whois='whois -H'
 

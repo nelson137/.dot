@@ -2,12 +2,12 @@
 
 
 no_ext() {
-    command sed -r 's/\.(c|cpp)$//' <<< "$1"
+    sed -r 's/\.(c|cpp)$//' <<< "$1"
 }
 
 
 get_ext() {
-    command sed -r 's/^.+\.([^. ]+)$/\1/' <<< "$1"
+    sed -r 's/^.+\.([^. ]+)$/\1/' <<< "$1"
 }
 
 

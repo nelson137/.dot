@@ -2,7 +2,7 @@
 
 
 no_ext() {
-    command sed -r 's/\.(c|cpp)$//' <<< "$1"
+    sed -r 's/\.(c|cpp)$//' <<< "$1"
 }
 
 
