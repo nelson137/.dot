@@ -8,7 +8,7 @@ no_ext() {
 
 # Compile only
 c() {
-    if [[ $# != 1 ]]; then
+    if [[ $# == 0 ]]; then
         echo 'Usage: c <file>' >&2
         return 1
     fi
@@ -16,7 +16,8 @@ c() {
     if [[ "${1%.cpp}" != "$1" ]]; then
         g++ -std=c++11 "$1" -o "$(no_ext "$1")"
     elif [[ "${1%.c}" != "$1" ]]; then
-        gcc -std=c11 -O3 -Wall -Werror "$1" -o "$(no_ext "$1")" -lm -lmylib
+        local cflags='-std=c11 -O3 -Wall -Werror'
+        eval "gcc $cflags '$1' -o '$(no_ext "$1")' $C_LD_FLAGS $@[2,$#]"
     else
         echo "File extension not recognized: $1" >&2
         return 1
