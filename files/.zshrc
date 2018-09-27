@@ -80,6 +80,9 @@ export CPATH=~/.include
 export LIBRARY_PATH=~/.lib
 export LD_LIBRARY_PATH=~/.lib
 
+# C flags for the c-utils plugin
+export C_LD_FLAGS='-lm -lmylib'
+
 # Fix nice error
 unsetopt BG_NICE
 
