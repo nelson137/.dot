@@ -321,6 +321,7 @@ filetype plugin indent on
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/' .
 \    '.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0
+let g:ycm_show_diagnostics_ui = 0
 
 " markdown-preview.vim
 let g:mkdp_path_to_chrome = 'google-chrome --new-window'
