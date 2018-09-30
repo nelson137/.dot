@@ -1,5 +1,6 @@
 #define _DEFAULT_SOURCE
 
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,6 +31,20 @@ void attempt_ssh(char *host) {
 }
 
 
+char *get_home(void) {
+    char *home;
+
+    // Check $HOME variable
+    home = getenv("HOME");
+    if (home != NULL && strcmp(home,"") != 0)
+        return home;
+
+    // Check password entry for user
+    struct passwd *pd = getpwuid(getuid());
+    return pd->pw_dir;
+}
+
+
 int main (void) {
     int max_lines = 10;
     int max_line_len = 100;
@@ -41,11 +56,26 @@ int main (void) {
         exit(1);
     }
 
-    // Attempt to open the connections file
-    char *conns_f = "connections.csv";
-    FILE *fp = fopen(conns_f, "r");
-    if (fp == NULL) {
-        fprintf(stderr, "Cannot open file %s", conns_f);
+    char *home = get_home();
+    char conns_fn[strlen(home)+9];
+    sprintf(conns_fn, "%s/.lsshrc", home);
+
+    // Make sure config file exists
+    if (access(conns_fn, F_OK) == -1) {
+        printf("Config file %s does not exist\n", conns_fn);
+        exit(1);
+    }
+
+    // Make sure config file can be read
+    if (access(conns_fn, R_OK) == -1) {
+        printf("Cannot read config file %s\n", conns_fn);
+        exit(1);
+    }
+
+    // Open the config file
+    FILE *conns_f = fopen(conns_fn, "r");
+    if (conns_f == NULL) {
+        fprintf(stderr, "Cannot open config file %s", conns_fn);
         exit(4);
     }
 
@@ -70,7 +100,7 @@ int main (void) {
         }
 
         // Read line
-        if (fgets(lines[nl], max_line_len-1, fp) == NULL)
+        if (fgets(lines[nl], max_line_len-1, conns_f) == NULL)
             // EOF reached
             break;
 
@@ -90,7 +120,7 @@ int main (void) {
     }
 
     // Close the file
-    fclose(fp);
+    fclose(conns_f);
 
     char *names[nl], *int_ips[nl], *ext_ips[nl];
 
