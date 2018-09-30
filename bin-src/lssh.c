@@ -82,7 +82,7 @@ int main (void) {
             ;
         lines[nl][j+1] = '\0';
 
-        // Ignore the first line
+        // Ignore the first line (the column headers)
         if (nl == 0 && consumed_first == 0) {
             nl--;
             consumed_first = 1;
