@@ -75,11 +75,10 @@ export EDITOR='vim'
 export TERM=xterm-256color
 
 # C flags
-export CPATH=~/.include
+export C_INCLUDE_PATH=~/.include
 export LIBRARY_PATH=~/.lib
-export LD_LIBRARY_PATH=~/.lib
 
-# C flags for the c-utils plugin
+# gcc -l flags for the c-utils plugin
 export C_LD_FLAGS='-lm -lmylib'
 
 # Fix nice error
