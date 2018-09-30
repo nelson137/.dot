@@ -73,7 +73,8 @@ for fn in "${to_compile[@]}"; do
     ext="$(get_ext "$fn")"
     exe="$(no_ext <<< "$fn")"
     if [[ "$ext" == c ]]; then
-        gcc -std=c11 -O3 -Wall -Werror "bin-src/$fn" -o "bin/compiled/$exe"
+        gcc -std=c11 -O3 -Wall -Werror "bin-src/$fn" -o "bin/compiled/$exe" \
+            $C_LD_FLAGS
     elif [[ "$ext" == cpp ]]; then
         g++ -std=c++11 "bin-src/$fn" -o "bin/compiled/$exe"
     else
