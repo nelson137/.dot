@@ -60,6 +60,10 @@ bindsym $mod+m [class="Spotify"] scratchpad show, resize set 1770 930, move posi
 for_window [class="Nautilus"] move to scratchpad
 bindsym $mod+n [class="Nautilus"] scratchpad show, move position center
 
+# Shift control
+for_window [class="Shift"] move to scratchpad
+bindsym $mod+s [class="Shift"] scratchpad show, resize set 1770 930, move position center
+
 # Change the focused window
 bindsym $mod+h focus left
 bindsym $mod+j focus down
@@ -188,3 +192,4 @@ exec --no-startup-id i3-msg 'workspace $wsDev; exec gnome-terminal'
 exec spotify
 exec nautilus
 exec google-chrome
+exec /opt/shift-linux-*/Shift
