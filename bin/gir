@@ -77,9 +77,10 @@ gir() {
     }
 
     # Curl POST failed
+    shopt -s nocasematch  # =~ match case insensitively
     echo 'Could not create Github repo.'
     read -rp 'Would you like to re-cache the token (yes/no)? ' response
-    if [[ "$response" =~ ^[Yy]([Ee][Ss])?$ ]]; then
+    if [[ "$response" =~ ^y(es)?$ ]]; then
         gir_store_passwd
         gir "$@"
     else
