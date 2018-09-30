@@ -160,6 +160,20 @@ for_window [class="Nm-connection-editor"] floating enable
 # i3blocks config
 bar {
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
+    colors {
+        # Bar background color
+        background #232f34
+        # Text color
+        statusline #eceff1
+        # Status separator color
+        separator #00acc1
+
+        # Color class       Border   BG       Text
+        focused_workspace   #0098a7  #006064  #ffffff
+        active_workspace    #00adc1  #00848f  #ffffff
+        inactive_workspace  #6a6377  #282334  #ffffff
+        urgent_workspace    #c8615c  #ac1714  #ffffff
+    }
 }
 
 
