@@ -136,6 +136,8 @@ int main (void) {
         char *choices[2] = {"Internal", "External"};
         char *values[2] = {int_ips[choice], ext_ips[choice]};
         int choice2 = listbox(0, "Host Location:", choices, 2, "*");
+        if (choice2 == -1)
+            return 0;
         host = values[choice2];
     }
 
