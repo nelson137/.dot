@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+setopt localtraps
+
 
 no_ext() {
     sed -r 's/\.(c|cpp)$//' <<< "$1"
