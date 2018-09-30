@@ -62,20 +62,22 @@ force_wifi() {
 gcl() {
     # git clone username/repo(.git) or repo(.git)
     # In the case without a username, it's assumed the repo is mine
-    local repo="${1%.git}"
-    if [[ $repo =~ ^.*/$ || $repo =~ ^/.+$ ]]; then
-        # Invalid repo names:
-        #  abc/
-        #  /abc
-        #  /
-        echo "invalid repo name: $repo" >&2
-    elif [[ $repo =~ .+/.+ ]]; then
-        # Clone someone else's repo
-        git clone --recursive "https://github.com/${repo}.git"
-    else
-        # Clone my repo
-        git clone --recursive "git@github.com:nelson137/${repo}.git"
-    fi
+    for name in "$@"; do
+        local repo="${name%.git}"
+        if [[ $repo =~ ^.*/$ || $repo =~ ^/.+$ ]]; then
+            # Invalid repo names:
+            #  abc/
+            #  /abc
+            #  /
+            echo "invalid repo name: $repo" >&2
+        elif [[ $repo =~ .+/.+ ]]; then
+            # Clone someone else's repo
+            git clone --recursive "https://github.com/${repo}.git"
+        else
+            # Clone my repo
+            git clone --recursive "git@github.com:nelson137/${repo}.git"
+        fi
+    done
 }
 
 
