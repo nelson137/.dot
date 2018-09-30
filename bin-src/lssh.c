@@ -120,7 +120,7 @@ int main (void) {
     // Run listbox with each hostname as a choice
     int choice = listbox(1, "Connect:", names, nl, "*");
     if (choice == -1)
-        return 1;
+        return 0;
 
     char *host;
     if (strcmp(int_ips[choice], "") == 0) {
