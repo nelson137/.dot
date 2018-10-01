@@ -108,20 +108,20 @@ int main (void) {
     // Make sure config file exists
     if (access(conf_fn, F_OK) == -1) {
         printf("Config file %s does not exist\n", conf_fn);
-        exit(1);
+        return 1;
     }
 
     // Make sure config file can be read
     if (access(conf_fn, R_OK) == -1) {
         printf("Cannot read config file %s\n", conf_fn);
-        exit(1);
+        return 1;
     }
 
     // Open the config file
     FILE *conf_fp = fopen(conf_fn, "r");
     if (conf_fp == NULL) {
         fprintf(stderr, "Cannot open config file %s", conf_fn);
-        exit(1);
+        return 1;
     }
 
     // Read the config file
@@ -130,7 +130,7 @@ int main (void) {
     ssize_t read = getdelim(&raw_config, &len, '\0', conf_fp);
     if (read == -1) {
         fprintf(stderr, "Cannot read config file %s\n", conf_fn);
-        exit(1);
+        return 1;
     }
 
     // Close the config file
@@ -144,7 +144,7 @@ int main (void) {
     if (err != json_tokener_success) {
         fprintf(stderr, "Error while parsing config file %s\n\n", conf_fn);
         print_config_help();
-        exit(1);
+        return 1;
     }
 
     // Number of children in config
@@ -172,7 +172,7 @@ int main (void) {
             char *e_t_name = get_type_name(json_type_object);
             fprintf(stderr, fmt, hn, t_name, e_t_prep, e_t_name);
             print_config_help();
-            exit(1);
+            return 1;
         }
 
         hostnames[i] = hn;
@@ -195,7 +195,7 @@ int main (void) {
                 char *e_t_name = get_type_name(json_type_object);
                 fprintf(stderr, fmt, key, hn, t_name, e_t_prep, e_t_name);
                 print_config_help();
-                exit(1);
+                return 1;
             }
 
             // The value of the key as a string
@@ -221,13 +221,13 @@ int main (void) {
             fprintf(stderr, "Host %s does not have the required key username\n", hn);
             fprintf(stderr, "Config file: %s\n\n", conf_fn);
             print_config_help();
-            exit(1);
+            return 1;
         }
 
         if (!has_addr) {
             fprintf(stderr, "Host %s has neither an internal_addr nor an external_addr key. One is required\n\n", hn);
             print_config_help();
-            exit(1);
+            return 1;
         }
 
         i++;
