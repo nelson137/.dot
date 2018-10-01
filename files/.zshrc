@@ -75,11 +75,11 @@ export EDITOR='vim'
 export TERM=xterm-256color
 
 # C flags
-export C_INCLUDE_PATH=~/.include
+export C_INCLUDE_PATH=/usr/include/json-c:~/.include
 export LIBRARY_PATH=~/.lib
 
 # gcc -l flags for the c-utils plugin
-export C_LD_FLAGS='-lm -lmylib'
+export C_LD_FLAGS='-lm -ljson-c -lmylib'
 
 # Fix nice error
 unsetopt BG_NICE
