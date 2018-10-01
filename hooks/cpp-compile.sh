@@ -119,6 +119,6 @@ for fn in "${to_rm[@]}"; do
 done
 
 
-# Put newline between removed binaries message and git output
+# Put newline between removed binary's message and git output
 [[ "$context" == pre-push ]] && (( "${#to_rm[@]}" > 0 )) &&
     echo
