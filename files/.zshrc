@@ -79,7 +79,12 @@ export C_INCLUDE_PATH=/usr/include/json-c:~/.include
 export LIBRARY_PATH=~/.lib
 
 # gcc -l flags for the c-utils plugin
-export C_LD_FLAGS='-lm -ljson-c -lmylib'
+c_ld_flags=(
+    -lm
+    $(is_mu || echo '-ljson-c')
+    -lmylib
+)
+export C_LD_FLAGS="${(j: :)c_ld_flags}"
 
 # Fix nice error
 unsetopt BG_NICE

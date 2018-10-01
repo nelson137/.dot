@@ -96,6 +96,12 @@ gp() {
 
 
 
+is_mu() {
+    [[ "$(hostname)" =~ tc-m[0-9]+-(login|hpc[0-9]+)-node[0-9]+ ]]
+}
+
+
+
 is_wsl() {
     grep -qE '(Microsoft|WSL)' /proc/version 2>/dev/null
 }
