@@ -107,7 +107,8 @@ int main (void) {
 
     // Make sure config file exists
     if (access(conf_fn, F_OK) == -1) {
-        printf("Config file %s does not exist\n", conf_fn);
+        printf("Config file %s does not exist\n\n", conf_fn);
+        print_config_help();
         return 1;
     }
 
