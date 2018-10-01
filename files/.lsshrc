@@ -13,5 +13,10 @@
     "username": "nelson",
     "internal_addr": "192.168.2.3",
     "external_addr": "24.182.191.122"
+  },
+  "mizzou": {
+      "username": "nwewnh",
+      "internal_addr": "",
+      "external_addr": "tc.rnet.missouri.edu"
   }
 }
