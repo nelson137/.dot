@@ -23,6 +23,7 @@ void print_config_help(void) {
     fprintf(stderr, "      },\n");
     fprintf(stderr, "      ...\n");
     fprintf(stderr, "    }\n");
+    fprintf(stderr, "A username must be specified for each host\n");
     fprintf(stderr, "Both an internal and external address do not have to be specified, but at least one must\n");
 }
 
