@@ -20,16 +20,14 @@ exec(default)
 
 def FlagsForFile(filename, **kwargs):
     """Return the compilation args to use for filename."""
-    print(kwargs)
     ext = os.path.splitext(filename)[1]
     if ext == '.c':
         lang = 'c'
     elif ext == '.cpp':
         lang = 'c++'
 
-    home = os.path.expanduser('~')
-    includes = '-I' + home + '/.include'
-    libs = '-L' + home + '/.lib'
+    includes = os.path.join('-I'+home, '.include')
+    libs = os.path.join('-L'+home, '.lib')
 
     return {
         'flags': ['-x', lang, '-std=c11', '-O3', '-Wall', '-Werror',
