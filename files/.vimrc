@@ -367,7 +367,8 @@ let g:ale_loclist_msg_format = g:ale_echo_msg_format
 let g:ale_python_pylint_options = '--disable=exec-used,eval-used,' .
 \    'invalid-name,line-too-long,missing-docstring,multiple-imports,' .
 \    'no-else-return,no-self-use,possibly-unused-variable,protected-access,' .
-\    'redefined-outer-name,too-few-public-methods,too-many-branches'
+\    'redefined-outer-name,too-few-public-methods,too-many-branches,' .
+\    'too-many-instance-attributes'
 " The first line of errors and warnings is what is ignored by default,
 " however, --ignore overrides the default
 " My flake8 ignores:
