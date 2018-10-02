@@ -23,9 +23,11 @@ def FlagsForFile(filename, **kwargs):
     ext = os.path.splitext(filename)[1]
     if ext == '.c':
         lang = 'c'
+        std = '-std=c11'
     elif ext == '.cpp':
         lang = 'c++'
+        std = '-std=c++11'
 
     return {
-        'flags': ['-x', lang, '-std=c11', '-O3', '-Wall', '-Werror']
+        'flags': ['-x', lang, std, '-O3', '-Wall', '-Werror']
     }
