@@ -15,6 +15,11 @@ conf_path = '%s/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py' % home
 with open(conf_path, 'r') as conf:
     default = conf.read()
 
+# DIR_OF_THIS_SCRIPT
+ycm_path = '.vim/bundle/YouCompleteMe'
+default = default.replace('os.path.abspath( os.path.dirname( __file__ ) )',
+                          "os.path.join('%s', '%s')" % (home, ycm_path))
+
 exec(default)
 
 
