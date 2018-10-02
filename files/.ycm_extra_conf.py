@@ -26,10 +26,6 @@ def FlagsForFile(filename, **kwargs):
     elif ext == '.cpp':
         lang = 'c++'
 
-    includes = os.path.join('-I'+home, '.include')
-    libs = os.path.join('-L'+home, '.lib')
-
     return {
-        'flags': ['-x', lang, '-std=c11', '-O3', '-Wall', '-Werror',
-                  includes, libs, '-lm', '-lmylib']
+        'flags': ['-x', lang, '-std=c11', '-O3', '-Wall', '-Werror']
     }
