@@ -364,11 +364,24 @@ let g:ale_use_global_executables = 1
 let g:ale_command_wrapper = 'nice -n 3'
 let g:ale_echo_msg_format = '%linter%: %code: %%s'
 let g:ale_loclist_msg_format = g:ale_echo_msg_format
-let g:ale_python_pylint_options = '--disable=exec-used,eval-used,' .
-\    'invalid-name,line-too-long,missing-docstring,multiple-imports,' .
-\    'no-else-return,no-self-use,possibly-unused-variable,protected-access,' .
-\    'redefined-outer-name,too-few-public-methods,too-many-branches,' .
-\    'too-many-instance-attributes,unused-argument'
+let s:pylint_disabled = [
+\    'exec-used',
+\    'eval-used',
+\    'invalid-name',
+\    'line-too-long',
+\    'missing-docstring',
+\    'multiple-imports',
+\    'no-else-return',
+\    'no-self-use',
+\    'possibly-unused-variable',
+\    'protected-access',
+\    'redefined-outer-name',
+\    'too-few-public-methods',
+\    'too-many-branches',
+\    'too-many-instance-attributes',
+\    'unused-argument'
+\]
+let g:ale_python_pylint_options = '--disable=' . join(s:pylint_disabled, ',')
 " The first line of errors and warnings is what is ignored by default,
 " however, --ignore overrides the default
 " My flake8 ignores:
