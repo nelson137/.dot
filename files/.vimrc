@@ -365,8 +365,8 @@ let g:ale_command_wrapper = 'nice -n 3'
 let g:ale_echo_msg_format = '%linter%: %code: %%s'
 let g:ale_loclist_msg_format = g:ale_echo_msg_format
 let s:pylint_disabled = [
-\    'exec-used',
 \    'eval-used',
+\    'exec-used',
 \    'invalid-name',
 \    'line-too-long',
 \    'missing-docstring',
