@@ -378,6 +378,7 @@ let s:pylint_disabled = [
 \    'redefined-outer-name',
 \    'too-few-public-methods',
 \    'too-many-branches',
+\    'too-many-locals',
 \    'too-many-instance-attributes',
 \    'unused-argument'
 \]
