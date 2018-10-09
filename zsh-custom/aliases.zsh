@@ -20,10 +20,19 @@ alias wget='wget --hsts-file /dev/null'
 alias whois='whois -H'
 
 # ls aliases
-alias ls='ls -pv --color --time-style=long-iso'
-alias la='ls -pAv --color --time-style=long-iso'
-alias ll='ls -pohv --color --time-style=long-iso'
-alias lla='ls -pAohv --color --time-style=long-iso'
+os="$(uname -s)"
+case "$os" in
+    Linux*)
+        color='--color'
+        time='--time-style=long-iso' ;;
+    Darwin*)
+        color='-G'
+        time='' ;;
+esac
+alias ls="ls -pv $color $time"
+alias la="ls -pAv $color $time"
+alias ll="ls -pohv $color $time"
+alias lla="ls -pAohv $color $time"
 
 # git aliases
 alias glop='git log -p'
