@@ -4,7 +4,7 @@ setopt localtraps
 
 
 no_ext() {
-    sed -r 's/\.(c|cpp)$//' <<< "$1"
+    sed -E 's/\.(c|cpp)$//' <<< "$1"
 }
 
 

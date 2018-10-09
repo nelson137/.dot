@@ -113,8 +113,8 @@ lum_show_current() {
         # - Remove trailling .
         local s_b_percent="$(
             bc <<< "scale=2; 100*${s_b}/${s_b_max}" |
-            sed -r 's/0+$//' |
-            sed -r 's/\.$//'
+            sed -E 's/0+$//' |
+            sed -E 's/\.$//'
         )"
     fi
 
@@ -130,8 +130,8 @@ lum_show_current() {
         # - Remove trailling .
         local d_b_percent="$(
             bc <<< "scale=2; 100*${d_b}/${d_b_max}" |
-            sed -r 's/0+$//' |
-            sed -r 's/\.$//'
+            sed -E 's/0+$//' |
+            sed -E 's/\.$//'
         )"
     fi
 

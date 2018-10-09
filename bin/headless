@@ -42,9 +42,9 @@ headless_reboot() {
 
 
 headless_yes() {
-    sudo sed -ri 's/^(GRUB_CMDLINE_LINUX_DEFAULT=).*$/\1"text"/' \
+    sudo sed -Ei 's/^(GRUB_CMDLINE_LINUX_DEFAULT=).*$/\1"text"/' \
         /etc/default/grub
-    sudo sed -ri 's/^#(GRUB_TERMINAL=.*)$/\1/' \
+    sudo sed -Ei 's/^#(GRUB_TERMINAL=.*)$/\1/' \
         /etc/default/grub
 
     sudo update-grub 2>/dev/null
@@ -56,9 +56,9 @@ headless_yes() {
 
 
 headless_no() {
-    sudo sed -ri 's/^(GRUB_CMDLINE_LINUX_DEFAULT=).*$/\1"quiet splash"/' \
+    sudo sed -Ei 's/^(GRUB_CMDLINE_LINUX_DEFAULT=).*$/\1"quiet splash"/' \
         /etc/default/grub
-    sudo sed -ri 's/^(GRUB_TERMINAL=.*)$/#\1/' \
+    sudo sed -Ei 's/^(GRUB_TERMINAL=.*)$/#\1/' \
         /etc/default/grub
 
     sudo update-grub 2>/dev/null
