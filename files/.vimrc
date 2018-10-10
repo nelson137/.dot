@@ -229,13 +229,13 @@ noremap   <C-w><C-k>   <C-w>+
 noremap   <C-w><C-l>   <C-w>>
 
 " New tab
-noremap <silent>   <Leader>t   :tabnew<CR>
+noremap <silent>   tn   :tabnew<CR>
 
 " Tab next
-noremap <silent>   <Leader>tn   :tabn<CR>
+noremap <silent>   tl   :tabn<CR>
 
 " Tab previous
-noremap <silent>   <Leader>tp   :tabp<CR>
+noremap <silent>   th   :tabp<CR>
 
 " New window below
 noremap <silent>   <Leader>wn   :new<CR>
