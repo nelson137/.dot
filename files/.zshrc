@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-export PATH="$HOME/bin:$HOME/bin/compiled:$HOME/.local/bin:$HOME/go/bin:$PATH"
+export PATH="$HOME/bin:$HOME/bin/compiled:$HOME/.local/bin:$HOME/go/bin:/mnt/c/Program Files/Oracle/VirtualBox:$PATH"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -85,6 +85,9 @@ c_ld_flags=(
     -lmylib
 )
 export C_LD_FLAGS="${(j: :)c_ld_flags}"
+
+# Give vagrant access to WSL features
+export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS=1
 
 # Fix nice error
 unsetopt BG_NICE
