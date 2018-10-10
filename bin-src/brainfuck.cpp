@@ -137,7 +137,7 @@ void evaluate(vector<char> code, int width, int delay, bool dump_tape,
                     cells.push_back(0);
                 break;
             case '<':
-                cellptr = cellptr <= 0 ? 0 : --cellptr;
+                cellptr = cellptr <= 0 ? 0 : cellptr-1;
                 break;
             case '+':
                 if (cells[cellptr] < 255)
