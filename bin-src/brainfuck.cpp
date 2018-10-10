@@ -1,3 +1,4 @@
+#include <array>
 #include <algorithm>  // find
 #include <chrono>  // sleep_for
 #include <fstream>  // ifstream
