@@ -1,14 +1,15 @@
+#include <algorithm>
 #include <array>
-#include <algorithm>  // find
-#include <chrono>  // sleep_for
-#include <fstream>  // ifstream
-#include <iomanip>  // setw
+#include <chrono>
+#include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <map>
 #include <sstream>
-#include <termios.h>  // termios, tcgetattr, ICANON, ECHO, VTIME, VMIN, TCSANOW
-#include <thread>  // this_thread
+#include <termios.h>
+#include <thread>
 #include <vector>
+
 using namespace std;
 
 
