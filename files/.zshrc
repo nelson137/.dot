@@ -75,7 +75,10 @@ export EDITOR='vim'
 export TERM=xterm-256color
 
 # C flags
-export C_INCLUDE_PATH=/usr/include/json-c:~/.include
+pi=$(find /usr/include -maxdepth 1 -name 'python3*' | sort -n | head -1)
+pi2=$(find /usr/include -maxdepth 1 -name 'python2*' | sort -n | head -1)
+[[ -z $pi ]] && pi="$pi2"
+export C_INCLUDE_PATH=/usr/include/json-c:$pi:~/.include
 export LIBRARY_PATH=~/.lib
 
 # gcc -l flags for the c-utils plugin
