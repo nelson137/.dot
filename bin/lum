@@ -4,11 +4,13 @@
 # Screen brightness directory
 s_b_dir=/sys/class/backlight/intel_backlight
 
-# Max screen and display brightnesses
+# Max, min, and default screen and display brightnesses
 s_b_max="$(cat "${s_b_dir}/max_brightness")"
 s_b_min=1
+s_b_default=61
 d_b_max=1.5
-d_b_min=.5
+d_b_min=0.5
+d_b_default=1
 
 # Disable -s/--screen if cannot get or set screen brightness
 [[ ! -f "${s_b_dir}/brightness" ]] &&
@@ -34,18 +36,19 @@ lum_help() {
     echo '  -d, --display  Set the display brightness to <brightness>'
     echo
     echo 'Description:'
-    echo
     echo '  If invoked without any arguments, the current screen and display'
     echo '  brightness values are printed out.'
     echo
-    echo '  The default screen brightness is 61.'
-    echo '  The default display brightness is 1.'
+    echo "  The default screen brightness is $s_b_default."
+    echo "  The default display brightness is $d_b_default."
     echo
     echo '  The screen and display brightness values have a maximum which'
     echo '  cannot be exceeded.'
     echo
-    echo '  The maximum screen brightness is 416.'
-    echo '  The maximum display brightness is 2.'
+    echo "  The maximum screen brightness is $s_b_max."
+    echo "  The minimum screen brightness is $s_b_min."
+    echo "  The maximum display brightness is $d_b_max."
+    echo "  The minimum display brightness is $d_b_min."
     exit 0
 }
 
@@ -210,10 +213,6 @@ lum() {
 
         exit 0
     fi
-
-    # Default brightness values
-    local s_b_default=61
-    local d_b_default=1
 
     # Reset both screen and display brightnesses
     if [[ "$reset_both" ]]; then
