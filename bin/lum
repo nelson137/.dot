@@ -23,8 +23,8 @@ xrandr -d :0 &>/dev/null ||
 lum_help() {
     echo 'Usage: lum [-h|--help]'
     echo '       lum reset'
-    echo '       lum {-s|--screen} {<brightness>|reset}'
-    echo '       lum {-d|--display} {<brightness>|reset}'
+    echo '       lum {-s|--screen} {<brightness>|reset|max|min}'
+    echo '       lum {-d|--display} {<brightness>|reset|max|min}'
     echo
     echo 'Get or set the brightness of the screen or display.'
     echo
@@ -231,23 +231,31 @@ lum() {
     # Set screen brightness
     if [[ "$set_s" ]]; then
         if [[ "$set_s_b" == reset ]]; then
-            # Reset screen brightness
-            lum_set_s_b "$s_b_default"
+            local s_b_val="$s_b_default"
+        elif [[ "$set_s_b" == max ]]; then
+            local s_b_val="$s_b_max"
+        elif [[ "$set_s_b" == min ]]; then
+            local s_b_val="$s_b_min"
         else
-            # Set screen brightness to $s_b
-            lum_set_s_b "$set_s_b"
+            local s_b_val="$set_s_b"
         fi
+
+        lum_set_s_b "$s_b_val"
     fi
 
     # Set display brightness
     if [[ "$set_d" ]]; then
         if [[ "$set_d_b" == reset ]]; then
-            # Reset display brightness
-            lum_set_d_b "$d_b_default"
+            local d_b_val="$d_b_default"
+        elif [[ "$set_d_b" == max ]]; then
+            local d_b_val="$d_b_max"
+        elif [[ "$set_d_b" == min ]]; then
+            local d_b_val="$d_b_min"
         else
-            # Set display brightness to $d_b
-            lum_set_d_b "$set_d_b"
+            local d_b_val="$set_d_b"
         fi
+
+        lum_set_d_b "$d_b_val"
     fi
 }
 
