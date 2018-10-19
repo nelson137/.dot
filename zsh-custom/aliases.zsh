@@ -24,15 +24,17 @@ os="$(uname -s)"
 case "$os" in
     Linux*)
         color='--color'
-        time='--time-style=long-iso' ;;
+        time='--time-style=long-iso'
+        groupdirs='--group-directories-first' ;;
     Darwin*)
         color='-G'
-        time='' ;;
+        time=''
+        groupdirs='' ;;
 esac
-alias ls="ls -pv $color $time"
-alias la="ls -pAv $color $time"
-alias ll="ls -pohv $color $time"
-alias lla="ls -pAohv $color $time"
+alias ls="ls -pv $color $time $groupdirs"
+alias la="ls -pAv $color $time $groupdirs"
+alias ll="ls -pohv $color $time $groupdirs"
+alias lla="ls -pAohv $color $time $groupdirs"
 
 # git aliases
 alias glop='git log -p'
