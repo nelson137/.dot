@@ -86,6 +86,7 @@ c_ld_flags=(
     -lm
     $(is_mu || echo '-ljson-c')
     -lmylib
+    $(pkg-config --cflags --libs python3 2>/dev/null)
 )
 export C_LD_FLAGS="${(j: :)c_ld_flags}"
 
