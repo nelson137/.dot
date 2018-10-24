@@ -41,7 +41,7 @@ def gen_script(data, outfn):
         out_f.write(script)
 
 
-def die(msg, usage=False):
+def die(*msg, usage=False):
     """Print msg to stderr and exit.
 
     If the keyword argument usage is True, this programs' usage is printed.
@@ -49,7 +49,7 @@ def die(msg, usage=False):
     if usage:
         msg = 'usage: bfgen [-h] [-o outfile] infile'
     else:
-        msg = 'bfgen: error: ' + msg
+        msg = 'bfgen: error: ' + ' '.join(msg)
 
     print(msg, file=sys.stderr)
     sys.exit(1)
@@ -69,7 +69,7 @@ def main(args):
             with open(args.infn, 'r') as f:
                 text = f.read()
         except FileNotFoundError:
-            die('file cannot be opened: ' + args.infn)
+            die('file cannot be opened:', args.infn)
 
         if args.outfn is None:  # if outfn not given use infn with bf ext
             args.outfn = re.sub('\.txt$', '', args.infn) + '.bf'
