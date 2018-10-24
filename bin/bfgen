@@ -1,21 +1,28 @@
 #!/usr/bin/env python3
 
-import sys, re
+"""Generate Brainfuck code that prints out the contents of the given file."""
+
+import re
+import sys
 from argparse import ArgumentParser
 from itertools import groupby
 
 
 def preprocess(text):
+    """Return a list of dicts for each character in text.
+
+    Each dict contains useful information for gen_script to use.
+    """
     data = []
     for o in [ord(c) for c in text]:
         rounded = round(o/10) * 10
-        make_dict = lambda o, r, d: {'ord': o, 'rounded': r, 'diff': d}
-        data.append(make_dict(o, rounded, o-rounded))
+        data.append({'ord': o, 'rounded': rounded, 'diff': o-rounded})
 
     return data
 
 
 def gen_script(data, outfn):
+    """Generate Brainfuck code using data and write it to outfn."""
     lines = [list(l[1]) for l in groupby(data, key=lambda x: x['ord'] == 10)]
     script = ''
     for line in lines:
@@ -35,16 +42,22 @@ def gen_script(data, outfn):
 
 
 def print_err(err, reason=None, usage=False):
+    """Print an error message and exit.
+
+    If the keyword argument usage is True, this programs' usage is printed.
+    """
     if usage:
         msg = 'usage: bfgen [-h] [-o outfile] infile'
     else:
         msg = 'bfgen: error: ' + err
-        if reason is not None: msg += ': ' + reason
+        if reason is not None:
+            msg += ': ' + reason
     print(msg, file=sys.stderr)
     sys.exit(1)
 
 
 def main(args):
+    """Parse arguments and generate the Brainfuck code."""
     if args.infn is None:  # if no infn was given
         if not sys.stdin.isatty():  # if stdin is not empty
             text = sys.stdin.read()
