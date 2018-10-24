@@ -29,12 +29,12 @@ def gen_script(data, outfn):
         script += '++++++++++['
 
         for char in line:
-            script += '>' + '+' * int(char['rounded']/10)
-        script += '<' * len(line) + '-]'
+            script += '>' + '+'*(char['rounded']//10)
+        script += '<'*len(line) + '-]'
 
         for char in line:
             op = '+' if char['offset'] > 0 else '-'
-            script += '>' + op * abs(char['offset']) + '.'
+            script += '>' + op*abs(char['offset']) + '.'
         script += '>'
 
     with open(outfn, 'w') as out_f:
