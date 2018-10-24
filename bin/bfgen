@@ -2,7 +2,7 @@
 
 """Generate Brainfuck code that prints out the contents of the given file."""
 
-import re
+import os
 import sys
 from argparse import ArgumentParser
 from itertools import groupby
@@ -72,7 +72,8 @@ def main(args):
             die('file cannot be opened:', args.infn)
 
         if args.outfn is None:  # if outfn not given use infn with bf ext
-            args.outfn = re.sub('\.txt$', '', args.infn) + '.bf'
+            base = os.path.splitext(args.infn)[0]
+            args.outfn = base + '.bf'
 
     data = preprocess(text)
     gen_script(data, args.outfn)
