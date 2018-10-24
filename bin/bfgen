@@ -2,10 +2,38 @@
 
 """Generate Brainfuck code that prints out the contents of the given file."""
 
-import os
 import sys
 from argparse import ArgumentParser
 from itertools import groupby
+
+from _io import TextIOWrapper
+
+
+class OutFile(TextIOWrapper):
+    """Allow."""  # TODO
+
+    def __init__(self, outf):
+        if isinstance(outf, str):
+            self.outf = open(outf, 'w')
+        elif isinstance(outf, TextIOWrapper):
+            self.outf = outf
+        else:
+            raise ValueError("Expected type 'str' or 'TextIOWrapper'")
+
+    def __enter__(self):
+        """Return the file object."""
+        return self
+
+    def __exit__(self, type, value, traceback):
+        """Close the file object if it is not sys.stdout."""
+        if self.outf is not sys.stdout:
+            self.outf.close()
+
+    def write(self, msg):
+        """Write msg to the stream object self.outf."""
+        self.outf.write(msg)
+        if msg[-1] != '\n':
+            self.outf.write('\n')
 
 
 def preprocess(text):
@@ -59,12 +87,10 @@ def die(*msg, usage=False):
 def main(args):
     """Parse arguments, generate the Brainfuck script, then output it."""
     if args.infn is None:  # if no infn was given
-        if not sys.stdin.isatty():  # if stdin is not empty
-            text = sys.stdin.read()
-        else:  # no input
+        # If nothing is being piped in, print usage and exit
+        if sys.stdin.isatty():
             die(usage=True)
-        if args.outfn is None:
-            args.outfn = 'out.bf'
+        text = sys.stdin.read()
     else:
         try:
             with open(args.infn, 'r') as f:
@@ -72,14 +98,10 @@ def main(args):
         except FileNotFoundError:
             die('file cannot be opened:', args.infn)
 
-        if args.outfn is None:  # if outfn not given use infn with bf ext
-            base = os.path.splitext(args.infn)[0]
-            args.outfn = base + '.bf'
-
     script = gen_script(text)
 
-    with open(args.outfn, 'w') as out_f:
-        out_f.write(script)
+    with OutFile(args.outfn) as of:
+        of.write(script)
 
 
 if __name__ == '__main__':
@@ -87,5 +109,5 @@ if __name__ == '__main__':
     parser.add_argument('infn', nargs='?', metavar='infile', default=None,
                         help='')
     parser.add_argument('-o', '--output', dest='outfn', metavar='outfile',
-                        default=None, help='')
+                        default=sys.stdout, help='')
     main(parser.parse_args())
