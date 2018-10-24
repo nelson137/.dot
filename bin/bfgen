@@ -21,8 +21,8 @@ def preprocess(text):
     return data
 
 
-def gen_script(text, outfn):
-    """Generate Brainfuck code using data and write it to outfn."""
+def gen_script(text):
+    """Return Brainfuck code that prints out the given text."""
     data = preprocess(text)
     lines = [list(l[1]) for l in groupby(data, key=lambda x: x['ord'] == 10)]
     script = ''
@@ -39,8 +39,7 @@ def gen_script(text, outfn):
             script += '>' + op*abs(char['offset']) + '.'
         script += '>'
 
-    with open(outfn, 'w') as out_f:
-        out_f.write(script)
+    return script
 
 
 def die(*msg, usage=False):
@@ -58,7 +57,7 @@ def die(*msg, usage=False):
 
 
 def main(args):
-    """Parse arguments and generate the Brainfuck code."""
+    """Parse arguments, generate the Brainfuck script, then output it."""
     if args.infn is None:  # if no infn was given
         if not sys.stdin.isatty():  # if stdin is not empty
             text = sys.stdin.read()
@@ -77,7 +76,10 @@ def main(args):
             base = os.path.splitext(args.infn)[0]
             args.outfn = base + '.bf'
 
-    gen_script(text, args.outfn)
+    script = gen_script(text)
+
+    with open(args.outfn, 'w') as out_f:
+        out_f.write(script)
 
 
 if __name__ == '__main__':
