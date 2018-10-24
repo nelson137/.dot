@@ -15,8 +15,8 @@ def preprocess(text):
     """
     data = []
     for o in [ord(c) for c in text]:
-        rounded = round(o/10) * 10
-        data.append({'ord': o, 'rounded': rounded, 'diff': o-rounded})
+        r = round(o, -1)  # Round to nearest ten
+        data.append({'ord': o, 'rounded': r, 'offset': o-r})
 
     return data
 
@@ -33,8 +33,8 @@ def gen_script(data, outfn):
         script += '<' * len(line) + '-]'
 
         for char in line:
-            op = '+' if char['diff'] > 0 else '-'
-            script += '>' + op * abs(char['diff']) + '.'
+            op = '+' if char['offset'] > 0 else '-'
+            script += '>' + op * abs(char['offset']) + '.'
         script += '>'
 
     with open(outfn, 'w') as out_f:
