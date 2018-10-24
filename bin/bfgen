@@ -95,8 +95,14 @@ def main(args):
         try:
             with open(args.infn, 'r') as f:
                 text = f.read()
-        except FileNotFoundError:
-            die('file cannot be opened:', args.infn)
+        except (FileNotFoundError, IsADirectoryError, PermissionError) as e:
+            fn_quoted = "'%s'" % args.infn
+            if isinstance(e, FileNotFoundError):
+                die('no such file:', fn_quoted)
+            if isinstance(e, IsADirectoryError):
+                die(e.strerror.lower() + ':', fn_quoted)
+            elif isinstance(e, PermissionError):
+                die(e.strerror.lower() + ':', fn_quoted)
 
     script = gen_script(text)
 
