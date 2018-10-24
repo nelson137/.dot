@@ -78,7 +78,7 @@ def die(*msg, usage=False):
     if usage:
         msg = 'usage: bfgen [-h] [-o outfile] infile'
     else:
-        msg = 'bfgen: error: ' + ' '.join(msg)
+        msg = 'bfgen: ' + ' '.join(msg)
 
     print(msg, file=sys.stderr)
     sys.exit(1)
