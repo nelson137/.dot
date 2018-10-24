@@ -76,11 +76,9 @@ def die(*msg, usage=False):
     If the keyword argument usage is True, this programs' usage is printed.
     """
     if usage:
-        msg = 'usage: bfgen [-h] [-o outfile] [infile]'
+        print('usage: bfgen [-h] [-o outfile] [infile]', file=sys.stderr)
     else:
-        msg = 'bfgen: ' + ' '.join(msg)
-
-    print(msg, file=sys.stderr)
+        print('bfgen: ' + ' '.join(msg), file=sys.stderr)
     sys.exit(1)
 
 
