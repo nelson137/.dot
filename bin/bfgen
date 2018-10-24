@@ -21,10 +21,12 @@ def preprocess(text):
     return data
 
 
-def gen_script(data, outfn):
+def gen_script(text, outfn):
     """Generate Brainfuck code using data and write it to outfn."""
+    data = preprocess(text)
     lines = [list(l[1]) for l in groupby(data, key=lambda x: x['ord'] == 10)]
     script = ''
+
     for line in lines:
         script += '++++++++++['
 
@@ -75,8 +77,7 @@ def main(args):
             base = os.path.splitext(args.infn)[0]
             args.outfn = base + '.bf'
 
-    data = preprocess(text)
-    gen_script(data, args.outfn)
+    gen_script(text, args.outfn)
 
 
 if __name__ == '__main__':
