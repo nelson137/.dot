@@ -402,7 +402,7 @@ int main(int argc, char** argv) {
 
     // No code or filenames were given
     if (!to_eval.size())
-        die("no input given");
+        help();
 
     // Evaluate all code
     for (vector<char> code : to_eval)
