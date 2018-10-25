@@ -16,6 +16,16 @@
 using namespace std;
 
 
+typedef struct {
+    int width;
+    int delay;
+    bool dump_tape;
+    bool show_tape;
+    bool use_input;
+    vector<char> input;
+} Options;
+
+
 void die(string err) {
     cerr << "brainfuck: " << err << endl;
     exit(1);
@@ -119,8 +129,7 @@ map<int, int> build_bracemap(vector<char> code) {
 }
 
 
-void evaluate(vector<char> code, int width, int delay, bool dump_tape,
-              bool show_tape, bool use_input, vector<char> input) {
+void evaluate(vector<char> code, vector<char> input, Options *options) {
     string output;
     map<int, int> bracemap = build_bracemap(code);
     vector<int> cells;
@@ -131,8 +140,8 @@ void evaluate(vector<char> code, int width, int delay, bool dump_tape,
     char cmd;
     int n_lines = 0;
     while (codeptr < (int) code.size()) {
-        if (show_tape)
-            n_lines = print_cells(cells, width, cellptr);
+        if (options->show_tape)
+            n_lines = print_cells(cells, options->width, cellptr);
 
         cmd = code.at(codeptr);
         switch (cmd) {
@@ -164,13 +173,13 @@ void evaluate(vector<char> code, int width, int delay, bool dump_tape,
                     codeptr = bracemap.at(codeptr);
                 break;
             case '.':
-                if (dump_tape || show_tape)
+                if (options->dump_tape || options->show_tape)
                     output += (char)cells.at(cellptr);
                 else
                     cout << (char)cells.at(cellptr) << flush;
                 break;
             case ',':
-                if (use_input) {
+                if (options->use_input) {
                     if (input.size() == 0)
                         die("runtime error: not enough input was given");
                     cells.at(cellptr) = (int)input.at(0);
@@ -181,21 +190,21 @@ void evaluate(vector<char> code, int width, int delay, bool dump_tape,
                 break;
         }
 
-        if (show_tape)
+        if (options->show_tape)
             for (int i=0; i<n_lines; i++)
                 cout << "\33[A";
 
         codeptr++;
-        this_thread::sleep_for(chrono::milliseconds(delay));
+        this_thread::sleep_for(chrono::milliseconds(options->delay));
     }
 
-    if (dump_tape)
+    if (options->dump_tape)
         // Pass illegal value -1 as ptr because ptr is not needed here
-        print_cells(cells, width, -1);
-    else if (show_tape)
-        print_cells(cells, width, cellptr);
+        print_cells(cells, options->width, -1);
+    else if (options->show_tape)
+        print_cells(cells, options->width, cellptr);
 
-    if (output.size() > 0 && (dump_tape || show_tape))
+    if (output.size() > 0 && (options->dump_tape || options->show_tape))
         cout << output;
 }
 
@@ -287,107 +296,96 @@ int main(int argc, char** argv) {
     vector<string> orig_args(argv, argv+argc);
     vector<string> args = split_options(orig_args);
 
+    Options options = {
+        .width = get_term_width(),
+        .delay = 0,
+        .dump_tape = false,
+        .show_tape = false,
+        .use_input = false,
+    };
+
     vector<string> infiles;
-    bool stdin_code = false;
-    bool stdin_filenames = false;
-    int delay = 0;
     bool delay_changed = false;
-    bool dump_tape = false;
-    bool show_tape = false;
-    bool use_input = false;
     vector<char> input;
-    int width = get_term_width();
 
     string cmd;
+    bool parsing_opts = true;
     for (int i=1; i<(int)args.size(); i++) {
         cmd = args[i];
-        if (cmd[0] == '-' && cmd.length() > 1) {
-            if (cmd == "-h" || cmd == "--help") {
-                help();
-            } else if (cmd == "-c" || cmd == "--stdin-code") {
-                stdin_code = true;
-            } else if (cmd == "-f" || cmd == "--stdin-filenames") {
-                stdin_filenames = true;
-            } else if (cmd == "-d" || cmd == "--delay") {
-                string err = "-d/--delay requires an integer";
-                if (++i == argc) {
-                    die(err);
-                } else {
-                    istringstream ss(argv[i]);
-                    if (! (ss >> delay))
-                        die(err);
-                    delay_changed = true;
-                }
-            } else if (cmd == "--dump-tape") {
-                dump_tape = true;
-            } else if (cmd == "--show-tape") {
-                show_tape = true;
-            } else if (cmd == "-i" || cmd == "--input") {
-                use_input = true;
-                if (++i == argc)
-                    die("-i/--input requires a value");
-                else {
-                    // TODO: is this broken? can this be improved?
-                    char* arg_i= argv[i];
-                    for (int j=0; arg_i[j] != '\0'; j++)
-                        input.push_back(arg_i[j]);
-                }
-            } else if (cmd == "-w" || cmd == "--width") {
-                string err = "-w/--width requires an integer";
-                if (++i == argc) {
-                    die(err);
-                } else {
-                    istringstream ss(argv[i]);
-                    if (! (ss >> width))
-                        die(err);
-                }
-            } else {
-                die("unknown option: " + cmd);
-            }
-        } else {  // Filename
+        // Argument is a filename or "--" has been parsed
+        if (cmd[0] != '-' || !parsing_opts) {
             infiles.push_back(cmd);
+            continue;
+        }
+
+        if (cmd == "--") {
+            // All subsequent arguments are filenames
+            // Or code if "-r" has been parsed
+            parsing_opts = false;
+        } else if (cmd == "-h" || cmd == "--help") {
+            help();
+        } else if (cmd == "-d" || cmd == "--delay") {
+            string err = "Option -d/--delay requires an integer";
+            // If there are no arguments after "-d"
+            if (++i == argc)
+                die(err);
+            istringstream ss(argv[i]);
+            if (! (ss >> options.delay))
+                die(err);
+            delay_changed = true;
+        } else if (cmd == "--dump-tape") {
+            options.dump_tape = true;
+        } else if (cmd == "--show-tape") {
+            options.show_tape = true;
+        } else if (cmd == "-i" || cmd == "--input") {
+            options.use_input = true;
+            if (++i == argc)
+                die("Option -i/--input requires a value");
+            // TODO: is this broken? can this be improved?
+            for (int j=0; argv[i][j] != '\0'; j++)
+                input.push_back(argv[i][j]);
+        } else if (cmd == "-w" || cmd == "--width") {
+            const char *err = "Option -w/--width requires an integer";
+            if (++i == argc)
+                die(err);
+            istringstream ss(argv[i]);
+            if (! (ss >> options.width))
+                die(err);
+        } else {
+            die("Unknown option: " + cmd);
         }
     }
 
     // Terminal width is too small for even 1 cell
-    if (width < 7)
-        die("terminal is not wide enough");
-
-    // -c/--stdin-code and -f/--stdin-filenames were both given
-    if (stdin_code && stdin_filenames)
-        die("arguments -c/--stdin-code and -f/--stdin-filenames" \
-                " cannot be used together");
+    if (options.width < 7)
+        die("Terminal is not wide enough");
 
     // --dump-tape and --show-tape were both given
-    if (dump_tape && show_tape)
-        die("arguments --dump-tape and --show-tape" \
-                " cannot be used together");
+    if (options.dump_tape && options.show_tape)
+        die("Options --dump-tape and --show-tape cannot be used together");
 
     // -i/--input was given without --show-tape
-    if (use_input && !show_tape)
-        die("-i/--input can only be used with --show-tape");
+    if (options.use_input && !options.show_tape)
+        die("Option -i/--input can only be used with --show-tape");
 
     // Auto set delay if --show-tape and delay wasn't changed by user
-    if (show_tape && !delay_changed)
-        delay = 125;
+    if (options.show_tape && !delay_changed)
+        options.delay = 125;
 
     // All code to evaluate
     vector<vector<char>> to_eval;
 
-    if (stdin_code) {
+    // If something is being piped in
+    if (!isatty(STDIN_FILENO)) {
         // Read code from stdin into in_code
         string in_code;
         for (string in_line; getline(cin, in_line);)
             in_code += in_line;
         if (in_code.size())
             to_eval.push_back(cleanup(in_code));
-    } else if (stdin_filenames) {
-        // Read filenames from stdin into infiles
-        for (string in_line; getline(cin, in_line);)
-            infiles.push_back(in_line);
     }
 
-    // Append code from each file in infiles to to_eval
+    // Read code from each infile into to_eval
     for (string fn : infiles) {
         ifstream bf_script(fn);
         if (bf_script.is_open()) {
@@ -407,7 +405,7 @@ int main(int argc, char** argv) {
 
     // Evaluate all code
     for (vector<char> code : to_eval)
-        evaluate(code, width, delay, dump_tape, show_tape, use_input, input);
+        evaluate(code, input, &options);
 
     return 0;
 }
