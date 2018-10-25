@@ -129,7 +129,7 @@ void evaluate(vector<char> code, int width, int delay, bool dump_tape,
     int cellptr = 0;
 
     char cmd;
-    int n_lines;
+    int n_lines = 0;
     while (codeptr < (int) code.size()) {
         if (show_tape)
             n_lines = print_cells(cells, width, cellptr);
