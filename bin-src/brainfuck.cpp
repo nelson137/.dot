@@ -276,6 +276,15 @@ void help() {
 }
 
 
+int get_num(string str, string err) {
+    int num;
+    istringstream ss(str);
+    if (! (ss >> num))
+        die(err);
+    return num;
+}
+
+
 vector<string> split_options(vector<string> args) {
     vector<string> split;
     for (string arg : args) {
@@ -330,9 +339,7 @@ int main(int argc, char** argv) {
             // If there are no arguments after "-d"
             if (++i == argc)
                 die(err);
-            istringstream ss(argv[i]);
-            if (! (ss >> options.delay))
-                die(err);
+            options.delay = get_num(argv[i], err);
             delay_changed = true;
         } else if (cmd == "--dump-tape") {
             options.dump_tape = true;
@@ -349,9 +356,7 @@ int main(int argc, char** argv) {
             const char *err = "Option -w/--width requires an integer";
             if (++i == argc)
                 die(err);
-            istringstream ss(argv[i]);
-            if (! (ss >> options.width))
-                die(err);
+            options.width = get_num(argv[i], err);
         } else {
             die("Unknown option: " + cmd);
         }
