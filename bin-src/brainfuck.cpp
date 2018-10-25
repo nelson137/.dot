@@ -13,7 +13,7 @@
 using namespace std;
 
 
-void err_out(string err) {
+void die(string err) {
     cerr << "brainfuck: " << err << endl;
     exit(1);
 }
@@ -79,7 +79,7 @@ char getch() {
     t.c_cc[VTIME] = 0;
     t.c_cc[VMIN] = 1;
     if (tcsetattr(fileno(stdin), TCSANOW, &t) < 0)
-        err_out("unable to set terminal to single character mode");
+        die("unable to set terminal to single character mode");
 
     cout << "Input: ";
 
@@ -92,7 +92,7 @@ char getch() {
 
     // Restore terminal mode
     if (tcsetattr(fileno(stdin), TCSANOW, &t_saved) < 0)
-        err_out("unable to restore terminal mode");
+        die("unable to restore terminal mode");
 
     return c;
 }
@@ -169,7 +169,7 @@ void evaluate(vector<char> code, int width, int delay, bool dump_tape,
             case ',':
                 if (use_input) {
                     if (input.size() == 0)
-                        err_out("runtime error: not enough input was given");
+                        die("runtime error: not enough input was given");
                     cells.at(cellptr) = (int)input.at(0);
                     input.erase(input.begin());
                 } else {
@@ -310,11 +310,11 @@ int main(int argc, char** argv) {
             } else if (cmd == "-d" || cmd == "--delay") {
                 string err = "-d/--delay requires an integer";
                 if (++i == argc) {
-                    err_out(err);
+                    die(err);
                 } else {
                     istringstream ss(argv[i]);
                     if (! (ss >> delay))
-                        err_out(err);
+                        die(err);
                     delay_changed = true;
                 }
             } else if (cmd == "--dump-tape") {
@@ -324,7 +324,7 @@ int main(int argc, char** argv) {
             } else if (cmd == "-i" || cmd == "--input") {
                 use_input = true;
                 if (++i == argc)
-                    err_out("-i/--input requires a value");
+                    die("-i/--input requires a value");
                 else {
                     // TODO: is this broken? can this be improved?
                     char* arg_i= argv[i];
@@ -334,14 +334,14 @@ int main(int argc, char** argv) {
             } else if (cmd == "-w" || cmd == "--width") {
                 string err = "-w/--width requires an integer";
                 if (++i == argc) {
-                    err_out(err);
+                    die(err);
                 } else {
                     istringstream ss(argv[i]);
                     if (! (ss >> width))
-                        err_out(err);
+                        die(err);
                 }
             } else {
-                err_out("unknown option: " + cmd);
+                die("unknown option: " + cmd);
             }
         } else {  // Filename
             infiles.push_back(cmd);
@@ -350,21 +350,21 @@ int main(int argc, char** argv) {
 
     // Terminal width is too small for even 1 cell
     if (width < 7)
-        err_out("terminal is not wide enough");
+        die("terminal is not wide enough");
 
     // -c/--stdin-code and -f/--stdin-filenames were both given
     if (stdin_code && stdin_filenames)
-        err_out("arguments -c/--stdin-code and -f/--stdin-filenames" \
+        die("arguments -c/--stdin-code and -f/--stdin-filenames" \
                 " cannot be used together");
 
     // --dump-tape and --show-tape were both given
     if (dump_tape && show_tape)
-        err_out("arguments --dump-tape and --show-tape" \
+        die("arguments --dump-tape and --show-tape" \
                 " cannot be used together");
 
     // -i/--input was given without --show-tape
     if (use_input && !show_tape)
-        err_out("-i/--input can only be used with --show-tape");
+        die("-i/--input can only be used with --show-tape");
 
     // Auto set delay if --show-tape and delay wasn't changed by user
     if (show_tape && !delay_changed)
@@ -396,13 +396,13 @@ int main(int argc, char** argv) {
             to_eval.push_back(cleanup(code));
             bf_script.close();
         } else {
-            err_out("cannot open file " + fn);
+            die("cannot open file " + fn);
         }
     }
 
     // No code or filenames were given
     if (!to_eval.size())
-        err_out("no input given");
+        die("no input given");
 
     // Evaluate all code
     for (vector<char> code : to_eval)
