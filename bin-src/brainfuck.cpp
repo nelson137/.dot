@@ -92,7 +92,7 @@ char getch() {
     t.c_cc[VTIME] = 0;
     t.c_cc[VMIN] = 1;
     if (tcsetattr(fileno(stdin), TCSANOW, &t) < 0)
-        die("unable to set terminal to single character mode");
+        die("Unable to set terminal to single character mode");
 
     cout << "Input: ";
 
@@ -101,11 +101,12 @@ char getch() {
     streambuf *pbuf = cin.rdbuf();
     c = pbuf->sbumpc();
 
-    cout << "\r\33[K";  // Clear line
+    // Clear line
+    cout << "\r\33[K";
 
     // Restore terminal mode
     if (tcsetattr(fileno(stdin), TCSANOW, &t_saved) < 0)
-        die("unable to restore terminal mode");
+        die("Unable to restore terminal mode");
 
     return c;
 }
@@ -395,7 +396,7 @@ int main(int argc, char** argv) {
             to_eval.push_back(cleanup(code));
             bf_script.close();
         } else {
-            die("cannot open file " + fn);
+            die("Cannot open file: " + fn);
         }
     }
 
