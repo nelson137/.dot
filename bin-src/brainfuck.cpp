@@ -9,6 +9,9 @@
 #include <termios.h>
 #include <thread>
 #include <vector>
+#include <unistd.h>
+
+#include <sys/ioctl.h>
 
 using namespace std;
 
@@ -210,23 +213,21 @@ vector<char> cleanup(string dirty_code) {
 }
 
 
+/**
+ * Get terminal cols, default to 80
+ */
 int get_term_width() {
-    // Get terminal cols, default to 80
-    int width;
-    string out;
-    array<char, 128> buffer;
-    shared_ptr<FILE> pipe(popen("tput cols", "r"), pclose);
-    if (pipe) {
-        while (!feof(pipe.get())) {
-            if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
-                out += buffer.data();
-        }
-        width = stoi(out);
-    } else {
-        width = 80;
-    }
+    struct winsize w;
+    int cols;
 
-    return width - 2;
+    int ret = ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+
+    if (ret < 0)
+        cols = 80;
+    else
+        cols = w.ws_col;
+
+    return cols - 2;
 }
 
 
