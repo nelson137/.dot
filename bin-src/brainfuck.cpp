@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <array>
 #include <chrono>
+#include <cstdarg>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -26,8 +27,11 @@ typedef struct {
 } Options;
 
 
-void die(string err) {
-    cerr << "brainfuck: " << err << endl;
+void die(const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    vfprintf(stderr, fmt, args);
+    va_end(args);
     exit(1);
 }
 
@@ -276,7 +280,7 @@ void help() {
 }
 
 
-int get_num(string str, string err) {
+int get_num(string str, const char *err) {
     int num;
     istringstream ss(str);
     if (! (ss >> num))
@@ -335,7 +339,7 @@ int main(int argc, char** argv) {
         } else if (cmd == "-h" || cmd == "--help") {
             help();
         } else if (cmd == "-d" || cmd == "--delay") {
-            string err = "Option -d/--delay requires an integer";
+            const char *err = "Option -d/--delay requires an integer";
             // If there are no arguments after "-d"
             if (++i == argc)
                 die(err);
@@ -358,7 +362,7 @@ int main(int argc, char** argv) {
                 die(err);
             options.width = get_num(argv[i], err);
         } else {
-            die("Unknown option: " + cmd);
+            die("Unknown option: %s", cmd);
         }
     }
 
@@ -401,7 +405,7 @@ int main(int argc, char** argv) {
             to_eval.push_back(cleanup(code));
             bf_script.close();
         } else {
-            die("Cannot open file: " + fn);
+            die("Cannot open file: %s", fn);
         }
     }
 
