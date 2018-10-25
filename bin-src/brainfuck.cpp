@@ -36,6 +36,41 @@ void die(const char *fmt, ...) {
 }
 
 
+void help() {
+    string help[24] {
+        "usage: brainfuck-py [-h] [-c | -f] [-d DELAY] [--dump-tape | --show-tape]",
+        "                    [-i INPUT] [-w WIDTH]",
+        "                    [FILE [FILE ...]]",
+        "",
+        "Executes one or more scripts written in Brainfuck.",
+        "",
+        "positional arguments:",
+        "  FILE                  One or more names of Brainfuck scripts. Filenames are",
+        "                        read from both the command line and from stdin.",
+        "",
+        "optional arguments:",
+        "  -h, --help            Show this help message and exit.",
+        "  -c, --stdin-code      Read Brainfuck code from stdin.",
+        "  -f, --stdin-filenames",
+        "                        Read Brainfuck script filenames from stdin.",
+        "  -d DELAY, --delay DELAY",
+        "                        The delay, in milliseconds, between the execution of",
+        "                        each Brainfuck command.",
+        "  --dump-tape           Output the tape after script execution.",
+        "  --show-tape           Show the tape during script execution.",
+        "  -i INPUT, --input INPUT",
+        "                        The input for Brainfuck's , command.",
+        "  -w WIDTH, --width WIDTH",
+        "                        The maximum width for the output."
+    };
+
+    for (string line : help)
+        cout << line << endl;
+
+    exit(1);
+}
+
+
 int print_cells(vector<int> raw_cells, int width, int ptr) {
     vector<string> cells;
     for (int cell : raw_cells)
@@ -214,19 +249,6 @@ void evaluate(vector<char> code, vector<char> input, Options *options) {
 }
 
 
-vector<char> cleanup(string dirty_code) {
-    char chars[] = { '<', '>', '+', '-', '[', ']', '.', ',' };
-    vector<char> bf_chars(chars, chars+8);
-
-    vector<char> clean_code;
-    for (char c : dirty_code)
-        if (find(bf_chars.begin(), bf_chars.end(), c) != bf_chars.end())
-            clean_code.push_back(c);
-
-    return clean_code;
-}
-
-
 /**
  * Get terminal cols, default to 80
  */
@@ -245,38 +267,16 @@ int get_term_width() {
 }
 
 
-void help() {
-    string help[24] {
-        "usage: brainfuck-py [-h] [-c | -f] [-d DELAY] [--dump-tape | --show-tape]",
-        "                    [-i INPUT] [-w WIDTH]",
-        "                    [FILE [FILE ...]]",
-        "",
-        "Executes one or more scripts written in Brainfuck.",
-        "",
-        "positional arguments:",
-        "  FILE                  One or more names of Brainfuck scripts. Filenames are",
-        "                        read from both the command line and from stdin.",
-        "",
-        "optional arguments:",
-        "  -h, --help            Show this help message and exit.",
-        "  -c, --stdin-code      Read Brainfuck code from stdin.",
-        "  -f, --stdin-filenames",
-        "                        Read Brainfuck script filenames from stdin.",
-        "  -d DELAY, --delay DELAY",
-        "                        The delay, in milliseconds, between the execution of",
-        "                        each Brainfuck command.",
-        "  --dump-tape           Output the tape after script execution.",
-        "  --show-tape           Show the tape during script execution.",
-        "  -i INPUT, --input INPUT",
-        "                        The input for Brainfuck's , command.",
-        "  -w WIDTH, --width WIDTH",
-        "                        The maximum width for the output."
-    };
+vector<char> cleanup(string dirty_code) {
+    char chars[] = { '<', '>', '+', '-', '[', ']', '.', ',' };
+    vector<char> bf_chars(chars, chars+8);
 
-    for (string line : help)
-        cout << line << endl;
+    vector<char> clean_code;
+    for (char c : dirty_code)
+        if (find(bf_chars.begin(), bf_chars.end(), c) != bf_chars.end())
+            clean_code.push_back(c);
 
-    exit(1);
+    return clean_code;
 }
 
 
