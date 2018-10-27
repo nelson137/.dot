@@ -321,6 +321,7 @@ int main(int argc, char** argv) {
     };
 
     vector<string> infiles;
+    bool read_code = false;
     bool delay_changed = false;
     vector<char> input;
 
@@ -340,6 +341,8 @@ int main(int argc, char** argv) {
             parsing_opts = false;
         } else if (cmd == "-h" || cmd == "--help") {
             help();
+        } else if (cmd == "-r" || cmd == "--read-code") {
+            read_code = true;
         } else if (cmd == "-d" || cmd == "--delay") {
             const char *err = "Option -d/--delay requires an integer";
             // If there are no arguments after "-d"
@@ -397,17 +400,23 @@ int main(int argc, char** argv) {
             to_eval.push_back(cleanup(in_code));
     }
 
-    // Read code from each infile into to_eval
-    for (string fn : infiles) {
-        ifstream bf_script(fn);
-        if (bf_script.is_open()) {
-            string code, code_line;
-            while (getline(bf_script, code_line))
-                code += code_line;
+    if (read_code) {
+        // Each element of infiles is code, append it to to_eval
+        for (string code : infiles)
             to_eval.push_back(cleanup(code));
-            bf_script.close();
-        } else {
-            die("Cannot open file: %s", fn);
+    } else {
+        // Read code from each infile into to_eval
+        for (string fn : infiles) {
+            ifstream bf_script(fn);
+            if (bf_script.is_open()) {
+                string code, code_line;
+                while (getline(bf_script, code_line))
+                    code += code_line;
+                to_eval.push_back(cleanup(code));
+                bf_script.close();
+            } else {
+                die("Cannot open file: %s", fn);
+            }
         }
     }
 
