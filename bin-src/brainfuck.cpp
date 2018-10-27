@@ -292,6 +292,8 @@ int get_num(string str, const char *err) {
 vector<string> split_options(vector<string> args) {
     vector<string> split;
     for (string arg : args) {
+        if (arg == "--")
+            return split;
         if (arg.substr(0,2) == "--")
             split.push_back(arg);
         else if (arg[0] == '-' && arg.length() > 1)
