@@ -302,16 +302,9 @@ void evaluate(vector<char> code, vector<char> input, Options *options) {
  */
 int get_term_width() {
     struct winsize w;
-    int cols;
-
     int ret = ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-
-    if (ret < 0)
-        cols = 80;
-    else
-        cols = w.ws_col;
-
-    return cols - 2;
+    int margin = 2;
+    return ret == 0 ? w.ws_col-margin : 80-margin;
 }
 
 
