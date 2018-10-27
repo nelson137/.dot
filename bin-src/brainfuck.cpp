@@ -7,13 +7,15 @@
 #include <iostream>
 #include <map>
 #include <sstream>
-#include <termios.h>
 #include <thread>
 #include <vector>
 
+#include <termios.h>
 #include <unistd.h>
 
 #include <sys/ioctl.h>
+
+#define ARRLEN(x) sizeof(x)/sizeof(x[0])
 
 using namespace std;
 
@@ -29,8 +31,6 @@ typedef struct {
     bool show_tape;
     // Whether or not to use the input vector
     bool use_input;
-    // The user input to use during program evaluation
-    vector<char> input;
 } Options;
 
 
@@ -201,7 +201,8 @@ map<int, int> build_bracemap(vector<char> code) {
 /**
  * Execute Brainfuck code.
  * The code is evaluated character by character according to the Brainfuck
- * specification (https://en.wikipedia.org/wiki/Brainfuck#Commands).
+ * specification (https://en.wikipedia.org/wiki/Brainfuck#Commands). The input
+ * is used during evaluation if input is needed.
  *
  * Usage of each member of the Options struct:
  *     The width integer is used to make sure the cells are printed correctly
@@ -214,8 +215,6 @@ map<int, int> build_bracemap(vector<char> code) {
  *         shown while the program is being evaluation.
  *     The use_input bool indicates whether or not to use the input character
  *         vector.
- *     The input character vector is is used for the Brainfuck program's input
- *         if use_input is true.
  */
 void evaluate(vector<char> code, vector<char> input, Options *options) {
     string output;
@@ -308,9 +307,12 @@ int get_term_width() {
 }
 
 
+/**
+ * Returns dirty_code with all non-Brainfuck characters removed.
+ */
 vector<char> cleanup(string dirty_code) {
     char chars[] = { '<', '>', '+', '-', '[', ']', '.', ',' };
-    vector<char> bf_chars(chars, chars+8);
+    vector<char> bf_chars(chars, chars+ARRLEN(chars));
 
     vector<char> clean_code;
     for (char c : dirty_code)
@@ -321,6 +323,10 @@ vector<char> cleanup(string dirty_code) {
 }
 
 
+/**
+ * Convert str to an integer.
+ * err is the error message to exit with if str cannot be converted.
+ */
 int get_num(string str, const char *err) {
     int num;
     istringstream ss(str);
@@ -330,16 +336,30 @@ int get_num(string str, const char *err) {
 }
 
 
-vector<string> split_options(vector<string> args) {
+/**
+ * Return the options, combined short optionss split apart.
+ * If args is a vector with the elements:
+ *     { "-a", "-bc", "--d", "--", "-e", "-fg", "--h" }
+ * The following vector is returned:
+ *     { "-a", "-b", "-c", "--d", "--", "-e", "-fg", "--h" };
+ * Explanation:
+ *     The first argument, "-a", is left as-is because it is a single short
+ *     option. The second argument, "-bc", is turned into {"-b", "-c"} because
+ *     it is two short options, "b" and "c", combined. The third argument,
+ *     "--d", is left alone because it is a long option. The fourth argument,
+ *     "--", is a sentinel indicating all subsequent arguments are not options.
+ *     Therefore, the remaining arguments are left untouched.
+ */
+vector<string> split_options(vector<string> arguments) {
     vector<string> split;
-    for (string arg : args) {
+    for (string arg : arguments) {
         if (arg == "--")
             return split;
         if (arg.substr(0,2) == "--")
             split.push_back(arg);
         else if (arg[0] == '-' && arg.length() > 1)
-            for (int j=1; j<(int)arg.length(); j++)
-                split.push_back('-' + string(1, arg[j]));
+            for (size_t i=1; i<arg.length(); i++)
+                split.push_back('-' + string(1, arg[i]));
         else
             split.push_back(arg);
     }
