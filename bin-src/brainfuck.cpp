@@ -10,6 +10,7 @@
 #include <termios.h>
 #include <thread>
 #include <vector>
+
 #include <unistd.h>
 
 #include <sys/ioctl.h>
@@ -18,15 +19,27 @@ using namespace std;
 
 
 typedef struct {
+    // Width of the terminal
     int width;
+    // Delay, in milliseconds, between each command's evaluation
     int delay;
+    // Print the tape after the program's evaluation
     bool dump_tape;
+    // Show the tape during the program's evaluation
     bool show_tape;
+    // Whether or not to use the input vector
     bool use_input;
+    // The user input to use during program evaluation
     vector<char> input;
 } Options;
 
 
+/**
+ * Print a message to stderr then exit.
+ * This function is a wrapper for vfprintf, meaning that the first argument
+ * can be a format string with a variable number of subsequent arguments
+ * corresponding to the number of format specifiers in the format string.
+ */
 void die(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
@@ -36,6 +49,9 @@ void die(const char *fmt, ...) {
 }
 
 
+/**
+ * Print this program's usage then exit.
+ */
 void help() {
     string help[24] {
         "usage: brainfuck-py [-h] [-c | -f] [-d DELAY] [--dump-tape | --show-tape]",
@@ -54,10 +70,10 @@ void help() {
         "  -f, --stdin-filenames",
         "                        Read Brainfuck script filenames from stdin.",
         "  -d DELAY, --delay DELAY",
-        "                        The delay, in milliseconds, between the execution of",
+        "                        The delay, in milliseconds, between the evaluation of",
         "                        each Brainfuck command.",
-        "  --dump-tape           Output the tape after script execution.",
-        "  --show-tape           Show the tape during script execution.",
+        "  --dump-tape           Output the tape after script evaluation.",
+        "  --show-tape           Show the tape during script evaluation.",
         "  -i INPUT, --input INPUT",
         "                        The input for Brainfuck's , command.",
         "  -w WIDTH, --width WIDTH",
@@ -71,6 +87,14 @@ void help() {
 }
 
 
+/**
+ * Print out cells.
+ * The cell that the Brainfuck program's cell pointer (ptr) is pointing to is
+ * suddrounded by parentheses. This function is meant to be called many times
+ * during the Brainfuck program's evaluation. It uses ANSI escape codes to
+ * overwrite the previous print_cells output. The terminals's width (width) is
+ * used to wrap the cells so that the cells get printed correctly.
+ */
 int print_cells(vector<int> raw_cells, int width, int ptr) {
     vector<string> cells;
     for (int cell : raw_cells)
@@ -120,6 +144,11 @@ int print_cells(vector<int> raw_cells, int width, int ptr) {
 }
 
 
+/**
+ * Return one character read from stdin.
+ * The user is prompted for input; this prompt is cleared after the user
+ * presses a key.
+ */
 char getch() {
     struct termios t;
     struct termios t_saved;
@@ -169,6 +198,25 @@ map<int, int> build_bracemap(vector<char> code) {
 }
 
 
+/**
+ * Execute Brainfuck code.
+ * The code is evaluated character by character according to the Brainfuck
+ * specification (https://en.wikipedia.org/wiki/Brainfuck#Commands).
+ *
+ * Usage of each member of the Options struct:
+ *     The width integer is used to make sure the cells are printed correctly
+ *         if the --dump-tape or --show-tape options are used.
+ *     The delay integer is the number of milliseconds to sleep for between
+ *         each command's evaluation.
+ *     The dump_tape bool indicates whether of not the program's tape should be
+ *         printed after the program finishes evaluation.
+ *     The show_tape bool indicates whether or not the program's tape should be
+ *         shown while the program is being evaluation.
+ *     The use_input bool indicates whether or not to use the input character
+ *         vector.
+ *     The input character vector is is used for the Brainfuck program's input
+ *         if use_input is true.
+ */
 void evaluate(vector<char> code, vector<char> input, Options *options) {
     string output;
     map<int, int> bracemap = build_bracemap(code);
@@ -250,7 +298,7 @@ void evaluate(vector<char> code, vector<char> input, Options *options) {
 
 
 /**
- * Get terminal cols, default to 80
+ * Return terminal width, default to 80.
  */
 int get_term_width() {
     struct winsize w;
@@ -307,7 +355,7 @@ vector<string> split_options(vector<string> args) {
 }
 
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
     // Split options -abc into -a -b -c
     vector<string> orig_args(argv, argv+argc);
     vector<string> args = split_options(orig_args);
