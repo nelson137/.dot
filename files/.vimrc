@@ -164,6 +164,24 @@ function! OpenVimrc()
     edit $MYVIMRC
 endfunction
 
+function! GetPythonVersion()
+    let l:shebang = system('head -1 "'.expand('%').'"')
+    if l:shebang[:1] == "#!"
+        let l:cmd = l:shebang[2:][:-2]
+        exe 'let l:version = system("'.l:cmd.' --version")'
+        let l:vnum = split(l:version)[1]
+        if l:vnum[0] == '3'
+            return 'python3'
+        elseif l:vnum[0] == '2'
+            return 'python2'
+        else
+            return ''
+        endif
+    else
+        return ''
+    endif
+endfunction
+
 
 
 " Key bindings
@@ -360,6 +378,8 @@ let s:ldflags='-I'.$HOME.'/.include -L'.$HOME.'/.lib -lm -lmylib'
 let g:ale_c_gcc_options = s:cflags . ' ' . s:ldflags
 let g:ale_linters = { 'python': ['flake8', 'pycodestyle', 'pylint', 'pyls'] }
 let g:ale_use_global_executables = 1
+let g:ale_python_flake8_executable = GetPythonVersion()
+let g:ale_python_pylint_executable = g:ale_python_flake8_executable
 let g:ale_command_wrapper = 'nice -n 3'
 let g:ale_echo_msg_format = '%linter%: %code: %%s'
 let g:ale_loclist_msg_format = g:ale_echo_msg_format
