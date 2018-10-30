@@ -167,18 +167,18 @@ endfunction
 function! GetPythonVersion()
     let l:shebang = system('head -1 "'.expand('%').'"')
     if l:shebang[:1] == "#!"
-        let l:cmd = l:shebang[2:][:-2]
-        exe 'let l:version = system("'.l:cmd.' --version")'
-        let l:vnum = split(l:version)[1]
+        let l:cmd = l:shebang[2:][:-2] . ' --version 2>&1'
+        let l:vnum = split(system(l:cmd))[1]
         if l:vnum[0] == '3'
             return 'python3'
         elseif l:vnum[0] == '2'
             return 'python2'
         else
-            return ''
+            return 'unrecognized version'
         endif
     else
-        return ''
+        " Default to python3 if there is no shebang
+        return 'python3'
     endif
 endfunction
 
