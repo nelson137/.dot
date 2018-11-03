@@ -30,29 +30,29 @@ class Tape:
     """
 
     def __init__(self, term_width):
-        self.cells = [0]
-        self.ptr = 0
-        self.term_width = term_width
+        self._cells = [0]
+        self._ptr = 0
+        self._term_width = term_width
 
     @property
     def current_cell(self):
         """Return the cell the pointer is currently pointing at."""
-        return self.cells[self.ptr]
+        return self._cells[self._ptr]
 
     @current_cell.setter
     def current_cell(self, value):
         """Set the value of the cell the pointer is currently pointing at."""
-        self.cells[self.ptr] = value
+        self._cells[self._ptr] = value
 
     def move_right(self):
         """Increase self.value by 1 if self.value won't exceed self.maximum."""
-        self.ptr += 1
-        if self.ptr == len(self.cells):
-            self.cells.append(0)
+        self._ptr += 1
+        if self._ptr == len(self._cells):
+            self._cells.append(0)
 
     def move_left(self):
         """Decrease self.value by 1 if self.value won't exceed self.maximum."""
-        self.ptr = 0 if self.ptr <= 0 else self.ptr - 1
+        self._ptr = 0 if self._ptr <= 0 else self._ptr - 1
 
     def inc_cell(self):
         """Increase the value of the current_cell.
@@ -75,12 +75,12 @@ class Tape:
         where the pointer is by surrounding current_cell with parentheses.
         """
         # Format cells
-        for_out = [' %s ' % str(c).ljust(3) for c in self.cells]
+        for_out = [' %s ' % str(c).ljust(3) for c in self._cells]
         if show_ptr:
-            for_out[self.ptr] = '(%s)' % str(self.cells[self.ptr]).ljust(3)
+            for_out[self._ptr] = '(%s)' % str(self._cells[self._ptr]).ljust(3)
 
         # Number of cells per line
-        nc = int((self.term_width+1)/6)
+        nc = int((self._term_width+1)/6)
 
         # Split cells into lines with a max of nc cells per line
         lines = [' '.join(for_out[i:i+nc]) for i in range(0, len(for_out), nc)]
@@ -101,8 +101,7 @@ def err_out(err):
 
 
 def getch():
-    """Read one character from stdin."""
-    # Prompt for input
+    """Return one character read from stdin."""
     print('Input: ', end='', flush=True)
 
     try:
@@ -112,18 +111,18 @@ def getch():
         import tty
         from termios import error, tcgetattr, tcsetattr, TCSADRAIN
         fd = sys.stdin.fileno()
-        old_settings = tcgetattr(fd)  # save tty settings
+        orig_settings = tcgetattr(fd)  # save tty settings
         try:
             tty.setraw(fd)
             char = sys.stdin.read(1)
         except error:
             char = None
         finally:
-            tcsetattr(fd, TCSADRAIN, old_settings)  # restore tty settings
+            tcsetattr(fd, TCSADRAIN, orig_settings)  # restore tty settings
     finally:
         if char is None:
-            msg = 'runtime error: stdin is already in use.' + \
-                  '\nmake sure nothing is being piped in'
+            msg = 'runtime error: stdin is already in use.\n' + \
+                  'make sure nothing is being piped in'
             err_out(msg)
 
     # Clear the prompt and echo'd input
@@ -135,13 +134,17 @@ def getch():
 def build_bracemap(code):
     """Return a dict linking opening and closing square brackets.
 
+    Each key in the returned bracemap is the index of either an opening square
+    bracket ([) or a closing square bracket (]) in the brainfuck code. If it
+    is the index of an opening square bracket, its value is the index of its
+    matching closing square bracket. If it is the index of a closing square
+    bracket, its value is the index of its matching opening square bracket.
+
     Example:
         >>> build_bracemap('++[>++<-]')
         {2: 8, 8: 2}
 
-    Therefore, when querying a bracemap with the index of the opening square
-    bracket in the code, the index of its matching closing square bracket is
-    returned. Nested square brackets are handled properly.
+    Nested square brackets are handled properly. There is no nesting limit.
     """
     temp_bracestack, bracemap = [], {}
     for pos, cmd in enumerate(code):
@@ -297,9 +300,9 @@ def main(args):
         to_eval.append(cleanup(sys.stdin.read()))
 
     # Combine config variables into one namespace
-    config = Namespace(width=args.width, delay=args.delay,
-                       dump_tape=args.dump_tape, show_tape=args.show_tape,
-                       use_user_in=use_user_in)
+    config = Namespace(
+        width=args.width, delay=args.delay, dump_tape=args.dump_tape,
+        show_tape=args.show_tape, use_user_in=use_user_in)
 
     # Evaluate all code
     for code in to_eval:
