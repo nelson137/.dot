@@ -254,19 +254,18 @@ def get_term_width():
     return width - 2
 
 
-@contextmanager
-def open_script(fn):
+def read_script(fn):
     """Open file fn, opening sys.stdin for files named "-"."""
-    if fn == '-':
-        script = sys.stdin
-    else:
-        script = open(fn, 'r')
-
     try:
-        yield script
+        script = sys.stdin if fn == '-' else open(fn, 'r')
+        code = script.read()
+    except OSError:
+        err_out('cannot open file ' + fn)
     finally:
         if script is not sys.stdin:
             script.close()
+
+    return code
 
 
 def main(args):
@@ -287,11 +286,7 @@ def main(args):
 
     for fn in infiles:
         # Read the contents of each file into to_eval
-        try:
-            with open_script(fn) as script:
-                to_eval.append(cleanup(script.read()))
-        except OSError:
-            err_out('cannot open file ' + fn)
+        to_eval.append(cleanup(read_script(fn)))
 
     if not to_eval:
         if sys.stdin.isatty():
