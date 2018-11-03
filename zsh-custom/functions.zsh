@@ -52,6 +52,12 @@ dc() {
 
 
 
+diff() {
+    git diff --no-index -- "$@"
+}
+
+
+
 force_wifi() {
     # Open http site to force WAP portal redirect
     dc xdg-open 'http://icanhazip.com'
