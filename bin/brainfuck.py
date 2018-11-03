@@ -287,7 +287,7 @@ def main(args):
         try:
             with open_script(fn) as script:
                 to_eval.append(cleanup(script.read()))
-        except FileNotFoundError:
+        except OSError:
             err_out('cannot open file ' + fn)
 
     if not to_eval:
