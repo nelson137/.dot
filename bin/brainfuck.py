@@ -244,7 +244,7 @@ def get_term_width():
     """Get terminal width, default to 80."""
     try:
         width = int(check_output(['tput', 'cols'], stderr=DEVNULL))
-    except CalledProcessError:
+    except (ValueError, CalledProcessError):
         width = 80
 
     # Subtract 2 for 1 column padding on either side
