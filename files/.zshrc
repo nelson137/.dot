@@ -111,6 +111,14 @@ setopt RC_QUOTES
 # Don't eat preceding space when | is typed
 export ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;&'
 
+# Change what characters are considered a word
+my-backward-delete-word () {
+    local WORDCHARS='&*|'
+    zle backward-delete-word
+}
+zle -N my-backward-delete-word
+bindkey '^W' my-backward-delete-word
+
 # Phantomjs
 export QT_QPA_PLATFORM=offscreen
 export QT_QPA_FONTDIR=/usr/share/fonts
