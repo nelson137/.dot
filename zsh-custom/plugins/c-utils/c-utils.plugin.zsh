@@ -37,7 +37,7 @@ ce() {
     fi
 
     # Surround each exec arg with single quotes if there are any args
-    exec_args="$@[2,$#]"
+    exec_args=( $@[2,$#] )
     (( $# > 1 )) &&
         exec_args="'${(j:' ':)exec_args}'"
 
