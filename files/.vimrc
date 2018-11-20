@@ -10,7 +10,7 @@ set nocompatible            " Be iMproved
 set noswapfile              " I like to live dangerously
 set scrolloff=4             " Keep cursor 4 lines from top & bot when scrolling
 set shell=zsh               " Shell to use for !
-set showmode                " Show current mode (normal|visual|insert|...)
+set showmode                " Show current mode (normal, visual, insert, etc)
 set splitbelow              " Open horizontal splits below
 set splitright              " Open vertical splits to the right
 set timeoutlen=500          " Max period of 500ms between keystrokes
