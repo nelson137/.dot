@@ -108,9 +108,9 @@ function! CompileAndRun()
     " % = filename
     " %< = filename without extension
     if l:filetype == 'c'
-        exe 'AsyncRun gcc % -o %<; ./%<'
+        exe 'AsyncRun gcc % -o %< && {./%<; rm %<}'
     elseif l:filetype == 'cpp'
-        exe 'AsyncRun g++ % -o %<; ./%<'
+        exe 'AsyncRun g++ % -o %< && {./%<; rm %<}'
     elseif l:filetype == 'sh' || l:filetype == 'zsh'
         if !IsX()
             let l:prompt = '"Do you want to make this file executable [y/n]? "'
