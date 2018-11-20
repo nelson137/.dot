@@ -93,6 +93,8 @@ autocmd FileType cpp,javascript,python,sh,vim,zsh
 autocmd FileType c
     \ setlocal colorcolumn=+1 textwidth=119
 
+autocmd FileType asm ALEDisable
+
 
 
 " Functions
