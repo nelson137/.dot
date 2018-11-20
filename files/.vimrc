@@ -2,6 +2,7 @@
 
 set autoread                " Automatically read changes made on disk
 set backspace=indent,eol,start
+set clipboard=unnamedplus   " Use the system clipboard (requires vim-gtk*)
 set encoding=utf-8
 set history=500             " Remember 500 ex commands
 set incsearch               " Highlight search matches while typing
