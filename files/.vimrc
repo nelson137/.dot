@@ -105,8 +105,11 @@ function! CompileAndRun()
     endif
 
     exe 'w'
-    if l:filetype == 'cpp'
-        " % = filename, %< = filename sans extension
+    " % = filename
+    " %< = filename without extension
+    if l:filetype == 'c'
+        exe 'AsyncRun gcc % -o %<; ./%<'
+    elseif l:filetype == 'cpp'
         exe 'AsyncRun g++ % -o %<; ./%<'
     elseif l:filetype == 'sh' || l:filetype == 'zsh'
         if !IsX()
