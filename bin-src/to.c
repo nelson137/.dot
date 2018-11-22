@@ -398,17 +398,17 @@ int main(int orig_argc, char *orig_argv[]) {
 
     char compoundOpts[argc*3];
     char *coPtr = compoundOpts;
-    int count = 0;
+    int argv_i = 0;
     for (int i=0; i<orig_argc; i++) {
         if (isCompoundOpt(orig_argv[i])) {
             for (int j=1; j<strlen(orig_argv[i]); j++) {
-                argv[count++] = coPtr;
+                argv[argv_i++] = coPtr;
                 *(coPtr++) = '-';
                 *(coPtr++) = orig_argv[i][j];
                 *(coPtr++) = '\0';
             }
         } else {
-            argv[count++] = orig_argv[i];
+            argv[argv_i++] = orig_argv[i];
         }
     }
 
@@ -515,12 +515,12 @@ int main(int orig_argc, char *orig_argv[]) {
     if (commands & REMOVE) {
         int rm_args_len = lang == LangASM ? 4 : 3;
         char *rm_args[rm_args_len];
-        int count = 0;
-        rm_args[count++] = "/bin/rm";
+        int rm_args_i = 0;
+        rm_args[rm_args_i++] = "/bin/rm";
         if (lang == LangASM)
-            rm_args[count++] = obj_name;
-        rm_args[count++] = exe_name;
-        rm_args[count] = NULL;
+            rm_args[rm_args_i++] = obj_name;
+        rm_args[rm_args_i++] = exe_name;
+        rm_args[rm_args_i] = NULL;
 
         if (dryrun) {
             print_args(rm_args, rm_args_len);
