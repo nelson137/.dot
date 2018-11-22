@@ -34,7 +34,7 @@ typedef struct {
     char err[MAX];
 } PRet;
 
-char *USAGE = "Usage: eo <commands> [-x LANG] <file>\n";
+char *USAGE = "Usage: eo <commands> [--dry-run] [-x LANG] <file>\n";
 
 
 /*************************************************
@@ -51,6 +51,16 @@ void die(const char *fmt, ...) {
     vfprintf(stderr, fmt, args);
     va_end(args);
     exit(1);
+}
+
+
+void print_args(char *args[], int len) {
+    for (int i=0; i<len-1; i++)
+        printf(
+            "%s%s",
+            i > 0 ? " " : "",
+            args[i]);
+    printf("\n");
 }
 
 
@@ -234,7 +244,7 @@ int autoDetermineLang(char *fn) {
 /**
  * Compile the program for assembly.
  */
-void compile_asm(char *src_name, char *obj_name, char *exe_name) {
+void compile_asm(int dryrun, char *src_name, char *obj_name, char *exe_name) {
     char *nasm_args[] = {
         "/usr/bin/nasm", "-f", "elf64", src_name, "-o", obj_name, NULL};
     int nasm_args_len = ARRLEN(nasm_args);
@@ -243,18 +253,21 @@ void compile_asm(char *src_name, char *obj_name, char *exe_name) {
         "/usr/bin/ld", obj_name, "-o", exe_name, NULL};
     int ld_args_len = ARRLEN(ld_args);
 
-    PRet nasm_ret;
-    execute(&nasm_ret, nasm_args, nasm_args_len);
-
-    PRet ld_ret;
-    execute(&ld_ret, ld_args, ld_args_len);
+    if (dryrun) {
+        print_args(nasm_args, nasm_args_len);
+        print_args(ld_args, ld_args_len);
+    } else {
+        PRet nasm_ret, ld_ret;
+        execute(&nasm_ret, nasm_args, nasm_args_len);
+        execute(&ld_ret, ld_args, ld_args_len);
+    }
 }
 
 
 /**
  * Compile the program for C.
  */
-void compile_c(char *src_name, char *exe_name) {
+void compile_c(int dryrun, char *src_name, char *exe_name) {
     // Get the cflags for the python library
     PRet pylibs;
     char *pylib_args[] = {
@@ -281,6 +294,7 @@ void compile_c(char *src_name, char *exe_name) {
     // Example string would now be: "abc\0def\0ghi\0"
     // Fill the flags array with a pointer to each null-terminated segment
     char *pylib_flags[n];
+    int pylib_flags_len = n;
     char *pointer = pylibs.out;
     pylib_flags[0] = pointer;
     // array with example string will be: {"abc\0", "def\0", "ghi\0"}
@@ -294,34 +308,44 @@ void compile_c(char *src_name, char *exe_name) {
         "-std=c11", "-O3", "-Wall", "-Werror",
         src_name, "-o", exe_name,
         "-lm", "-ljson-c", "-lmylib"};
+    int base_args_len = ARRLEN(base_args);
 
     // Combine base_args, pylib_flags, and NULL sentinel
-    char *args[ARRLEN(base_args)+ARRLEN(pylib_flags)+1];
+    int args_len = base_args_len + pylib_flags_len + 1;
+    char *args[args_len];
     int count = 0;
-    for (int i=0; i<ARRLEN(base_args); i++)
+    for (int i=0; i<base_args_len; i++)
         args[count++] = base_args[i];
-    for (int i=0; i<ARRLEN(pylib_flags); i++)
+    for (int i=0; i<pylib_flags_len; i++)
         args[count++] = pylib_flags[i];
     args[count] = NULL;
 
-    // Execute
-    PRet ret;
-    execute(&ret, args, ARRLEN(args));
+    if (dryrun) {
+        print_args(args, args_len);
+    } else {
+        PRet ret;
+        execute(&ret, args, args_len);
+    }
 }
 
 
 /**
  * Compile the program for C++.
  */
-void compile_cpp(char *src_name, char *exe_name) {
+void compile_cpp(int dryrun, char *src_name, char *exe_name) {
     char *args[] = {
         "/usr/bin/g++",
         "-std=c++11", "-O3", "-Wall", "-Werror",
         src_name, "-o", exe_name,
         NULL};
+    int args_len = ARRLEN(args);
 
-    PRet ret;
-    execute(&ret, args, ARRLEN(args));
+    if (dryrun) {
+        print_args(args, args_len);
+    } else {
+        PRet ret;
+        execute(&ret, args, args_len);
+    }
 }
 
 
@@ -361,6 +385,7 @@ int main(int argc, char *argv[]) {
      */
 
     int parsing_opts = 1;
+    int dryrun = 0;
     char *src_name = NULL;
     int too_many_src_fns = 0;
     char *forced_ext = NULL;
@@ -370,6 +395,8 @@ int main(int argc, char *argv[]) {
             argv[i]++;
             if (strMatchesAny(argv[i], "-", NULL))
                 parsing_opts = 0;
+            else if (strMatchesAny(argv[i], "-dry-run", NULL))
+                dryrun = 1;
             else if (strMatchesAny(argv[i], "x", "-language", NULL))
                 forced_ext = argv[++i];
             else
@@ -380,6 +407,10 @@ int main(int argc, char *argv[]) {
             src_name = argv[i];
         }
     }
+
+    /**
+     * Error messages and setup
+     */
 
     // None or more than one src_name was given
     if (src_name == NULL || too_many_src_fns)
@@ -409,29 +440,48 @@ int main(int argc, char *argv[]) {
     char obj_name[strlen(exe_name)+2+1];
     snprintf(obj_name, sizeof(obj_name), "%s.o", exe_name);
 
+    /**
+     * Execute commands
+     */
+
     if (lang == LangASM)
-        compile_asm(src_name, obj_name, exe_name);
+        compile_asm(dryrun, src_name, obj_name, exe_name);
     else if (lang == LangC)
-        compile_c(src_name, exe_name);
+        compile_c(dryrun, src_name, exe_name);
     else if (lang == LangCPP)
-        compile_cpp(src_name, exe_name);
+        compile_cpp(dryrun, src_name, exe_name);
 
     if (commands & EXECUTE) {
-        PRet exeRet;
         char exe_arg[2+strlen(exe_name)+1];
         snprintf(exe_arg, sizeof(exe_arg), "./%s", exe_name);
-        char *args[] = {exe_arg, NULL};
-        execute(&exeRet, args, ARRLEN(args));
-        printf("%s", exeRet.out);
-        fprintf(stderr, "%s", exeRet.err);
+        char *exec_args[] = {exe_arg, NULL};
+        int exec_args_len = ARRLEN(exec_args);
+        if (dryrun) {
+            print_args(exec_args, exec_args_len);
+        } else {
+            PRet exeRet;
+            execute(&exeRet, exec_args, exec_args_len);
+            printf("%s", exeRet.out);
+            fprintf(stderr, "%s", exeRet.err);
+        }
     }
 
     if (commands & REMOVE) {
-        char *rm_err = "Could not remove file: %s\n";
-        if (lang == LangASM && remove(obj_name) < 0)
-            die(rm_err, obj_name);
-        if (remove(exe_name) < 0)
-            die(rm_err, exe_name);
+        int rm_args_len = lang == LangASM ? 4 : 3;
+        char *rm_args[rm_args_len];
+        int count = 0;
+        rm_args[count++] = "/bin/rm";
+        if (lang == LangASM)
+            rm_args[count++] = obj_name;
+        rm_args[count++] = exe_name;
+        rm_args[count] = NULL;
+
+        if (dryrun) {
+            print_args(rm_args, rm_args_len);
+        } else {
+            PRet rmRet;
+            execute(&rmRet, rm_args, rm_args_len);
+        }
     }
 
     return 0;
