@@ -54,6 +54,21 @@ void die(const char *fmt, ...) {
 }
 
 
+int isOpt(char *arg) {
+    return arg[0] == '-' && strlen(arg) >= 2;
+}
+
+
+int isLongOpt(char *arg) {
+    return arg[0] == '-' && arg[1] == '-' && strlen(arg) > 2;
+}
+
+
+int isCompoundOpt(char *arg) {
+    return arg[0] == '-' && arg[1] != '-' && strlen(arg) > 2;
+}
+
+
 void print_args(char *args[], int len) {
     for (int i=0; i<len-1; i++)
         printf(
@@ -354,53 +369,78 @@ void compile_cpp(int dryrun, char *src_name, char *exe_name) {
  ************************************************/
 
 
-int main(int argc, char *argv[]) {
-    if (argc < 3)
-        die(USAGE, argv[0]);
+int main(int orig_argc, char *orig_argv[]) {
+    if (orig_argc < 3)
+        die(USAGE, orig_argv[0]);
 
     /**
-     * Determine the commands
+     * Pre-process arguments
      */
 
-    int commands = 0;
-    for (int i=0; argv[1][i]; i++) {
-        if (argv[1][i] == 'c')
-            commands |= COMPILE;
-        else if (argv[1][i] == 'e')
-            commands |= EXECUTE;
-        else if (argv[1][i] == 'r')
-            commands |= REMOVE;
-        else
-            die("Unknown command: %c\n", argv[1][i]);
+    int argc = 0;
+    int parsing_opts = 1;
+    for (int i=0; i<orig_argc; i++) {
+        if (strcmp(orig_argv[i], "--") == 0)
+            parsing_opts = 0;
+        else if (parsing_opts && isCompoundOpt(orig_argv[i]))
+            argc += strlen(orig_argv[i]) - 2;
+        argc++;
     }
 
-    if (commands == 0)
-        die("No commands were given\n");
+    /**
+     * Split compound options
+     * For example, -abc gets expanded to -a, -b, -c in-place
+     * If orig_argv is {"./t", "-abc", "--long", "-def"}, then
+     * argv will be {"./t", "-a", "-b", "-c", "--long", "-d", "-e", "-f"}
+     */
 
-    if (! (commands & COMPILE))
-        die("Program requires compilation\n");
+    char *argv[argc];
+
+    char compoundOpts[argc*3];
+    char *coPtr = compoundOpts;
+    int count = 0;
+    for (int i=0; i<orig_argc; i++) {
+        if (isCompoundOpt(orig_argv[i])) {
+            for (int j=1; j<strlen(orig_argv[i]); j++) {
+                argv[count++] = coPtr;
+                *(coPtr++) = '-';
+                *(coPtr++) = orig_argv[i][j];
+                *(coPtr++) = '\0';
+            }
+        } else {
+            argv[count++] = orig_argv[i];
+        }
+    }
 
     /**
      * Parse arguments
      */
 
-    int parsing_opts = 1;
+    parsing_opts = 1;
+    int commands = 0;
     int dryrun = 0;
     char *src_name = NULL;
     int too_many_src_fns = 0;
     char *forced_ext = NULL;
 
-    for (int i=2; i<argc; i++) {
-        if (parsing_opts && *argv[i] == '-') {
-            argv[i]++;
-            if (strMatchesAny(argv[i], "-", NULL))
+    for (int i=1; i<argc; i++) {
+        if (parsing_opts && isOpt(argv[i])) {
+            if (strMatchesAny(argv[i], "--", NULL))
                 parsing_opts = 0;
-            else if (strMatchesAny(argv[i], "-dry-run", NULL))
-                dryrun = 1;
-            else if (strMatchesAny(argv[i], "x", "-language", NULL))
+            else if (strMatchesAny(argv[i], "-c", "--compile", NULL))
+                commands |= COMPILE;
+            else if (strMatchesAny(argv[i], "-e", "--execute", NULL))
+                commands |= EXECUTE;
+            else if (strMatchesAny(argv[i], "-r", "--remove", NULL))
+                commands |= REMOVE;
+            else if (strMatchesAny(argv[i], "-x", "--language", NULL))
                 forced_ext = argv[++i];
+            else if (strMatchesAny(argv[i], "--dry-run", NULL))
+                dryrun = 1;
             else
-                die(USAGE, argv[0]);
+                die("%s option not recognized: %s\n",
+                    isLongOpt(argv[i]) ? "Long" : "Short",
+                    argv[i]);
         } else {
             if (src_name != NULL)
                 too_many_src_fns = 1;
@@ -411,6 +451,12 @@ int main(int argc, char *argv[]) {
     /**
      * Error messages and setup
      */
+
+    if (commands == 0)
+        die("No commands were given\n");
+
+    if (! (commands & COMPILE))
+        die("Program requires compilation\n");
 
     // None or more than one src_name was given
     if (src_name == NULL || too_many_src_fns)
