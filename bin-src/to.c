@@ -34,7 +34,7 @@ typedef struct {
     char err[MAX];
 } PRet;
 
-char *USAGE = "Usage: eo <commands> [--dry-run] [-x LANG] <file>\n";
+char *USAGE = "Usage: eo <commands> [--dry-run] [-l LANG] <file>\n";
 
 
 /*************************************************
@@ -433,7 +433,7 @@ int main(int orig_argc, char *orig_argv[]) {
                 commands |= EXECUTE;
             else if (strMatchesAny(argv[i], "-r", "--remove", NULL))
                 commands |= REMOVE;
-            else if (strMatchesAny(argv[i], "-x", "--language", NULL))
+            else if (strMatchesAny(argv[i], "-l", "--language", NULL))
                 forced_ext = argv[++i];
             else if (strMatchesAny(argv[i], "--dry-run", NULL))
                 dryrun = 1;
