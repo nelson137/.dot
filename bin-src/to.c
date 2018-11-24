@@ -34,7 +34,7 @@ typedef struct {
     char err[MAX];
 } PRet;
 
-char *USAGE = "Usage: eo <commands> [--dry-run] [-l LANG] <file> [-x [ARGS...]]\n";
+char *USAGE = "Usage: eo <commands> [--dry-run] [-l LANG] <infile> [-x [ARGS...]]\n";
 
 
 /*************************************************
@@ -273,7 +273,7 @@ void compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
 
         execute(&nasm_ret, nasm_args, ARRLEN(nasm_args));
         if (!nasm_ret.exited || nasm_ret.exitstatus != 0) {
-            fprintf(stderr, "Could not create object file for source: %s\n\n",
+            fprintf(stderr, "Could not create object file for infile: %s\n\n",
                     src_name);
             die(nasm_ret.err);
         }
@@ -349,7 +349,7 @@ void compile_c(int dryrun, char *src_name, char *bin_name) {
         PRet ret;
         execute(&ret, args, args_len);
         if (!ret.exited || ret.exitstatus != 0) {
-            fprintf(stderr, "Could not compile source: %s\n\n", src_name);
+            fprintf(stderr, "Could not compile infile: %s\n\n", src_name);
             die(ret.err);
         }
     }
@@ -372,7 +372,7 @@ void compile_cpp(int dryrun, char *src_name, char *bin_name) {
         PRet ret;
         execute(&ret, args, ARRLEN(args));
         if (!ret.exited || ret.exitstatus != 0) {
-            fprintf(stderr, "Could not compile source: %s\n\n", src_name);
+            fprintf(stderr, "Could not compile infile: %s\n\n", src_name);
             die(ret.err);
         }
     }
