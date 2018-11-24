@@ -455,7 +455,7 @@ int main(int orig_argc, char *orig_argv[]) {
 
     char *argv[argc];
 
-    char compoundOpts[argc*3];
+    char compoundOpts[argc * 3];
     char *coPtr = compoundOpts;
     int argv_i = 0;
     for (int i=0; i<orig_argc; i++) {
@@ -579,7 +579,7 @@ int main(int orig_argc, char *orig_argv[]) {
     if (access(obj_name, F_OK) == 0) {
         char *fmt2 = "Object file '%s' exists, overwrite it [y/n]? ";
         char prompt2[strlen(fmt2) - 2 + strlen(obj_name) + 1];
-        snprintf(prompt2, sizeof(prompt2), fmt2, obj_name);
+        sprintf(prompt2, fmt2, obj_name);
 
         char response2[3];
         read_yesno(response2, 3, prompt2);
@@ -605,7 +605,7 @@ int main(int orig_argc, char *orig_argv[]) {
         char exec_call[2+strlen(bin_name)+1];
         snprintf(exec_call, sizeof(exec_call), "./%s", bin_name);
 
-        char *all_exec_args[1+sub_args_c+1];
+        char *all_exec_args[1 + sub_args_c + 1];
         int exec_args_i = 0;
         all_exec_args[exec_args_i++] = exec_call;
         for (int i=0; i<sub_args_c; i++)
