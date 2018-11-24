@@ -55,6 +55,27 @@ void die(const char *fmt, ...) {
 }
 
 
+void help() {
+    printf("%s", USAGE);
+    puts("");
+    puts("Positional Arguments");
+    puts("  infile          The source file for a single-file C, C++, or x86");
+    puts("                  Assembly program");
+    puts("");
+    puts("Command Options");
+    puts("  -c, --compile   Compile the program");
+    puts("  -e, --execute   Execute the compiled program");
+    puts("  -r, --remove    Remove the binary and any compilation files");
+    puts("");
+    puts("Options");
+    puts("  -h, --help      Print this help message and exit");
+    puts("  -l, --lang      Set the language to compile for");
+    puts("  --dry-run       Print out the commands that would be executed in");
+    puts("                  response to the -c, -e, and -r options");
+    exit(0);
+}
+
+
 int isOpt(char *arg) {
     return arg[0] == '-' && strlen(arg) >= 2;
 }
@@ -452,6 +473,7 @@ int main(int orig_argc, char *orig_argv[]) {
      */
 
     parsing_opts = 1;
+    int show_help = 0;
     int commands = 0;
     int dryrun = 0;
     char *src_name = NULL;
@@ -463,6 +485,8 @@ int main(int orig_argc, char *orig_argv[]) {
         if (parsing_opts && isOpt(argv[i])) {
             if (strMatchesAny(argv[i], "--", NULL))
                 parsing_opts = 0;
+            else if (strMatchesAny(argv[i], "-h", "--help", NULL))
+                show_help = 1;
             else if (strMatchesAny(argv[i], "-c", "--compile", NULL))
                 commands |= COMPILE;
             else if (strMatchesAny(argv[i], "-e", "--execute", NULL))
@@ -498,6 +522,9 @@ int main(int orig_argc, char *orig_argv[]) {
     /**
      * Error messages and setup
      */
+
+    if (show_help)
+        help();
 
     if (commands == 0)
         die("No commands were given\n");
