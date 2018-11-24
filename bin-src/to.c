@@ -262,19 +262,16 @@ int autoDetermineLang(char *fn) {
 void compile_asm(int dryrun, char *src_name, char *obj_name, char *exe_name) {
     char *nasm_args[] = {
         "/usr/bin/nasm", "-f", "elf64", src_name, "-o", obj_name, NULL};
-    int nasm_args_len = ARRLEN(nasm_args);
-
     char *ld_args[] = {
         "/usr/bin/ld", obj_name, "-o", exe_name, NULL};
-    int ld_args_len = ARRLEN(ld_args);
 
     if (dryrun) {
-        print_args(nasm_args, nasm_args_len);
-        print_args(ld_args, ld_args_len);
+        print_args(nasm_args, ARRLEN(nasm_args));
+        print_args(ld_args, ARRLEN(ld_args));
     } else {
         PRet nasm_ret, ld_ret;
-        execute(&nasm_ret, nasm_args, nasm_args_len);
-        execute(&ld_ret, ld_args, ld_args_len);
+        execute(&nasm_ret, nasm_args, ARRLEN(nasm_args));
+        execute(&ld_ret, ld_args, ARRLEN(ld_args));
     }
 }
 
@@ -353,13 +350,12 @@ void compile_cpp(int dryrun, char *src_name, char *exe_name) {
         "-std=c++11", "-O3", "-Wall", "-Werror",
         src_name, "-o", exe_name,
         NULL};
-    int args_len = ARRLEN(args);
 
     if (dryrun) {
-        print_args(args, args_len);
+        print_args(args, ARRLEN(args));
     } else {
         PRet ret;
-        execute(&ret, args, args_len);
+        execute(&ret, args, ARRLEN(args));
     }
 }
 
