@@ -3,7 +3,7 @@
 setopt localtraps
 
 
-no_ext() {
+c_no_ext() {
     sed -E 's/\.(c|cpp)$//' <<< "$1"
 }
 
@@ -18,10 +18,10 @@ c() {
     local stdflags='-O3 -Wall -Werror'
     if [[ "${1%.cpp}" != "$1" ]]; then
         local cppflags="-std=c++11 $stdflags"
-        eval "g++ $cppflags $1 -o '$(no_ext "$1")' $@[2,$#]"
+        eval "g++ $cppflags $1 -o '$(c_no_ext "$1")' $@[2,$#]"
     elif [[ "${1%.c}" != "$1" ]]; then
         local cflags="-std=c11 $stdflags"
-        eval "gcc $cflags '$1' -o '$(no_ext "$1")' $C_LD_FLAGS $@[2,$#]"
+        eval "gcc $cflags '$1' -o '$(c_no_ext "$1")' $C_LD_FLAGS $@[2,$#]"
     else
         echo "File extension not recognized: $1" >&2
         return 1
@@ -41,7 +41,7 @@ ce() {
     (( $# > 1 )) &&
         exec_args="'${(j:' ':)exec_args}'"
 
-    c "$1" && eval "./$(no_ext "$1") $exec_args"
+    c "$1" && eval "./$(c_no_ext "$1") $exec_args"
 }
 
 
@@ -52,6 +52,6 @@ cer() {
         return 1
     fi
 
-    trap "rm -f './$(no_ext "$1")'" EXIT INT TERM
+    trap "rm -f './$(c_no_ext "$1")'" EXIT INT TERM
     ce "$1" "$@[2,$#]"
 }
