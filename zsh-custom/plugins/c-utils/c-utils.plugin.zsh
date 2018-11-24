@@ -8,6 +8,11 @@ c_no_ext() {
 }
 
 
+c_dot_slash() {
+    [[ "${1:0:1}" == / ]] && echo '' || echo './'
+}
+
+
 # Compile only
 c() {
     if [[ $# == 0 ]]; then
@@ -41,7 +46,10 @@ ce() {
     (( $# > 1 )) &&
         exec_args="'${(j:' ':)exec_args}'"
 
-    c "$1" && eval "$(c_no_ext "$1") $exec_args"
+    c "$1" && {
+        dot_slash="$(c_dot_slash "$1")"
+        eval "$dot_slash$(c_no_ext "$1") $exec_args"
+    }
 }
 
 
@@ -52,6 +60,7 @@ cer() {
         return 1
     fi
 
-    trap "rm -f '$(c_no_ext "$1")'" EXIT INT TERM
+    dot_slash="$(c_dot_slash "$1")"
+    trap "rm -f '$dot_slash$(c_no_ext "$1")'" EXIT INT TERM
     ce "$1" "$@[2,$#]"
 }
