@@ -34,7 +34,7 @@ typedef struct {
     char err[MAX];
 } PRet;
 
-char *USAGE = "Usage: eo <commands> [--dry-run] [-l LANG] <file>\n";
+char *USAGE = "Usage: eo <commands> [--dry-run] [-l LANG] <file> [-x [ARGS...]]\n";
 
 
 /*************************************************
@@ -422,6 +422,7 @@ int main(int orig_argc, char *orig_argv[]) {
     char *src_name = NULL;
     int too_many_src_fns = 0;
     char *forced_ext = NULL;
+    int sub_args_i = -1;
 
     for (int i=1; i<argc; i++) {
         if (parsing_opts && isOpt(argv[i])) {
@@ -435,6 +436,8 @@ int main(int orig_argc, char *orig_argv[]) {
                 commands |= REMOVE;
             else if (strMatchesAny(argv[i], "-l", "--language", NULL))
                 forced_ext = argv[++i];
+            else if (strMatchesAny(argv[i], "-x", "--args", NULL))
+                sub_args_i = i + 1;
             else if (strMatchesAny(argv[i], "--dry-run", NULL))
                 dryrun = 1;
             else
@@ -442,11 +445,20 @@ int main(int orig_argc, char *orig_argv[]) {
                     isLongOpt(argv[i]) ? "Long" : "Short",
                     argv[i]);
         } else {
-            if (src_name != NULL)
+            if (src_name == NULL)
+                src_name = argv[i];
+            else if (sub_args_i != -1)
+                continue;
+            else
                 too_many_src_fns = 1;
-            src_name = argv[i];
         }
     }
+
+    int sub_args_c = argc - sub_args_i;
+    char *sub_args[sub_args_c];
+
+    for (int i=0; i<argc; i++)
+        sub_args[i] = argv[i+sub_args_i];
 
     /**
      * Error messages and setup
@@ -498,15 +510,21 @@ int main(int orig_argc, char *orig_argv[]) {
         compile_cpp(dryrun, src_name, exe_name);
 
     if (commands & EXECUTE) {
-        char exe_arg[2+strlen(exe_name)+1];
-        snprintf(exe_arg, sizeof(exe_arg), "./%s", exe_name);
-        char *exec_args[] = {exe_arg, NULL};
-        int exec_args_len = ARRLEN(exec_args);
+        char exec_call[2+strlen(exe_name)+1];
+        snprintf(exec_call, sizeof(exec_call), "./%s", exe_name);
+
+        char *all_exec_args[1+sub_args_c+1];
+        int exec_args_i = 0;
+        all_exec_args[exec_args_i++] = exec_call;
+        for (int i=0; i<sub_args_c; i++)
+            all_exec_args[exec_args_i++] = sub_args[i];
+        all_exec_args[exec_args_i] = NULL;
+
         if (dryrun) {
-            print_args(exec_args, exec_args_len);
+            print_args(all_exec_args, ARRLEN(all_exec_args));
         } else {
             PRet exeRet;
-            execute(&exeRet, exec_args, exec_args_len);
+            execute(&exeRet, all_exec_args, ARRLEN(all_exec_args));
             printf("%s", exeRet.out);
             fprintf(stderr, "%s", exeRet.err);
         }
