@@ -34,7 +34,7 @@ typedef struct {
     char err[MAX];
 } PRet;
 
-char *USAGE = "Usage: to [-h] [-c] [-e] [-r] [--dry-run] [-l LANG] <infile> "
+char *USAGE = "Usage: to [-h] [-c] [-e] [-r] [-l LANG] [--dry-run] <infile>\n"
               "       [-x [ARGS...]]\n";
 
 
