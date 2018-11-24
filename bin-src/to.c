@@ -34,7 +34,7 @@ typedef struct {
     char err[MAX];
 } PRet;
 
-char *USAGE = "Usage: eo <commands> [--dry-run] [-l LANG] <infile> [-x [ARGS...]]\n";
+char *USAGE = "Usage: to <commands> [--dry-run] [-l LANG] <infile> [-x [ARGS...]]\n";
 
 
 /*************************************************
@@ -528,7 +528,7 @@ int main(int orig_argc, char *orig_argv[]) {
 
     // Get the executable filename
     char bin_name[strlen(src_name)+3+1];
-    snprintf(bin_name, sizeof(bin_name), "%s.eo", src_name);
+    snprintf(bin_name, sizeof(bin_name), "%s.to", src_name);
 
     if (access(bin_name, F_OK) == 0) {
         char *fmt = "Executable file '%s' exists, overwrite it [y/n]? ";
