@@ -10,9 +10,12 @@
 #define ARRLEN(x) sizeof(x)/sizeof(x[0])
 #define MAX 512
 
-#define COMPILE  1
-#define EXECUTE  2
-#define REMOVE   4
+// Bitflags for options
+#define HELP      1  // 0b00001
+#define COMPILE   2  // 0b00010
+#define EXECUTE   4  // 0b00100
+#define REMOVE    8  // 0b01000
+#define DRYRUN   16  // 0b10000
 
 enum Lang {
     LangUnknown,
@@ -473,9 +476,7 @@ int main(int orig_argc, char *orig_argv[]) {
      */
 
     parsing_opts = 1;
-    int show_help = 0;
-    int commands = 0;
-    int dryrun = 0;
+    int options = 0;
     char *src_name = NULL;
     int too_many_src_fns = 0;
     char *forced_ext = NULL;
@@ -486,19 +487,19 @@ int main(int orig_argc, char *orig_argv[]) {
             if (strMatchesAny(argv[i], "--", NULL))
                 parsing_opts = 0;
             else if (strMatchesAny(argv[i], "-h", "--help", NULL))
-                show_help = 1;
+                options |= HELP;
             else if (strMatchesAny(argv[i], "-c", "--compile", NULL))
-                commands |= COMPILE;
+                options |= COMPILE;
             else if (strMatchesAny(argv[i], "-e", "--execute", NULL))
-                commands |= EXECUTE;
+                options |= EXECUTE;
             else if (strMatchesAny(argv[i], "-r", "--remove", NULL))
-                commands |= REMOVE;
+                options |= REMOVE;
             else if (strMatchesAny(argv[i], "-l", "--language", NULL))
                 forced_ext = argv[++i];
             else if (strMatchesAny(argv[i], "-x", "--args", NULL))
                 parsing_opts = 0, sub_args_i = i + 1;
             else if (strMatchesAny(argv[i], "--dry-run", NULL))
-                dryrun = 1;
+                options |= DRYRUN;
             else
                 die("%s option not recognized: %s\n",
                     isLongOpt(argv[i]) ? "Long" : "Short",
@@ -523,13 +524,13 @@ int main(int orig_argc, char *orig_argv[]) {
      * Error messages and setup
      */
 
-    if (show_help)
+    if (options & HELP)
         help();
 
-    if (commands == 0)
+    if (! (options & (COMPILE|EXECUTE|REMOVE)))
         die("No commands were given\n");
 
-    if (! (commands & COMPILE))
+    if (! (options & COMPILE))
         die("Program requires compilation\n");
 
     // None or more than one src_name was given
@@ -594,13 +595,13 @@ int main(int orig_argc, char *orig_argv[]) {
     int exitstatus = 0;
 
     if (lang == LangASM)
-        compile_asm(dryrun, src_name, obj_name, bin_name);
+        compile_asm(options & DRYRUN, src_name, obj_name, bin_name);
     else if (lang == LangC)
-        compile_c(dryrun, src_name, bin_name);
+        compile_c(options & DRYRUN, src_name, bin_name);
     else if (lang == LangCPP)
-        compile_cpp(dryrun, src_name, bin_name);
+        compile_cpp(options & DRYRUN, src_name, bin_name);
 
-    if (commands & EXECUTE) {
+    if (options & EXECUTE) {
         char exec_call[2+strlen(bin_name)+1];
         snprintf(exec_call, sizeof(exec_call), "./%s", bin_name);
 
@@ -611,7 +612,7 @@ int main(int orig_argc, char *orig_argv[]) {
             all_exec_args[exec_args_i++] = sub_args[i];
         all_exec_args[exec_args_i] = NULL;
 
-        if (dryrun) {
+        if (options & DRYRUN) {
             print_args(all_exec_args, ARRLEN(all_exec_args));
         } else {
             PRet execRet;
@@ -622,7 +623,7 @@ int main(int orig_argc, char *orig_argv[]) {
         }
     }
 
-    if (commands & REMOVE) {
+    if (options & REMOVE) {
         char *rm_args[lang == LangASM ? 4 : 3];
         int rm_args_i = 0;
         rm_args[rm_args_i++] = "/bin/rm";
@@ -631,7 +632,7 @@ int main(int orig_argc, char *orig_argv[]) {
         rm_args[rm_args_i++] = bin_name;
         rm_args[rm_args_i] = NULL;
 
-        if (dryrun) {
+        if (options & DRYRUN) {
             print_args(rm_args, ARRLEN(rm_args));
         } else {
             PRet rmRet;
