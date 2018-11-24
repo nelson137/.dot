@@ -259,19 +259,30 @@ int autoDetermineLang(char *fn) {
 /**
  * Compile the program for assembly.
  */
-void compile_asm(int dryrun, char *src_name, char *obj_name, char *exe_name) {
+void compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
     char *nasm_args[] = {
         "/usr/bin/nasm", "-f", "elf64", src_name, "-o", obj_name, NULL};
     char *ld_args[] = {
-        "/usr/bin/ld", obj_name, "-o", exe_name, NULL};
+        "/usr/bin/ld", obj_name, "-o", bin_name, NULL};
 
     if (dryrun) {
         print_args(nasm_args, ARRLEN(nasm_args));
         print_args(ld_args, ARRLEN(ld_args));
     } else {
         PRet nasm_ret, ld_ret;
+
         execute(&nasm_ret, nasm_args, ARRLEN(nasm_args));
+        if (!nasm_ret.exited || nasm_ret.exitstatus != 0) {
+            fprintf(stderr, "Could not create object file for source: %s\n\n",
+                    src_name);
+            die(nasm_ret.err);
+        }
+
         execute(&ld_ret, ld_args, ARRLEN(ld_args));
+        if (!ld_ret.exited || ld_ret.exitstatus != 0) {
+            fprintf(stderr, "Could not link object file: %s\n\n", obj_name);
+            die(ld_ret.err);
+        }
     }
 }
 
@@ -279,7 +290,7 @@ void compile_asm(int dryrun, char *src_name, char *obj_name, char *exe_name) {
 /**
  * Compile the program for C.
  */
-void compile_c(int dryrun, char *src_name, char *exe_name) {
+void compile_c(int dryrun, char *src_name, char *bin_name) {
     // Get the cflags for the python library
     PRet pylibs;
     char *pylib_args[] = {
@@ -318,7 +329,7 @@ void compile_c(int dryrun, char *src_name, char *exe_name) {
     char *base_args[] = {
         "/usr/bin/gcc",
         "-std=c11", "-O3", "-Wall", "-Werror",
-        src_name, "-o", exe_name,
+        src_name, "-o", bin_name,
         "-lm", "-ljson-c", "-lmylib"};
     int base_args_len = ARRLEN(base_args);
 
@@ -337,6 +348,10 @@ void compile_c(int dryrun, char *src_name, char *exe_name) {
     } else {
         PRet ret;
         execute(&ret, args, args_len);
+        if (!ret.exited || ret.exitstatus != 0) {
+            fprintf(stderr, "Could not compile source: %s\n\n", src_name);
+            die(ret.err);
+        }
     }
 }
 
@@ -344,11 +359,11 @@ void compile_c(int dryrun, char *src_name, char *exe_name) {
 /**
  * Compile the program for C++.
  */
-void compile_cpp(int dryrun, char *src_name, char *exe_name) {
+void compile_cpp(int dryrun, char *src_name, char *bin_name) {
     char *args[] = {
         "/usr/bin/g++",
         "-std=c++11", "-O3", "-Wall", "-Werror",
-        src_name, "-o", exe_name,
+        src_name, "-o", bin_name,
         NULL};
 
     if (dryrun) {
@@ -356,6 +371,10 @@ void compile_cpp(int dryrun, char *src_name, char *exe_name) {
     } else {
         PRet ret;
         execute(&ret, args, ARRLEN(args));
+        if (!ret.exited || ret.exitstatus != 0) {
+            fprintf(stderr, "Could not compile source: %s\n\n", src_name);
+            die(ret.err);
+        }
     }
 }
 
@@ -486,28 +505,30 @@ int main(int orig_argc, char *orig_argv[]) {
     }
 
     // Get the executable filename
-    char exe_name[strlen(src_name)+3+1];
-    snprintf(exe_name, sizeof(exe_name), "%s.eo", src_name);
+    char bin_name[strlen(src_name)+3+1];
+    snprintf(bin_name, sizeof(bin_name), "%s.eo", src_name);
 
     // Get the object file name
     // Only used for ASM
-    char obj_name[strlen(exe_name)+2+1];
-    snprintf(obj_name, sizeof(obj_name), "%s.o", exe_name);
+    char obj_name[strlen(bin_name)+2+1];
+    snprintf(obj_name, sizeof(obj_name), "%s.o", bin_name);
 
     /**
      * Execute commands
      */
 
+    int exitstatus = 0;
+
     if (lang == LangASM)
-        compile_asm(dryrun, src_name, obj_name, exe_name);
+        compile_asm(dryrun, src_name, obj_name, bin_name);
     else if (lang == LangC)
-        compile_c(dryrun, src_name, exe_name);
+        compile_c(dryrun, src_name, bin_name);
     else if (lang == LangCPP)
-        compile_cpp(dryrun, src_name, exe_name);
+        compile_cpp(dryrun, src_name, bin_name);
 
     if (commands & EXECUTE) {
-        char exec_call[2+strlen(exe_name)+1];
-        snprintf(exec_call, sizeof(exec_call), "./%s", exe_name);
+        char exec_call[2+strlen(bin_name)+1];
+        snprintf(exec_call, sizeof(exec_call), "./%s", bin_name);
 
         char *all_exec_args[1+sub_args_c+1];
         int exec_args_i = 0;
@@ -519,30 +540,36 @@ int main(int orig_argc, char *orig_argv[]) {
         if (dryrun) {
             print_args(all_exec_args, ARRLEN(all_exec_args));
         } else {
-            PRet exeRet;
-            execute(&exeRet, all_exec_args, ARRLEN(all_exec_args));
-            printf("%s", exeRet.out);
-            fprintf(stderr, "%s", exeRet.err);
+            PRet execRet;
+            execute(&execRet, all_exec_args, ARRLEN(all_exec_args));
+            printf("%s", execRet.out);
+            fprintf(stderr, "%s", execRet.err);
+            exitstatus = execRet.exitstatus;
         }
     }
 
     if (commands & REMOVE) {
-        int rm_args_len = lang == LangASM ? 4 : 3;
-        char *rm_args[rm_args_len];
+        char *rm_args[lang == LangASM ? 4 : 3];
         int rm_args_i = 0;
         rm_args[rm_args_i++] = "/bin/rm";
         if (lang == LangASM)
             rm_args[rm_args_i++] = obj_name;
-        rm_args[rm_args_i++] = exe_name;
+        rm_args[rm_args_i++] = bin_name;
         rm_args[rm_args_i] = NULL;
 
         if (dryrun) {
-            print_args(rm_args, rm_args_len);
+            print_args(rm_args, ARRLEN(rm_args));
         } else {
             PRet rmRet;
-            execute(&rmRet, rm_args, rm_args_len);
+            execute(&rmRet, rm_args, ARRLEN(rm_args));
+            if (!rmRet.exited || rmRet.exitstatus != 0) {
+                if (lang == LangASM)
+                    die("Could not remove files: %s %s\n", obj_name, bin_name);
+                else
+                    die("Could not remove executable: %s\n", bin_name);
+            }
         }
     }
 
-    return 0;
+    return exitstatus;
 }
