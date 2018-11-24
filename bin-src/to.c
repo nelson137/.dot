@@ -496,7 +496,7 @@ int main(int orig_argc, char *orig_argv[]) {
             else if (strMatchesAny(argv[i], "-l", "--language", NULL))
                 forced_ext = argv[++i];
             else if (strMatchesAny(argv[i], "-x", "--args", NULL))
-                sub_args_i = i + 1;
+                parsing_opts = 0, sub_args_i = i + 1;
             else if (strMatchesAny(argv[i], "--dry-run", NULL))
                 dryrun = 1;
             else
