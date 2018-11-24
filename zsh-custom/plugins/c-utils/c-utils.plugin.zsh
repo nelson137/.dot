@@ -41,7 +41,7 @@ ce() {
     (( $# > 1 )) &&
         exec_args="'${(j:' ':)exec_args}'"
 
-    c "$1" && eval "./$(c_no_ext "$1") $exec_args"
+    c "$1" && eval "$(c_no_ext "$1") $exec_args"
 }
 
 
@@ -52,6 +52,6 @@ cer() {
         return 1
     fi
 
-    trap "rm -f './$(c_no_ext "$1")'" EXIT INT TERM
+    trap "rm -f '$(c_no_ext "$1")'" EXIT INT TERM
     ce "$1" "$@[2,$#]"
 }
