@@ -79,6 +79,25 @@ void print_args(char *args[], int len) {
 }
 
 
+void read_yesno(char response[], int size, char *prompt) {
+    size--;
+    int index = 0;
+    char c;
+
+    printf("%s", prompt);
+
+    do {
+        c = getchar();
+        if (c == '\n')
+            break;
+        if (index < size)
+            response[index++] = c;
+    } while (1);
+
+    response[index] = '\0';
+}
+
+
 /**
  * Convert the string to lowercase.
  */
@@ -511,10 +530,34 @@ int main(int orig_argc, char *orig_argv[]) {
     char bin_name[strlen(src_name)+3+1];
     snprintf(bin_name, sizeof(bin_name), "%s.eo", src_name);
 
+    if (access(bin_name, F_OK) == 0) {
+        char *fmt = "Executable file '%s' exists, overwrite it [y/n]? ";
+        char prompt[strlen(fmt) - 2 + strlen(bin_name) + 1];
+        snprintf(prompt, sizeof(prompt), fmt, bin_name);
+
+        char response[3];
+        read_yesno(response, 3, prompt);
+        lower(response);
+        if (strcmp(response, "y") != 0)
+            return 1;
+    }
+
     // Get the object file name
     // Only used for ASM
     char obj_name[strlen(bin_name)+2+1];
     snprintf(obj_name, sizeof(obj_name), "%s.o", bin_name);
+
+    if (access(obj_name, F_OK) == 0) {
+        char *fmt2 = "Object file '%s' exists, overwrite it [y/n]? ";
+        char prompt2[strlen(fmt2) - 2 + strlen(obj_name) + 1];
+        snprintf(prompt2, sizeof(prompt2), fmt2, obj_name);
+
+        char response2[3];
+        read_yesno(response2, 3, prompt2);
+        lower(response2);
+        if (strcmp(response2, "y") != 0)
+            return 1;
+    }
 
     /**
      * Execute commands
