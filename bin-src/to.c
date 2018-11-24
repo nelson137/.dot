@@ -489,6 +489,9 @@ int main(int orig_argc, char *orig_argv[]) {
     if (src_name == NULL || too_many_src_fns)
         die(USAGE, argv[0]);
 
+    if (access(src_name, F_OK) != 0)
+        die("Infile does not exist\n");
+
     // Get the programming language as an integer
     enum Lang lang;
     if (forced_ext == NULL) {
