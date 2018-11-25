@@ -10,6 +10,11 @@
 #define ARRLEN(x) sizeof(x)/sizeof(x[0])
 #define MAX 512
 
+#define POS_ARG             0
+#define LONG_OPT            1
+#define SHORT_OPT           2
+#define COMPOUND_SHORT_OPT  3
+
 // Bitflags for options
 #define HELP      1  // 0b00001
 #define COMPILE   2  // 0b00010
@@ -23,6 +28,15 @@ enum Lang {
     LangC,
     LangCPP
 };
+
+typedef struct {
+    char **argv;
+    int argc;
+    int parsing_opts;
+    int parsing_sub_args;
+    int flags;
+    char *forced_ext;
+} Options;
 
 typedef struct {
     int exited;
@@ -75,21 +89,6 @@ void help() {
     puts("  --dry-run       Print out the commands that would be executed in");
     puts("                  response to the -c, -e, and -r options");
     exit(0);
-}
-
-
-int isOpt(char *arg) {
-    return arg[0] == '-' && strlen(arg) >= 2;
-}
-
-
-int isLongOpt(char *arg) {
-    return arg[0] == '-' && arg[1] == '-' && strlen(arg) > 2;
-}
-
-
-int isCompoundOpt(char *arg) {
-    return arg[0] == '-' && arg[1] != '-' && strlen(arg) > 2;
 }
 
 
@@ -434,102 +433,109 @@ int compile_cpp(int dryrun, char *src_name, char *bin_name) {
 
 
 /*************************************************
+ * Argument Parsing
+ ************************************************/
+
+
+int arg_type(char *arg) {
+    int len = strlen(arg);
+    char first = arg[0];
+    char second = arg[1];
+
+    if (len < 2 || first != '-')
+        return POS_ARG;
+
+    if (len == 2)
+        return SHORT_OPT;
+
+    if (second == '-')
+        return LONG_OPT;
+    else
+        return COMPOUND_SHORT_OPT;
+}
+
+
+int process_opt(int i, char *arg, int type, Options *opts) {
+    if (strcmp(opts->argv[i], "--") == 0)
+        opts->parsing_opts = 0;
+    else if (strMatchesAny(arg, "-h", "--help", NULL))
+        opts->flags |= HELP;
+    else if (strMatchesAny(arg, "-c", "--compile", NULL))
+        opts->flags |= COMPILE;
+    else if (strMatchesAny(arg, "-e", "--execute", NULL))
+        opts->flags |= EXECUTE;
+    else if (strMatchesAny(arg, "-r", "--remove", NULL))
+        opts->flags |= REMOVE;
+    else if (strMatchesAny(arg, "-l", "--language", NULL))
+        opts->forced_ext = opts->argv[i+1];
+    else if (strMatchesAny(arg, "--dry-run", NULL))
+        opts->flags |= DRYRUN;
+    else if (strMatchesAny(arg, "-x", "--args", NULL))
+        opts->parsing_opts = 0, opts->parsing_sub_args = 1;
+    else
+        return -1;
+
+    return 0;
+}
+
+
+/*************************************************
  * Main
  ************************************************/
 
 
-int main(int orig_argc, char *orig_argv[]) {
-    if (orig_argc < 3) {
-        error(USAGE, orig_argv[0]);
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        error(USAGE, argv[0]);
         return 1;
     }
 
     int exitstatus = 0;
 
     /**
-     * Pre-process arguments
-     */
-
-    int argc = 0;
-    int parsing_opts = 1;
-    for (int i=0; i<orig_argc; i++) {
-        if (strcmp(orig_argv[i], "--") == 0)
-            parsing_opts = 0;
-        else if (parsing_opts && isCompoundOpt(orig_argv[i]))
-            argc += strlen(orig_argv[i]) - 2;
-        argc++;
-    }
-
-    /**
-     * Split compound options
-     * For example, -abc gets expanded to -a, -b, -c in-place
-     * If orig_argv is {"./t", "-abc", "--long", "-def"}, then
-     * argv will be {"./t", "-a", "-b", "-c", "--long", "-d", "-e", "-f"}
-     */
-
-    char *argv[argc];
-
-    char compoundOpts[argc * 3];
-    char *coPtr = compoundOpts;
-    int argv_i = 0;
-    for (int i=0; i<orig_argc; i++) {
-        if (isCompoundOpt(orig_argv[i])) {
-            for (int j=1; j<strlen(orig_argv[i]); j++) {
-                argv[argv_i++] = coPtr;
-                *(coPtr++) = '-';
-                *(coPtr++) = orig_argv[i][j];
-                *(coPtr++) = '\0';
-            }
-        } else {
-            argv[argv_i++] = orig_argv[i];
-        }
-    }
-
-    /**
      * Parse arguments
      */
 
-    parsing_opts = 1;
-    int options = 0;
+    Options opts = {
+        .argv = argv,
+        .argc = argc,
+        .parsing_opts = 1,
+        .parsing_sub_args = 0,
+        .flags = 0,
+        .forced_ext = NULL,
+    };
+
     char *src_name = NULL;
     int too_many_src_fns = 0;
-    char *forced_ext = NULL;
-    char **sub_args = NULL;
-    int sub_args_c = 0;
+    char **sub_args = malloc(sizeof(char*) * argc);
     int sub_args_i = 0;
 
+    char temp_opt[] = "-X";
+    int type;
+    char *opt_err = "Option not recognized: %s\n";
     for (int i=1; i<argc; i++) {
-        if (parsing_opts && isOpt(argv[i])) {
-            if (strMatchesAny(argv[i], "--", NULL))
-                parsing_opts = 0;
-            else if (strMatchesAny(argv[i], "-h", "--help", NULL))
-                options |= HELP;
-            else if (strMatchesAny(argv[i], "-c", "--compile", NULL))
-                options |= COMPILE;
-            else if (strMatchesAny(argv[i], "-e", "--execute", NULL))
-                options |= EXECUTE;
-            else if (strMatchesAny(argv[i], "-r", "--remove", NULL))
-                options |= REMOVE;
-            else if (strMatchesAny(argv[i], "-l", "--language", NULL))
-                forced_ext = argv[++i];
-            else if (strMatchesAny(argv[i], "-x", "--args", NULL))
-                parsing_opts = 0, sub_args_c = argc - (i + 1),
-                    sub_args = malloc(sizeof(char*) * sub_args_c);
-            else if (strMatchesAny(argv[i], "--dry-run", NULL))
-                options |= DRYRUN;
-            else {
-                error("%s option not recognized: %s\n",
-                    isLongOpt(argv[i]) ? "Long" : "Short",
-                    argv[i]);
-                goto end1;
-            }
-        } else {
+        type = arg_type(argv[i]);
+
+        if (opts.parsing_sub_args) {  // Sub arg
+            sub_args[sub_args_i++] = argv[i];
+        } else if (type == POS_ARG || !opts.parsing_opts) {  // Positional arg
             if (src_name == NULL)
                 src_name = argv[i];
-            else if (sub_args != NULL)
-                sub_args[sub_args_i++] = argv[i];
             else
                 too_many_src_fns = 1;
+        } else if (type == COMPOUND_SHORT_OPT) {  // Compound short option
+            for (int j=1; j<strlen(argv[i]); j++) {
+                temp_opt[1] = argv[i][j];
+                if (process_opt(i, temp_opt, SHORT_OPT, &opts) < 0) {
+                    error(opt_err, temp_opt);
+                    goto end1;
+                }
+            }
+        } else {  // Long option
+            if (process_opt(i, argv[i], type, &opts) < 0) {
+                error(opt_err, argv[i]);
+                goto end1;
+            }
         }
     }
 
@@ -537,15 +543,16 @@ int main(int orig_argc, char *orig_argv[]) {
      * Error messages and setup
      */
 
-    if (options & HELP)
+    if (opts.flags & HELP)
         help();
 
-    if (! (options & (COMPILE|EXECUTE|REMOVE))) {
+    if (! (opts.flags & (COMPILE|EXECUTE|REMOVE))) {
         error("No commands were given\n");
         goto end1;
     }
 
-    if (! (options & COMPILE)) {
+    // The -c, --compile option was not given
+    if (! (opts.flags & COMPILE)) {
         error("Program requires compilation\n");
         goto end1;
     }
@@ -563,7 +570,7 @@ int main(int orig_argc, char *orig_argv[]) {
 
     // Get the programming language as an integer
     enum Lang lang;
-    if (forced_ext == NULL) {
+    if (opts.forced_ext == NULL) {
         lang = autoDetermineLang(src_name);
         if (lang == LangUnknown) {
             error("Could not determine language from filename: %s\n",
@@ -571,13 +578,13 @@ int main(int orig_argc, char *orig_argv[]) {
             goto end1;
         }
     } else {
-        if (strlen(forced_ext) == 0) {
+        if (strlen(opts.forced_ext) == 0) {
             error("Language cannot be empty string\n");
             goto end1;
         }
-        lang = determineLang(lower(forced_ext));
+        lang = determineLang(lower(opts.forced_ext));
         if (lang == LangUnknown) {
-            error("Language not recognized: %s\n", forced_ext);
+            error("Language not recognized: %s\n", opts.forced_ext);
             goto end1;
         }
     }
@@ -621,29 +628,30 @@ int main(int orig_argc, char *orig_argv[]) {
 
     int retstat = 0;
     if (lang == LangASM)
-        retstat = compile_asm(options & DRYRUN, src_name, obj_name, bin_name);
+        retstat = compile_asm(opts.flags & DRYRUN, src_name, obj_name,
+            bin_name);
     else if (lang == LangC)
-        retstat = compile_c(options & DRYRUN, src_name, bin_name);
+        retstat = compile_c(opts.flags & DRYRUN, src_name, bin_name);
     else if (lang == LangCPP)
-        retstat = compile_cpp(options & DRYRUN, src_name, bin_name);
+        retstat = compile_cpp(opts.flags & DRYRUN, src_name, bin_name);
 
     if (retstat != 0) {
         exitstatus = retstat;
         goto end3;
     }
 
-    if (options & EXECUTE) {
+    if (opts.flags & EXECUTE) {
         char exec_call[2 + strlen(bin_name) + 1];
         sprintf(exec_call, "./%s", bin_name);
 
-        char *all_exec_args[1 + sub_args_c + 1];
+        char *all_exec_args[1 + sub_args_i + 1];
         int exec_args_i = 0;
         all_exec_args[exec_args_i++] = exec_call;
-        for (int i=0; i<sub_args_c; i++)
+        for (int i=0; i<sub_args_i; i++)
             all_exec_args[exec_args_i++] = sub_args[i];
         all_exec_args[exec_args_i] = NULL;
 
-        if (options & DRYRUN) {
+        if (opts.flags & DRYRUN) {
             print_args(all_exec_args, ARRLEN(all_exec_args));
         } else {
             PRet execRet;
@@ -654,7 +662,7 @@ int main(int orig_argc, char *orig_argv[]) {
         }
     }
 
-    if (options & REMOVE) {
+    if (opts.flags & REMOVE) {
         char *rm_args[lang == LangASM ? 4 : 3];
         int rm_args_i = 0;
         rm_args[rm_args_i++] = "/bin/rm";
@@ -663,7 +671,7 @@ int main(int orig_argc, char *orig_argv[]) {
         rm_args[rm_args_i++] = bin_name;
         rm_args[rm_args_i] = NULL;
 
-        if (options & DRYRUN) {
+        if (opts.flags & DRYRUN) {
             print_args(rm_args, ARRLEN(rm_args));
         } else {
             PRet rmRet;
