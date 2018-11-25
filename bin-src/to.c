@@ -590,8 +590,14 @@ int main(int argc, char *argv[]) {
     }
 
     // Get the executable filename
-    char *bin_name = malloc(strlen(src_name) + 3 + 1);
-    sprintf(bin_name, "%s.to", src_name);
+    char *bin_name;
+    if (src_name[0] == '/') {
+        bin_name = malloc(strlen(src_name) + 3 + 1);
+        sprintf(bin_name, "%s.to", src_name);
+    } else {
+        bin_name = malloc(2 + strlen(src_name) + 3 + 1);
+        sprintf(bin_name, "./%s.to", src_name);
+    }
 
     if (access(bin_name, F_OK) == 0) {
         char *fmt = "Executable file '%s' exists, overwrite it [y/n]? ";
@@ -607,8 +613,14 @@ int main(int argc, char *argv[]) {
 
     // Get the object file name
     // Only used for ASM
-    char *obj_name = malloc(strlen(bin_name) + 2 + 1);
-    sprintf(obj_name, "%s.o", bin_name);
+    char *obj_name;
+    if (bin_name[0] == '/') {
+        obj_name = malloc(strlen(bin_name) + 2 + 1);
+        sprintf(obj_name, "%s.o", bin_name);
+    } else {
+        obj_name = malloc(2 + strlen(bin_name) + 2 + 1);
+        sprintf(obj_name, "./%s.o", bin_name);
+    }
 
     if (access(obj_name, F_OK) == 0) {
         char *fmt2 = "Object file '%s' exists, overwrite it [y/n]? ";
@@ -641,12 +653,9 @@ int main(int argc, char *argv[]) {
     }
 
     if (opts.flags & EXECUTE) {
-        char exec_call[2 + strlen(bin_name) + 1];
-        sprintf(exec_call, "./%s", bin_name);
-
         char *all_exec_args[1 + sub_args_i + 1];
         int exec_args_i = 0;
-        all_exec_args[exec_args_i++] = exec_call;
+        all_exec_args[exec_args_i++] = bin_name;
         for (int i=0; i<sub_args_i; i++)
             all_exec_args[exec_args_i++] = sub_args[i];
         all_exec_args[exec_args_i] = NULL;
