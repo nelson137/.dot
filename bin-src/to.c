@@ -49,12 +49,11 @@ char *USAGE = "Usage: to [-h] [-c] [-e] [-r] [-l LANG] [--dry-run] <infile>\n"
 /**
  * Print an error message to stderr and exit with code 1.
  */
-void die(const char *fmt, ...) {
+void error(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);
     va_end(args);
-    exit(1);
 }
 
 
@@ -303,7 +302,7 @@ int autoDetermineLang(char *fn) {
 /**
  * Compile the program for assembly.
  */
-void compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
+int compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
     char *nasm_args[] = {
         "/usr/bin/nasm", "-f", "elf64", src_name, "-o", obj_name, NULL};
     char *ld_args[] = {
@@ -317,31 +316,36 @@ void compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
 
         execute(&nasm_ret, nasm_args, ARRLEN(nasm_args));
         if (!nasm_ret.exited || nasm_ret.exitstatus != 0) {
-            fprintf(stderr, "Could not create object file for infile: %s\n\n",
-                    src_name);
-            die(nasm_ret.err);
+            error("Could not create object file for infile: %s\n\n", src_name);
+            error(nasm_ret.err);
+            return nasm_ret.exitstatus;
         }
 
         execute(&ld_ret, ld_args, ARRLEN(ld_args));
         if (!ld_ret.exited || ld_ret.exitstatus != 0) {
-            fprintf(stderr, "Could not link object file: %s\n\n", obj_name);
-            die(ld_ret.err);
+            error("Could not link object file: %s\n\n", obj_name);
+            error(ld_ret.err);
+            return ld_ret.exitstatus;
         }
     }
+
+    return 0;
 }
 
 
 /**
  * Compile the program for C.
  */
-void compile_c(int dryrun, char *src_name, char *bin_name) {
+int compile_c(int dryrun, char *src_name, char *bin_name) {
     // Get the cflags for the python library
     PRet pylibs;
     char *pylib_args[] = {
         "/usr/bin/pkg-config", "--cflags", "--libs", "python3", NULL};
     execute(&pylibs, pylib_args, 5);
-    if (!pylibs.exited || pylibs.exitstatus != 0)
-        die("Could not get cflags for the python3 library\n");
+    if (!pylibs.exited || pylibs.exitstatus != 0) {
+        error("Could not get gcc flags for the python3 library\n");
+        return pylibs.exitstatus;
+    }
 
     // Remove trailing newline
     char *nl = strrchr(pylibs.out, '\n');
@@ -393,17 +397,20 @@ void compile_c(int dryrun, char *src_name, char *bin_name) {
         PRet ret;
         execute(&ret, args, args_len);
         if (!ret.exited || ret.exitstatus != 0) {
-            fprintf(stderr, "Could not compile infile: %s\n\n", src_name);
-            die(ret.err);
+            error("Could not compile infile: %s\n\n", src_name);
+            error(ret.err);
+            return ret.exitstatus;
         }
     }
+
+    return 0;
 }
 
 
 /**
  * Compile the program for C++.
  */
-void compile_cpp(int dryrun, char *src_name, char *bin_name) {
+int compile_cpp(int dryrun, char *src_name, char *bin_name) {
     char *args[] = {
         "/usr/bin/g++",
         "-std=c++11", "-O3", "-Wall", "-Werror",
@@ -416,10 +423,13 @@ void compile_cpp(int dryrun, char *src_name, char *bin_name) {
         PRet ret;
         execute(&ret, args, ARRLEN(args));
         if (!ret.exited || ret.exitstatus != 0) {
-            fprintf(stderr, "Could not compile infile: %s\n\n", src_name);
-            die(ret.err);
+            error("Could not compile infile: %s\n\n", src_name);
+            error(ret.err);
+            return ret.exitstatus;
         }
     }
+
+    return 0;
 }
 
 
@@ -429,8 +439,12 @@ void compile_cpp(int dryrun, char *src_name, char *bin_name) {
 
 
 int main(int orig_argc, char *orig_argv[]) {
-    if (orig_argc < 3)
-        die(USAGE, orig_argv[0]);
+    if (orig_argc < 3) {
+        error(USAGE, orig_argv[0]);
+        return 1;
+    }
+
+    int exitstatus = 0;
 
     /**
      * Pre-process arguments
@@ -480,7 +494,9 @@ int main(int orig_argc, char *orig_argv[]) {
     char *src_name = NULL;
     int too_many_src_fns = 0;
     char *forced_ext = NULL;
-    int sub_args_i = -1;
+    char **sub_args = NULL;
+    int sub_args_c = 0;
+    int sub_args_i = 0;
 
     for (int i=1; i<argc; i++) {
         if (parsing_opts && isOpt(argv[i])) {
@@ -497,28 +513,25 @@ int main(int orig_argc, char *orig_argv[]) {
             else if (strMatchesAny(argv[i], "-l", "--language", NULL))
                 forced_ext = argv[++i];
             else if (strMatchesAny(argv[i], "-x", "--args", NULL))
-                parsing_opts = 0, sub_args_i = i + 1;
+                parsing_opts = 0, sub_args_c = argc - (i + 1),
+                    sub_args = malloc(sizeof(char*) * sub_args_c);
             else if (strMatchesAny(argv[i], "--dry-run", NULL))
                 options |= DRYRUN;
-            else
-                die("%s option not recognized: %s\n",
+            else {
+                error("%s option not recognized: %s\n",
                     isLongOpt(argv[i]) ? "Long" : "Short",
                     argv[i]);
+                goto end1;
+            }
         } else {
             if (src_name == NULL)
                 src_name = argv[i];
-            else if (sub_args_i != -1)
-                continue;
+            else if (sub_args != NULL)
+                sub_args[sub_args_i++] = argv[i];
             else
                 too_many_src_fns = 1;
         }
     }
-
-    int sub_args_c = argc - sub_args_i;
-    char *sub_args[sub_args_c];
-
-    for (int i=0; i<argc; i++)
-        sub_args[i] = argv[i+sub_args_i];
 
     /**
      * Error messages and setup
@@ -527,54 +540,68 @@ int main(int orig_argc, char *orig_argv[]) {
     if (options & HELP)
         help();
 
-    if (! (options & (COMPILE|EXECUTE|REMOVE)))
-        die("No commands were given\n");
+    if (! (options & (COMPILE|EXECUTE|REMOVE))) {
+        error("No commands were given\n");
+        goto end1;
+    }
 
-    if (! (options & COMPILE))
-        die("Program requires compilation\n");
+    if (! (options & COMPILE)) {
+        error("Program requires compilation\n");
+        goto end1;
+    }
 
     // None or more than one src_name was given
-    if (src_name == NULL || too_many_src_fns)
-        die(USAGE, argv[0]);
+    if (src_name == NULL || too_many_src_fns) {
+        error(USAGE, argv[0]);
+        goto end1;
+    }
 
-    if (access(src_name, F_OK) != 0)
-        die("Infile does not exist\n");
+    if (access(src_name, F_OK) != 0) {
+        error("Infile does not exist\n");
+        goto end1;
+    }
 
     // Get the programming language as an integer
     enum Lang lang;
     if (forced_ext == NULL) {
         lang = autoDetermineLang(src_name);
-        if (lang == LangUnknown)
-            die("Could not determine language from filename: %s\n",
+        if (lang == LangUnknown) {
+            error("Could not determine language from filename: %s\n",
                 src_name);
+            goto end1;
+        }
     } else {
-        if (strlen(forced_ext) == 0)
-            die("Language cannot be empty string\n");
+        if (strlen(forced_ext) == 0) {
+            error("Language cannot be empty string\n");
+            goto end1;
+        }
         lang = determineLang(lower(forced_ext));
-        if (lang == LangUnknown)
-            die("Language not recognized: %s\n", forced_ext);
+        if (lang == LangUnknown) {
+            error("Language not recognized: %s\n", forced_ext);
+            goto end1;
+        }
     }
 
     // Get the executable filename
-    char bin_name[strlen(src_name)+3+1];
-    snprintf(bin_name, sizeof(bin_name), "%s.to", src_name);
+    char *bin_name = malloc(strlen(src_name) + 3 + 1);
+    sprintf(bin_name, "%s.to", src_name);
 
     if (access(bin_name, F_OK) == 0) {
         char *fmt = "Executable file '%s' exists, overwrite it [y/n]? ";
         char prompt[strlen(fmt) - 2 + strlen(bin_name) + 1];
-        snprintf(prompt, sizeof(prompt), fmt, bin_name);
+        sprintf(prompt, fmt, bin_name);
 
         char response[3];
         read_yesno(response, 3, prompt);
         lower(response);
         if (strcmp(response, "y") != 0)
-            return 1;
+            goto end2;
     }
 
     // Get the object file name
     // Only used for ASM
-    char obj_name[strlen(bin_name)+2+1];
-    snprintf(obj_name, sizeof(obj_name), "%s.o", bin_name);
+    char *obj_name = malloc(strlen(bin_name) + 2 + 1);
+    sprintf(obj_name, "%s.o", bin_name);
 
     if (access(obj_name, F_OK) == 0) {
         char *fmt2 = "Object file '%s' exists, overwrite it [y/n]? ";
@@ -585,25 +612,29 @@ int main(int orig_argc, char *orig_argv[]) {
         read_yesno(response2, 3, prompt2);
         lower(response2);
         if (strcmp(response2, "y") != 0)
-            return 1;
+            goto end3;
     }
 
     /**
      * Execute commands
      */
 
-    int exitstatus = 0;
-
+    int retstat = 0;
     if (lang == LangASM)
-        compile_asm(options & DRYRUN, src_name, obj_name, bin_name);
+        retstat = compile_asm(options & DRYRUN, src_name, obj_name, bin_name);
     else if (lang == LangC)
-        compile_c(options & DRYRUN, src_name, bin_name);
+        retstat = compile_c(options & DRYRUN, src_name, bin_name);
     else if (lang == LangCPP)
-        compile_cpp(options & DRYRUN, src_name, bin_name);
+        retstat = compile_cpp(options & DRYRUN, src_name, bin_name);
+
+    if (retstat != 0) {
+        exitstatus = retstat;
+        goto end3;
+    }
 
     if (options & EXECUTE) {
-        char exec_call[2+strlen(bin_name)+1];
-        snprintf(exec_call, sizeof(exec_call), "./%s", bin_name);
+        char exec_call[2 + strlen(bin_name) + 1];
+        sprintf(exec_call, "./%s", bin_name);
 
         char *all_exec_args[1 + sub_args_c + 1];
         int exec_args_i = 0;
@@ -618,7 +649,7 @@ int main(int orig_argc, char *orig_argv[]) {
             PRet execRet;
             execute(&execRet, all_exec_args, ARRLEN(all_exec_args));
             printf("%s", execRet.out);
-            fprintf(stderr, "%s", execRet.err);
+            error("%s", execRet.err);
             exitstatus = execRet.exitstatus;
         }
     }
@@ -638,13 +669,22 @@ int main(int orig_argc, char *orig_argv[]) {
             PRet rmRet;
             execute(&rmRet, rm_args, ARRLEN(rm_args));
             if (!rmRet.exited || rmRet.exitstatus != 0) {
-                if (lang == LangASM)
-                    die("Could not remove files: %s %s\n", obj_name, bin_name);
-                else
-                    die("Could not remove executable: %s\n", bin_name);
+                if (lang == LangASM) {
+                    error("Could not remove files: %s %s\n", obj_name,
+                        bin_name);
+                } else {
+                    error("Could not remove executable: %s\n", bin_name);
+                    goto end3;
+                }
             }
         }
     }
 
+end3:
+    free(obj_name);
+end2:
+    free(bin_name);
+end1:
+    free(sub_args);
     return exitstatus;
 }
