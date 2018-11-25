@@ -51,7 +51,7 @@ typedef struct {
     char err[MAX];
 } PRet;
 
-char *USAGE = "Usage: to [-h] [-c] [-e] [-r] [-l LANG] [--dry-run] <infile>\n"
+char *USAGE = "Usage: to [-h] [-d] [-c] [-e] [-r] [-l LANG] <infile>\n"
               "       [-x [ARGS...]]\n";
 
 
@@ -86,7 +86,7 @@ void help() {
     puts("Options");
     puts("  -h, --help      Print this help message and exit");
     puts("  -l, --lang      Set the language to compile for");
-    puts("  --dry-run       Print out the commands that would be executed in");
+    puts("  -d, --dry-run   Print out the commands that would be executed in");
     puts("                  response to the -c, -e, and -r options");
     exit(0);
 }
@@ -468,7 +468,7 @@ int process_opt(int i, char *arg, int type, Options *opts) {
         opts->flags |= REMOVE;
     else if (strMatchesAny(arg, "-l", "--language", NULL))
         opts->forced_ext = opts->argv[i+1];
-    else if (strMatchesAny(arg, "--dry-run", NULL))
+    else if (strMatchesAny(arg, "-d", "--dry-run", NULL))
         opts->flags |= DRYRUN;
     else if (strMatchesAny(arg, "-x", "--args", NULL))
         opts->parsing_opts = 0, opts->parsing_sub_args = 1;
