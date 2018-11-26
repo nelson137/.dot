@@ -37,7 +37,7 @@ typedef struct {
     int parsing_opts;
     int parsing_sub_args;
     int flags;
-    char *forced_ext;
+    char *forced_lang;
     char *outfile;
 } Options;
 
@@ -342,40 +342,40 @@ int compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
  */
 int compile_c(int dryrun, char *src_name, char *bin_name) {
     // Get the cflags for the python library
-    PRet pylibs;
-    char *pylib_args[] = {
+    PRet pylibRet;
+    char *pkgconfig_args[] = {
         "/usr/bin/pkg-config", "--cflags", "--libs", "python3", NULL};
-    execute(&pylibs, pylib_args, 5);
-    if (!pylibs.exited || pylibs.exitstatus != 0) {
+    execute(&pylibRet, pkgconfig_args, 5);
+    if (!pylibRet.exited || pylibRet.exitstatus != 0) {
         error("Could not get gcc flags for the python3 library\n");
-        return pylibs.exitstatus;
+        return pylibRet.exitstatus;
     }
 
     // Remove trailing newline
-    char *nl = strrchr(pylibs.out, '\n');
-    if (nl && nl != pylibs.out)
+    char *nl = strrchr(pylibRet.out, '\n');
+    if (nl && nl != pylibRet.out)
         *nl = '\0';
 
     // Split the pylibs string
     // Example string: "abc def ghi\0"
     int n = 1;
-    for (int i=0; pylibs.out[i]; i++) {
-        if (pylibs.out[i] == ' ') {
+    for (int i=0; pylibRet.out[i]; i++) {
+        if (pylibRet.out[i] == ' ') {
             n++;
             // Replace each space with '\0'
-            pylibs.out[i] = '\0';
+            pylibRet.out[i] = '\0';
         }
     }
     // Example string would now be: "abc\0def\0ghi\0"
     // Fill the flags array with a pointer to each null-terminated segment
-    char *pylib_flags[n];
+    char *pylib_args[n];
     int pylib_flags_len = 0;
-    char *pointer = pylibs.out;
+    char *pointer = pylibRet.out;
     // array with example string will be: {"abc\0", "def\0", "ghi\0"}
     for (int i=0; i<n; i++) {
         pointer = strchr(pointer, '\0') + 1;
         if (strlen(pointer) > 0)
-            pylib_flags[pylib_flags_len++] = pointer;
+            pylib_args[pylib_flags_len++] = pointer;
     }
 
     char *base_args[11] = {
@@ -387,14 +387,14 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
     if (access("/usr/lib/x86_64-linux-gnu/libjson-c.a", F_OK) == 0)
         base_args[base_args_len++] = "-ljson-c";
 
-    // Combine base_args, pylib_flags, and NULL sentinel
+    // Combine base_args, pylib_args, and NULL sentinel
     int args_len = base_args_len + pylib_flags_len + 1;
     char *args[args_len];
     int count = 0;
     for (int i=0; i<base_args_len; i++)
         args[count++] = base_args[i];
     for (int i=0; i<pylib_flags_len; i++)
-        args[count++] = pylib_flags[i];
+        args[count++] = pylib_args[i];
     args[count] = NULL;
 
     if (dryrun) {
@@ -478,7 +478,7 @@ int process_opt(int *i, char *arg, int type, Options *opts) {
     else if (strMatchesAny(arg, "-o", "--outfile", NULL))
         opts->outfile = opts->argv[++(*i)];
     else if (strMatchesAny(arg, "-l", "--language", NULL))
-        opts->forced_ext = opts->argv[++(*i)];
+        opts->forced_lang = opts->argv[++(*i)];
     else if (strMatchesAny(arg, "-d", "--dry-run", NULL))
         opts->flags |= DRYRUN;
     else if (strMatchesAny(arg, "-x", "--args", NULL))
@@ -513,7 +513,7 @@ int main(int argc, char *argv[]) {
         .parsing_opts = 1,
         .parsing_sub_args = 0,
         .flags = 0,
-        .forced_ext = NULL,
+        .forced_lang = NULL,
         .outfile = NULL,
     };
 
@@ -582,7 +582,7 @@ int main(int argc, char *argv[]) {
 
     // Get the programming language as an integer
     enum Lang lang;
-    if (opts.forced_ext == NULL) {
+    if (opts.forced_lang == NULL) {
         lang = autoDetermineLang(src_name);
         if (lang == LangUnknown) {
             error("Could not determine language from filename: %s\n",
@@ -590,13 +590,13 @@ int main(int argc, char *argv[]) {
             goto end1;
         }
     } else {
-        if (strlen(opts.forced_ext) == 0) {
+        if (strlen(opts.forced_lang) == 0) {
             error("Language cannot be empty string\n");
             goto end1;
         }
-        lang = determineLang(lower(opts.forced_ext));
+        lang = determineLang(lower(opts.forced_lang));
         if (lang == LangUnknown) {
-            error("Language not recognized: %s\n", opts.forced_ext);
+            error("Language not recognized: %s\n", opts.forced_lang);
             goto end1;
         }
     }
