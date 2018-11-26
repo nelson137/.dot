@@ -112,6 +112,11 @@ function! CompileAndRun()
         exe 'AsyncRun gcc % -o %< && {./%<; rm %<}'
     elseif l:filetype == 'cpp'
         exe 'AsyncRun g++ % -o %< && {./%<; rm %<}'
+    elseif l:filetype == 'asm'
+        let l:compile = 'nasm -f elf64 % -o %<.o'
+        let l:link = 'ld %<.o -o %<'
+        let l:clean = 'rm %<.o %<'
+        exe 'AsyncRun '.l:compile.' && '.l:link.' && {./%<; '.l:clean.';}'
     elseif l:filetype == 'sh' || l:filetype == 'zsh'
         if !IsX()
             let l:prompt = '"Do you want to make this file executable [y/n]? "'
