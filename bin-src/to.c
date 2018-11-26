@@ -369,21 +369,23 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
     // Example string would now be: "abc\0def\0ghi\0"
     // Fill the flags array with a pointer to each null-terminated segment
     char *pylib_flags[n];
-    int pylib_flags_len = n;
+    int pylib_flags_len = 0;
     char *pointer = pylibs.out;
-    pylib_flags[0] = pointer;
     // array with example string will be: {"abc\0", "def\0", "ghi\0"}
-    for (int i=1; i<n; i++) {
+    for (int i=0; i<n; i++) {
         pointer = strchr(pointer, '\0') + 1;
-        pylib_flags[i] = pointer;
+        if (strlen(pointer) > 0)
+            pylib_flags[pylib_flags_len++] = pointer;
     }
 
-    char *base_args[] = {
+    char *base_args[11] = {
         "/usr/bin/gcc",
         "-std=c11", "-O3", "-Wall", "-Werror",
         src_name, "-o", bin_name,
-        "-lm", "-ljson-c", "-lmylib"};
-    int base_args_len = ARRLEN(base_args);
+        "-lmylib", "-lm"};
+    int base_args_len = 10;
+    if (access("/usr/lib/x86_64-linux-gnu/libjson-c.a", F_OK) == 0)
+        base_args[base_args_len++] = "-ljson-c";
 
     // Combine base_args, pylib_flags, and NULL sentinel
     int args_len = base_args_len + pylib_flags_len + 1;
