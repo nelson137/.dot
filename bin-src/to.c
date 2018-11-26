@@ -600,7 +600,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (access(bin_name, F_OK) == 0) {
-        char *fmt = "Executable file '%s' exists, overwrite it [y/n]? ";
+        char *fmt = "Executable file '%s' exists\nOverwrite it [y/n]? ";
         char prompt[strlen(fmt) - 2 + strlen(bin_name) + 1];
         sprintf(prompt, fmt, bin_name);
 
