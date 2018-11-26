@@ -88,10 +88,8 @@ augroup end
 au BufRead,BufNewFile *.html set ts=2 sw=2 sts=2
 
 " Show ruler for specific filetypes
-autocmd FileType cpp,javascript,python,sh,vim,zsh
+autocmd FileType c,cpp,javascript,python,sh,vim,zsh
     \ setlocal colorcolumn=+1 textwidth=79
-autocmd FileType c
-    \ setlocal colorcolumn=+1 textwidth=119
 
 autocmd FileType asm ALEDisable
 
