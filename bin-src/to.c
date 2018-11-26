@@ -16,11 +16,12 @@
 #define COMPOUND_SHORT_OPT  3
 
 // Bitflags for options
-#define HELP      1  // 0b00001
-#define COMPILE   2  // 0b00010
-#define EXECUTE   4  // 0b00100
-#define REMOVE    8  // 0b01000
-#define DRYRUN   16  // 0b10000
+#define HELP      1  // 0b000001
+#define QUIET     2  // 0b000010
+#define COMPILE   4  // 0b000100
+#define EXECUTE   8  // 0b001000
+#define REMOVE   16  // 0b010000
+#define DRYRUN   32  // 0b100000
 
 enum Lang {
     LangUnknown,
@@ -51,7 +52,7 @@ typedef struct {
     char err[MAX];
 } PRet;
 
-char *USAGE = "Usage: to [-h] [-d] [-c] [-e] [-r] [-l LANG] <infile>\n"
+char *USAGE = "Usage: to [-h] [-q] [-d] [-c] [-e] [-r] [-l LANG] <infile>\n"
               "       [-x [ARGS...]]\n";
 
 
@@ -85,6 +86,7 @@ void help() {
     puts("");
     puts("Options");
     puts("  -h, --help      Print this help message and exit");
+    puts("  -q, --quiet     Suppress OUTPUT and END OUTPUT messages");
     puts("  -l, --lang      Set the language to compile for");
     puts("  -d, --dry-run   Print out the commands that would be executed in");
     puts("                  response to the -c, -e, and -r options");
@@ -460,6 +462,8 @@ int process_opt(int i, char *arg, int type, Options *opts) {
         opts->parsing_opts = 0;
     else if (strMatchesAny(arg, "-h", "--help", NULL))
         opts->flags |= HELP;
+    else if (strMatchesAny(arg, "-q", "--quiet", NULL))
+        opts->flags |= QUIET;
     else if (strMatchesAny(arg, "-c", "--compile", NULL))
         opts->flags |= COMPILE;
     else if (strMatchesAny(arg, "-e", "--execute", NULL))
@@ -653,7 +657,8 @@ int main(int argc, char *argv[]) {
     }
 
     if (opts.flags & EXECUTE) {
-        printf("===== OUTPUT =====\n");
+        if (! (opts.flags & QUIET))
+            printf("===== OUTPUT =====\n");
         char *all_exec_args[1 + sub_args_i + 1];
         int exec_args_i = 0;
         all_exec_args[exec_args_i++] = bin_name;
@@ -670,7 +675,8 @@ int main(int argc, char *argv[]) {
             error("%s", execRet.err);
             exitstatus = execRet.exitstatus;
         }
-        printf("===== END OUTPUT =====\n");
+        if (! (opts.flags & QUIET))
+            printf("===== END OUTPUT =====\n");
     }
 
     if (opts.flags & REMOVE) {
