@@ -653,6 +653,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (opts.flags & EXECUTE) {
+        printf("===== OUTPUT =====\n");
         char *all_exec_args[1 + sub_args_i + 1];
         int exec_args_i = 0;
         all_exec_args[exec_args_i++] = bin_name;
@@ -669,6 +670,7 @@ int main(int argc, char *argv[]) {
             error("%s", execRet.err);
             exitstatus = execRet.exitstatus;
         }
+        printf("===== END OUTPUT =====\n");
     }
 
     if (opts.flags & REMOVE) {
