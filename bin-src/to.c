@@ -457,8 +457,8 @@ int arg_type(char *arg) {
 }
 
 
-int process_opt(int i, char *arg, int type, Options *opts) {
-    if (strcmp(opts->argv[i], "--") == 0)
+int process_opt(int *i, char *arg, int type, Options *opts) {
+    if (strcmp(opts->argv[*i], "--") == 0)
         opts->parsing_opts = 0;
     else if (strMatchesAny(arg, "-h", "--help", NULL))
         opts->flags |= HELP;
@@ -471,7 +471,7 @@ int process_opt(int i, char *arg, int type, Options *opts) {
     else if (strMatchesAny(arg, "-r", "--remove", NULL))
         opts->flags |= REMOVE;
     else if (strMatchesAny(arg, "-l", "--language", NULL))
-        opts->forced_ext = opts->argv[i+1];
+        opts->forced_ext = opts->argv[++(*i)];
     else if (strMatchesAny(arg, "-d", "--dry-run", NULL))
         opts->flags |= DRYRUN;
     else if (strMatchesAny(arg, "-x", "--args", NULL))
@@ -530,13 +530,13 @@ int main(int argc, char *argv[]) {
         } else if (type == COMPOUND_SHORT_OPT) {  // Compound short option
             for (int j=1; j<strlen(argv[i]); j++) {
                 temp_opt[1] = argv[i][j];
-                if (process_opt(i, temp_opt, SHORT_OPT, &opts) < 0) {
+                if (process_opt(&i, temp_opt, SHORT_OPT, &opts) < 0) {
                     error(opt_err, temp_opt);
                     goto end1;
                 }
             }
         } else {  // Long option
-            if (process_opt(i, argv[i], type, &opts) < 0) {
+            if (process_opt(&i, argv[i], type, &opts) < 0) {
                 error(opt_err, argv[i]);
                 goto end1;
             }
