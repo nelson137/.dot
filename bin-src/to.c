@@ -37,6 +37,7 @@ typedef struct {
     int parsing_sub_args;
     int flags;
     char *forced_ext;
+    char *outfile;
 } Options;
 
 typedef struct {
@@ -53,7 +54,7 @@ typedef struct {
 } PRet;
 
 char *USAGE = "Usage: to [-h] [-q] [-d] [-c] [-e] [-r] [-l LANG] <infile>\n"
-              "       [-x [ARGS...]]\n";
+              "       [-o <outfile>] [-x [ARGS...]]\n";
 
 
 /*************************************************
@@ -86,6 +87,7 @@ void help() {
     puts("");
     puts("Options");
     puts("  -h, --help      Print this help message and exit");
+    puts("  -o, --outfile   What name to give the binary");
     puts("  -q, --quiet     Suppress OUTPUT and END OUTPUT messages");
     puts("  -l, --lang      Set the language to compile for");
     puts("  -d, --dry-run   Print out the commands that would be executed in");
@@ -470,6 +472,8 @@ int process_opt(int *i, char *arg, int type, Options *opts) {
         opts->flags |= EXECUTE;
     else if (strMatchesAny(arg, "-r", "--remove", NULL))
         opts->flags |= REMOVE;
+    else if (strMatchesAny(arg, "-o", "--outfile", NULL))
+        opts->outfile = opts->argv[++(*i)];
     else if (strMatchesAny(arg, "-l", "--language", NULL))
         opts->forced_ext = opts->argv[++(*i)];
     else if (strMatchesAny(arg, "-d", "--dry-run", NULL))
@@ -507,6 +511,7 @@ int main(int argc, char *argv[]) {
         .parsing_sub_args = 0,
         .flags = 0,
         .forced_ext = NULL,
+        .outfile = NULL,
     };
 
     char *src_name = NULL;
@@ -595,12 +600,16 @@ int main(int argc, char *argv[]) {
 
     // Get the executable filename
     char *bin_name;
-    if (src_name[0] == '/') {
-        bin_name = malloc(strlen(src_name) + 3 + 1);
-        sprintf(bin_name, "%s.to", src_name);
+    if (opts.outfile == NULL) {
+        if (src_name[0] == '/') {
+            bin_name = malloc(strlen(src_name) + 3 + 1);
+            sprintf(bin_name, "%s.to", src_name);
+        } else {
+            bin_name = malloc(2 + strlen(src_name) + 3 + 1);
+            sprintf(bin_name, "./%s.to", src_name);
+        }
     } else {
-        bin_name = malloc(2 + strlen(src_name) + 3 + 1);
-        sprintf(bin_name, "./%s.to", src_name);
+        bin_name = opts.outfile;
     }
 
     if (access(bin_name, F_OK) == 0) {
