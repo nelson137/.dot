@@ -173,7 +173,7 @@ char *getExt(char *fn) {
 }
 
 
-int execute(PRet *ret, char *argv[], int len) {
+int execute(PRet *ret, char *argv[], int len, int capture_output) {
     // Make sure argv ends with NULL sentinel
     if (argv[len-1] != NULL) {
         strcpy(ret->err, "Last argument of argv must be a null pointer\n");
@@ -181,18 +181,18 @@ int execute(PRet *ret, char *argv[], int len) {
     }
 
     int pipes[2][2];
-
     int *out_pipe = pipes[0];
     int *err_pipe = pipes[1];
 
-    if (pipe(out_pipe) < 0) {
-        strcpy(ret->err, "Could not create pipe for stdout\n");
-        return -2;
-    }
-
-    if (pipe(err_pipe) < 0) {
-        strcpy(ret->err, "Could not create pipe for stderr\n");
-        return -2;
+    if (capture_output) {
+        if (pipe(out_pipe) < 0) {
+            strcpy(ret->err, "Could not create pipe for stdout\n");
+            return -2;
+        }
+        if (pipe(err_pipe) < 0) {
+            strcpy(ret->err, "Could not create pipe for stderr\n");
+            return -2;
+        }
     }
 
     int parent_out_fd = out_pipe[0];
@@ -210,13 +210,15 @@ int execute(PRet *ret, char *argv[], int len) {
          * Child
          */
 
-        dup2(child_out_fd, STDOUT_FILENO);
-        dup2(child_err_fd, STDERR_FILENO);
+        if (capture_output) {
+            dup2(child_out_fd, STDOUT_FILENO);
+            dup2(child_err_fd, STDERR_FILENO);
 
-        close(parent_out_fd);
-        close(parent_err_fd);
-        close(child_out_fd);
-        close(child_err_fd);
+            close(parent_out_fd);
+            close(parent_err_fd);
+            close(child_out_fd);
+            close(child_err_fd);
+        }
 
         execv(argv[0], argv);
         _exit(1);
@@ -225,9 +227,11 @@ int execute(PRet *ret, char *argv[], int len) {
          * Parent
          */
 
-        // Child pipes are not needed in the parent
-        close(child_out_fd);
-        close(child_err_fd);
+        if (capture_output) {
+            // Child's end of the pipes are not needed in the parent
+            close(child_out_fd);
+            close(child_err_fd);
+        }
 
         // Wait for child to complete
         int status;
@@ -242,29 +246,34 @@ int execute(PRet *ret, char *argv[], int len) {
         ret->stopsig = WSTOPSIG(status);
         ret->continued = WIFCONTINUED(status);
 
-        int count;
-        char out[MAX], err[MAX];
+        if (capture_output) {
+            int count;
+            char out[MAX], err[MAX];
 
-        // Read child's stdout
-        count = read(parent_out_fd, out, sizeof(out)-1);
-        if (count == -1) {
-            strcpy(ret->err, "Could not read child's stdout\n");
-            return -4;
+            // Read child's stdout
+            count = read(parent_out_fd, out, sizeof(out)-1);
+            if (count == -1) {
+                strcpy(ret->err, "Could not read child's stdout\n");
+                return -4;
+            }
+            out[count] = '\0';
+            strcpy(ret->out, out);
+
+            // Read child's stderr
+            count = read(parent_err_fd, err, sizeof(err)-1);
+            if (count == -1) {
+                strcpy(ret->err, "Could not read child's stderr\n");
+                return -4;
+            }
+            err[count] = '\0';
+            strcpy(ret->err, err);
+
+            close(parent_out_fd);
+            close(parent_err_fd);
+        } else {
+            strcpy(ret->out, "");
+            strcpy(ret->err, "");
         }
-        out[count] = '\0';
-        strcpy(ret->out, out);
-
-        // Read child's stderr
-        count = read(parent_err_fd, err, sizeof(err)-1);
-        if (count == -1) {
-            strcpy(ret->err, "Could not read child's stderr\n");
-            return -4;
-        }
-        err[count] = '\0';
-        strcpy(ret->err, err);
-
-        close(parent_out_fd);
-        close(parent_err_fd);
     }
 
     return 0;
@@ -315,14 +324,14 @@ int compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
     } else {
         PRet nasm_ret, ld_ret;
 
-        execute(&nasm_ret, nasm_args, ARRLEN(nasm_args));
+        execute(&nasm_ret, nasm_args, ARRLEN(nasm_args), 1);
         if (!nasm_ret.exited || nasm_ret.exitstatus != 0) {
             error("Could not create object file for infile: %s\n\n", src_name);
             error(nasm_ret.err);
             return nasm_ret.exitstatus;
         }
 
-        execute(&ld_ret, ld_args, ARRLEN(ld_args));
+        execute(&ld_ret, ld_args, ARRLEN(ld_args), 1);
         if (!ld_ret.exited || ld_ret.exitstatus != 0) {
             error("Could not link object file: %s\n\n", obj_name);
             error(ld_ret.err);
@@ -342,7 +351,7 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
     PRet pylibRet;
     char *pkgconfig_args[] = {
         "/usr/bin/pkg-config", "--cflags", "--libs", "python3", NULL};
-    execute(&pylibRet, pkgconfig_args, 5);
+    execute(&pylibRet, pkgconfig_args, 5, 1);
     if (!pylibRet.exited || pylibRet.exitstatus != 0) {
         error("Could not get gcc flags for the python3 library\n");
         return pylibRet.exitstatus;
@@ -398,7 +407,7 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
         print_args(args, args_len);
     } else {
         PRet ret;
-        execute(&ret, args, args_len);
+        execute(&ret, args, args_len, 1);
         if (!ret.exited || ret.exitstatus != 0) {
             error("Could not compile infile: %s\n\n", src_name);
             error(ret.err);
@@ -424,7 +433,7 @@ int compile_cpp(int dryrun, char *src_name, char *bin_name) {
         print_args(args, ARRLEN(args));
     } else {
         PRet ret;
-        execute(&ret, args, ARRLEN(args));
+        execute(&ret, args, ARRLEN(args), 1);
         if (!ret.exited || ret.exitstatus != 0) {
             error("Could not compile infile: %s\n\n", src_name);
             error(ret.err);
@@ -679,9 +688,7 @@ int main(int argc, char *argv[]) {
             print_args(all_exec_args, ARRLEN(all_exec_args));
         } else {
             PRet execRet;
-            execute(&execRet, all_exec_args, ARRLEN(all_exec_args));
-            printf("%s", execRet.out);
-            error("%s", execRet.err);
+            execute(&execRet, all_exec_args, ARRLEN(all_exec_args), 0);
             exitstatus = execRet.exitstatus;
         }
         if (! (opts.flags & QUIET))
@@ -701,7 +708,7 @@ int main(int argc, char *argv[]) {
             print_args(rm_args, ARRLEN(rm_args));
         } else {
             PRet rmRet;
-            execute(&rmRet, rm_args, ARRLEN(rm_args));
+            execute(&rmRet, rm_args, ARRLEN(rm_args), 1);
             if (!rmRet.exited || rmRet.exitstatus != 0) {
                 if (lang == LangASM) {
                     error("Could not remove files: %s %s\n", obj_name,
