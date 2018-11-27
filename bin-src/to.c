@@ -351,7 +351,7 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
     PRet pylibRet;
     char *pkgconfig_args[] = {
         "/usr/bin/pkg-config", "--cflags", "--libs", "python3", NULL};
-    execute(&pylibRet, pkgconfig_args, 5, 1);
+    execute(&pylibRet, pkgconfig_args, ARRLEN(pkgconfig_args), 1);
     if (!pylibRet.exited || pylibRet.exitstatus != 0) {
         error("Could not get gcc flags for the python3 library\n");
         return pylibRet.exitstatus;
@@ -375,13 +375,13 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
     // Example string would now be: "abc\0def\0ghi\0"
     // Fill the flags array with a pointer to each null-terminated segment
     char *pylib_args[n];
-    int pylib_flags_len = 0;
+    int pylib_args_len = 0;
     char *pointer = pylibRet.out;
     // array with example string will be: {"abc\0", "def\0", "ghi\0"}
     for (int i=0; i<n; i++) {
         pointer = strchr(pointer, '\0') + 1;
         if (strlen(pointer) > 0)
-            pylib_args[pylib_flags_len++] = pointer;
+            pylib_args[pylib_args_len++] = pointer;
     }
 
     char *base_args[11] = {
@@ -394,12 +394,12 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
         base_args[base_args_len++] = "-ljson-c";
 
     // Combine base_args, pylib_args, and NULL sentinel
-    int args_len = base_args_len + pylib_flags_len + 1;
+    int args_len = base_args_len + pylib_args_len + 1;
     char *args[args_len];
     int count = 0;
     for (int i=0; i<base_args_len; i++)
         args[count++] = base_args[i];
-    for (int i=0; i<pylib_flags_len; i++)
+    for (int i=0; i<pylib_args_len; i++)
         args[count++] = pylib_args[i];
     args[count] = NULL;
 
@@ -663,7 +663,7 @@ int main(int argc, char *argv[]) {
     int retstat = 0;
     if (lang == LangASM)
         retstat = compile_asm(opts.flags & DRYRUN, src_name, obj_name,
-            bin_name);
+                              bin_name);
     else if (lang == LangC)
         retstat = compile_c(opts.flags & DRYRUN, src_name, bin_name);
     else if (lang == LangCPP)
@@ -682,10 +682,10 @@ int main(int argc, char *argv[]) {
         all_exec_args[exec_args_i++] = bin_name;
         for (int i=0; i<sub_args_i; i++)
             all_exec_args[exec_args_i++] = sub_args[i];
-        all_exec_args[exec_args_i] = NULL;
+        all_exec_args[exec_args_i++] = NULL;
 
         if (opts.flags & DRYRUN) {
-            print_args(all_exec_args, ARRLEN(all_exec_args));
+            print_args(all_exec_args, exec_args_i);
         } else {
             PRet execRet;
             execute(&execRet, all_exec_args, ARRLEN(all_exec_args), 0);
@@ -721,11 +721,11 @@ int main(int argc, char *argv[]) {
         }
     }
 
-end3:
-    free(obj_name);
-end2:
-    free(bin_name);
-end1:
-    free(sub_args);
-    return exitstatus;
+    end3:
+        free(obj_name);
+    end2:
+        free(bin_name);
+    end1:
+        free(sub_args);
+        return exitstatus;
 }
