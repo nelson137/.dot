@@ -108,7 +108,6 @@ void print_args(char *args[], int len) {
 
 
 void read_yesno(char response[], int size, char *prompt) {
-    size--;
     int index = 0;
     char c;
 
@@ -118,7 +117,7 @@ void read_yesno(char response[], int size, char *prompt) {
         c = getchar();
         if (c == '\n')
             break;
-        if (index < size)
+        if (index < size-1)
             response[index++] = c;
     } while (1);
 
@@ -214,7 +213,6 @@ int execute(PRet *ret, char *argv[], int len) {
         dup2(child_out_fd, STDOUT_FILENO);
         dup2(child_err_fd, STDERR_FILENO);
 
-        // None of the pipes are needed in the child
         close(parent_out_fd);
         close(parent_err_fd);
         close(child_out_fd);
@@ -233,7 +231,6 @@ int execute(PRet *ret, char *argv[], int len) {
 
         // Wait for child to complete
         int status;
-        /* wait(&status); */
         waitpid(pid, &status, 0);
 
         ret->exited = WIFEXITED(status);
