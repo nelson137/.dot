@@ -55,7 +55,7 @@ typedef struct {
 } PRet;
 
 char *USAGE = "Usage: to [-h] [-q] [-d] [-c] [-e] [-r] [-l LANG] <infile>\n"
-              "       [-o <outfile>] [-x [ARGS...]]\n";
+              "       [-o OUTFILE] [-x [ARGS...]]\n";
 
 
 /*************************************************
@@ -88,9 +88,11 @@ void help() {
     puts("");
     puts("Options");
     puts("  -h, --help      Print this help message and exit");
-    puts("  -o, --outfile   What name to give the binary");
+    puts("  -o, --outfile OUTFILE");
+    puts("                  What name to give the binary");
     puts("  -q, --quiet     Suppress OUTPUT and END OUTPUT messages");
-    puts("  -l, --lang      Set the language to compile for");
+    puts("  -l, --lang LANGUAGE");
+    puts("                  Set the language to compile for");
     puts("  -d, --dry-run   Print out the commands that would be executed in");
     puts("                  response to the -c, -e, and -r options");
     exit(0);
