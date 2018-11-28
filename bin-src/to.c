@@ -351,7 +351,7 @@ int compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
 int compile_c(int dryrun, char *src_name, char *bin_name) {
     char *base_args[] = {
         "/usr/bin/gcc",
-        "-std=c11", "-O3", "-Wall", "-Werror",
+        "-x", "c", "-std=c11", "-O3", "-Wall", "-Werror",
         src_name, "-o", bin_name,
         "-lmylib", "-lm"};
     int base_args_len = ARRLEN(base_args);
@@ -428,7 +428,7 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
 int compile_cpp(int dryrun, char *src_name, char *bin_name) {
     char *args[] = {
         "/usr/bin/g++",
-        "-std=c++11", "-O3", "-Wall", "-Werror",
+        "-x", "c++", "-std=c++11", "-O3", "-Wall", "-Werror",
         src_name, "-o", bin_name,
         NULL};
 
