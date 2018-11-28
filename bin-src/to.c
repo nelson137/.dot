@@ -328,14 +328,14 @@ int compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
 
         execute(&nasm_ret, nasm_args, ARRLEN(nasm_args), 1);
         if (!nasm_ret.exited || nasm_ret.exitstatus != 0) {
-            error("Could not create object file for infile: %s\n\n", src_name);
+            error("Could not create object file: %s\n", obj_name);
             error(nasm_ret.err);
             return nasm_ret.exitstatus;
         }
 
         execute(&ld_ret, ld_args, ARRLEN(ld_args), 1);
         if (!ld_ret.exited || ld_ret.exitstatus != 0) {
-            error("Could not link object file: %s\n\n", obj_name);
+            error("Could not link object file: %s\n", obj_name);
             error(ld_ret.err);
             return ld_ret.exitstatus;
         }
@@ -411,7 +411,7 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
         PRet ret;
         execute(&ret, args, args_len, 1);
         if (!ret.exited || ret.exitstatus != 0) {
-            error("Could not compile infile: %s\n\n", src_name);
+            error("Could not compile infile: %s\n", src_name);
             error(ret.err);
             return ret.exitstatus;
         }
@@ -437,7 +437,7 @@ int compile_cpp(int dryrun, char *src_name, char *bin_name) {
         PRet ret;
         execute(&ret, args, ARRLEN(args), 1);
         if (!ret.exited || ret.exitstatus != 0) {
-            error("Could not compile infile: %s\n\n", src_name);
+            error("Could not compile infile: %s\n", src_name);
             error(ret.err);
             return ret.exitstatus;
         }
@@ -547,14 +547,17 @@ int main(int argc, char *argv[]) {
     for (int i=1; i<argc; i++) {
         type = arg_type(argv[i]);
 
-        if (opts.parsing_sub_args) {  // Sub arg
+        if (opts.parsing_sub_args) {
+            // Sub-argument
             sub_args[sub_args_i++] = argv[i];
-        } else if (type == POS_ARG || !opts.parsing_opts) {  // Positional arg
+        } else if (type == POS_ARG || !opts.parsing_opts) {
+            // Positional argument
             if (src_name == NULL)
                 src_name = argv[i];
             else
                 too_many_src_fns = 1;
-        } else if (type == COMPOUND_SHORT_OPT) {  // Compound short option
+        } else if (type == COMPOUND_SHORT_OPT) {
+            // Compound short option
             for (int j=1; j<strlen(argv[i]); j++) {
                 temp_opt[1] = argv[i][j];
                 if (process_opt(&i, temp_opt, SHORT_OPT, &opts) < 0) {
@@ -562,7 +565,8 @@ int main(int argc, char *argv[]) {
                     goto end1;
                 }
             }
-        } else {  // Long option
+        } else {
+            // Short or long option
             if (process_opt(&i, argv[i], type, &opts) < 0) {
                 exitstatus = 1;
                 goto end1;
@@ -680,19 +684,16 @@ int main(int argc, char *argv[]) {
      * Execute commands
      */
 
-    int retstat = 0;
     if (lang == LangASM)
-        retstat = compile_asm(opts.flags & DRYRUN, src_name, obj_name,
-                              bin_name);
+        exitstatus = compile_asm(opts.flags & DRYRUN, src_name, obj_name,
+                                 bin_name);
     else if (lang == LangC)
-        retstat = compile_c(opts.flags & DRYRUN, src_name, bin_name);
+        exitstatus = compile_c(opts.flags & DRYRUN, src_name, bin_name);
     else if (lang == LangCPP)
-        retstat = compile_cpp(opts.flags & DRYRUN, src_name, bin_name);
+        exitstatus = compile_cpp(opts.flags & DRYRUN, src_name, bin_name);
 
-    if (retstat != 0) {
-        exitstatus = retstat;
+    if (exitstatus != 0)
         goto end3;
-    }
 
     if (opts.flags & EXECUTE) {
         if (! (opts.flags & QUIET))
