@@ -579,9 +579,6 @@ int main(int argc, char *argv[]) {
      * Error messages and setup
      */
 
-    if (opts.flags & HELP)
-        help();
-
     if (! (opts.flags & (COMPILE|EXECUTE|REMOVE))) {
         err_msg("No commands were given\n");
         exitstatus = 1;
@@ -594,6 +591,9 @@ int main(int argc, char *argv[]) {
         exitstatus = 1;
         goto end1;
     }
+
+    if (opts.flags & HELP)
+        help();
 
     // None or more than one src_name was given
     if (src_name == NULL || too_many_src_fns) {
