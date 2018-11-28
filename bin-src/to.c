@@ -349,6 +349,13 @@ int compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
  * Compile the program for C.
  */
 int compile_c(int dryrun, char *src_name, char *bin_name) {
+    char *base_args[] = {
+        "/usr/bin/gcc",
+        "-std=c11", "-O3", "-Wall", "-Werror",
+        src_name, "-o", bin_name,
+        "-lmylib", "-lm"};
+    int base_args_len = ARRLEN(base_args);
+
     // Get the cflags for the python library
     PRet pylibRet;
     char *pkgconfig_args[] = {
@@ -386,21 +393,15 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
             pylib_args[pylib_args_len++] = pointer;
     }
 
-    char *base_args[11] = {
-        "/usr/bin/gcc",
-        "-std=c11", "-O3", "-Wall", "-Werror",
-        src_name, "-o", bin_name,
-        "-lmylib", "-lm"};
-    int base_args_len = 10;
-    if (access("/usr/lib/x86_64-linux-gnu/libjson-c.a", F_OK) == 0)
-        base_args[base_args_len++] = "-ljson-c";
-
-    // Combine base_args, pylib_args, and NULL sentinel
-    int args_len = base_args_len + pylib_args_len + 1;
+    // Combine all arguments for gcc call
+    int has_libjson = ! access("/usr/lib/x86_64-linux-gnu/libjson-c.a", F_OK);
+    int args_len = base_args_len + has_libjson + pylib_args_len + 1;
     char *args[args_len];
     int count = 0;
     for (int i=0; i<base_args_len; i++)
         args[count++] = base_args[i];
+    if (has_libjson)
+        base_args[count++] = "-ljson-c";
     for (int i=0; i<pylib_args_len; i++)
         args[count++] = pylib_args[i];
     args[count] = NULL;
