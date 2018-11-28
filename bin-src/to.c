@@ -66,7 +66,7 @@ char *USAGE = "Usage: to [-h] [-q] [-d] [-c] [-e] [-r] [-l LANG] <infile>\n"
 /**
  * Print an error message to stderr and exit with code 1.
  */
-void error(const char *fmt, ...) {
+void err_msg(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);
@@ -328,15 +328,15 @@ int compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
 
         execute(&nasm_ret, nasm_args, ARRLEN(nasm_args), 1);
         if (!nasm_ret.exited || nasm_ret.exitstatus != 0) {
-            error("Could not create object file: %s\n", obj_name);
-            error(nasm_ret.err);
+            err_msg("Could not create object file: %s\n", obj_name);
+            err_msg(nasm_ret.err);
             return nasm_ret.exitstatus;
         }
 
         execute(&ld_ret, ld_args, ARRLEN(ld_args), 1);
         if (!ld_ret.exited || ld_ret.exitstatus != 0) {
-            error("Could not link object file: %s\n", obj_name);
-            error(ld_ret.err);
+            err_msg("Could not link object file: %s\n", obj_name);
+            err_msg(ld_ret.err);
             return ld_ret.exitstatus;
         }
     }
@@ -362,7 +362,7 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
         "/usr/bin/pkg-config", "--cflags", "--libs", "python3", NULL};
     execute(&pylibRet, pkgconfig_args, ARRLEN(pkgconfig_args), 1);
     if (!pylibRet.exited || pylibRet.exitstatus != 0) {
-        error("Could not get gcc flags for the python3 library\n");
+        err_msg("Could not get gcc flags for the python3 library\n");
         return pylibRet.exitstatus;
     }
 
@@ -412,8 +412,8 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
         PRet ret;
         execute(&ret, args, args_len, 1);
         if (!ret.exited || ret.exitstatus != 0) {
-            error("Could not compile infile: %s\n", src_name);
-            error(ret.err);
+            err_msg("Could not compile infile: %s\n", src_name);
+            err_msg(ret.err);
             return ret.exitstatus;
         }
     }
@@ -438,8 +438,8 @@ int compile_cpp(int dryrun, char *src_name, char *bin_name) {
         PRet ret;
         execute(&ret, args, ARRLEN(args), 1);
         if (!ret.exited || ret.exitstatus != 0) {
-            error("Could not compile infile: %s\n", src_name);
-            error(ret.err);
+            err_msg("Could not compile infile: %s\n", src_name);
+            err_msg(ret.err);
             return ret.exitstatus;
         }
     }
@@ -488,14 +488,14 @@ int process_opt(int *i, char *arg, int type, Options *opts) {
         if ((*i)+1 < opts->argc) {
             opts->outfile = opts->argv[++(*i)];
         } else {
-            error(USAGE);
+            err_msg(USAGE);
             return -1;
         }
     } else if (strMatchesAny(arg, "-l", "--language", NULL)) {
         if ((*i)+1 < opts->argc) {
             opts->forced_lang = opts->argv[++(*i)];
         } else {
-            error(USAGE);
+            err_msg(USAGE);
             return -1;
         }
     } else if (strMatchesAny(arg, "-d", "--dry-run", NULL))
@@ -503,7 +503,7 @@ int process_opt(int *i, char *arg, int type, Options *opts) {
     else if (strMatchesAny(arg, "-x", "--args", NULL))
         opts->parsing_opts = 0, opts->parsing_sub_args = 1;
     else {
-        error("Option not recognized: %s\n", arg);
+        err_msg("Option not recognized: %s\n", arg);
         return -1;
     }
 
@@ -518,7 +518,7 @@ int process_opt(int *i, char *arg, int type, Options *opts) {
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        error(USAGE, argv[0]);
+        err_msg(USAGE, argv[0]);
         return 1;
     }
 
@@ -583,27 +583,27 @@ int main(int argc, char *argv[]) {
         help();
 
     if (! (opts.flags & (COMPILE|EXECUTE|REMOVE))) {
-        error("No commands were given\n");
+        err_msg("No commands were given\n");
         exitstatus = 1;
         goto end1;
     }
 
     // The -c, --compile option was not given
     if (! (opts.flags & COMPILE)) {
-        error("Program requires compilation\n");
+        err_msg("Program requires compilation\n");
         exitstatus = 1;
         goto end1;
     }
 
     // None or more than one src_name was given
     if (src_name == NULL || too_many_src_fns) {
-        error(USAGE, argv[0]);
+        err_msg(USAGE, argv[0]);
         exitstatus = 1;
         goto end1;
     }
 
     if (access(src_name, F_OK) != 0) {
-        error("Infile does not exist\n");
+        err_msg("Infile does not exist\n");
         exitstatus = 1;
         goto end1;
     }
@@ -613,20 +613,20 @@ int main(int argc, char *argv[]) {
     if (opts.forced_lang == NULL) {
         lang = autoDetermineLang(src_name);
         if (lang == LangUnknown) {
-            error("Could not determine language from filename: %s\n",
-                src_name);
+            err_msg("Could not determine language from filename: %s\n",
+                    src_name);
             exitstatus = 1;
             goto end1;
         }
     } else {
         if (strlen(opts.forced_lang) == 0) {
-            error("Language cannot be empty string\n");
+            err_msg("Language cannot be empty string\n");
             exitstatus = 1;
             goto end1;
         }
         lang = determineLang(lower(opts.forced_lang));
         if (lang == LangUnknown) {
-            error("Language not recognized: %s\n", opts.forced_lang);
+            err_msg("Language not recognized: %s\n", opts.forced_lang);
             exitstatus = 1;
             goto end1;
         }
@@ -733,10 +733,10 @@ int main(int argc, char *argv[]) {
             execute(&rmRet, rm_args, ARRLEN(rm_args), 1);
             if (!rmRet.exited || rmRet.exitstatus != 0) {
                 if (lang == LangASM) {
-                    error("Could not remove files: %s %s\n", obj_name,
-                        bin_name);
+                    err_msg("Could not remove files: %s %s\n", obj_name,
+                            bin_name);
                 } else {
-                    error("Could not remove executable: %s\n", bin_name);
+                    err_msg("Could not remove executable: %s\n", bin_name);
                     exitstatus = 1;
                     goto end3;
                 }
