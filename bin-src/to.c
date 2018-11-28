@@ -697,7 +697,7 @@ int main(int argc, char *argv[]) {
         goto end3;
 
     if (opts.flags & EXECUTE) {
-        if (! (opts.flags & QUIET))
+        if (!(opts.flags & QUIET) && !(opts.flags & DRYRUN))
             printf("===== OUTPUT =====\n");
         char *all_exec_args[1 + sub_args_i + 1];
         int exec_args_i = 0;
@@ -713,7 +713,7 @@ int main(int argc, char *argv[]) {
             execute(&execRet, all_exec_args, ARRLEN(all_exec_args), 0);
             exitstatus = execRet.exitstatus;
         }
-        if (! (opts.flags & QUIET))
+        if (!(opts.flags & QUIET) && !(opts.flags & DRYRUN))
             printf("===== END OUTPUT =====\n");
     }
 
