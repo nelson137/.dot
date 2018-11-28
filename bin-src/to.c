@@ -557,12 +557,16 @@ int main(int argc, char *argv[]) {
         } else if (type == COMPOUND_SHORT_OPT) {  // Compound short option
             for (int j=1; j<strlen(argv[i]); j++) {
                 temp_opt[1] = argv[i][j];
-                if (process_opt(&i, temp_opt, SHORT_OPT, &opts) < 0)
+                if (process_opt(&i, temp_opt, SHORT_OPT, &opts) < 0) {
+                    exitstatus = 1;
                     goto end1;
+                }
             }
         } else {  // Long option
-            if (process_opt(&i, argv[i], type, &opts) < 0)
+            if (process_opt(&i, argv[i], type, &opts) < 0) {
+                exitstatus = 1;
                 goto end1;
+            }
         }
     }
 
@@ -575,23 +579,27 @@ int main(int argc, char *argv[]) {
 
     if (! (opts.flags & (COMPILE|EXECUTE|REMOVE))) {
         error("No commands were given\n");
+        exitstatus = 1;
         goto end1;
     }
 
     // The -c, --compile option was not given
     if (! (opts.flags & COMPILE)) {
         error("Program requires compilation\n");
+        exitstatus = 1;
         goto end1;
     }
 
     // None or more than one src_name was given
     if (src_name == NULL || too_many_src_fns) {
         error(USAGE, argv[0]);
+        exitstatus = 1;
         goto end1;
     }
 
     if (access(src_name, F_OK) != 0) {
         error("Infile does not exist\n");
+        exitstatus = 1;
         goto end1;
     }
 
@@ -602,16 +610,19 @@ int main(int argc, char *argv[]) {
         if (lang == LangUnknown) {
             error("Could not determine language from filename: %s\n",
                 src_name);
+            exitstatus = 1;
             goto end1;
         }
     } else {
         if (strlen(opts.forced_lang) == 0) {
             error("Language cannot be empty string\n");
+            exitstatus = 1;
             goto end1;
         }
         lang = determineLang(lower(opts.forced_lang));
         if (lang == LangUnknown) {
             error("Language not recognized: %s\n", opts.forced_lang);
+            exitstatus = 1;
             goto end1;
         }
     }
@@ -724,6 +735,7 @@ int main(int argc, char *argv[]) {
                         bin_name);
                 } else {
                     error("Could not remove executable: %s\n", bin_name);
+                    exitstatus = 1;
                     goto end3;
                 }
             }
