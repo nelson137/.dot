@@ -483,16 +483,28 @@ int process_opt(int *i, char *arg, int type, Options *opts) {
         opts->flags |= EXECUTE;
     else if (strMatchesAny(arg, "-r", "--remove", NULL))
         opts->flags |= REMOVE;
-    else if (strMatchesAny(arg, "-o", "--outfile", NULL))
-        opts->outfile = opts->argv[++(*i)];
-    else if (strMatchesAny(arg, "-l", "--language", NULL))
-        opts->forced_lang = opts->argv[++(*i)];
-    else if (strMatchesAny(arg, "-d", "--dry-run", NULL))
+    else if (strMatchesAny(arg, "-o", "--outfile", NULL)) {
+        if ((*i)+1 < opts->argc) {
+            opts->outfile = opts->argv[++(*i)];
+        } else {
+            error(USAGE);
+            return -1;
+        }
+    } else if (strMatchesAny(arg, "-l", "--language", NULL)) {
+        if ((*i)+1 < opts->argc) {
+            opts->forced_lang = opts->argv[++(*i)];
+        } else {
+            error(USAGE);
+            return -1;
+        }
+    } else if (strMatchesAny(arg, "-d", "--dry-run", NULL))
         opts->flags |= DRYRUN;
     else if (strMatchesAny(arg, "-x", "--args", NULL))
         opts->parsing_opts = 0, opts->parsing_sub_args = 1;
-    else
+    else {
+        error("Option not recognized: %s\n", arg);
         return -1;
+    }
 
     return 0;
 }
@@ -532,7 +544,6 @@ int main(int argc, char *argv[]) {
 
     char temp_opt[] = "-X";
     int type;
-    char *opt_err = "Option not recognized: %s\n";
     for (int i=1; i<argc; i++) {
         type = arg_type(argv[i]);
 
@@ -546,16 +557,12 @@ int main(int argc, char *argv[]) {
         } else if (type == COMPOUND_SHORT_OPT) {  // Compound short option
             for (int j=1; j<strlen(argv[i]); j++) {
                 temp_opt[1] = argv[i][j];
-                if (process_opt(&i, temp_opt, SHORT_OPT, &opts) < 0) {
-                    error(opt_err, temp_opt);
+                if (process_opt(&i, temp_opt, SHORT_OPT, &opts) < 0)
                     goto end1;
-                }
             }
         } else {  // Long option
-            if (process_opt(&i, argv[i], type, &opts) < 0) {
-                error(opt_err, argv[i]);
+            if (process_opt(&i, argv[i], type, &opts) < 0)
                 goto end1;
-            }
         }
     }
 
