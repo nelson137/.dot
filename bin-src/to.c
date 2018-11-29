@@ -17,12 +17,11 @@
 #define COMPOUND_SHORT_OPT  3
 
 // Bitflags for options
-#define HELP      1  // 0b000001
-#define QUIET     2  // 0b000010
-#define COMPILE   4  // 0b000100
-#define EXECUTE   8  // 0b001000
-#define REMOVE   16  // 0b010000
-#define DRYRUN   32  // 0b100000
+#define COMPILE   1  // 0b00001
+#define EXECUTE   2  // 0b00010
+#define REMOVE    4  // 0b00100
+#define QUIET     8  // 0b01000
+#define DRYRUN   16  // 0b10000
 
 enum Lang {
     LangUnknown,
@@ -36,7 +35,7 @@ typedef struct {
     int argc;
     int parsing_opts;
     int parsing_sub_args;
-    int flags;
+    int help;
     char *forced_lang;
     char *outfile;
 } Options;
@@ -54,8 +53,9 @@ typedef struct {
     char err[MAX];
 } PRet;
 
-char *USAGE = "Usage: to [-h] [-q] [-d] [-c] [-e] [-r] [-l LANG] <infile>\n"
-              "       [-o OUTFILE] [-x [ARGS...]]\n";
+char *USAGE = "Usage: to [-h] <commands> [-l LANG] <infile>\n"
+              "       [-o OUTFILE] [-x [ARGS...]]\n"
+              "See `to --help` for more information\n";
 
 
 /*************************************************
@@ -77,24 +77,27 @@ void err_msg(const char *fmt, ...) {
 void help() {
     printf("%s", USAGE);
     puts("");
+    puts("Commands");
+    puts("  c               Compile the program");
+    puts("  e               Execute the compiled program");
+    puts("  r               Remove the binary and any compilation files");
+    puts("  q               Suppress the OUTPUT and END OUTPUT messages");
+    puts("  d               Print out the commands that would be executed in");
+    puts("                  response to the c, e, and r commands");
+    puts("");
     puts("Positional Arguments");
     puts("  infile          The source file for a single-file C, C++, or x86");
     puts("                  Assembly program");
-    puts("");
-    puts("Command Options");
-    puts("  -c, --compile   Compile the program");
-    puts("  -e, --execute   Execute the compiled program");
-    puts("  -r, --remove    Remove the binary and any compilation files");
     puts("");
     puts("Options");
     puts("  -h, --help      Print this help message and exit");
     puts("  -o, --outfile OUTFILE");
     puts("                  What name to give the binary");
-    puts("  -q, --quiet     Suppress OUTPUT and END OUTPUT messages");
     puts("  -l, --lang LANGUAGE");
     puts("                  Set the language to compile for");
-    puts("  -d, --dry-run   Print out the commands that would be executed in");
-    puts("                  response to the -c, -e, and -r options");
+    puts("  -x, --args ARGS");
+    puts("                  The arguments to pass to the program if it is");
+    puts("                  executed in response to the e command");
     exit(0);
 }
 
@@ -475,15 +478,7 @@ int process_opt(int *i, char *arg, int type, Options *opts) {
     if (strcmp(opts->argv[*i], "--") == 0)
         opts->parsing_opts = 0;
     else if (strMatchesAny(arg, "-h", "--help", NULL))
-        opts->flags |= HELP;
-    else if (strMatchesAny(arg, "-q", "--quiet", NULL))
-        opts->flags |= QUIET;
-    else if (strMatchesAny(arg, "-c", "--compile", NULL))
-        opts->flags |= COMPILE;
-    else if (strMatchesAny(arg, "-e", "--execute", NULL))
-        opts->flags |= EXECUTE;
-    else if (strMatchesAny(arg, "-r", "--remove", NULL))
-        opts->flags |= REMOVE;
+        opts->help = 1;
     else if (strMatchesAny(arg, "-o", "--outfile", NULL)) {
         if ((*i)+1 < opts->argc) {
             opts->outfile = opts->argv[++(*i)];
@@ -498,9 +493,7 @@ int process_opt(int *i, char *arg, int type, Options *opts) {
             err_msg(USAGE);
             return -1;
         }
-    } else if (strMatchesAny(arg, "-d", "--dry-run", NULL))
-        opts->flags |= DRYRUN;
-    else if (strMatchesAny(arg, "-x", "--args", NULL))
+    } else if (strMatchesAny(arg, "-x", "--args", NULL))
         opts->parsing_opts = 0, opts->parsing_sub_args = 1;
     else {
         err_msg("Option not recognized: %s\n", arg);
@@ -533,13 +526,14 @@ int main(int argc, char *argv[]) {
         .argc = argc,
         .parsing_opts = 1,
         .parsing_sub_args = 0,
-        .flags = 0,
+        .help = 0,
         .forced_lang = NULL,
         .outfile = NULL,
     };
 
+    int commands = 0;
     char *src_name = NULL;
-    int too_many_src_fns = 0;
+    int too_many_pos_args = 0;
     char **sub_args = malloc(sizeof(char*) * argc);
     int sub_args_i = 0;
 
@@ -553,10 +547,29 @@ int main(int argc, char *argv[]) {
             sub_args[sub_args_i++] = argv[i];
         } else if (type == POS_ARG || !opts.parsing_opts) {
             // Positional argument
-            if (src_name == NULL)
+            if (commands == 0)
+                for (int j=0; j<strlen(argv[i]); j++) {
+                    if (argv[i][j] == 'c')
+                        commands |= COMPILE;
+                    else if (argv[i][j] == 'e')
+                        commands |= EXECUTE;
+                    else if (argv[i][j] == 'r')
+                        commands |= REMOVE;
+                    else if (argv[i][j] == 'q')
+                        commands |= QUIET;
+                    else if (argv[i][j] == 'd')
+                        commands |= DRYRUN;
+                    else {
+                        printf("unknown cmd: %c\n", argv[i][j]);
+                        err_msg(USAGE);
+                        exitstatus = 1;
+                        goto end1;
+                    }
+                }
+            else if (src_name == NULL)
                 src_name = argv[i];
             else
-                too_many_src_fns = 1;
+                too_many_pos_args = 1;
         } else if (type == COMPOUND_SHORT_OPT) {
             // Compound short option
             for (int j=1; j<strlen(argv[i]); j++) {
@@ -579,24 +592,24 @@ int main(int argc, char *argv[]) {
      * Error messages and setup
      */
 
-    if (! (opts.flags & (COMPILE|EXECUTE|REMOVE))) {
+    if (commands == 0) {
         err_msg("No commands were given\n");
         exitstatus = 1;
         goto end1;
     }
 
     // The -c, --compile option was not given
-    if (! (opts.flags & COMPILE)) {
+    if (! (commands & COMPILE)) {
         err_msg("Program requires compilation\n");
         exitstatus = 1;
         goto end1;
     }
 
-    if (opts.flags & HELP)
+    if (opts.help)
         help();
 
     // None or more than one src_name was given
-    if (src_name == NULL || too_many_src_fns) {
+    if (src_name == NULL || too_many_pos_args) {
         err_msg(USAGE, argv[0]);
         exitstatus = 1;
         goto end1;
@@ -686,18 +699,18 @@ int main(int argc, char *argv[]) {
      */
 
     if (lang == LangASM)
-        exitstatus = compile_asm(opts.flags & DRYRUN, src_name, obj_name,
+        exitstatus = compile_asm(commands & DRYRUN, src_name, obj_name,
                                  bin_name);
     else if (lang == LangC)
-        exitstatus = compile_c(opts.flags & DRYRUN, src_name, bin_name);
+        exitstatus = compile_c(commands & DRYRUN, src_name, bin_name);
     else if (lang == LangCPP)
-        exitstatus = compile_cpp(opts.flags & DRYRUN, src_name, bin_name);
+        exitstatus = compile_cpp(commands & DRYRUN, src_name, bin_name);
 
     if (exitstatus != 0)
         goto end3;
 
-    if (opts.flags & EXECUTE) {
-        if (!(opts.flags & QUIET) && !(opts.flags & DRYRUN))
+    if (commands & EXECUTE) {
+        if (!(commands & QUIET) && !(commands & DRYRUN))
             printf("===== OUTPUT =====\n");
         char *all_exec_args[1 + sub_args_i + 1];
         int exec_args_i = 0;
@@ -706,18 +719,18 @@ int main(int argc, char *argv[]) {
             all_exec_args[exec_args_i++] = sub_args[i];
         all_exec_args[exec_args_i++] = NULL;
 
-        if (opts.flags & DRYRUN) {
+        if (commands & DRYRUN) {
             print_args(all_exec_args, exec_args_i);
         } else {
             PRet execRet;
             execute(&execRet, all_exec_args, ARRLEN(all_exec_args), 0);
             exitstatus = execRet.exitstatus;
         }
-        if (!(opts.flags & QUIET) && !(opts.flags & DRYRUN))
+        if (!(commands & QUIET) && !(commands & DRYRUN))
             printf("===== END OUTPUT =====\n");
     }
 
-    if (opts.flags & REMOVE) {
+    if (commands & REMOVE) {
         char *rm_args[lang == LangASM ? 4 : 3];
         int rm_args_i = 0;
         rm_args[rm_args_i++] = "/bin/rm";
@@ -726,7 +739,7 @@ int main(int argc, char *argv[]) {
         rm_args[rm_args_i++] = bin_name;
         rm_args[rm_args_i] = NULL;
 
-        if (opts.flags & DRYRUN) {
+        if (commands & DRYRUN) {
             print_args(rm_args, ARRLEN(rm_args));
         } else {
             PRet rmRet;
