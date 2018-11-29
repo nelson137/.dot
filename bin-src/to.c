@@ -52,6 +52,12 @@ typedef struct {
     char err[MAX];
 } PRet;
 
+char *NASM = "/usr/bin/nasm_";
+char *LD = "/usr/bin/ld";
+char *GCC = "/usr/bin/gcc";
+char *PKGCONFIG = "/usr/bin/pkg-config";
+char *GPP = "/usr/bin/g++";
+
 char *USAGE = "Usage: to [-h] [-l LANG] [-o OUTFILE] <commands> <infile>\n"
               "       [ARGS...]\n"
               "See `to --help` for more information\n";
@@ -319,9 +325,9 @@ int autoDetermineLang(char *fn) {
  */
 int compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
     char *nasm_args[] = {
-        "/usr/bin/nasm", "-f", "elf64", src_name, "-o", obj_name, NULL};
+        NASM, "-f", "elf64", src_name, "-o", obj_name, NULL};
     char *ld_args[] = {
-        "/usr/bin/ld", obj_name, "-o", bin_name, NULL};
+        LD, obj_name, "-o", bin_name, NULL};
 
     if (dryrun) {
         print_args(nasm_args, ARRLEN(nasm_args));
@@ -353,7 +359,7 @@ int compile_asm(int dryrun, char *src_name, char *obj_name, char *bin_name) {
  */
 int compile_c(int dryrun, char *src_name, char *bin_name) {
     char *base_args[] = {
-        "/usr/bin/gcc",
+        GCC,
         "-x", "c", "-std=c11", "-O3", "-Wall", "-Werror",
         src_name, "-o", bin_name,
         "-lmylib", "-lm"};
@@ -362,7 +368,7 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
     // Get the cflags for the python library
     PRet pylibRet;
     char *pkgconfig_args[] = {
-        "/usr/bin/pkg-config", "--cflags", "--libs", "python3", NULL};
+        PKGCONFIG, "--cflags", "--libs", "python3", NULL};
     execute(&pylibRet, pkgconfig_args, ARRLEN(pkgconfig_args), 1);
     if (!pylibRet.exited || pylibRet.exitstatus != 0) {
         err_msg("Could not get gcc flags for the python3 library\n");
@@ -430,7 +436,7 @@ int compile_c(int dryrun, char *src_name, char *bin_name) {
  */
 int compile_cpp(int dryrun, char *src_name, char *bin_name) {
     char *args[] = {
-        "/usr/bin/g++",
+        GPP,
         "-x", "c++", "-std=c++11", "-O3", "-Wall", "-Werror",
         src_name, "-o", bin_name,
         NULL};
@@ -640,6 +646,25 @@ int main(int argc, char *argv[]) {
             exitstatus = 1;
             goto end1;
         }
+    }
+
+    char *missing_prog = NULL;
+    if (lang == LangASM) {
+        if (access(NASM, F_OK | X_OK) != 0)
+            missing_prog = NASM;
+        if (access(LD, F_OK | X_OK) != 0)
+            missing_prog = LD;
+    } else if (lang == LangC) {
+        if (access(GCC, F_OK | X_OK) != 0)
+            missing_prog = GCC;
+    } else if (lang == LangCPP) {
+        if (access(GPP, F_OK | X_OK) != 0)
+            missing_prog = GPP;
+    }
+    if (missing_prog != NULL) {
+        err_msg("Could not find program: %s\n", missing_prog);
+        exitstatus = 1;
+        goto end1;
     }
 
     // Get the executable filename
