@@ -682,7 +682,7 @@ int main(int argc, char *argv[]) {
         sprintf(obj_name, "./%s.o", bin_name);
     }
 
-    if (access(obj_name, F_OK) == 0) {
+    if (lang == LangASM && access(obj_name, F_OK) == 0) {
         char *fmt2 = "Object file '%s' exists, overwrite it [y/n]? ";
         char prompt2[strlen(fmt2) - 2 + strlen(obj_name) + 1];
         sprintf(prompt2, fmt2, obj_name);
