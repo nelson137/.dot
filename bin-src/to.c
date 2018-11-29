@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <wait.h>
 
+
 #define ARRLEN(x) sizeof(x)/sizeof(x[0])
 #define MAX 512
 
@@ -22,6 +23,7 @@
 #define REMOVE    4  // 0b00100
 #define QUIET     8  // 0b01000
 #define DRYRUN   16  // 0b10000
+
 
 enum Lang {
     LangUnknown,
