@@ -34,7 +34,6 @@ typedef struct {
     char **argv;
     int argc;
     int parsing_opts;
-    int parsing_sub_args;
     int help;
     char *forced_lang;
     char *outfile;
@@ -53,8 +52,8 @@ typedef struct {
     char err[MAX];
 } PRet;
 
-char *USAGE = "Usage: to [-h] <commands> [-l LANG] <infile>\n"
-              "       [-o OUTFILE] [-x [ARGS...]]\n"
+char *USAGE = "Usage: to [-h] [-l LANG] [-o OUTFILE] <commands> <infile>\n"
+              "       [ARGS...]\n"
               "See `to --help` for more information\n";
 
 
@@ -77,6 +76,10 @@ void err_msg(const char *fmt, ...) {
 void help() {
     printf("%s", USAGE);
     puts("");
+    puts("Note");
+    puts("  ALL arguments after <infile> will be passed directly to the");
+    puts("  program if <commands> includes e.");
+    puts("");
     puts("Commands");
     puts("  c               Compile the program");
     puts("  e               Execute the compiled program");
@@ -95,9 +98,6 @@ void help() {
     puts("                  What name to give the binary");
     puts("  -l, --lang LANGUAGE");
     puts("                  Set the language to compile for");
-    puts("  -x, --args ARGS");
-    puts("                  The arguments to pass to the program if it is");
-    puts("                  executed in response to the e command");
     exit(0);
 }
 
@@ -493,9 +493,7 @@ int process_opt(int *i, char *arg, int type, Options *opts) {
             err_msg(USAGE);
             return -1;
         }
-    } else if (strMatchesAny(arg, "-x", "--args", NULL))
-        opts->parsing_opts = 0, opts->parsing_sub_args = 1;
-    else {
+    } else {
         err_msg("Option not recognized: %s\n", arg);
         return -1;
     }
@@ -525,7 +523,6 @@ int main(int argc, char *argv[]) {
         .argv = argv,
         .argc = argc,
         .parsing_opts = 1,
-        .parsing_sub_args = 0,
         .help = 0,
         .forced_lang = NULL,
         .outfile = NULL,
@@ -533,8 +530,8 @@ int main(int argc, char *argv[]) {
 
     int commands = 0;
     char *src_name = NULL;
-    int too_many_pos_args = 0;
-    char **sub_args = malloc(sizeof(char*) * argc);
+    int parsing_sub_args = 0;
+    char **sub_args = malloc(sizeof(char*) * (argc-3));
     int sub_args_i = 0;
 
     char temp_opt[] = "-X";
@@ -542,12 +539,12 @@ int main(int argc, char *argv[]) {
     for (int i=1; i<argc; i++) {
         type = arg_type(argv[i]);
 
-        if (opts.parsing_sub_args) {
+        if (parsing_sub_args) {
             // Sub-argument
             sub_args[sub_args_i++] = argv[i];
         } else if (type == POS_ARG || !opts.parsing_opts) {
             // Positional argument
-            if (commands == 0)
+            if (commands == 0) {
                 for (int j=0; j<strlen(argv[i]); j++) {
                     if (argv[i][j] == 'c')
                         commands |= COMPILE;
@@ -566,10 +563,10 @@ int main(int argc, char *argv[]) {
                         goto end1;
                     }
                 }
-            else if (src_name == NULL)
+            } else if (src_name == NULL) {
                 src_name = argv[i];
-            else
-                too_many_pos_args = 1;
+                parsing_sub_args = 1;
+            }
         } else if (type == COMPOUND_SHORT_OPT) {
             // Compound short option
             for (int j=1; j<strlen(argv[i]); j++) {
@@ -609,7 +606,7 @@ int main(int argc, char *argv[]) {
     }
 
     // None or more than one src_name was given
-    if (src_name == NULL || too_many_pos_args) {
+    if (src_name == NULL) {
         err_msg(USAGE, argv[0]);
         exitstatus = 1;
         goto end1;
