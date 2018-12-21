@@ -1,0 +1,8 @@
+import sys
+
+try:
+    from ptpython.repl import embed
+except ImportError:
+    print('Could not import ptpython. Falling back to standard REPL')
+else:
+    sys.exit(embed(globals(), locals()))

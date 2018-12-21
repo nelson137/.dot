@@ -90,6 +90,8 @@ c_ld_flags=(
 )
 export C_LD_FLAGS="${(j: :)c_ld_flags}"
 
+export PYTHONSTARTUP="$HOME/.pythonrc"
+
 # Give vagrant access to WSL features
 export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS=1
 
