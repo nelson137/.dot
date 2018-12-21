@@ -79,33 +79,33 @@ dunst() {
 
 case "$cmd" in
 
-    lock)
-        dunst pause
+lock)
+    dunst pause
 
-        lock &
+    lock &
 
-        pid="$!"
-        log "Waiting for PID $pid to end..."
-        while kill -0 "$pid" 2>/dev/null; do
-            sleep 1
-        done
+    pid="$!"
+    log "Waiting for PID $pid to end..."
+    while kill -0 "$pid" 2>/dev/null; do
+        sleep 1
+    done
 
-        dunst resume
-        ;;
+    dunst resume
+    ;;
 
-  notify)
-        # Don't notify while locked
-        locked && exit
-        log 'Sending notification.'
-        xset dpms force off
-        ;;
+notify)
+    # Don't notify while locked
+    locked && exit
+    log 'Sending notification.'
+    xset dpms force off
+    ;;
 
-  suspend)
-        log "Suspending system."
-        systemctl suspend
-        ;;
+suspend)
+    log "Suspending system."
+    systemctl suspend
+    ;;
 
-  *)
-    log "Option not recognized: $1"
+*)
+log "Option not recognized: $1"
 
 esac

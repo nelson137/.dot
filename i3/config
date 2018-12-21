@@ -182,7 +182,7 @@ bar {
 exec --no-startup-id xautolock
 
 # Set the background
-exec_always nitrogen --set-zoom-fill --random ~/.config/i3/backgrounds/ &
+exec_always --no-startup-id nitrogen --set-zoom-fill --random ~/.config/i3/backgrounds/
 
 # Start the GNOME keyring for Chrome and other programs
 exec gnome-keyring-daemon --start
@@ -193,12 +193,8 @@ exec compton
 # Start NetworkManager
 exec --no-startup-id nm-applet
 
-# Start in workspace 2
+# Start in the dev workspace
 exec --no-startup-id i3-msg workspace $wsDev
-
-# Kill programs
-exec --no-startup-id pkill -9 gnome-screensaver
-exec --no-startup-id pkill -9 notify-osd
 
 # Startup programs
 exec --no-startup-id xrdb -merge ~/.Xresources
