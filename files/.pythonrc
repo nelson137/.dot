@@ -1,4 +1,6 @@
-import sys
+before_locals = locals().copy()
+before_globals = globals().copy()
+del before_globals['before_locals']
 
 try:
     from ptpython.repl import embed
@@ -6,4 +8,7 @@ except ImportError:
     print('%sCould not import ptpython. Falling back to standard REPL.%s'
           % ('\33[91m', '\33[0m'))
 else:
-    sys.exit(embed(globals(), locals()))
+    exit(embed(before_globals, before_locals))
+
+del(before_locals)
+del(before_globals)
