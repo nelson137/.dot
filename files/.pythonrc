@@ -2,6 +2,9 @@ before_locals = locals().copy()
 before_globals = globals().copy()
 del before_globals['before_locals']
 
+del before_locals['__file__']
+del before_globals['__file__']
+
 try:
     from ptpython.repl import embed
 except ImportError:
