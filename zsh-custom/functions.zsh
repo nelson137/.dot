@@ -136,7 +136,8 @@ newscript() {
             cat <<'EOF' > "$f"
 #include <stdio.h>
 
-int main(void) {
+
+int main(int argc, char *argv[]) {
 
     return 0;
 }
@@ -145,14 +146,16 @@ EOF
         elif [[ $f =~ .+[.]cpp$ ]]; then
             cat <<'EOF' > "$f"
 #include <iostream>
+
 using namespace std;
 
-int main(int argc, char** argv) {
+
+int main(int argc, char *argv[]) {
 
     return 0;
 }
 EOF
-            vim +4 "$f"
+            vim +6 "$f"
         elif [[ $f =~ .+[.]py$ ]]; then
             cat <<'EOF' > "$f"
 #!/usr/bin/env python3
