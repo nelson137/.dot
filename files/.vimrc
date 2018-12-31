@@ -273,6 +273,9 @@ noremap <silent>   <Leader>wv   :vnew<CR>
 " Toggle line numbers
 noremap <silent>   <Leader>n   :set nu!<CR>
 
+" Toggle the colorcolumn
+noremap <silent>   <Leader>gt  :let &cc = &cc == '' ? '+1' : ''<CR>
+
 " Don't fuck up indentation when pasting
 noremap <silent>   <F2>   :set paste!<CR>
 
