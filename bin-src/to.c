@@ -21,7 +21,7 @@
 #define COMPILE   1  // 0b00001
 #define EXECUTE   2  // 0b00010
 #define REMOVE    4  // 0b00100
-#define QUIET     8  // 0b01000
+#define LOUD      8  // 0b01000
 #define DRYRUN   16  // 0b10000
 
 
@@ -560,8 +560,8 @@ int main(int argc, char *argv[]) {
                         commands |= EXECUTE;
                     else if (argv[i][j] == 'r')
                         commands |= REMOVE;
-                    else if (argv[i][j] == 'q')
-                        commands |= QUIET;
+                    else if (argv[i][j] == 'l')
+                        commands |= LOUD;
                     else if (argv[i][j] == 'd')
                         commands |= DRYRUN;
                     else {
@@ -734,7 +734,7 @@ int main(int argc, char *argv[]) {
         goto end3;
 
     if (commands & EXECUTE) {
-        if (!(commands & QUIET) && !(commands & DRYRUN))
+        if (commands & LOUD && !(commands & DRYRUN))
             printf("===== OUTPUT =====\n");
         char *all_exec_args[1 + sub_args_i + 1];
         int exec_args_i = 0;
@@ -750,7 +750,7 @@ int main(int argc, char *argv[]) {
             execute(&execRet, all_exec_args, ARRLEN(all_exec_args), 0);
             exitstatus = execRet.exitstatus;
         }
-        if (!(commands & QUIET) && !(commands & DRYRUN))
+        if (commands & LOUD && !(commands & DRYRUN))
             printf("===== END OUTPUT =====\n");
     }
 
