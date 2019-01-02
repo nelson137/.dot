@@ -516,7 +516,7 @@ int process_opt(int *i, char *arg, int type, Options *opts) {
 
 
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
+    if (argc < 3) {
         err_msg(USAGE, argv[0]);
         return 1;
     }
