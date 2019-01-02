@@ -671,6 +671,7 @@ int main(int argc, char *argv[]) {
 
     // Get the executable filename
     char *bin_name;
+    int free_bin_name;
     if (opts.outfile == NULL) {
         if (src_name[0] == '/') {
             bin_name = malloc(strlen(src_name) + 3 + 1);
@@ -679,8 +680,10 @@ int main(int argc, char *argv[]) {
             bin_name = malloc(2 + strlen(src_name) + 3 + 1);
             sprintf(bin_name, "./%s.to", src_name);
         }
+        free_bin_name = 1;
     } else {
         bin_name = opts.outfile;
+        free_bin_name = 0;
     }
 
     if (access(bin_name, F_OK) == 0) {
@@ -781,10 +784,12 @@ int main(int argc, char *argv[]) {
         }
     }
 
+
     end3:
         free(obj_name);
     end2:
-        free(bin_name);
+        if (free_bin_name)
+            free(bin_name);
     end1:
         free(sub_args);
         return exitstatus;
