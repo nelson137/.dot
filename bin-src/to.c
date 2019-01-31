@@ -54,7 +54,7 @@ typedef struct {
     char err[MAX];
 } PRet;
 
-char *NASM = "/usr/bin/nasm_";
+char *NASM = "/usr/bin/nasm";
 char *LD = "/usr/bin/ld";
 char *GCC = "/usr/bin/gcc";
 char *PKGCONFIG = "/usr/bin/pkg-config";
