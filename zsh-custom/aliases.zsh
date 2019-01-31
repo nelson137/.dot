@@ -15,6 +15,7 @@ alias pip='pip3'
 alias play='dc play'
 alias python='python3'
 alias rm='rm -r'
+alias sqlite3='sqlite3 -header -column'
 alias wget='wget --hsts-file /dev/null'
 alias whois='whois -H'
 
