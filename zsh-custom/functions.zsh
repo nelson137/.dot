@@ -200,6 +200,17 @@ ping() {
 
 
 
+py_include() {
+    find_py_include() {
+        find /usr/include -maxdepth 1 -name "$1" | sort -n | head -1
+    }
+    pi3=$(find_py_include 'python3*')
+    pi2=$(find_py_include 'python2*')
+    [[ -n "$pi3" ]] && echo "$pi3" || echo "$pi2"
+}
+
+
+
 shutdown() {
     pkill --oldest chrome &&
     pkill --oldest spotify &&
