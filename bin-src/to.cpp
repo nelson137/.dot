@@ -368,6 +368,7 @@ int execute(PRet *ret, vector<string> args, bool capture_output=false) {
         close(parent_err_fd);
 
         execv(argv[0], argv);
+        _exit(0);
     } else {
         /**
          * Parent
