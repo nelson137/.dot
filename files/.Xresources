@@ -1,6 +1,14 @@
-! Xterm
-XTerm*decTerminalID: vt340
-XTerm*numColorRegisters: 256
+! URxvt
+URxvt.transparent: true
+URxvt.shading: 15
+URxvt.background: black
+URxvt.foreground: white
+URxvt.font: xft:FiraMono-Regular:size=13
+URxvt.visualBell: false
+URxvt.scrollstyle: plain
+URxvt.scrollBar: true
+URxvt.scrollBar_right: true
+URxvt.cursorBlink: true
 
 ! Xautolock config
 Xautolock.noclose: true
