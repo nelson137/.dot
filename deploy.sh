@@ -12,7 +12,7 @@ command ls -A "$here/files" | xargs -I % ln -fs "$HOME/.dot/files/%" "$HOME"
 
 # Make directories for libraries
 rm -rf "$HOME"/.{include,lib}
-mkdir -p "$HOME"/.include/ "$HOME"/.lib/c{,pp}
+mkdir -p "$HOME"/.include "$HOME"/.lib/{c,cpp}
 ln -fs "$here/lib/c-include" "$HOME/.include/c"
 ln -fs "$here/lib/cpp-include" "$HOME/.include/cpp"
 
