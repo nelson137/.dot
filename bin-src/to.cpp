@@ -184,7 +184,7 @@ Argtype Parser::arg_type(string arg) {
 
 void Parser::auto_bin_name() {
     this->opts.bin_name = this->opts.src_name[0] == '/' ? "" : "./";
-    this->opts.bin_name += ".to";
+    this->opts.bin_name += this->opts.src_name + ".to";
 }
 
 
