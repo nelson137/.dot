@@ -109,7 +109,7 @@ void check_executable_exists(string exe) {
  * Exit the program if it fails.
  */
 void rm(string fn) {
-    if (! remove(fn.c_str()))
+    if (remove(fn.c_str()))
         die("Could not remove file:", fn);
 }
 
