@@ -285,9 +285,6 @@ Options Parser::parse_args(int argc, char *argv[]) {
     // Error check commands
     if (this->opts.commands == 0)
         die("No commands were given");
-    // The compile command is required
-    if (! (this->opts.commands & CMD_COMPILE))
-        die("Program requires compilation");
 
     this->opts.src_name = pos_args[1];
     // Make sure src_name isn't an empty string
