@@ -439,7 +439,7 @@ vector<string> get_lib_flags(string a, T... ts) {
 
 
 /*************************************************
- * Compilation
+ * Compile
  ************************************************/
 
 
@@ -515,17 +515,7 @@ void compile_cpp(Options& opts) {
 }
 
 
-/*************************************************
- * Main
- ************************************************/
-
-
-int main(int argc, char *argv[]) {
-    Parser parser;
-    Options opts = parser.parse_args(argc, argv);
-
-    int exitstatus = 0;
-
+void to_compile(Options& opts) {
     // Ask to remove the object file if it already exists
     if (opts.lang == LANG_ASM && file_exists(opts.obj_name)) {
         cout << "Object file exists: " << opts.obj_name << endl;
@@ -538,29 +528,63 @@ int main(int argc, char *argv[]) {
         ask_rm_file(opts.bin_name);
     }
 
-    // Compile the program
     switch(opts.lang) {
-        case LANG_ASM: compile_asm(&opts); break;
-        case LANG_C:   compile_c  (&opts); break;
-        case LANG_CPP: compile_cpp(&opts); break;
-        default: break;
+        case LANG_ASM: compile_asm(opts); break;
+        case LANG_C:   compile_c  (opts); break;
+        case LANG_CPP: compile_cpp(opts); break;
+        default: die("Compilation not implemented for", opts.lang);
     }
+}
 
-    // Execute the program if it was specified
-    if (opts.commands & CMD_EXECUTE) {
-        if (opts.wrap_output)
-            cout << "===== OUTPUT =====" << endl;
-        exitstatus = easy_execute(opts.bin_args);
-        if (opts.wrap_output)
-            cout << "===== END OUTPUT =====" << endl;
-    }
 
-    // Remove the generated file if it was specified
-    if (opts.commands & CMD_REMOVE) {
-        rm(opts.bin_name);
-        if (opts.lang == LANG_ASM)
-            rm(opts.obj_name);
-    }
+/*************************************************
+ * Execute
+ ************************************************/
+
+
+int to_execute(Options& opts) {
+    if (opts.wrap_output)
+        cout << "===== OUTPUT =====" << endl;
+    int exitstatus = easy_execute(opts.bin_args);
+    if (opts.wrap_output)
+        cout << "===== END OUTPUT =====" << endl;
+    return exitstatus;
+}
+
+
+/*************************************************
+ * Remove
+ ************************************************/
+
+
+void to_remove(Options& opts) {
+    rm(opts.bin_name);
+    if (opts.lang == LANG_ASM)
+        rm(opts.obj_name);
+}
+
+
+/*************************************************
+ * Main
+ ************************************************/
+
+
+int main(int argc, char *argv[]) {
+    Parser parser;
+    Options opts = parser.parse_args(argc, argv);
+
+    int exitstatus = 0;
+
+    // Compile the program
+    to_compile(opts);
+
+    // Execute the program
+    if (opts.commands & CMD_EXECUTE)
+        exitstatus = to_execute(opts);
+
+    // Remove the generated files
+    if (opts.commands & CMD_REMOVE)
+        to_remove(opts);
 
     return exitstatus;
 }
