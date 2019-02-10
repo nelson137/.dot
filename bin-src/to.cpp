@@ -443,12 +443,12 @@ vector<string> get_lib_flags(string a, T... ts) {
  ************************************************/
 
 
-void compile_asm(Options *opts) {
+void compile_asm(Options& opts) {
     vector<string> nasm_args = {
-        NASM, "-f", "elf64", opts->src_name, "-o", opts->obj_name};
-    vector<string> ld_args = {LD, opts->obj_name, "-o", opts->bin_name};
+        NASM, "-f", "elf64", opts.src_name, "-o", opts.obj_name};
+    vector<string> ld_args = {LD, opts.obj_name, "-o", opts.bin_name};
 
-    if (opts->commands & CMD_DRYRUN) {
+    if (opts.commands & CMD_DRYRUN) {
         print_args(nasm_args);
         print_args(ld_args);
     } else {
@@ -458,18 +458,18 @@ void compile_asm(Options *opts) {
         int code;
 
         if ((code = easy_execute(nasm_args)))
-            die(code, "Could not create object file:", opts->obj_name);
+            die(code, "Could not create object file:", opts.obj_name);
 
         if ((code = easy_execute(ld_args)))
-            die(code, "Could not link object file:", opts->obj_name);
+            die(code, "Could not link object file:", opts.obj_name);
     }
 }
 
 
-void compile_c(Options *opts) {
+void compile_c(Options& opts) {
     vector<string> gcc_args = {
         GCC, "-x", "c", "-std=c11", "-O3", "-Wall", "-Werror",
-        opts->src_name, "-o", opts->bin_name};
+        opts.src_name, "-o", opts.bin_name};
 
     char *c_include = getenv("C_SEARCH_LIBS");
     if (c_include != NULL) {
@@ -480,22 +480,22 @@ void compile_c(Options *opts) {
     vector<string> lib_flags = get_lib_flags("python3", "json-c");
     gcc_args.insert(gcc_args.end(), lib_flags.begin(), lib_flags.end());
 
-    if (opts->commands & CMD_DRYRUN) {
+    if (opts.commands & CMD_DRYRUN) {
         print_args(gcc_args);
     } else {
         check_executable_exists(gcc_args[0]);
 
         int code;
         if ((code = easy_execute(gcc_args)))
-            die(code, "Could not compile infile:", opts->src_name);
+            die(code, "Could not compile infile:", opts.src_name);
     }
 }
 
 
-void compile_cpp(Options *opts) {
+void compile_cpp(Options& opts) {
     vector<string> gpp_args = {
         GPP, "-x", "c++", "-std=c++11", "-O3", "-Wall", "-Werror",
-        opts->src_name, "-o", opts->bin_name};
+        opts.src_name, "-o", opts.bin_name};
 
     char *c_include = getenv("CPLUS_SEARCH_LIBS");
     if (c_include != NULL) {
@@ -503,14 +503,14 @@ void compile_cpp(Options *opts) {
         gpp_args.insert(gpp_args.end(), dirs.begin(), dirs.end());
     }
 
-    if (opts->commands & CMD_DRYRUN) {
+    if (opts.commands & CMD_DRYRUN) {
         print_args(gpp_args);
     } else {
         check_executable_exists(gpp_args[0]);
 
         int code;
         if ((code = easy_execute(gpp_args)))
-            die("Could not compile infile:", opts->src_name);
+            die("Could not compile infile:", opts.src_name);
     }
 }
 
