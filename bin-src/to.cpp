@@ -469,8 +469,13 @@ void compile_asm(Options *opts) {
 void compile_c(Options *opts) {
     vector<string> gcc_args = {
         GCC, "-x", "c", "-std=c11", "-O3", "-Wall", "-Werror",
-        opts->src_name, "-o", opts->bin_name,
-        "-lm", "-lmylib"};
+        opts->src_name, "-o", opts->bin_name};
+
+    char *c_include = getenv("C_SEARCH_LIBS");
+    if (c_include != NULL) {
+        vector<string> dirs = split(string(c_include));
+        gcc_args.insert(gcc_args.end(), dirs.begin(), dirs.end());
+    }
 
     vector<string> lib_flags = get_lib_flags("python3", "json-c");
     gcc_args.insert(gcc_args.end(), lib_flags.begin(), lib_flags.end());
@@ -491,6 +496,12 @@ void compile_cpp(Options *opts) {
     vector<string> gpp_args = {
         GPP, "-x", "c++", "-std=c++11", "-O3", "-Wall", "-Werror",
         opts->src_name, "-o", opts->bin_name};
+
+    char *c_include = getenv("CPLUS_SEARCH_LIBS");
+    if (c_include != NULL) {
+        vector<string> dirs = split(string(c_include));
+        gpp_args.insert(gpp_args.end(), dirs.begin(), dirs.end());
+    }
 
     if (opts->commands & CMD_DRYRUN) {
         print_args(gpp_args);
