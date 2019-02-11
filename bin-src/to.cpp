@@ -319,13 +319,11 @@ Options Parser::parse_args(int argc, char *argv[]) {
 
 
 int execute(PRet& ret, vector<string>& args, bool capture_output=false) {
-    // Convert vector<string> to a char *[]
-    char *argv[args.size()+1];
-    unsigned i;
-    for (i=0; i<args.size(); i++)
-        argv[i] = (char*) args[i].c_str();
-    // Arguments array has to be null-terminated
-    argv[i] = NULL;
+    // Get args as a vector<char*>
+    vector<char*> argv(args.size() + 1);
+    transform(args.begin(), args.end(), argv.begin(),
+        [](string& s){ return const_cast<char*>(s.c_str()); });
+    argv.push_back(NULL);
 
     int pipes[2][2];
     int *out_pipe = pipes[0];
@@ -364,7 +362,7 @@ int execute(PRet& ret, vector<string>& args, bool capture_output=false) {
         close(parent_out_fd);
         close(parent_err_fd);
 
-        execv(argv[0], argv);
+        execv(argv[0], argv.data());
         _exit(0);
     } else {
         /**
@@ -398,10 +396,10 @@ int execute(PRet& ret, vector<string>& args, bool capture_output=false) {
 }
 
 
-int easy_execute(vector<string> args, bool capture_output=false) {
+PRet easy_execute(vector<string>& args, bool capture_output=false) {
     PRet ret;
-    execute(&ret, args, capture_output);
-    return ret.exitstatus;
+    execute(ret, args, capture_output);
+    return ret;
 }
 
 
@@ -414,10 +412,8 @@ void print_args(vector<string> args) {
 
 
 vector<string> get_lib_flags(string lib) {
-    PRet ret;
     vector<string> pkg_conf_args = {PKGCONFIG, "--cflags", "--libs", lib};
-    execute(&ret, pkg_conf_args, true);
-    return split(trim_whitespace(ret.out));
+    return split(trim_whitespace(easy_execute(pkg_conf_args, true).out));
 }
 
 
@@ -454,10 +450,10 @@ void compile_asm(Options& opts) {
 
         int code;
 
-        if ((code = easy_execute(nasm_args)))
+        if ((code = easy_execute(nasm_args).exitstatus))
             die(code, "Could not create object file:", opts.obj_name);
 
-        if ((code = easy_execute(ld_args)))
+        if ((code = easy_execute(ld_args).exitstatus))
             die(code, "Could not link object file:", opts.obj_name);
     }
 }
@@ -483,7 +479,7 @@ void compile_c(Options& opts) {
         check_executable_exists(gcc_args[0]);
 
         int code;
-        if ((code = easy_execute(gcc_args)))
+        if ((code = easy_execute(gcc_args).exitstatus))
             die(code, "Could not compile infile:", opts.src_name);
     }
 }
@@ -506,7 +502,7 @@ void compile_cpp(Options& opts) {
         check_executable_exists(gpp_args[0]);
 
         int code;
-        if ((code = easy_execute(gpp_args)))
+        if ((code = easy_execute(gpp_args).exitstatus))
             die("Could not compile infile:", opts.src_name);
     }
 }
@@ -542,7 +538,7 @@ void to_compile(Options& opts) {
 int to_execute(Options& opts) {
     if (opts.wrap_output)
         cout << "===== OUTPUT =====" << endl;
-    int exitstatus = easy_execute(opts.bin_args);
+    int exitstatus = easy_execute(opts.bin_args).exitstatus;
     if (opts.wrap_output)
         cout << "===== END OUTPUT =====" << endl;
     return exitstatus;
