@@ -62,7 +62,7 @@ class any {
             }
         }
 
-        friend ostream& operator<<(ostream& os, any& a) {
+        friend ostream& operator<<(ostream& os, any&& a) {
             switch (a.m_type) {
                 case Char:   os << a.CHAR;   break;
                 case Int:    os << a.INT;    break;
