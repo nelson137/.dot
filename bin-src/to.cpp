@@ -274,6 +274,7 @@ void Prog::parse_args(int argc, char *argv[]) {
         this->auto_bin_name();
 
     this->exec_args = vector<string>(pos_args.begin()+2, pos_args.end());
+    this->exec_args.push_back(this->bin_name);
 
     if (this->lang == NO_LANG)
         this->auto_lang();
