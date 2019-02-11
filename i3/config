@@ -105,7 +105,7 @@ bindsym $mod+z focus child
 bindsym $mod+Shift+c kill
 
 # Open a terminal
-bindsym $mod+Return exec gnome-terminal
+bindsym $mod+Return exec urxvt
 
 # Open chrome
 bindsym $mod+backslash exec google-chrome
@@ -199,7 +199,7 @@ exec --no-startup-id i3-msg workspace $wsDev
 # Startup programs
 exec --no-startup-id xrdb -merge ~/.Xresources
 exec --no-startup-id dunst -config ~/.dunstrc
-exec --no-startup-id i3-msg 'workspace $wsDev; exec gnome-terminal'
+exec --no-startup-id i3-msg 'workspace $wsDev; exec urxvt'
 exec spotify
 exec nautilus
 exec google-chrome
