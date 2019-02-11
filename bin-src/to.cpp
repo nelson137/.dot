@@ -351,7 +351,7 @@ void compile_c(Prog const& prog) {
         prog.src_name, "-o", prog.bin_name};
 
     char *c_include = getenv("C_SEARCH_LIBS");
-    if (c_include != NULL) {
+    if (c_include != nullptr) {
         vector<string> dirs = split(string(c_include));
         gcc_args.insert(gcc_args.end(), dirs.begin(), dirs.end());
     }
@@ -377,7 +377,7 @@ void compile_cpp(Prog const& prog) {
         prog.src_name, "-o", prog.bin_name};
 
     char *c_include = getenv("CPLUS_SEARCH_LIBS");
-    if (c_include != NULL) {
+    if (c_include != nullptr) {
         vector<string> dirs = split(string(c_include));
         gpp_args.insert(gpp_args.end(), dirs.begin(), dirs.end());
     }
