@@ -79,7 +79,7 @@ for fn in "${to_compile[@]}"; do
         g++ -std=c++11 "bin-src/$fn" -o "bin/compiled/$exe"
     else
         printf "\r\033[A"
-        echo "cpp-compile.sh: filetype not recognized: $fn" >&2
+        echo "compile.sh: filetype not recognized: $fn" >&2
     fi
 done
 

@@ -5,7 +5,7 @@ hooks="$(dirname "$0")"
 
 
 # Compile added, modified, and uncompiled bin-src/ files
-"${hooks}/cpp-compile.sh" post-merge
+"${hooks}/compile.sh" post-merge
 
 # Update plugins if changes were made in plugin section of files/.vimrc
 "${hooks}/update-vim-plugins.sh"
