@@ -1,13 +1,16 @@
 #!/bin/bash
 
-hooks="$(dirname "$0")/.git/hooks"
+hooks="$(cd "$(dirname "$0")" && pwd)/.git/hooks"
 
 # Make sure the hooks directory exists
 mkdir -p "$hooks"
 
 # Remove all example hooks
-rm -f "${hooks}"/*.sample
+rm -f "$hooks"/*.sample
 
-cd "$hooks"
+pushd "$hooks" >/dev/null
+
 # Symbolic link the hooks
 command ls -A '../../hooks' | xargs -I % ln -fs '../../hooks/%' .
+
+popd >/dev/null
