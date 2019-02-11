@@ -33,16 +33,6 @@ enum Lang {
     NO_LANG, LANG_ASM, LANG_C, LANG_CPP
 };
 
-struct Options {
-    int commands;
-    string src_name;
-    string obj_name;
-    string bin_name;
-    vector<string> bin_args;
-    Lang lang;
-    bool wrap_output;
-};
-
 
 char *USAGE = (char*)
     "Usage: to [-h] [-l LANG] [-o OUTFILE] <commands> <infile> [ARGS...]\n";
@@ -117,11 +107,11 @@ void ask_rm_file(string file) {
 
 
 /*************************************************
- * Parser
+ * Prog
  ************************************************/
 
 
-class Parser {
+class Prog {
     private:
         bool parsing_opts = true;
 
@@ -131,17 +121,24 @@ class Parser {
         void auto_lang();
 
     public:
-        Options opts;
-        Options parse_args(int, char *[]);
+        int commands;
+        string src_name;
+        string obj_name;
+        string bin_name;
+        vector<string> exec_args;
+        Lang lang;
+        bool wrap_output;
+
+        void parse_args(int, char *[]);
 };
 
 
 /*************************************************
- * Parser Private Methods
+ * Prog Private Methods
  ************************************************/
 
 
-Argtype Parser::arg_type(string arg) {
+Argtype Prog::arg_type(string arg) {
     int arglen = arg.length();
 
     if (this->parsing_opts && arglen > 0 && arg[0] == '-') {
@@ -157,45 +154,45 @@ Argtype Parser::arg_type(string arg) {
 }
 
 
-void Parser::auto_bin_name() {
-    this->opts.bin_name = this->opts.src_name[0] == '/' ? "" : "./";
-    this->opts.bin_name += this->opts.src_name + ".to";
+void Prog::auto_bin_name() {
+    this->bin_name = this->src_name[0] == '/' ? "" : "./";
+    this->bin_name += this->src_name + ".to";
 }
 
 
-void Parser::set_lang(string lang) {
+void Prog::set_lang(string lang) {
     transform(lang.begin(), lang.end(), lang.begin(), ::tolower);
     if (lang == "s" || lang == "asm" || lang == "assembly")
-        this->opts.lang = LANG_ASM;
+        this->lang = LANG_ASM;
     else if (lang == "c")
-        this->opts.lang = LANG_C;
+        this->lang = LANG_C;
     else if (lang == "cpp" || lang == "c++")
-        this->opts.lang = LANG_CPP;
+        this->lang = LANG_CPP;
     else
         die("Language not recognized:", lang);
 }
 
 
-void Parser::auto_lang() {
-    size_t pos = this->opts.src_name.rfind(".");
+void Prog::auto_lang() {
+    size_t pos = this->src_name.rfind(".");
     string lang;
     if (pos != string::npos)
-        lang = this->opts.src_name.substr(pos+1);
+        lang = this->src_name.substr(pos+1);
     this->set_lang(lang);
 }
 
 
 /*************************************************
- * Parser Public Methods
+ * Prog Public Methods
  ************************************************/
 
 
-Options Parser::parse_args(int argc, char *argv[]) {
+void Prog::parse_args(int argc, char *argv[]) {
     if (argc < 3)
         usage();
 
-    this->opts.commands = 0;
-    this->opts.lang = NO_LANG;
+    this->commands = 0;
+    this->lang = NO_LANG;
     bool show_help = false;
 
     vector<string> args(argv+1, argv+argc);
@@ -224,7 +221,7 @@ Options Parser::parse_args(int argc, char *argv[]) {
                 else if (args[i] == "-l" || args[i] == "--language")
                     this->set_lang(args[++i]);
                 else if (args[i] == "-o" || args[i] == "--outfile")
-                    this->opts.bin_name = args[++i];
+                    this->bin_name = args[++i];
                 else
                     usage();
                 break;
@@ -248,43 +245,41 @@ Options Parser::parse_args(int argc, char *argv[]) {
     // Parse commands
     for (char c : pos_args[0]) {
         switch (c) {
-            case 'c': this->opts.commands |= CMD_COMPILE; break;
-            case 'e': this->opts.commands |= CMD_EXECUTE; break;
-            case 'r': this->opts.commands |= CMD_REMOVE;  break;
-            case 'l': this->opts.commands |= CMD_LOUD;    break;
-            case 'd': this->opts.commands |= CMD_DRYRUN;  break;
+            case 'c': this->commands |= CMD_COMPILE; break;
+            case 'e': this->commands |= CMD_EXECUTE; break;
+            case 'r': this->commands |= CMD_REMOVE;  break;
+            case 'l': this->commands |= CMD_LOUD;    break;
+            case 'd': this->commands |= CMD_DRYRUN;  break;
             default:  die("Command not recognized:", c);  break;
         }
     }
 
     // Error check commands
-    if (this->opts.commands == 0)
+    if (this->commands == 0)
         die("No commands were given");
 
-    this->opts.src_name = pos_args[1];
+    this->src_name = pos_args[1];
     // Make sure src_name isn't an empty string
-    if (this->opts.src_name.empty())
+    if (this->src_name.empty())
         die("Infile cannot be an empty string");
     // Make sure src_name exists
-    if (! file_exists(this->opts.src_name))
-        die("Infile does not exist:", this->opts.src_name);
+    if (! file_exists(this->src_name))
+        die("Infile does not exist:", this->src_name);
 
     // Get object file name
-    this->opts.obj_name = this->opts.src_name + ".o";
+    this->obj_name = this->src_name + ".o";
 
     // Determine the binary filename if it wasn't specified by the user
-    if (this->opts.bin_name.empty())
+    if (this->bin_name.empty())
         this->auto_bin_name();
 
-    this->opts.bin_args = vector<string>(pos_args.begin()+2, pos_args.end());
+    this->exec_args = vector<string>(pos_args.begin()+2, pos_args.end());
 
-    if (this->opts.lang == NO_LANG)
+    if (this->lang == NO_LANG)
         this->auto_lang();
 
-    this->opts.wrap_output =
-        this->opts.commands & CMD_LOUD && !(this->opts.commands & CMD_DRYRUN);
-
-    return this->opts;
+    this->wrap_output =
+        this->commands & CMD_LOUD && !(this->commands & CMD_DRYRUN);
 }
 
 
@@ -326,12 +321,12 @@ vector<string> get_lib_flags(string a, T... ts) {
  ************************************************/
 
 
-void compile_asm(Options& opts) {
+void compile_asm(Prog& prog) {
     vector<string> nasm_args = {
-        NASM, "-f", "elf64", opts.src_name, "-o", opts.obj_name};
-    vector<string> ld_args = {LD, opts.obj_name, "-o", opts.bin_name};
+        NASM, "-f", "elf64", prog.src_name, "-o", prog.obj_name};
+    vector<string> ld_args = {LD, prog.obj_name, "-o", prog.bin_name};
 
-    if (opts.commands & CMD_DRYRUN) {
+    if (prog.commands & CMD_DRYRUN) {
         print_args(nasm_args);
         print_args(ld_args);
     } else {
@@ -341,18 +336,18 @@ void compile_asm(Options& opts) {
         int code;
 
         if ((code = easy_execute(nasm_args).exitstatus))
-            die(code, "Could not create object file:", opts.obj_name);
+            die(code, "Could not create object file:", prog.obj_name);
 
         if ((code = easy_execute(ld_args).exitstatus))
-            die(code, "Could not link object file:", opts.obj_name);
+            die(code, "Could not link object file:", prog.obj_name);
     }
 }
 
 
-void compile_c(Options& opts) {
+void compile_c(Prog& prog) {
     vector<string> gcc_args = {
         GCC, "-x", "c", "-std=c11", "-O3", "-Wall", "-Werror",
-        opts.src_name, "-o", opts.bin_name};
+        prog.src_name, "-o", prog.bin_name};
 
     char *c_include = getenv("C_SEARCH_LIBS");
     if (c_include != NULL) {
@@ -363,22 +358,22 @@ void compile_c(Options& opts) {
     vector<string> lib_flags = get_lib_flags("python3", "json-c");
     gcc_args.insert(gcc_args.end(), lib_flags.begin(), lib_flags.end());
 
-    if (opts.commands & CMD_DRYRUN) {
+    if (prog.commands & CMD_DRYRUN) {
         print_args(gcc_args);
     } else {
         check_executable_exists(gcc_args[0]);
 
         int code;
         if ((code = easy_execute(gcc_args).exitstatus))
-            die(code, "Could not compile infile:", opts.src_name);
+            die(code, "Could not compile infile:", prog.src_name);
     }
 }
 
 
-void compile_cpp(Options& opts) {
+void compile_cpp(Prog& prog) {
     vector<string> gpp_args = {
         GPP, "-x", "c++", "-std=c++11", "-O3", "-Wall", "-Werror",
-        opts.src_name, "-o", opts.bin_name};
+        prog.src_name, "-o", prog.bin_name};
 
     char *c_include = getenv("CPLUS_SEARCH_LIBS");
     if (c_include != NULL) {
@@ -386,36 +381,36 @@ void compile_cpp(Options& opts) {
         gpp_args.insert(gpp_args.end(), dirs.begin(), dirs.end());
     }
 
-    if (opts.commands & CMD_DRYRUN) {
+    if (prog.commands & CMD_DRYRUN) {
         print_args(gpp_args);
     } else {
         check_executable_exists(gpp_args[0]);
 
         int code;
         if ((code = easy_execute(gpp_args).exitstatus))
-            die("Could not compile infile:", opts.src_name);
+            die("Could not compile infile:", prog.src_name);
     }
 }
 
 
-void to_compile(Options& opts) {
+void to_compile(Prog& prog) {
     // Ask to remove the object file if it already exists
-    if (opts.lang == LANG_ASM && file_exists(opts.obj_name)) {
-        cout << "Object file exists: " << opts.obj_name << endl;
-        ask_rm_file(opts.obj_name);
+    if (prog.lang == LANG_ASM && file_exists(prog.obj_name)) {
+        cout << "Object file exists: " << prog.obj_name << endl;
+        ask_rm_file(prog.obj_name);
     }
 
     // Ask to remove the outfile if it already exists
-    if (file_exists(opts.bin_name)) {
-        cout << "Outfile exists: " << opts.bin_name << endl;
-        ask_rm_file(opts.bin_name);
+    if (file_exists(prog.bin_name)) {
+        cout << "Outfile exists: " << prog.bin_name << endl;
+        ask_rm_file(prog.bin_name);
     }
 
-    switch(opts.lang) {
-        case LANG_ASM: compile_asm(opts); break;
-        case LANG_C:   compile_c  (opts); break;
-        case LANG_CPP: compile_cpp(opts); break;
-        default: die("Compilation not implemented for", opts.lang);
+    switch(prog.lang) {
+        case LANG_ASM: compile_asm(prog); break;
+        case LANG_C:   compile_c  (prog); break;
+        case LANG_CPP: compile_cpp(prog); break;
+        default: die("Compilation not implemented for", prog.lang);
     }
 }
 
@@ -425,11 +420,11 @@ void to_compile(Options& opts) {
  ************************************************/
 
 
-int to_execute(Options& opts) {
-    if (opts.wrap_output)
+int to_execute(Prog& prog) {
+    if (prog.wrap_output)
         cout << "===== OUTPUT =====" << endl;
-    int exitstatus = easy_execute(opts.bin_args).exitstatus;
-    if (opts.wrap_output)
+    int exitstatus = easy_execute(prog.exec_args).exitstatus;
+    if (prog.wrap_output)
         cout << "===== END OUTPUT =====" << endl;
     return exitstatus;
 }
@@ -440,10 +435,10 @@ int to_execute(Options& opts) {
  ************************************************/
 
 
-void to_remove(Options& opts) {
-    rm(opts.bin_name);
-    if (opts.lang == LANG_ASM)
-        rm(opts.obj_name);
+void to_remove(Prog& prog) {
+    rm(prog.bin_name);
+    if (prog.lang == LANG_ASM)
+        rm(prog.obj_name);
 }
 
 
@@ -453,21 +448,21 @@ void to_remove(Options& opts) {
 
 
 int main(int argc, char *argv[]) {
-    Parser parser;
-    Options opts = parser.parse_args(argc, argv);
+    Prog parser;
+    parser.parse_args(argc, argv);
 
     int exitstatus = 0;
 
     // Compile the program
-    to_compile(opts);
+    to_compile(parser);
 
     // Execute the program
-    if (opts.commands & CMD_EXECUTE)
-        exitstatus = to_execute(opts);
+    if (parser.commands & CMD_EXECUTE)
+        exitstatus = to_execute(parser);
 
     // Remove the generated files
-    if (opts.commands & CMD_REMOVE)
-        to_remove(opts);
+    if (parser.commands & CMD_REMOVE)
+        to_remove(parser);
 
     return exitstatus;
 }
