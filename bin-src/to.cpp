@@ -125,7 +125,7 @@ void ask_rm_file(string file) {
 }
 
 
-bool read_fd(int fd, string *dest) {
+bool read_fd(int fd, string& dest) {
     int count;
     char buff[128];
 
@@ -134,7 +134,7 @@ bool read_fd(int fd, string *dest) {
         if (count == -1)
             return false;
         buff[count] = '\0';
-        *dest += buff;
+        dest += buff;
     } while (count > 0);
 
     return true;
@@ -318,7 +318,7 @@ Options Parser::parse_args(int argc, char *argv[]) {
  ************************************************/
 
 
-int execute(PRet *ret, vector<string> args, bool capture_output=false) {
+int execute(PRet& ret, vector<string>& args, bool capture_output=false) {
     // Convert vector<string> to a char *[]
     char *argv[args.size()+1];
     unsigned i;
@@ -379,14 +379,14 @@ int execute(PRet *ret, vector<string> args, bool capture_output=false) {
         int status;
         waitpid(pid, &status, 0);
 
-        ret->exitstatus = WEXITSTATUS(status);
+        ret.exitstatus = WEXITSTATUS(status);
 
         if (capture_output) {
             // Read child's stdout
-            if (! read_fd(parent_out_fd, &ret->out))
+            if (! read_fd(parent_out_fd, ret.out))
                 die("Could not read stdout");
             // Read child's stderr
-            if (! read_fd(parent_err_fd, &ret->err))
+            if (! read_fd(parent_err_fd, ret.err))
                 die("Could not read stderr");
         }
 
@@ -394,7 +394,7 @@ int execute(PRet *ret, vector<string> args, bool capture_output=false) {
         close(parent_err_fd);
     }
 
-    return ret->exitstatus;
+    return ret.exitstatus;
 }
 
 
