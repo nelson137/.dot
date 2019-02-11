@@ -308,7 +308,7 @@ vector<string> get_lib_flags(string a, T... ts) {
     vector<string> libraries = {a, ts...};
 
     vector<string> flags;
-    for (auto& lib : libraries) {
+    for (auto const& lib : libraries) {
         vector<string> lib_flags = get_lib_flags(lib);
         flags.insert(flags.end(), lib_flags.begin(), lib_flags.end());
     }
@@ -322,7 +322,7 @@ vector<string> get_lib_flags(string a, T... ts) {
  ************************************************/
 
 
-void compile_asm(Prog& prog) {
+void compile_asm(Prog const& prog) {
     vector<string> nasm_args = {
         NASM, "-f", "elf64", prog.src_name, "-o", prog.obj_name};
     vector<string> ld_args = {LD, prog.obj_name, "-o", prog.bin_name};
@@ -345,7 +345,7 @@ void compile_asm(Prog& prog) {
 }
 
 
-void compile_c(Prog& prog) {
+void compile_c(Prog const& prog) {
     vector<string> gcc_args = {
         GCC, "-x", "c", "-std=c11", "-O3", "-Wall", "-Werror",
         prog.src_name, "-o", prog.bin_name};
@@ -371,7 +371,7 @@ void compile_c(Prog& prog) {
 }
 
 
-void compile_cpp(Prog& prog) {
+void compile_cpp(Prog const& prog) {
     vector<string> gpp_args = {
         GPP, "-x", "c++", "-std=c++11", "-O3", "-Wall", "-Werror",
         prog.src_name, "-o", prog.bin_name};
@@ -394,7 +394,7 @@ void compile_cpp(Prog& prog) {
 }
 
 
-void to_compile(Prog& prog) {
+void to_compile(Prog const& prog) {
     // Ask to remove the object file if it already exists
     if (prog.lang == LANG_ASM && file_exists(prog.obj_name)) {
         cout << "Object file exists: " << prog.obj_name << endl;
@@ -436,7 +436,7 @@ int to_execute(Prog& prog) {
  ************************************************/
 
 
-void to_remove(Prog& prog) {
+void to_remove(Prog const& prog) {
     rm(prog.bin_name);
     if (prog.lang == LANG_ASM)
         rm(prog.obj_name);
