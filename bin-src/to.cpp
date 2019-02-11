@@ -297,26 +297,6 @@ void print_args(vector<string> args) {
 }
 
 
-vector<string> get_lib_flags(string lib) {
-    vector<string> pkg_conf_args = {PKGCONFIG, "--cflags", "--libs", lib};
-    return split(trim_whitespace(easy_execute(pkg_conf_args, true).out));
-}
-
-
-template<typename... T>
-vector<string> get_lib_flags(string a, T... ts) {
-    vector<string> libraries = {a, ts...};
-
-    vector<string> flags;
-    for (auto const& lib : libraries) {
-        vector<string> lib_flags = get_lib_flags(lib);
-        flags.insert(flags.end(), lib_flags.begin(), lib_flags.end());
-    }
-
-    return flags;
-}
-
-
 /*************************************************
  * Compile
  ************************************************/
@@ -355,9 +335,6 @@ void compile_c(Prog const& prog) {
         vector<string> dirs = split(string(c_include));
         gcc_args.insert(gcc_args.end(), dirs.begin(), dirs.end());
     }
-
-    vector<string> lib_flags = get_lib_flags("python3", "json-c");
-    gcc_args.insert(gcc_args.end(), lib_flags.begin(), lib_flags.end());
 
     if (prog.commands & CMD_DRYRUN) {
         print_args(gcc_args);
