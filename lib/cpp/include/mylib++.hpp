@@ -62,18 +62,6 @@ class any {
             }
         }
 
-        friend ostream& operator<<(ostream& os, any&& a) {
-            switch (a.m_type) {
-                case Char:   os << a.CHAR;   break;
-                case Int:    os << a.INT;    break;
-                case Float:  os << a.FLOAT;  break;
-                case Double: os << a.DOUBLE; break;
-                case Size_t: os << a.SIZE_T; break;
-                case String: os << a.STRING; break;
-            }
-            return os;
-        }
-
 };
 
 
