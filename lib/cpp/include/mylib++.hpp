@@ -11,6 +11,13 @@
 using namespace std;
 
 
+struct PRet {
+    int exitstatus;
+    string out;
+    string err;
+};
+
+
 bool file_exists(string);
 
 
@@ -85,6 +92,13 @@ template<typename T, typename... Ts>
 void die(T t, Ts... ts) {
     die(1, t, ts...);
 }
+
+
+bool read_fd(int, string&);
+
+int execute(PRet&, vector<string>&, bool=false);
+
+PRet easy_execute(vector<string>&, bool=false);
 
 
 #endif
