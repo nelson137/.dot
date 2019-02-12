@@ -56,9 +56,9 @@ bindsym $mod+Shift+0 move container to workspace $ws10;  workspace $ws10
 for_window [class="Spotify"] move to scratchpad
 bindsym $mod+m [class="Spotify"] scratchpad show, resize set 1770 930, move position center
 
-# Nautilus control
-for_window [class="Nautilus"] move to scratchpad
-bindsym $mod+n [class="Nautilus"] scratchpad show, move position center
+# Ranger terminal control
+for_window [title="ranger"] move to scratchpad
+bindsym $mod+n [title="ranger"] scratchpad show, resize set 1640 800, move position center
 
 # Shift control
 for_window [class="Thunderbird"] move to scratchpad
@@ -201,6 +201,6 @@ exec --no-startup-id xrdb -merge ~/.Xresources
 exec --no-startup-id dunst -config ~/.dunstrc
 exec --no-startup-id i3-msg 'workspace $wsDev; exec urxvt'
 exec spotify
-exec nautilus
+exec urxvt -e ranger
 exec google-chrome
 exec /usr/bin/thunderbird
