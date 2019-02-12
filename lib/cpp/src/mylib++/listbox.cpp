@@ -102,9 +102,10 @@ int Listbox::run(bool show_instructs) {
     this->setup_term();
 
     char c;
-    bool will_redraw, made_choice, quit = false;
+    bool will_redraw, quit = false;
     unsigned current = 0;
 
+    this->chosen = -1;
     this->draw(current);
 
     do {
@@ -148,7 +149,7 @@ int Listbox::run(bool show_instructs) {
 
             // Confirm selection
             case '\n':
-                made_choice = true;
+                this->chosen = current;
                 will_redraw = false;
                 quit = true;
                 break;
@@ -160,10 +161,5 @@ int Listbox::run(bool show_instructs) {
     } while (quit == false);
 
     this->restore_term();
-
-    if (not made_choice)
-        return (this->chosen_index = -1);
-
-    this->chosen = this->choices[current];
-    return (this->chosen_index = current);
+    return this->chosen;
 }

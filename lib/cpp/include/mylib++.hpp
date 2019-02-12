@@ -113,8 +113,7 @@ public:
     static const string df_cursor;
     static const string df_title;
 
-    int chosen_index;
-    string chosen;
+    int chosen;
 
     Listbox(vector<string>&, string=df_title, string=df_cursor);
 
