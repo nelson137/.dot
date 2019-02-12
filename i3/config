@@ -57,7 +57,7 @@ for_window [class="Spotify"] move to scratchpad
 bindsym $mod+m [class="Spotify"] scratchpad show, resize set 1770 930, move position center
 
 # Ranger terminal control
-for_window [title="ranger"] move to scratchpad
+for_window [title="^ranger$"] move to scratchpad
 bindsym $mod+n [title="ranger"] scratchpad show, resize set 1640 800, move position center
 
 # Shift control
