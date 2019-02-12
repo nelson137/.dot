@@ -10,6 +10,10 @@
 using namespace std;
 
 
+const string Listbox::df_cursor = "*";
+const string Listbox::df_title = "__DEFAULT_TITLE";
+
+
 void Listbox::print_instructs() {
     cout << "Press k/j or up/down arrows to move up and down." << endl;
     cout << "Press q to quit." << endl;

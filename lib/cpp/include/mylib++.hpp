@@ -110,8 +110,8 @@ private:
 
 public:
 
-    static string df_cursor;
-    static string df_title;
+    static const string df_cursor;
+    static const string df_title;
 
     int chosen_index;
     string chosen;
@@ -121,9 +121,6 @@ public:
     int run(bool=true);
 
 };
-
-string Listbox::df_cursor = "*";
-string Listbox::df_title = "__DEFAULT_TITLE";
 
 
 #endif
