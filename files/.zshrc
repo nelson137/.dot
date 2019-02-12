@@ -83,13 +83,14 @@ export LIBRARY_PATH=~/.lib/c:~/.lib/cpp
 export LD_LIBRARY_PATH=
 
 # gcc -l flags for the c-utils plugin
-c_ld_flags=(
+c_search_libs=(
     -lm
     $(is_mu || echo '-ljson-c')
+    $(pkg-config --libs-only-l python3 2>/dev/null)
     -lmylib
-    $(pkg-config --cflags --libs python3 2>/dev/null)
 )
-export C_LD_FLAGS="${(j: :)c_ld_flags}"
+export C_SEARCH_LIBS="${(j: :)c_search_libs}"
+export CPLUS_SEARCH_LIBS=-lmylib++
 
 export PYTHONSTARTUP="$HOME/.pythonrc"
 
