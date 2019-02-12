@@ -1,6 +1,6 @@
 ! URxvt
 URxvt.transparent: true
-URxvt.shading: 15
+URxvt.shading: 12
 URxvt.background: black
 URxvt.foreground: white
 URxvt.font: xft:FiraMono-Regular:size=12
