@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#include <termios.h>
+
 using namespace std;
 
 
@@ -84,6 +86,44 @@ bool read_fd(int, string&);
 int execute(PRet&, vector<string>&, bool=false);
 
 PRet easy_execute(vector<string>&, bool=false);
+
+
+class Listbox {
+
+private:
+    struct termios oldt;
+
+    bool show_title;
+    string title;
+    string cursor;
+    vector<string> choices;
+
+    void print_instructs();
+    string cursor_spaces();
+    void print(string, bool=false);
+    void print_title();
+    void save_term_attrs();
+    void setup_term();
+    void restore_term();
+    void draw(unsigned const&);
+    void redraw(unsigned const&);
+
+public:
+
+    static string df_cursor;
+    static string df_title;
+
+    int chosen_index;
+    string chosen;
+
+    Listbox(vector<string>&, string=df_title, string=df_cursor);
+
+    int run(bool=true);
+
+};
+
+string Listbox::df_cursor = "*";
+string Listbox::df_title = "__DEFAULT_TITLE";
 
 
 #endif
