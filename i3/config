@@ -54,7 +54,7 @@ bindsym $mod+Shift+0 move container to workspace $ws10;  workspace $ws10
 
 # Ranger terminal control
 for_window [title="^ranger$"] move to scratchpad
-bindsym $mod+n [title="ranger"] scratchpad show, resize set 1640 800, move position center
+bindsym $mod+n [title="^ranger$"] scratchpad show, resize set 1640 800, move position center
 
 # Change the focused window
 bindsym $mod+h focus left
