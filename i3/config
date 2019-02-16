@@ -20,6 +20,7 @@ set $ws8    "8: 8"
 set $wsMail "9: "
 set $ws10   "10: 10"
 
+set $exec_noid exec --no-startup-id
 set $i3msg     exec --no-startup-id i3-msg
 
 # i3-gaps
@@ -103,7 +104,7 @@ bindsym $mod+Return exec urxvt
 bindsym $mod+backslash exec google-chrome
 
 # Start dmenu
-bindsym $mod+p exec --no-startup-id i3-dmenu-desktop
+bindsym $mod+p $exec_noid i3-dmenu-desktop
 
 # Reload the config file
 bindsym $mod+q reload
@@ -173,7 +174,7 @@ $i3msg 'workspace $wsMail; append_layout $layouts/wsMail.json'
 
 
 # Start xautolock, config in ~/.Xresource
-exec --no-startup-id xautolock
+$exec_noid xautolock
 
 # Set the background
 exec_always --no-startup-id nitrogen --set-zoom-fill --random ~/.config/i3/backgrounds/
@@ -185,14 +186,14 @@ exec gnome-keyring-daemon --start
 exec compton
 
 # Start NetworkManager
-exec --no-startup-id nm-applet
+$exec_noid nm-applet
 
 # Start in the dev workspace
 $i3msg 'workspace $wsDev'
 
 # Startup programs
-exec --no-startup-id xrdb -merge ~/.Xresources
-exec --no-startup-id dunst -config ~/.dunstrc
+$exec_noid xrdb -merge ~/.Xresources
+$exec_noid dunst -config ~/.dunstrc
 exec --no-startup-id i3-msg 'workspace $wsDev; exec urxvt'
 exec spotify
 exec urxvt -e ranger
