@@ -157,8 +157,8 @@ mode "resize" {
 
 
 # Default workspaces for programs
-for_window [class="Nm-connection-editor"] floating enable
-for_window [class="VirtualBox Machine"] move to workspace $ws3
+for_window [class="^Nm-connection-editor$"] floating enable
+for_window [class="^VirtualBox Machine$"] move to workspace $ws3
 
 
 # i3blocks config
