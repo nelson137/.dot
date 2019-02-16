@@ -110,7 +110,7 @@ bindsym $mod+q reload
 # Restart i3
 bindsym $mod+Shift+q restart
 # Logout of i3
-bindsym $mod+Control+l exec "i3-nagbar -t warning -m 'Do you want to exit i3? This will end your X session.' -b 'Yes' 'i3-msg exit'"
+bindsym $mod+Control+l exec "i3-nagbar -t warning -m 'Do you want to logout?' -b 'Yes' 'i3-msg exit'"
 
 # Multimedia bindings
 set $volumeCmd amixer -qc 0 -D pulse set Master
