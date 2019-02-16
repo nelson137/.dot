@@ -24,7 +24,7 @@ set $exec_noid exec --no-startup-id
 set $i3msg     exec --no-startup-id i3-msg
 
 # i3-gaps
-for_widow [class="^.*"] border pixel 2
+for_window [class="^.*"] border pixel 2
 gaps inner 15
 gaps outer 15
 workspace 2 gaps inner 0
