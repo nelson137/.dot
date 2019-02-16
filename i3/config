@@ -153,12 +153,9 @@ for_window [class="VirtualBox Machine"] move to workspace $ws3
 bar {
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
     colors {
-        # Bar background color
-        background #232f34
-        # Text color
-        statusline #eceff1
-        # Status separator color
-        separator #00acc1
+        background #232f34  # Bar background color
+        statusline #eceff1  # Text color
+        separator  #00acc1  # Status separator color
 
         # Color class       Border   BG       Text
         focused_workspace   #0098a7  #006064  #ffffff
