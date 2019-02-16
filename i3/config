@@ -43,6 +43,17 @@ bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $wsMail
 bindsym $mod+0 workspace $ws10
 
+# Switch workspace with keypad
+bindsym $mod+Mod2+KP_1 workspace $wsDev
+bindsym $mod+Mod2+KP_2 workspace $wsWeb
+bindsym $mod+Mod2+KP_3 workspace $ws3
+bindsym $mod+Mod2+KP_4 workspace $ws4
+bindsym $mod+Mod2+KP_5 workspace $ws5
+bindsym $mod+Mod2+KP_6 workspace $ws6
+bindsym $mod+Mod2+KP_7 workspace $ws7
+bindsym $mod+Mod2+KP_8 workspace $wsSpotify
+bindsym $mod+Mod2+KP_9 workspace $wsMail
+
 # Move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $wsDev; workspace $wsDev
 bindsym $mod+Shift+2 move container to workspace $wsWeb; workspace $wsWeb
