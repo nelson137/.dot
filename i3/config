@@ -20,6 +20,8 @@ set $ws8    "8: 8"
 set $wsMail "9: "
 set $ws10   "10: 10"
 
+set $i3msg     exec --no-startup-id i3-msg
+
 # i3-gaps
 for_widow [class="^.*"] border pixel 2
 gaps inner 15
@@ -169,8 +171,8 @@ bar {
 
 # Layouts
 set $layouts "~/.config/i3/layouts"
-exec --no-startup-id i3-msg 'workspace $wsWeb; append_layout $layouts/wsWeb.json'
-exec --no-startup-id i3-msg 'workspace $wsMail; append_layout $layouts/wsMail.json'
+$i3msg 'workspace $wsWeb; append_layout $layouts/wsWeb.json'
+$i3msg 'workspace $wsMail; append_layout $layouts/wsMail.json'
 
 
 # Start xautolock, config in ~/.Xresource
@@ -189,7 +191,7 @@ exec compton
 exec --no-startup-id nm-applet
 
 # Start in the dev workspace
-exec --no-startup-id i3-msg workspace $wsDev
+$i3msg 'workspace $wsDev'
 
 # Startup programs
 exec --no-startup-id xrdb -merge ~/.Xresources
