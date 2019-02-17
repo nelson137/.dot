@@ -93,7 +93,7 @@ bool read_fd(int fd, string& dest) {
 }
 
 
-int execute(PRet& ret, vector<string>& args, bool capture_output) {
+int execute(exec_ret& er, vector<string>& args, bool capture_output) {
     // Get args as a vector<char*>
     vector<char*> argv(args.size() + 1);
     transform(args.begin(), args.end(), argv.begin(),
@@ -152,14 +152,14 @@ int execute(PRet& ret, vector<string>& args, bool capture_output) {
         int status;
         waitpid(pid, &status, 0);
 
-        ret.exitstatus = WEXITSTATUS(status);
+        er.exitstatus = WEXITSTATUS(status);
 
         if (capture_output) {
             // Read child's stdout
-            if (! read_fd(parent_out_fd, ret.out))
+            if (! read_fd(parent_out_fd, er.out))
                 die("Could not read stdout");
             // Read child's stderr
-            if (! read_fd(parent_err_fd, ret.err))
+            if (! read_fd(parent_err_fd, er.err))
                 die("Could not read stderr");
         }
 
@@ -167,12 +167,12 @@ int execute(PRet& ret, vector<string>& args, bool capture_output) {
         close(parent_err_fd);
     }
 
-    return ret.exitstatus;
+    return er.exitstatus;
 }
 
 
-PRet easy_execute(vector<string>& args, bool capture_output) {
-    PRet ret;
-    execute(ret, args, capture_output);
-    return ret;
+exec_ret easy_execute(vector<string>& args, bool capture_output) {
+    exec_ret er;
+    execute(er, args, capture_output);
+    return er;
 }

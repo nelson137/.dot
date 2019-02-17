@@ -13,7 +13,7 @@
 using namespace std;
 
 
-struct PRet {
+struct exec_ret {
     int exitstatus;
     string out;
     string err;
@@ -83,9 +83,9 @@ void die(T t, Ts... ts) {
 
 bool read_fd(int, string&);
 
-int execute(PRet&, vector<string>&, bool=false);
+int execute(exec_ret&, vector<string>&, bool=false);
 
-PRet easy_execute(vector<string>&, bool=false);
+exec_ret easy_execute(vector<string>&, bool=false);
 
 
 class Listbox {
