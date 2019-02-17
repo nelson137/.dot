@@ -41,7 +41,7 @@ void attempt_ssh(const char *uname, const char *addr) {
         exit(1);
     } else if (pid == 0) {
         // Executes in child process
-        execl("/usr/bin/ssh", "ssh", "-o", "ConnectTimeout=5", host, (char*)NULL);
+        execl("/usr/bin/ssh", "ssh", "-oConnectTimeout=5", host, NULL);
         _exit(1);
     } else {
         // Executes in parent process
