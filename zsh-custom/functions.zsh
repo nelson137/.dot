@@ -116,7 +116,7 @@ is_wsl() {
 
 mc() {
     # Make then cd into a directory
-    mkdir -p "$@" && eval "cd \$$#"
+    mkdir -p "$@" && cd "${@[$#]}"
 }
 
 
