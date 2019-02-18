@@ -180,6 +180,7 @@ bar {
 
 # Layouts
 set $layouts "~/.config/i3/layouts"
+$i3msg 'workspace $wsDev; append_layou $layouts/wsDev.json'
 $i3msg 'workspace $wsWeb; append_layout $layouts/wsWeb.json'
 $i3msg 'workspace $wsMail; append_layout $layouts/wsMail.json'
 
@@ -208,7 +209,7 @@ $i3msg 'workspace $wsDev'
 # Startup programs
 $exec_noid xrdb -merge ~/.Xresources
 $exec_noid dunst -config ~/.dunstrc
-exec --no-startup-id i3-msg 'workspace $wsDev; exec urxvt'
+exec urxvt
 exec spotify
 exec urxvt -e ranger
 exec google-chrome
