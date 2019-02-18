@@ -9,16 +9,16 @@ font pango:monospace, FontAwesome 12
 # Use Mouse+$mod to drag floating windows around
 floating_modifier $mod
 
-set $wsDev     "1: "
-set $wsWeb     "2: "
-set $ws3       "3: 3"
-set $ws4       "4: 4"
-set $ws5       "5: 5"
-set $ws6       "6: 6"
-set $ws7       "7: 7"
-set $wsSpotify "8: "
-set $wsMail    "9: "
-set $ws10      "10: 10"
+set $wsDev     "1:"
+set $wsWeb     "2:"
+set $ws3       "3:3"
+set $ws4       "4:4"
+set $ws5       "5:5"
+set $ws6       "6:6"
+set $ws7       "7:7"
+set $wsSpotify "8:"
+set $wsMail    "9:"
+set $ws10      "10:10"
 
 set $exec_noid exec --no-startup-id
 set $i3msg     exec --no-startup-id i3-msg
@@ -164,6 +164,7 @@ for_window [class="^VirtualBox Machine$"] move to workspace $ws3
 # i3blocks config
 bar {
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
+    strip_workspace_numbers yes
     colors {
         background #232f34  # Bar background color
         statusline #eceff1  # Text color
