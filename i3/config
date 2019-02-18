@@ -142,13 +142,13 @@ bindsym $mod+Shift+z exec xautolock -locknow
 bindsym $mod+r mode "resize"
 mode "resize" {
     # h: Decrease width
-    # j: Increase width
-    # k: Decrease height
-    # l: Increase height
-    bindsym h resize shrink width 5 px or 5 ppt
-    bindsym j resize grow height 5 px or 5 ppt
-    bindsym k resize shrink height 5 px or 5 ppt
-    bindsym l resize grow width 5 px or 5 ppt
+    # j: Decrease height
+    # k: Increase height
+    # l: Increase width
+    bindsym h resize shrink width  5 px or 5 ppt
+    bindsym j resize shrink height 5 px or 5 ppt
+    bindsym k resize grow   height 5 px or 5 ppt
+    bindsym l resize grow   width  5 px or 5 ppt
 
     # Enter or Escape exits resize mode
     bindsym Return mode "default"
