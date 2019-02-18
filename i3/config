@@ -9,16 +9,16 @@ font pango:monospace, FontAwesome 12
 # Use Mouse+$mod to drag floating windows around
 floating_modifier $mod
 
-set $wsDev  "1: "
-set $wsWeb  "2: "
-set $ws3    "3: 3"
-set $ws4    "4: 4"
-set $ws5    "5: 5"
-set $ws6    "6: 6"
-set $ws7    "7: 7"
-set $ws8    "8: 8"
-set $wsMail "9: "
-set $ws10   "10: 10"
+set $wsDev     "1: "
+set $wsWeb     "2: "
+set $ws3       "3: 3"
+set $ws4       "4: 4"
+set $ws5       "5: 5"
+set $ws6       "6: 6"
+set $ws7       "7: 7"
+set $wsSpotify "8: "
+set $wsMail    "9: "
+set $ws10      "10: 10"
 
 set $exec_noid exec --no-startup-id
 set $i3msg     exec --no-startup-id i3-msg
@@ -39,7 +39,7 @@ bindsym $mod+4 workspace $ws4
 bindsym $mod+5 workspace $ws5
 bindsym $mod+6 workspace $ws6
 bindsym $mod+7 workspace $ws7
-bindsym $mod+8 workspace $ws8
+bindsym $mod+8 workspace $wsSpotify
 bindsym $mod+9 workspace $wsMail
 bindsym $mod+0 workspace $ws10
 
@@ -182,6 +182,9 @@ bar {
 set $layouts "~/.config/i3/layouts"
 $i3msg 'workspace $wsWeb; append_layout $layouts/wsWeb.json'
 $i3msg 'workspace $wsMail; append_layout $layouts/wsMail.json'
+
+# Layouts won't work with Spotify
+for_window [class="Spotify"] move to workspace $wsSpotify
 
 
 # Start xautolock, config in ~/.Xresource
