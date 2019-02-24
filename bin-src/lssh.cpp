@@ -135,19 +135,17 @@ void Config::read_config() {
     if (home == NULL)
         die("Environment variable $HOME is not set");
 
-    string config_fn = string(home) + "/.lsshrc";
-
-    if (!file_exists(config_fn))
+    if (!file_exists(this->config_fn))
         die("Config file does not exist:", config_fn);
 
     ifstream fs;
-    fs.open(config_fn);
+    fs.open(this->config_fn);
 
     json config;
     fs >> config;
 
     if (!config.size())
-        die("No profiles found in config file:", config_fn);
+        die("No profiles found in config file:", this->config_fn);
 
     this->profiles.reserve(config.size());
 
