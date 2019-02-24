@@ -54,16 +54,15 @@ public:
     string user;
     vector<string> hosts;
 
-    Profile(json::iterator&);
+    Profile(json::iterator::reference&);
 
 };
 
 
-Profile::Profile(json::iterator& it) {
-    auto value = it.value();
-    this->name = value["name"];
-    this->user = value["username"];
-    json hosts = value["hosts"];
+Profile::Profile(json::iterator::reference& j_profile) {
+    this->name = j_profile["name"];
+    this->user = j_profile["username"];
+    json hosts = j_profile["hosts"];
     for (auto&& it=hosts.begin(); it!=hosts.end(); it++)
         this->hosts.push_back(it.value());
 }
@@ -81,7 +80,7 @@ private:
 
     template<typename... T> void config_error(T...);
     string get_home_dir();
-    void profile_is_valid(json::iterator&);
+    void profile_is_valid(json::iterator::reference&);
     void read_config();
 
 public:
@@ -101,22 +100,20 @@ void Config::config_error(T... ts) {
 }
 
 
-void Config::profile_is_valid(json::iterator& it) {
-    auto value = it.value();
-
-    if (value.find("name") == value.end())
+void Config::profile_is_valid(json::iterator::reference& j_profile) {
+    if (j_profile.find("name") == j_profile.end())
         this->config_error("Profiles must specify a name");
-    if (!value["name"].is_string())
+    if (!j_profile["name"].is_string())
         this->config_error("Profile names must be of type string");
 
-    if (value.find("username") == value.end())
+    if (j_profile.find("username") == j_profile.end())
         this->config_error("Profiles must specify a username");
-    if (!value["username"].is_string())
+    if (!j_profile["username"].is_string())
         this->config_error("Profile usernames must be of type string");
 
-    if (value.find("hosts") == value.end())
+    if (j_profile.find("hosts") == j_profile.end())
         this->config_error("Profiles must specify an array of hosts");
-    if (!value["hosts"].is_array())
+    if (!j_profile["hosts"].is_array())
         this->config_error("Profile hosts must be an array of strings");
 }
 
@@ -145,8 +142,8 @@ void Config::read_config() {
     this->profiles.reserve(j_profiles.size());
 
     for (auto&& it=j_profiles.begin(); it!=j_profiles.end(); it++) {
-        this->profile_is_valid(it);
-        this->profiles.push_back(Profile(it));
+        this->profile_is_valid(it.value());
+        this->profiles.push_back(Profile(it.value()));
     }
 }
 
