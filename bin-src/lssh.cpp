@@ -18,24 +18,27 @@ using namespace nlohmann;
  ************************************************/
 
 
+void puterr(string const& str="") {
+    cerr << str << endl;
+}
+
+
 void print_config_help() {
-    cerr << "The config file must be valid JSON with the following structure:"
-         << endl;
-    cerr << endl;
-    cerr << "{" << endl;
-    cerr << "    \"profiles\": [" << endl;
-    cerr << "        {" << endl;
-    cerr << "            \"name\": \"<name>\"," << endl;
-    cerr << "            \"username\": \"<username>\"," << endl;
-    cerr << "            \"hosts\": [\"example.com\", \"1.2.3.4\", ...]"
-         << endl;
-    cerr << "        }," << endl;
-    cerr << "        ..." << endl;
-    cerr << "    ]" << endl;
-    cerr << "}" << endl;
-    cerr << endl;
-    cerr << "A profile name, username, and list of at least one host " << endl;
-    cerr << "must be specified for each host." << endl;
+    puterr("The config file must be valid JSON with the following structure:");
+    puterr();
+    puterr("{");
+    puterr("    \"profiles\": [");
+    puterr("        {");
+    puterr("            \"name\": \"<name>\",");
+    puterr("            \"username\": \"<username>\",");
+    puterr("            \"hosts\": [\"example.com\", \"1.2.3.4\", ...]");
+    puterr("        },");
+    puterr("        ...");
+    puterr("    ]");
+    puterr("}");
+    puterr();
+    puterr("A profile name, username, and list of at least one host ");
+    puterr("must be specified for each host.");
 }
 
 
