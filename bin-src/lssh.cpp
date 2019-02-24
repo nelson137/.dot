@@ -80,7 +80,7 @@ private:
 
     template<typename... T> void config_error(T...);
     string get_home_dir();
-    void profile_is_valid(json::iterator::reference&);
+    Profile get_valid_profile(json::iterator::reference&);
     void read_config();
 
 public:
@@ -100,7 +100,7 @@ void Config::config_error(T... ts) {
 }
 
 
-void Config::profile_is_valid(json::iterator::reference& j_profile) {
+Profile Config::get_valid_profile(json::iterator::reference& j_profile) {
     if (j_profile.find("name") == j_profile.end())
         this->config_error("Profiles must specify a name");
     if (!j_profile["name"].is_string())
@@ -115,6 +115,8 @@ void Config::profile_is_valid(json::iterator::reference& j_profile) {
         this->config_error("Profiles must specify an array of hosts");
     if (!j_profile["hosts"].is_array())
         this->config_error("Profile hosts must be an array of strings");
+
+    return Profile(j_profile);
 }
 
 
@@ -141,10 +143,8 @@ void Config::read_config() {
 
     this->profiles.reserve(j_profiles.size());
 
-    for (auto&& it=j_profiles.begin(); it!=j_profiles.end(); it++) {
-        this->profile_is_valid(it.value());
-        this->profiles.push_back(Profile(it.value()));
-    }
+    for (auto&& it=j_profiles.begin(); it!=j_profiles.end(); it++)
+        this->profiles.push_back(this->get_valid_profile(it.value()));
 }
 
 
