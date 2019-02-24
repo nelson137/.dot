@@ -81,7 +81,8 @@ private:
     template<typename... T> void config_error(T...);
     string get_home_dir();
     Profile get_valid_profile(json::iterator::reference&);
-    void read_config();
+    json get_config();
+    void parse_config(json);
 
 public:
     vector<Profile> profiles;
@@ -120,7 +121,7 @@ Profile Config::get_valid_profile(json::iterator::reference& j_profile) {
 }
 
 
-void Config::read_config() {
+json Config::get_config() {
     char *home = getenv("HOME");
     if (home == NULL)
         die("Environment variable $HOME is not set");
@@ -133,7 +134,11 @@ void Config::read_config() {
 
     json config;
     fs >> config;
+    return config;
+}
 
+
+void Config::parse_config(json config) {
     json j_profiles = config["profiles"];
 
     if (j_profiles.is_null())
@@ -150,7 +155,7 @@ void Config::read_config() {
 
 Config::Config(string& fn) {
     this->config_fn = fn;
-    this->read_config();
+    this->parse_config(this->get_config());
 }
 
 
