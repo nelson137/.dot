@@ -19,20 +19,23 @@ using namespace nlohmann;
 
 
 void print_config_help() {
-    cerr << "The config file must be valid JSON with the following "
-         << "structure:" << endl;
-    cerr << "    {" << endl;
-    cerr << "      \"<hostname>\": {" << endl;
-    cerr << "        \"username\": \"<username>\"," << endl;
-    cerr << "        \"internal_addr\": \"<internal ip addr>\"," << endl;
-    cerr << "        \"external_addr\": \"<external ip addr>\"" << endl;
-    cerr << "      }," << endl;
-    cerr << "      ..." << endl;
-    cerr << "    }" << endl;
-    cerr << "A username must be specified for each host." << endl;
-    cerr << "Both an internal and external ip address do not have to be "
-         << "specified," << endl;
-    cerr << "but at least one must." << endl;
+    cerr << "The config file must be valid JSON with the following structure:"
+         << endl;
+    cerr << endl;
+    cerr << "{" << endl;
+    cerr << "    \"profiles\": [" << endl;
+    cerr << "        {" << endl;
+    cerr << "            \"name\": \"<name>\"," << endl;
+    cerr << "            \"username\": \"<username>\"," << endl;
+    cerr << "            \"hosts\": [\"example.com\", \"1.2.3.4\", ...]"
+         << endl;
+    cerr << "        }," << endl;
+    cerr << "        ..." << endl;
+    cerr << "    ]" << endl;
+    cerr << "}" << endl;
+    cerr << endl;
+    cerr << "A profile name, username, and list of at least one host " << endl;
+    cerr << "must be specified for each host." << endl;
 }
 
 
@@ -46,33 +49,20 @@ class Profile {
 public:
     string name;
     string user;
-    string internal_addr;
-    string external_addr;
+    vector<string> hosts;
 
     Profile(json::iterator&);
-
-    bool has_internal_addr();
-    bool has_external_addr();
 
 };
 
 
 Profile::Profile(json::iterator& it) {
     auto value = it.value();
-    this->name = it.key();
+    this->name = value["name"];
     this->user = value["username"];
-    this->internal_addr = value["internal_addr"];
-    this->external_addr = value["external_addr"];
-}
-
-
-bool Profile::has_internal_addr() {
-    return this->internal_addr.size();
-}
-
-
-bool Profile::has_external_addr() {
-    return this->external_addr.size();
+    json hosts = value["hosts"];
+    for (auto&& it=hosts.begin(); it!=hosts.end(); it++)
+        this->hosts.push_back(it.value());
 }
 
 
@@ -111,22 +101,20 @@ void Config::config_error(T... ts) {
 void Config::profile_is_valid(json::iterator& it) {
     auto value = it.value();
 
+    if (value.find("name") == value.end())
+        this->config_error("Profiles must specify a name");
+    if (!value["name"].is_string())
+        this->config_error("Profile names must be of type string");
+
     if (value.find("username") == value.end())
         this->config_error("Profiles must specify a username");
     if (!value["username"].is_string())
         this->config_error("Profile usernames must be of type string");
 
-    if (value.find("internal_addr") == value.end() &&
-            value.find("internal_addr") == value.end())
-        this->config_error(
-            "Profiles must specify at least an internal or external address");
-    if (!value["internal_addr"].is_string())
-        this->config_error("Profile internal_addrs must be of type string");
-
-    if (!value["external_addr"].is_string())
-        this->config_error("Profile external_addrs must be of type string");
-    if (!value["external_addr"].is_string())
-        this->config_error("Profile external_addrs must be of type string");
+    if (value.find("hosts") == value.end())
+        this->config_error("Profiles must specify an array of hosts");
+    if (!value["hosts"].is_array())
+        this->config_error("Profile hosts must be an array of strings");
 }
 
 
@@ -144,12 +132,16 @@ void Config::read_config() {
     json config;
     fs >> config;
 
-    if (!config.size())
-        die("No profiles found in config file:", this->config_fn);
+    json j_profiles = config["profiles"];
 
-    this->profiles.reserve(config.size());
+    if (j_profiles.is_null())
+        this->config_error("Config must specify an array of profiles");
+    if (!j_profiles.is_array())
+        this->config_error("Config profiles object must be an array");
 
-    for (auto&& it=config.begin(); it!=config.end(); it++) {
+    this->profiles.reserve(j_profiles.size());
+
+    for (auto&& it=j_profiles.begin(); it!=j_profiles.end(); it++) {
         this->profile_is_valid(it);
         this->profiles.push_back(Profile(it));
     }
@@ -203,17 +195,14 @@ string select_profile(Config& config) {
     Profile& profile = config.profiles[profile_i];
     string addr = profile.user + '@';
 
-    if (!profile.has_internal_addr()) {
-        addr += profile.external_addr;
-    } else if (!profile.has_external_addr()) {
-        addr += profile.internal_addr;
+    if (profile.hosts.size() == 1) {
+        addr += profile.hosts[0];
     } else {
-        vector<string> addrs = {profile.internal_addr, profile.external_addr};
-        int addr_i = Listbox(addrs).run();
+        int addr_i = Listbox(profile.hosts).run();
         cout << endl;
         if (addr_i < 0)
             die();
-        addr += addrs[addr_i];
+        addr += profile.hosts[addr_i];
     }
 
     return addr;
