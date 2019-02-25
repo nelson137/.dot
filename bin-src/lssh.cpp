@@ -37,8 +37,8 @@ void print_config_help() {
     puterr("    ]");
     puterr("}");
     puterr();
-    puterr("A profile name, username, and list of at least one host ");
-    puterr("must be specified for each host.");
+    puterr("A profile name, username, and list of at least one host must be");
+    puterr("specified for each host.");
 }
 
 
