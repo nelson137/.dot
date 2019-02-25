@@ -47,9 +47,8 @@ void print_config_help() {
  ************************************************/
 
 
-class Profile {
+struct Profile {
 
-public:
     string name;
     string user;
     vector<string> hosts;
