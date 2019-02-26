@@ -191,6 +191,11 @@ function! GetPythonVersion()
     endif
 endfunction
 
+function! VimSupportsYouCompleteMe()
+    return empty(matchstr(system('uname -m'), '\varmv\dl')) &&
+    \    v:version >= 800 || (v:version >= 704 && has('patch1578'))
+endfunction
+
 
 
 " Key bindings
@@ -317,9 +322,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     set runtimepath+=~/.vim/bundle/Vundle.vim
     call vundle#begin()
     Plugin 'VundleVim/Vundle.vim'          " Package manager
-    " Enable YouCompleteMe if Vim supports it
-    if empty(matchstr(system('uname -m'), '\varmv\dl')) &&
-    \    v:version >= 800 || (v:version >= 704 && has('patch1578'))
+    if VimSupportsYouCompleteMe()
         Plugin 'Valloric/YouCompleteMe'    " Code completion engine
     endif
     Plugin 'ap/vim-css-color'              " Show colors of CSS color codes
