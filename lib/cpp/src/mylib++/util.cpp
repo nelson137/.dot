@@ -35,24 +35,6 @@ string trim_whitespace(string str) {
 
 
 /**
- * Join the given vector of strings with delim.
- * The default delim is a space.
- * Example:
- *     vector<string> v = {"a", "b", "c"};
- *     cout << join(v)  // "a b c"
- */
-string join(vector<string> tokens, string delim) {
-    string str;
-    for (unsigned i=0; i<tokens.size(); i++) {
-        str += tokens[i];
-        if (i < tokens.size()-1)
-            str += delim;
-    }
-    return str;
-}
-
-
-/**
  * Return a vector of words in str, using delim as the delimeter.
  * The default delim is a space.
  * Example:

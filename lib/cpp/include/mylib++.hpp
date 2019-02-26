@@ -5,6 +5,7 @@
 
 #include <ios>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -24,7 +25,25 @@ bool file_exists(string);
 
 string trim_whitespace(string);
 
-string join(vector<string>, string=" ");
+/**
+ * Join the given vector with delim.
+ * The default delim is a space.
+ * Example:
+ *     vector<string> v = {"a", "b", "c"};
+ *     join(v);  // "a b c"
+ */
+template<typename T>
+string join(vector<T> tokens, string delim=" ") {
+    ostringstream str;
+
+    if (tokens.size()) {
+        str << tokens[0];
+        for (unsigned i=1; i<tokens.size(); i++)
+            str << delim << tokens[i];
+    }
+
+    return str.str();
+}
 
 vector<string> split(string, string=" ");
 
