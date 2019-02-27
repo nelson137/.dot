@@ -330,9 +330,9 @@ void compile_c(Prog const& prog) {
         GCC, "-x", "c", "-std=c11", "-O3", "-Wall", "-Werror",
         prog.src_name, "-o", prog.bin_name};
 
-    char *c_include = getenv("C_SEARCH_LIBS");
-    if (c_include != nullptr) {
-        vector<string> dirs = split(string(c_include));
+    string lib_flags = string(getenv("C_SEARCH_LIBS"));
+    if (lib_flags.size()) {
+        vector<string> dirs = split(lib_flags);
         gcc_args.insert(gcc_args.end(), dirs.begin(), dirs.end());
     }
 
@@ -353,9 +353,9 @@ void compile_cpp(Prog const& prog) {
         GPP, "-x", "c++", "-std=c++11", "-O3", "-Wall", "-Werror",
         prog.src_name, "-o", prog.bin_name};
 
-    char *c_include = getenv("CPLUS_SEARCH_LIBS");
-    if (c_include != nullptr) {
-        vector<string> dirs = split(string(c_include));
+    string lib_flags = getenv("CPLUS_SEARCH_LIBS");
+    if (lib_flags.size()) {
+        vector<string> dirs = split(lib_flags);
         gpp_args.insert(gpp_args.end(), dirs.begin(), dirs.end());
     }
 
