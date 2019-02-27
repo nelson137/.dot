@@ -13,6 +13,18 @@ using namespace std;
 
 
 /**
+ * Set `handler` as the handler function for signal `sig`.
+ */
+void catchSig(int sig, void (*handler)(int)) {
+    struct sigaction sa;
+    sa.sa_handler = handler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(sig, &sa, NULL);
+}
+
+
+/**
  * Return whether a file exists.
  */
 bool file_exists(string fn) {

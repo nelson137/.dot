@@ -21,6 +21,8 @@ struct exec_ret {
 };
 
 
+void catchSig(int, void *(int));
+
 bool file_exists(string);
 
 string trim_whitespace(string);
