@@ -332,8 +332,8 @@ void compile_c(Prog const& prog) {
 
     string lib_flags = string(getenv("C_SEARCH_LIBS"));
     if (lib_flags.size()) {
-        vector<string> dirs = split(lib_flags);
-        gcc_args.insert(gcc_args.end(), dirs.begin(), dirs.end());
+        vector<string> flags = split(lib_flags);
+        gcc_args.insert(gcc_args.end(), flags.begin(), flags.end());
     }
 
     if (prog.commands & CMD_DRYRUN) {
@@ -355,8 +355,8 @@ void compile_cpp(Prog const& prog) {
 
     string lib_flags = getenv("CPLUS_SEARCH_LIBS");
     if (lib_flags.size()) {
-        vector<string> dirs = split(lib_flags);
-        gpp_args.insert(gpp_args.end(), dirs.begin(), dirs.end());
+        vector<string> flags = split(lib_flags);
+        gpp_args.insert(gpp_args.end(), flags.begin(), flags.end());
     }
 
     if (prog.commands & CMD_DRYRUN) {
