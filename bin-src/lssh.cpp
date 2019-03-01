@@ -104,6 +104,17 @@ private:
     string get_home_dir();
     Profile get_valid_profile(json::iterator::reference&);
     json get_config();
+
+    template<typename T, typename U>
+        vector<U> parse_array(json&, string, string, function<U(T)>);
+    template<typename T>
+        vector<T> parse_obj_array(json&, string, function<T(json)>);
+
+    template<typename T>
+        vector<T> parse_array(json&, string, string);
+    vector<string> parse_str_array(json&, string);
+    vector<json> parse_obj_array(json&, string);
+
     void parse_config(json);
 
 public:
@@ -161,32 +172,55 @@ json Config::get_config() {
 }
 
 
-void Config::parse_config(json config) {
-    json j_ssh_opts = config["ssh_options"];
-    if (!j_ssh_opts.is_null()) {
-        if (!j_ssh_opts.is_array())
-            this->config_error("Config: ssh_options must be of type array");
-        this->ssh_options.clear();
-        for (auto&& it=j_ssh_opts.begin(); it!=j_ssh_opts.end(); it++) {
-            if (it.value().is_string())
-                this->ssh_options.push_back(it.value());
-            else
-                this->config_error("Config: elements of ssh_options must be "
-                                   "of type string");
-        }
+template<typename T, typename U>
+vector<U> Config::parse_array(json& j, string key, string type,
+                              function<U(T)> predicate) {
+    json j_arr = j[key];
+    if (!j_arr.is_array())
+        this->config_error("Value for key '"+key+"' must be of type 'array'");
+    vector<U> arr;
+    for (auto&& it=j_arr.begin(); it!=j_arr.end(); it++) {
+        if (it.value().type_name() == type)
+            arr.push_back(predicate(it.value()));
+        else
+            this->config_error("Elements of array '"+key+"' must be of type '"
+                               +type+"'");
     }
+    return arr;
+}
 
-    json j_profiles = config["profiles"];
 
-    if (j_profiles.is_null())
+template<typename T>
+vector<T> Config::parse_obj_array(json& j, string key,
+                                  function<T(json)> predicate) {
+    return this->parse_array<json>(j, key, "object", predicate);
+}
+
+
+template<typename T>
+vector<T> Config::parse_array(json& j, string key, string type) {
+    return this->parse_array<T,T>(j, key, type, [](T t)->T{ return t; });
+}
+
+
+vector<string> Config::parse_str_array(json& j, string key) {
+    return this->parse_array<string>(j, key, "string");
+}
+
+
+vector<json> Config::parse_obj_array(json& j, string key) {
+    return this->parse_array<json>(j, key, "object");
+}
+
+
+void Config::parse_config(json config) {
+    if (!config["ssh_options"].is_null())
+        this->ssh_options = this->parse_str_array(config, "ssh_options");
+
+    if (config["profiles"].is_null())
         this->config_error("Config must specify an array of profiles");
-    if (!j_profiles.is_array())
-        this->config_error("Config profiles object must be an array");
-
-    this->profiles.reserve(j_profiles.size());
-
-    for (auto&& it=j_profiles.begin(); it!=j_profiles.end(); it++)
-        this->profiles.push_back(this->get_valid_profile(it.value()));
+    this->profiles = this->parse_obj_array<Profile>(config, "profiles",
+        [this](json j)->Profile{ return this->get_valid_profile(j); });
 }
 
 
