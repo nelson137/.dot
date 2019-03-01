@@ -106,6 +106,38 @@ void ask_rm_file(string file) {
 }
 
 
+vector<string> include_args() {
+    vector<string> include_paths = split(getenv("CPLUS_INCLUDE_PATH"), ":");
+    for (unsigned i=0; i<include_paths.size(); i++)
+        include_paths[i] = "-I" + include_paths[i];
+    return include_paths;
+}
+
+
+vector<string> library_args() {
+    vector<string> library_paths = split(getenv("LIBRARY_PATH"), ":");
+    for (unsigned i=0; i<library_paths.size(); i++)
+        library_paths[i] = "-L" + library_paths[i];
+    return library_paths;
+}
+
+
+bool can_find_lib(string name) {
+    vector<string> args = {"/usr/bin/ld", name};
+    append(args, include_args());
+    append(args, library_args());
+    return easy_execute(args, true).exitstatus == 0;
+}
+
+
+vector<string> can_find_libs(vector<string> libs) {
+    vector<string> found_libs;
+    copy_if(libs.begin(), libs.end(), back_inserter(found_libs),
+        [](string& a){ return can_find_lib(a); });
+    return found_libs;
+}
+
+
 /*************************************************
  * Prog
  ************************************************/
@@ -331,10 +363,8 @@ void compile_c(Prog const& prog) {
         prog.src_name, "-o", prog.bin_name};
 
     string lib_flags = string(getenv("C_SEARCH_LIBS"));
-    if (lib_flags.size()) {
-        vector<string> flags = split(lib_flags);
-        gcc_args.insert(gcc_args.end(), flags.begin(), flags.end());
-    }
+    if (lib_flags.size())
+        append(gcc_args, can_find_libs(split(lib_flags)));
 
     if (prog.commands & CMD_DRYRUN) {
         print_args(gcc_args);
@@ -354,10 +384,8 @@ void compile_cpp(Prog const& prog) {
         prog.src_name, "-o", prog.bin_name};
 
     string lib_flags = getenv("CPLUS_SEARCH_LIBS");
-    if (lib_flags.size()) {
-        vector<string> flags = split(lib_flags);
-        gpp_args.insert(gpp_args.end(), flags.begin(), flags.end());
-    }
+    if (lib_flags.size())
+        append(gpp_args, can_find_libs(split(lib_flags)));
 
     if (prog.commands & CMD_DRYRUN) {
         print_args(gpp_args);
