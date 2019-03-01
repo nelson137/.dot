@@ -162,4 +162,10 @@ ostream& operator<<(ostream& os, const vector<T>&& vec) {
 }
 
 
+template<typename L, typename R>
+void append(L& l, R const& r) {
+    l.insert(l.end(), r.begin(), r.end());
+}
+
+
 #endif
