@@ -3,6 +3,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include <string.h>
 #include <unistd.h>
 #include <wait.h>
 #include <pwd.h>
@@ -39,6 +40,28 @@ void print_config_help() {
     puterr();
     puterr("A profile name, username, and list of at least one host must be");
     puterr("specified for each host.");
+}
+
+
+char **args_for_exec(vector<string>& strings) {
+    char **args = (char**) malloc(sizeof(char*) * (strings.size()+1));
+    unsigned i, len;
+    for (i=0; i<strings.size(); i++) {
+        len = strings[i].length();
+        args[i] = (char*) malloc(sizeof(char) * (len+1));
+        strcpy(args[i], strings[i].c_str());
+        args[i][len] = '\0';
+    }
+    args[i] = NULL;
+    return args;
+}
+
+
+char **free_args_for_exec(char **args) {
+    for (int i=0; args[i]; i++)
+        free(args[i]);
+    free(args);
+    return NULL;
 }
 
 
@@ -85,6 +108,7 @@ private:
 
 public:
     vector<Profile> profiles;
+    vector<string> ssh_options;
 
     Config(string&);
 
@@ -138,6 +162,20 @@ json Config::get_config() {
 
 
 void Config::parse_config(json config) {
+    json j_ssh_opts = config["ssh_options"];
+    if (!j_ssh_opts.is_null()) {
+        if (!j_ssh_opts.is_array())
+            this->config_error("Config: ssh_options must be of type array");
+        this->ssh_options.clear();
+        for (auto&& it=j_ssh_opts.begin(); it!=j_ssh_opts.end(); it++) {
+            if (it.value().is_string())
+                this->ssh_options.push_back(it.value());
+            else
+                this->config_error("Config: elements of ssh_options must be "
+                                   "of type string");
+        }
+    }
+
     json j_profiles = config["profiles"];
 
     if (j_profiles.is_null())
@@ -154,6 +192,7 @@ void Config::parse_config(json config) {
 
 Config::Config(string& fn) {
     this->config_fn = fn;
+    this->ssh_options = {"-oConnectTimeout=5"};
     this->parse_config(this->get_config());
 }
 
@@ -213,18 +252,24 @@ string select_profile(Config& config) {
 }
 
 
-void attempt_ssh(string const& addr) {
+void attempt_ssh(string const& addr, vector<string> str_opts) {
+    str_opts.insert(str_opts.begin(), "ssh");
+    str_opts.push_back(addr);
+    char **opts = args_for_exec(str_opts);
+
     int stat, pid = fork();
     if (pid < 0) {
         die("Could not fork()");
     } else if (pid == 0) {
         // Child
-        execl("/usr/bin/ssh", "ssh", "-oConnectTimeout=5", addr.c_str(), NULL);
+        execv("/usr/bin/ssh", opts);
         _exit(127);
     } else {
         // Parent
         wait(&stat);
     }
+
+    opts = free_args_for_exec(opts);
 }
 
 
@@ -238,7 +283,7 @@ int main() {
     Config config(config_fn);
 
     string addr = select_profile(config);
-    attempt_ssh(addr);
+    attempt_ssh(addr, config.ssh_options);
 
     return 0;
 }
