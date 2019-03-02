@@ -5,22 +5,15 @@ ret_status="%(?.%{$fg_bold[green]%}.%{$fg_bold[red]%})\$%{$reset_color%}"
 
 
 style() {
-    # $1: 1 for bold, 0 for not bold
-    # $2: fg color
-    # $3: text to style
-    if [[ $1 == 1 ]]; then
-        print -P "%F{$2}%B$3%b%f"
-    else
-        print -P "%F{$2}$3%f"
-    fi
+    print -P "%F{$1}$2%f"
 }
 
 
 prompt_core() {
-    local user="$(style 1 green $USER)"
-    local at="$(style 0 cyan @)"
-    local host="$(style 1 green $HOST)"
-    local cwd="$(style 1 cyan %~)"
+    local user="$(style 046 $USER)"
+    local   at="$(style 050 @    )"
+    local host="$(style 046 $HOST)"
+    local  cwd="$(style 050 %~   )"
     print -P "${user}${at}${host} ${cwd}"
 }
 
