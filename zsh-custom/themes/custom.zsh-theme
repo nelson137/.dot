@@ -63,12 +63,8 @@ prompt_status() {
     (( bg_jobs > 0 )) &&
         status_items+=( "$(style 0 cyan "⚙:$bg_jobs")" )
 
-    # Combine any activated status widgets
-    if [[ $#status_items == 0 ]]; then
-        echo ""
-    else
-        echo "[${(j:|:)status_items}]"  # Join status_items with |
-    fi
+    # Display status items with space as separator
+    echo "${(j: :)status_items}"
 }
 
 
