@@ -54,10 +54,6 @@ prompt_status() {
         status_items+=( "$short_status" )
     fi
 
-    # Is sudo password still saved
-    sudo -n echo &>/dev/null &&
-        status_items+=( "$(style 1 red SUDO)" )
-
     # Background jobs
     local bg_jobs="$(jobs -l | wc -l)"
     (( bg_jobs > 0 )) &&
