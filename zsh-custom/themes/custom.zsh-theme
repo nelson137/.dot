@@ -72,5 +72,5 @@ prompt_status() {
 }
 
 
-PROMPT='╭─ $(prompt_core) $(prompt_status)
-╰─ $ret_status '
+PROMPT='╓ $(prompt_core) $(prompt_status)
+╙ $ret_status '
