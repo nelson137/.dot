@@ -66,7 +66,7 @@ char **free_args_for_exec(char **args) {
 
 
 /*************************************************
- * Profile Class
+ * Classes
  ************************************************/
 
 
@@ -76,23 +76,11 @@ struct Profile {
     string user;
     vector<string> hosts;
 
+    void validate_data(json::iterator::reference&);
+
     Profile(json::iterator::reference&);
 
 };
-
-
-Profile::Profile(json::iterator::reference& j_profile) {
-    this->name = j_profile["name"];
-    this->user = j_profile["username"];
-    json hosts = j_profile["hosts"];
-    for (auto&& it=hosts.begin(); it!=hosts.end(); it++)
-        this->hosts.push_back(it.value());
-}
-
-
-/*************************************************
- * Config Class
- ************************************************/
 
 
 class Config {
@@ -100,9 +88,7 @@ class Config {
 private:
     string config_fn;
 
-    template<typename... T> void config_error(T...);
     string get_home_dir();
-    Profile get_valid_profile(json::iterator::reference&);
     json get_config();
 
     template<typename T, typename U>
@@ -121,6 +107,9 @@ public:
     vector<Profile> profiles;
     vector<string> ssh_options;
 
+    template<typename... T>
+        static void config_error(T...);
+
     Config(string&);
 
     vector<string> get_profile_names();
@@ -128,31 +117,42 @@ public:
 };
 
 
-template<typename... T>
-void Config::config_error(T... ts) {
-    cerr << "Error in config file: " << this->config_fn << endl;
-    die(ts...);
-}
+/*************************************************
+ * Profile Methods
+ ************************************************/
 
 
-Profile Config::get_valid_profile(json::iterator::reference& j_profile) {
+void Profile::validate_data(json::iterator::reference& j_profile) {
     if (j_profile.find("name") == j_profile.end())
-        this->config_error("Profiles must specify a name");
+        Config::config_error("Profiles must specify a name");
     if (!j_profile["name"].is_string())
-        this->config_error("Profile names must be of type string");
+        Config::config_error("Profile names must be of type string");
 
     if (j_profile.find("username") == j_profile.end())
-        this->config_error("Profiles must specify a username");
+        Config::config_error("Profiles must specify a username");
     if (!j_profile["username"].is_string())
-        this->config_error("Profile usernames must be of type string");
+        Config::config_error("Profile usernames must be of type string");
 
     if (j_profile.find("hosts") == j_profile.end())
-        this->config_error("Profiles must specify an array of hosts");
+        Config::config_error("Profiles must specify an array of hosts");
     if (!j_profile["hosts"].is_array())
-        this->config_error("Profile hosts must be an array of strings");
-
-    return Profile(j_profile);
+        Config::config_error("Profile hosts must be an array of strings");
 }
+
+
+Profile::Profile(json::iterator::reference& j_profile) {
+    this->validate_data(j_profile);
+    this->name = j_profile["name"];
+    this->user = j_profile["username"];
+    json hosts = j_profile["hosts"];
+    for (auto&& it=hosts.begin(); it!=hosts.end(); it++)
+        this->hosts.push_back(it.value());
+}
+
+
+/*************************************************
+ * Config Private Methods
+ ************************************************/
 
 
 json Config::get_config() {
@@ -220,7 +220,19 @@ void Config::parse_config(json config) {
     if (config["profiles"].is_null())
         this->config_error("Config must specify an array of profiles");
     this->profiles = this->parse_obj_array<Profile>(config, "profiles",
-        [this](json j)->Profile{ return this->get_valid_profile(j); });
+        [](json j)->Profile{ return Profile(j); });
+}
+
+
+/*************************************************
+ * Config Public Methods
+ ************************************************/
+
+
+template<typename... T>
+void Config::config_error(T... ts) {
+    cerr << "Error in config file:" << endl;
+    die(ts...);
 }
 
 
