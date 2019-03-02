@@ -28,32 +28,6 @@ prompt_core() {
 prompt_status() {
     local status_items=()
 
-    # Battery percent
-    if which upower &>/dev/null && bat &>/dev/null; then
-        local state="$(bat | awk '/state/ {print $2}')"
-        local percent="$(bat | awk '/percentage/ {print $2}' | tr -d '%')"
-
-        local short_status
-        if [[ $percent == 100 && $state != discharging ]]; then
-            short_status="$(style 1 green "$percent%%%%")"
-            short_status+="$(style 1 green ' UNPLUG')"
-        elif (( percent > 25 )); then
-            short_status="$(style 1 green "$percent%%%%")"
-        elif (( percent > 10 )); then
-            short_status="$(style 1 yellow "$percent%%%%")"
-        elif [[ $percent -le 10 && $state == discharging ]]; then
-            short_status="$(style 1 red "$percent%%%%")"
-            short_status+="$(style 1 red ' PLUG IN')"
-        else
-            short_status="$(style 1 red "$percent%%%%")"
-        fi
-
-        # Put ⚡ after battery percent if charging
-        [[ $state == charging ]] && short_status+=⚡
-
-        status_items+=( "$short_status" )
-    fi
-
     # Background jobs
     local bg_jobs="$(jobs -l | wc -l)"
     (( bg_jobs > 0 )) &&
