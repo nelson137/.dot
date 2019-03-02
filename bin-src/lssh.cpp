@@ -108,7 +108,7 @@ public:
     vector<string> ssh_options;
 
     template<typename... T>
-        static void config_error(T...);
+        static void error(T...);
 
     Config(string&);
 
@@ -124,19 +124,19 @@ public:
 
 void Profile::validate_data(json::iterator::reference& j_profile) {
     if (j_profile.find("name") == j_profile.end())
-        Config::config_error("Profiles must specify a name");
+        Config::error("Profiles must specify a name");
     if (!j_profile["name"].is_string())
-        Config::config_error("Profile names must be of type string");
+        Config::error("Profile names must be of type string");
 
     if (j_profile.find("username") == j_profile.end())
-        Config::config_error("Profiles must specify a username");
+        Config::error("Profiles must specify a username");
     if (!j_profile["username"].is_string())
-        Config::config_error("Profile usernames must be of type string");
+        Config::error("Profile usernames must be of type string");
 
     if (j_profile.find("hosts") == j_profile.end())
-        Config::config_error("Profiles must specify an array of hosts");
+        Config::error("Profiles must specify an array of hosts");
     if (!j_profile["hosts"].is_array())
-        Config::config_error("Profile hosts must be an array of strings");
+        Config::error("Profile hosts must be an array of strings");
 }
 
 
@@ -177,14 +177,14 @@ vector<U> Config::parse_array(json& j, string key, string type,
                               function<U(T)> predicate) {
     json j_arr = j[key];
     if (!j_arr.is_array())
-        this->config_error("Value for key '"+key+"' must be of type 'array'");
+        this->error("Value for key '"+key+"' must be of type 'array'");
     vector<U> arr;
     for (auto&& it=j_arr.begin(); it!=j_arr.end(); it++) {
         if (it.value().type_name() == type)
             arr.push_back(predicate(it.value()));
         else
-            this->config_error("Elements of array '"+key+"' must be of type '"
-                               +type+"'");
+            this->error("Elements of array '"+key+"' must be of type '"
+                        +type+"'");
     }
     return arr;
 }
@@ -218,7 +218,7 @@ void Config::parse_config(json config) {
         this->ssh_options = this->parse_str_array(config, "ssh_options");
 
     if (config["profiles"].is_null())
-        this->config_error("Config must specify an array of profiles");
+        this->error("Config must specify an array of profiles");
     this->profiles = this->parse_obj_array<Profile>(config, "profiles",
         [](json j)->Profile{ return Profile(j); });
 }
@@ -230,7 +230,7 @@ void Config::parse_config(json config) {
 
 
 template<typename... T>
-void Config::config_error(T... ts) {
+void Config::error(T... ts) {
     cerr << "Error in config file:" << endl;
     die(ts...);
 }
