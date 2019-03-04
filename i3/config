@@ -68,6 +68,9 @@ bindsym $mod+Shift+0 move container to workspace $ws10;  workspace $ws10
 for_window [title="^ranger$"] move to scratchpad
 bindsym $mod+n [title="^ranger$"] scratchpad show, resize set 1640 800, move position center
 
+for_window [instance="^FloatingTerm$"] move to scratchpad
+bindsym $mod+t [instance="^FloatingTerm$"] scratchpad show, resize set 1640 800, move position center
+
 # Change the focused window
 bindsym $mod+h focus left
 bindsym $mod+j focus down
@@ -212,5 +215,6 @@ $exec_noid dunst -config ~/.dunstrc
 exec urxvt
 exec spotify
 exec urxvt -e ranger
+exec urxvt -name FloatingTerm
 exec google-chrome
 exec /usr/bin/thunderbird
