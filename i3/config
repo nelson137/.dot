@@ -53,16 +53,19 @@ bindsym $mod+Mod2+KP_6 workspace $ws6
 bindsym $mod+Mod2+KP_7 workspace $ws7
 bindsym $mod+Mod2+KP_8 workspace $wsSpotify
 bindsym $mod+Mod2+KP_9 workspace $wsMail
+bindsym $mod+Mod2+KP_0 workspace $ws10
 
 # Move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace $wsDev; workspace $wsDev
-bindsym $mod+Shift+2 move container to workspace $wsWeb; workspace $wsWeb
-bindsym $mod+Shift+3 move container to workspace $ws3;   workspace $ws3
-bindsym $mod+Shift+4 move container to workspace $ws4;   workspace $ws4
-bindsym $mod+Shift+5 move container to workspace $ws5;   workspace $ws5
-bindsym $mod+Shift+6 move container to workspace $ws6;   workspace $ws6
-bindsym $mod+Shift+7 move container to workspace $ws7;   workspace $ws7
-bindsym $mod+Shift+0 move container to workspace $ws10;  workspace $ws10
+bindsym $mod+Shift+1 move container to workspace $wsDev;     workspace $wsDev
+bindsym $mod+Shift+2 move container to workspace $wsWeb;     workspace $wsWeb
+bindsym $mod+Shift+3 move container to workspace $ws3;       workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4;       workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5;       workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6;       workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7;       workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $wsSpotify; workspace $wsSpotify
+bindsym $mod+Shift+9 move container to workspace $wsMail;    workspace $wsMail
+bindsym $mod+Shift+0 move container to workspace $ws10;      workspace $ws10
 
 # Ranger terminal control
 for_window [title="^ranger$"] move to scratchpad
