@@ -180,10 +180,9 @@ bar {
 
 
 # Layouts
-set $layouts "~/.config/i3/layouts"
-$i3msg 'workspace $wsDev; append_layou $layouts/wsDev.json'
-$i3msg 'workspace $wsWeb; append_layout $layouts/wsWeb.json'
-$i3msg 'workspace $wsMail; append_layout $layouts/wsMail.json'
+$i3msg 'workspace $wsDev; append_layout ~/.config/i3/layouts/wsDev.json'
+$i3msg 'workspace $wsWeb; append_layout ~/.config/i3/layouts/wsWeb.json'
+$i3msg 'workspace $wsMail; append_layout ~/.config/i3/layouts/wsMail.json'
 
 # Layouts won't work with Spotify
 for_window [class="Spotify"] move to workspace $wsSpotify
