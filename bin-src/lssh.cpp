@@ -25,7 +25,7 @@ void puterr(string const& str="") {
 
 
 void print_config_help() {
-    puterr("The config file must be valid JSON with the following structure:");
+    puterr("The config file is a JSON file with the following structure:");
     puterr();
     puterr("{");
     puterr("    \"profiles\": [");
