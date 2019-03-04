@@ -8,8 +8,9 @@
 #define CMD_COMPILE   1  // 0000 0001
 #define CMD_EXECUTE   2  // 0000 0010
 #define CMD_REMOVE    4  // 0000 0100
-#define CMD_LOUD      8  // 0000 1000
-#define CMD_DRYRUN   16  // 0001 0000
+#define CMD_FORCE     8  // 0000 1000
+#define CMD_LOUD     16  // 0001 0000
+#define CMD_DRYRUN   32  // 0010 0000
 
 #define NASM       "/usr/bin/nasm"
 #define LD         "/usr/bin/ld"
@@ -56,6 +57,7 @@ void help() {
     puts("  c          Compile the program");
     puts("  e          Execute the compiled program");
     puts("  r          Remove the binary and all compilation files");
+    puts("  f          Do not prompt before overwriting files");
     puts("  l          Print the OUTPUT and END OUTPUT messages");
     puts("  d          Print out the commands that would be executed in");
     puts("             response to the c, e, and r commands");
@@ -280,6 +282,7 @@ void Prog::parse_args(int argc, char *argv[]) {
             case 'c': this->commands |= CMD_COMPILE; break;
             case 'e': this->commands |= CMD_EXECUTE; break;
             case 'r': this->commands |= CMD_REMOVE;  break;
+            case 'f': this->commands |= CMD_FORCE;   break;
             case 'l': this->commands |= CMD_LOUD;    break;
             case 'd': this->commands |= CMD_DRYRUN;  break;
             default:  die("Command not recognized:", c);  break;
@@ -336,7 +339,7 @@ void print_args(vector<string> args) {
 
 void compile_asm(Prog const& prog) {
     // Ask to remove the object file if it already exists
-    if (file_exists(prog.obj_name)) {
+    if (file_exists(prog.obj_name) && !(prog.commands & CMD_FORCE)) {
         cout << "Object file exists: " << prog.obj_name << endl;
         ask_rm_file(prog.obj_name);
     }
@@ -407,7 +410,7 @@ void compile_cpp(Prog const& prog) {
 
 void to_compile(Prog const& prog) {
     // Ask to remove the outfile if it already exists
-    if (file_exists(prog.bin_name)) {
+    if (file_exists(prog.bin_name) && !(prog.commands & CMD_FORCE)) {
         cout << "Outfile exists: " << prog.bin_name << endl;
         ask_rm_file(prog.bin_name);
     }
