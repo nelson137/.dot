@@ -35,19 +35,19 @@ enum Lang {
 };
 
 
-char *USAGE = (char*)
-    "Usage: to [-h] [-l LANG] [-o OUTFILE] <commands> <infile> [ARGS...]\n";
+string USAGE =
+    "Usage: to [-h] [-l LANG] [-o OUTFILE] <commands> <infile> [ARGS...]";
 
 
 void usage() {
-    cerr << USAGE;
+    cerr << USAGE << endl;
     cerr << "See `to --help` for more information" << endl;
     die();
 }
 
 
 void help() {
-    cout << USAGE;
+    cout << USAGE << endl;
     puts("");
     puts("Note");
     puts("  All arguments after <infile> will be passed to the program if");
