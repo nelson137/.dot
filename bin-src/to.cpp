@@ -123,7 +123,7 @@ vector<string> library_args() {
 
 
 bool can_find_lib(string name) {
-    vector<string> args = {"/usr/bin/ld", name};
+    vector<string> args = {"/usr/bin/ld", "-o", "/dev/null", name};
     append(args, include_args());
     append(args, library_args());
     return easy_execute(args, true).exitstatus == 0;
