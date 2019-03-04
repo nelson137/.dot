@@ -53,6 +53,7 @@ alias setbg="$D nitrogen --set-zoom-fill --random ~/.xmonad/backgrounds/"
 alias vimrc='vim ~/.vimrc'
 alias wifi='nohup nm-connection-editor &>/dev/null &!'
 alias zshhist='vim ~/.zsh_history'
+alias zshenv='vim ~/.zshenv'
 alias zshrc='vim ~/.zshrc'
 
 # System-specific aliases
