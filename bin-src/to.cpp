@@ -335,6 +335,12 @@ void print_args(vector<string> args) {
 
 
 void compile_asm(Prog const& prog) {
+    // Ask to remove the object file if it already exists
+    if (file_exists(prog.obj_name)) {
+        cout << "Object file exists: " << prog.obj_name << endl;
+        ask_rm_file(prog.obj_name);
+    }
+
     vector<string> nasm_args = {
         NASM, "-f", "elf64", prog.src_name, "-o", prog.obj_name};
     vector<string> ld_args = {LD, prog.obj_name, "-o", prog.bin_name};
@@ -400,12 +406,6 @@ void compile_cpp(Prog const& prog) {
 
 
 void to_compile(Prog const& prog) {
-    // Ask to remove the object file if it already exists
-    if (prog.lang == LANG_ASM && file_exists(prog.obj_name)) {
-        cout << "Object file exists: " << prog.obj_name << endl;
-        ask_rm_file(prog.obj_name);
-    }
-
     // Ask to remove the outfile if it already exists
     if (file_exists(prog.bin_name)) {
         cout << "Outfile exists: " << prog.bin_name << endl;
