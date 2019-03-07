@@ -71,6 +71,7 @@ c_search_libs=(
     -lm
     $(is_mu || echo '-ljson-c')
     $(pkg-config --libs-only-l python3 2>/dev/null)
+    $(pkg-config --cflags --libs-only-l gtk+-2.0)
     -lmylib
 )
 export C_SEARCH_LIBS="${(j: :)c_search_libs}"
