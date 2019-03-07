@@ -198,7 +198,7 @@ for_window [class="Spotify"] move to workspace $wsSpotify
 $exec_noid xautolock
 
 # Set the background
-exec_always --no-startup-id nitrogen --set-zoom-fill --random ~/.config/i3/backgrounds
+exec_always --no-startup-id nitrogen --set-zoom-fill --random ~/.config/i3/assets/backgrounds
 
 # Start the GNOME keyring for Chrome and other programs
 exec gnome-keyring-daemon --start
