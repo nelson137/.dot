@@ -92,6 +92,6 @@ suspend)
     ;;
 
 *)
-log "Option not recognized: $1"
+    log "Option not recognized: $1"
 
 esac
