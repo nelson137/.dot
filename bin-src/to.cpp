@@ -6,20 +6,29 @@
 
 #include "mylib++.hpp"
 
-#define CMD_COMPILE    1  // 0000 0001
-#define CMD_EXECUTE    2  // 0000 0010
-#define CMD_REMOVE     4  // 0000 0100
-#define CMD_FORCE      8  // 0000 1000
-#define CMD_LOUD      16  // 0001 0000
-#define CMD_DRYRUN    32  // 0010 0000
-#define CMD_OUTFILE   64  // 0100 0000
-#define CMD_LANG     128  // 1000 0000
+#define  COMPILE    1  // 0000 0001
+#define  EXECUTE    2  // 0000 0010
+#define  REMOVE     4  // 0000 0100
+#define  FORCE      8  // 0000 1000
+#define  LOUD      16  // 0001 0000
+#define  DRYRUN    32  // 0010 0000
+#define  OUTFILE   64  // 0100 0000
+#define  LANG     128  // 1000 0000
 
-#define NASM       "/usr/bin/nasm"
-#define LD         "/usr/bin/ld"
-#define GCC        "/usr/bin/gcc"
-#define PKGCONFIG  "/usr/bin/pkg-config"
-#define GPP        "/usr/bin/g++"
+#define  HAS_COMPILE(x)  (x & COMPILE)
+#define  HAS_EXECUTE(x)  (x & EXECUTE)
+#define  HAS_REMOVE(x)   (x & REMOVE)
+#define  HAS_FORCE(x)    (x & FORCE)
+#define  HAS_LOUD(x)     (x & LOUD)
+#define  HAS_DRYRUN(x)   (x & DRYRUN)
+#define  HAS_OUTFILE(x)  (x & OUTFILE)
+#define  HAS_LANG(x)     (x & LANG)
+
+#define  NASM       "/usr/bin/nasm"
+#define  LD         "/usr/bin/ld"
+#define  GCC        "/usr/bin/gcc"
+#define  PKGCONFIG  "/usr/bin/pkg-config"
+#define  GPP        "/usr/bin/g++"
 
 using namespace std;
 
@@ -48,21 +57,21 @@ void help() {
     puts("");
     puts("Commands");
     puts("  c          Compile the program");
-    puts("  e          Execute the compiled program");
-    puts("  r          Remove the binary and all compilation files");
-    puts("  o          What to name the binary");
-    puts("  x          The language of the infile");
-    puts("  f          Do not prompt before overwriting files");
-    puts("  l          Print the OUTPUT and END OUTPUT messages");
     puts("  d          Print out the commands that would be executed in");
     puts("             response to the c, e, and r commands");
+    puts("  e          Execute the compiled program");
+    puts("  f          Do not prompt before overwriting files");
+    puts("  l          Print the OUTPUT and END OUTPUT messages");
+    puts("  o          What to name the binary");
+    puts("  r          Remove the binary and all compilation files");
+    puts("  x          The language of the infile");
     puts("");
     puts("Positional Arguments");
     puts("  commands   A single word consisting of any commands in any order");
     puts("  infile     The source file for a single-file C, C++, or Linux");
     puts("             x86 Assembly program");
-    puts("  outfile    The name of the outfile");
     puts("  lang       The language to compile for");
+    puts("  outfile    The name of the outfile");
     puts("");
     puts("Options");
     puts("  -h, --help");
@@ -229,14 +238,14 @@ void Prog::parse_args(int argc, char *argv[]) {
     // Parse commands
     for (char c : pos_args.front()) {
         switch (c) {
-            case 'c': this->commands |= CMD_COMPILE; break;
-            case 'e': this->commands |= CMD_EXECUTE; break;
-            case 'r': this->commands |= CMD_REMOVE;  break;
-            case 'o': this->commands |= CMD_OUTFILE; break;
-            case 'x': this->commands |= CMD_LANG;    break;
-            case 'f': this->commands |= CMD_FORCE;   break;
-            case 'l': this->commands |= CMD_LOUD;    break;
-            case 'd': this->commands |= CMD_DRYRUN;  break;
+            case 'c': this->commands |= COMPILE; break;
+            case 'd': this->commands |= DRYRUN;  break;
+            case 'e': this->commands |= EXECUTE; break;
+            case 'f': this->commands |= FORCE;   break;
+            case 'l': this->commands |= LOUD;    break;
+            case 'o': this->commands |= OUTFILE; break;
+            case 'r': this->commands |= REMOVE;  break;
+            case 'x': this->commands |= LANG;    break;
             default:  die("Command not recognized:", c);  break;
         }
     }
@@ -255,14 +264,14 @@ void Prog::parse_args(int argc, char *argv[]) {
     if (! file_exists(this->src_name))
         die("Infile does not exist:", this->src_name);
 
-    if (this->commands & CMD_OUTFILE) {
+    if (HAS_OUTFILE(this->commands)) {
         if (!pos_args.size())
             usage();  // print error message?
         this->bin_name = pos_args.front();
         pos_args.pop();
     }
 
-    if (this->commands & CMD_LANG) {
+    if (HAS_LANG(this->commands)) {
         if (!pos_args.size())
             usage();  // print error message?
         this->set_lang(pos_args.front());
@@ -286,7 +295,7 @@ void Prog::parse_args(int argc, char *argv[]) {
     }
 
     this->wrap_output =
-        this->commands & CMD_LOUD && !(this->commands & CMD_DRYRUN);
+        HAS_LOUD(this->commands) && !HAS_DRYRUN(this->commands);
 }
 
 
@@ -310,7 +319,7 @@ void print_args(vector<string> args) {
 
 void compile_asm(Prog const& prog) {
     // Ask to remove the object file if it already exists
-    if (file_exists(prog.obj_name) && !(prog.commands & CMD_FORCE)) {
+    if (file_exists(prog.obj_name) && !HAS_FORCE(prog.commands)) {
         cout << "Object file exists: " << prog.obj_name << endl;
         ask_rm_file(prog.obj_name);
     }
@@ -319,7 +328,7 @@ void compile_asm(Prog const& prog) {
         NASM, "-f", "elf64", prog.src_name, "-o", prog.obj_name};
     vector<string> ld_args = {LD, prog.obj_name, "-o", prog.bin_name};
 
-    if (prog.commands & CMD_DRYRUN) {
+    if (HAS_DRYRUN(prog.commands)) {
         print_args(nasm_args);
         print_args(ld_args);
     } else {
@@ -346,7 +355,7 @@ void compile_c(Prog const& prog) {
     if (lib_flags.size())
         append(gcc_args, can_find_libs(split(lib_flags)));
 
-    if (prog.commands & CMD_DRYRUN) {
+    if (HAS_DRYRUN(prog.commands)) {
         print_args(gcc_args);
     } else {
         check_executable_exists(gcc_args[0]);
@@ -367,7 +376,7 @@ void compile_cpp(Prog const& prog) {
     if (lib_flags.size())
         append(gpp_args, can_find_libs(split(lib_flags)));
 
-    if (prog.commands & CMD_DRYRUN) {
+    if (HAS_DRYRUN(prog.commands)) {
         print_args(gpp_args);
     } else {
         check_executable_exists(gpp_args[0]);
@@ -381,7 +390,7 @@ void compile_cpp(Prog const& prog) {
 
 void to_compile(Prog const& prog) {
     // Ask to remove the outfile if it already exists
-    if (file_exists(prog.bin_name) && !(prog.commands & CMD_FORCE)) {
+    if (file_exists(prog.bin_name) && !HAS_FORCE(prog.commands)) {
         cout << "Outfile exists: " << prog.bin_name << endl;
         ask_rm_file(prog.bin_name);
     }
@@ -437,11 +446,11 @@ int main(int argc, char *argv[]) {
     to_compile(parser);
 
     // Execute the program
-    if (parser.commands & CMD_EXECUTE)
+    if (HAS_EXECUTE(parser.commands))
         exitstatus = to_execute(parser);
 
     // Remove the generated files
-    if (parser.commands & CMD_REMOVE)
+    if (HAS_REMOVE(parser.commands))
         to_remove(parser);
 
     return exitstatus;
