@@ -438,6 +438,11 @@ void to_compile(Prog const& prog) {
 
 
 int to_execute(Prog& prog) {
+    if (HAS_DRYRUN(prog.commands)) {
+        print_args(prog.exec_args);
+        return 0;
+    }
+
     if (prog.wrap_output)
         cout << "===== OUTPUT =====" << endl;
     int exitstatus = easy_execute(prog.exec_args).exitstatus;
@@ -453,9 +458,14 @@ int to_execute(Prog& prog) {
 
 
 void to_remove(Prog const& prog) {
-    rm(prog.bin_name);
-    if (prog.lang == LANG_ASM)
-        rm(prog.obj_name);
+    if (HAS_DRYRUN(prog.commands)) {
+        vector<string> args = {"/bin/rm", prog.bin_name};
+        print_args(args);
+    } else {
+        rm(prog.bin_name);
+        if (prog.lang == LANG_ASM)
+            rm(prog.obj_name);
+    }
 }
 
 
