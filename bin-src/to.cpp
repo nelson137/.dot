@@ -52,30 +52,31 @@ void help() {
     cout << USAGE << endl;
     puts("");
     puts("Note");
-    puts("  All arguments after <infile> will be passed to the program if");
-    puts("  the e command is given.");
-    puts("");
-    puts("Commands");
-    puts("  c          Compile the program");
-    puts("  d          Print out the commands that would be executed in");
-    puts("             response to the c, e, and r commands");
-    puts("  e          Execute the compiled program");
-    puts("  f          Do not prompt before overwriting files");
-    puts("  l          Print the OUTPUT and END OUTPUT messages");
-    puts("  o          What to name the binary");
-    puts("  r          Remove the binary and all compilation files");
-    puts("  x          The language of the infile");
-    puts("");
-    puts("Positional Arguments");
-    puts("  commands   A single word consisting of any commands in any order");
-    puts("  infile     The source file for a single-file C, C++, or Linux");
-    puts("             x86 Assembly program");
-    puts("  lang       The language to compile for");
-    puts("  outfile    The name of the outfile");
+    puts("  All arguments after the last positional argument (outfile if the");
+    puts("  outfile command (o) was given, lang if the lang command (x) was");
+    puts("  given) will be passed to the program if the execute command (e)");
+    puts("  is given.");
     puts("");
     puts("Options");
-    puts("  -h, --help");
-    puts("             Print this help message and exit");
+    puts("  -h, --help   Print this help message and exit");
+    puts("");
+    puts("Positional Arguments");
+    puts("  commands     A single word consisting of command characters in");
+    puts("               any order");
+    puts("  infile       The source file for a single-file C, C++, or Linux");
+    puts("               x86 Assembly program");
+    puts("  lang         The language to compile for");
+    puts("  outfile      The name of the outfile");
+    puts("");
+    puts("Commands");
+    puts("  c            Compile the program");
+    puts("  d            Print out the commands that would be executed");
+    puts("  e            Execute the compiled program");
+    puts("  f            Do not prompt before overwriting files");
+    puts("  l            Print the OUTPUT and END OUTPUT messages");
+    puts("  o            What to name the binary");
+    puts("  r            Remove the binary and all compilation files");
+    puts("  x            The language of the infile");
     exit(0);
 }
 
@@ -207,9 +208,6 @@ void Prog::auto_lang() {
 
 
 void Prog::parse_args(int argc, char *argv[]) {
-    if (argc < 3)
-        usage();
-
     this->commands = 0;
     this->lang = NO_LANG;
     bool show_help = false;
@@ -228,7 +226,7 @@ void Prog::parse_args(int argc, char *argv[]) {
             pos_args.push(arg);
     }
 
-    if (show_help)
+    if (argc < 3 || show_help)
         help();
 
     // Make sure there are at least commands and an src_name
