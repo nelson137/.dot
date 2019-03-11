@@ -143,6 +143,14 @@ vector<string> can_find_libs(vector<string> libs) {
 }
 
 
+void print_args(vector<string> args) {
+    cout << args[0];
+    for (unsigned i=1; i<args.size(); i++)
+        cout << " " << args[i];
+    cout << endl;
+}
+
+
 /*************************************************
  * Prog
  ************************************************/
@@ -294,19 +302,6 @@ void Prog::parse_args(int argc, char *argv[]) {
 
     this->wrap_output =
         HAS_LOUD(this->commands) && !HAS_DRYRUN(this->commands);
-}
-
-
-/*************************************************
- * Core Functions
- ************************************************/
-
-
-void print_args(vector<string> args) {
-    cout << args[0];
-    for (unsigned i=1; i<args.size(); i++)
-        cout << " " << args[i];
-    cout << endl;
 }
 
 
