@@ -45,7 +45,6 @@ plugins=(
     extract
     git
     git-prompt
-    git-prompt-custom
     java-utils
     listbox
     web-search
