@@ -70,7 +70,8 @@ void help() {
     puts("");
     puts("Commands");
     puts("  c            Compile the program");
-    puts("  d            Print out the commands that would be executed");
+    puts("  d            Print out the commands that would be executed,");
+    puts("               output is suitable for use in a shell");
     puts("  e            Execute the compiled program");
     puts("  f            Do not prompt before overwriting files");
     puts("  l            Print the OUTPUT and END OUTPUT messages");
@@ -143,10 +144,44 @@ vector<string> can_find_libs(vector<string> libs) {
 }
 
 
+bool is_clean(char& c) {
+    return (43 <= c && c <= 57)
+        || c == 61
+        || (64 <= c && c <= 90)
+        || c == 95
+        || (97 <= c && c <= 122);
+}
+
+
+bool is_clean(string& str) {
+    for (char c : str)
+        if (!is_clean(c))
+            return false;
+    return true;
+}
+
+
+string sanitize(string str) {
+    if (is_clean(str))
+        return str;
+
+    char singleQuote = '\'';
+    size_t pos = 0;
+
+    do {
+        if ((pos = str.find(singleQuote, pos)) == string::npos)
+            break;
+        str.insert(pos, "'\\'");
+        pos += 4;
+    } while (true);
+    return '\'' + str + '\'';
+}
+
+
 void print_args(vector<string> args) {
-    cout << args[0];
+    cout << sanitize(args[0]);
     for (unsigned i=1; i<args.size(); i++)
-        cout << " " << args[i];
+        cout << " " << sanitize(args[i]);
     cout << endl;
 }
 
