@@ -241,6 +241,7 @@ $exec_noid nm-applet
 $i3msg 'workspace $wsDev'
 
 # Startup programs
+$exec_noid xbacklight -set 20
 $exec_noid xrdb -merge ~/.Xresources
 $exec_noid dunst -config ~/.dunstrc
 exec urxvt
