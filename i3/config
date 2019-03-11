@@ -133,17 +133,17 @@ set $volumeCmd amixer -qc 0 -D pulse set Master
 set $volumeChanged play /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
 set $audioCmd dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player
 
-bindsym XF86AudioRaiseVolume exec $volumeCmd 10%+ unmute && $volumeChanged
-bindsym XF86AudioLowerVolume exec $volumeCmd 10%- unmute && $volumeChanged
-bindsym XF86AudioMute exec $volumeCmd toggle
-bindsym XF86AudioPlay exec $audioCmd.PlayPause
-bindsym $mod+bracketright exec $audioCmd.Next
-bindsym $mod+bracketleft exec $audioCmd.Previous
-bindsym $mod+Shift+z exec xautolock -locknow
+bindsym XF86AudioRaiseVolume $exec_noid $volumeCmd 10%+ unmute && $volumeChanged
+bindsym XF86AudioLowerVolume $exec_noid $volumeCmd 10%- unmute && $volumeChanged
+bindsym XF86AudioMute $exec_noid $volumeCmd toggle
+bindsym XF86AudioPlay $exec_noid $audioCmd.PlayPause
+bindsym $mod+bracketright $exec_noid $audioCmd.Next
+bindsym $mod+bracketleft $exec_noid $audioCmd.Previous
+bindsym $mod+Shift+z $exec_noid xautolock -locknow
 
 # Brightness keys
-bindsym XF86MonBrightnessUp exec xbacklight -inc 10
-bindsym XF86MonBrightnessDown exec xbacklight -dec 10
+bindsym XF86MonBrightnessUp $exec_noid xbacklight -inc 10
+bindsym XF86MonBrightnessDown $exec_noid xbacklight -dec 10
 
 
 # Resize the focused window
@@ -167,9 +167,9 @@ mode "resize" {
 set $mode_system System: [l]ogout [s]hutdown [r]eboot
 bindsym $mod+Control+l mode "$mode_system"
 mode "$mode_system" {
-    bindsym l exec "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to logout?' -b Yes 'i3-msg exit'"; mode default
-    bindsym s exec "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to shutdown?' -b Yes 'true'"; mode default
-    bindsym r exec "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to reboot?' -b Yes true"; mode default
+    bindsym l $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to logout?' -b Yes 'i3-msg exit'"; mode default
+    bindsym s $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to shutdown?' -b Yes 'true'"; mode default
+    bindsym r $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to reboot?' -b Yes true"; mode default
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
