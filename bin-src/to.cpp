@@ -376,7 +376,7 @@ void compile_asm(Prog const& prog) {
 
 void compile_c(Prog const& prog) {
     vector<string> gcc_args = {
-        GCC, "-x", "c", "-std=c11", "-O3", "-Wall", "-Werror",
+        GCC, "-xc", "-std=c11", "-O3", "-Wall", "-Werror",
         prog.src_name, "-o", prog.bin_name};
 
     string lib_flags = string(getenv("C_SEARCH_LIBS"));
@@ -397,7 +397,7 @@ void compile_c(Prog const& prog) {
 
 void compile_cpp(Prog const& prog) {
     vector<string> gpp_args = {
-        GPP, "-x", "c++", "-std=c++11", "-O3", "-Wall", "-Werror",
+        GPP, "-xc++", "-std=c++11", "-O3", "-Wall", "-Werror",
         prog.src_name, "-o", prog.bin_name};
 
     string lib_flags = getenv("CPLUS_SEARCH_LIBS");
