@@ -58,6 +58,12 @@ diff() {
 
 
 
+feh() {
+    DISPLAY=:0 nohup /usr/bin/feh --scale-down --borderless "$@" &>/dev/null &|
+}
+
+
+
 force_wifi() {
     # Open http site to force WAP portal redirect
     dc xdg-open 'http://icanhazip.com'

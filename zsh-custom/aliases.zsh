@@ -5,7 +5,6 @@ D='DISPLAY=:0'
 # Command aliases
 alias cp='cp -ir'
 alias du='du -h --max-depth=1'
-alias feh="$D feh -x."
 alias grep='grep -E'
 alias md='mkdir -p'
 alias mkx='chmod +x'
