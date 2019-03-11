@@ -1,16 +1,19 @@
 #include <algorithm>
 #include <iostream>
+#include <queue>
 #include <string>
 #include <vector>
 
 #include "mylib++.hpp"
 
-#define CMD_COMPILE   1  // 0000 0001
-#define CMD_EXECUTE   2  // 0000 0010
-#define CMD_REMOVE    4  // 0000 0100
-#define CMD_FORCE     8  // 0000 1000
-#define CMD_LOUD     16  // 0001 0000
-#define CMD_DRYRUN   32  // 0010 0000
+#define CMD_COMPILE    1  // 0000 0001
+#define CMD_EXECUTE    2  // 0000 0010
+#define CMD_REMOVE     4  // 0000 0100
+#define CMD_FORCE      8  // 0000 1000
+#define CMD_LOUD      16  // 0001 0000
+#define CMD_DRYRUN    32  // 0010 0000
+#define CMD_OUTFILE   64  // 0100 0000
+#define CMD_LANG     128  // 1000 0000
 
 #define NASM       "/usr/bin/nasm"
 #define LD         "/usr/bin/ld"
@@ -21,22 +24,12 @@
 using namespace std;
 
 
-enum Argtype {
-    HYPHEN,
-    SHORT_OPT,
-    COMPOUND_SHORT_OPT,
-    POSITIONAL_FLAG,
-    LONG_OPT,
-    POSITIONAL,
-};
-
 enum Lang {
     NO_LANG, LANG_ASM, LANG_C, LANG_CPP
 };
 
 
-string USAGE =
-    "Usage: to [-h] [-l LANG] [-o OUTFILE] <commands> <infile> [ARGS...]";
+string USAGE = "Usage: to [-h] <commands> <infile> [outfile] [lang] [ARGS...]";
 
 
 void usage() {
@@ -57,6 +50,8 @@ void help() {
     puts("  c          Compile the program");
     puts("  e          Execute the compiled program");
     puts("  r          Remove the binary and all compilation files");
+    puts("  o          What to name the binary");
+    puts("  x          The language of the infile");
     puts("  f          Do not prompt before overwriting files");
     puts("  l          Print the OUTPUT and END OUTPUT messages");
     puts("  d          Print out the commands that would be executed in");
@@ -66,14 +61,12 @@ void help() {
     puts("  commands   A single word consisting of any commands in any order");
     puts("  infile     The source file for a single-file C, C++, or Linux");
     puts("             x86 Assembly program");
+    puts("  outfile    The name of the outfile");
+    puts("  lang       The language to compile for");
     puts("");
     puts("Options");
     puts("  -h, --help");
     puts("             Print this help message and exit");
-    puts("  -o, --outfile OUTFILE");
-    puts("             What name to give the binary");
-    puts("  -l, --language LANG");
-    puts("             The language for which the program should be compiled");
     exit(0);
 }
 
@@ -149,7 +142,6 @@ class Prog {
     private:
         bool parsing_opts = true;
 
-        Argtype arg_type(string);
         void auto_bin_name();
         void set_lang(string);
         void auto_lang();
@@ -170,22 +162,6 @@ class Prog {
 /*************************************************
  * Prog Private Methods
  ************************************************/
-
-
-Argtype Prog::arg_type(string arg) {
-    int arglen = arg.length();
-
-    if (this->parsing_opts && arglen > 0 && arg[0] == '-') {
-        if (arglen == 1)
-            return HYPHEN;
-        else if (arglen == 2)
-            return arg[1] == '-' ? POSITIONAL_FLAG : SHORT_OPT;
-        else
-            return arg[1] == '-' ? LONG_OPT : COMPOUND_SHORT_OPT;
-    } else {
-        return POSITIONAL;
-    }
-}
 
 
 void Prog::auto_bin_name() {
@@ -229,44 +205,18 @@ void Prog::parse_args(int argc, char *argv[]) {
     this->lang = NO_LANG;
     bool show_help = false;
 
-    vector<string> args(argv+1, argv+argc);
-    vector<string> pos_args;
+    queue<string> pos_args;
 
-    Argtype a_type;
-    for (unsigned i=0; i<args.size(); i++) {
-        a_type = this->arg_type(args[i]);
+    string arg;
+    for (int i=1; i<argc; i++) {
+        arg = string(argv[i]);
 
-        switch(a_type) {
-
-            case COMPOUND_SHORT_OPT:
-                for (int j=args[i].length()-1; j>=1; j--)
-                    args.insert(args.begin()+i+1, "-"+string(1, args[i][j]));
-                break;
-
-            case POSITIONAL_FLAG:
-                this->parsing_opts = false;
-                break;
-
-            case HYPHEN:
-            case SHORT_OPT:
-            case LONG_OPT:
-                if (args[i] == "-h" || args[i] == "--help")
-                    show_help = true;
-                else if (args[i] == "-l" || args[i] == "--language")
-                    this->set_lang(args[++i]);
-                else if (args[i] == "-o" || args[i] == "--outfile")
-                    this->bin_name = args[++i];
-                else
-                    usage();
-                break;
-
-            case POSITIONAL:
-                pos_args.push_back(args[i]);
-                if (pos_args.size() >= 2)
-                    parsing_opts = false;
-                break;
-
-        }
+        if (arg == "-h" || arg == "--help")
+            show_help = true;
+        else if (arg == "--")
+            ;  // Do nothing
+        else
+            pos_args.push(arg);
     }
 
     if (show_help)
@@ -277,29 +227,49 @@ void Prog::parse_args(int argc, char *argv[]) {
         usage();
 
     // Parse commands
-    for (char c : pos_args[0]) {
+    for (char c : pos_args.front()) {
         switch (c) {
             case 'c': this->commands |= CMD_COMPILE; break;
             case 'e': this->commands |= CMD_EXECUTE; break;
             case 'r': this->commands |= CMD_REMOVE;  break;
+            case 'o': this->commands |= CMD_OUTFILE; break;
+            case 'x': this->commands |= CMD_LANG;    break;
             case 'f': this->commands |= CMD_FORCE;   break;
             case 'l': this->commands |= CMD_LOUD;    break;
             case 'd': this->commands |= CMD_DRYRUN;  break;
             default:  die("Command not recognized:", c);  break;
         }
     }
+    pos_args.pop();
 
     // Error check commands
     if (this->commands == 0)
         die("No commands were given");
 
-    this->src_name = pos_args[1];
+    this->src_name = pos_args.front();
+    pos_args.pop();
     // Make sure src_name isn't an empty string
     if (this->src_name.empty())
         die("Infile cannot be an empty string");
     // Make sure src_name exists
     if (! file_exists(this->src_name))
         die("Infile does not exist:", this->src_name);
+
+    if (this->commands & CMD_OUTFILE) {
+        if (!pos_args.size())
+            usage();  // print error message?
+        this->bin_name = pos_args.front();
+        pos_args.pop();
+    }
+
+    if (this->commands & CMD_LANG) {
+        if (!pos_args.size())
+            usage();  // print error message?
+        this->set_lang(pos_args.front());
+        pos_args.pop();
+    } else {
+        this->auto_lang();
+    }
 
     // Get object file name
     this->obj_name = this->src_name + ".o";
@@ -308,11 +278,12 @@ void Prog::parse_args(int argc, char *argv[]) {
     if (this->bin_name.empty())
         this->auto_bin_name();
 
-    this->exec_args = vector<string>(pos_args.begin()+2, pos_args.end());
+    this->exec_args.reserve(1 + pos_args.size());
     this->exec_args.push_back(this->bin_name);
-
-    if (this->lang == NO_LANG)
-        this->auto_lang();
+    while (!pos_args.empty()) {
+        this->exec_args.push_back(pos_args.front());
+        pos_args.pop();
+    }
 
     this->wrap_output =
         this->commands & CMD_LOUD && !(this->commands & CMD_DRYRUN);
