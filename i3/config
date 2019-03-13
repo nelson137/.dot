@@ -139,7 +139,8 @@ bindsym XF86AudioMute $exec_noid $volumeCmd toggle
 bindsym XF86AudioPlay $exec_noid $audioCmd.PlayPause
 bindsym $mod+bracketright $exec_noid $audioCmd.Next
 bindsym $mod+bracketleft $exec_noid $audioCmd.Previous
-bindsym $mod+Shift+z $exec_noid xautolock -locknow
+set $lockscreen /home/nelson/.config/i3/assets/lockscreen/lockscreen.png
+bindsym $mod+Shift+z $exec_noid i3lock -eni $lockscreen
 
 # Brightness keys
 bindsym XF86MonBrightnessUp $exec_noid xbacklight -inc 10
@@ -223,7 +224,8 @@ for_window [class="Spotify"] move to workspace $wsSpotify
 
 
 # Start xautolock, config in ~/.Xresource
-$exec_noid xautolock
+$exec_noid xautolock -noclose -notify 10 -notifier 'xset dpms force off' -time 10 -locker 'i3lock -eni /home/nelson/.config/i3/assets/lockscreen/lockscreen.png'
+$exec_noid xautolock -noclose -time 12 -locker 'systemctl suspend'
 
 # Set the background
 exec_always --no-startup-id nitrogen --set-zoom-fill --random ~/.config/i3/assets/backgrounds

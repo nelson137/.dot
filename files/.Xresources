@@ -9,12 +9,3 @@ URxvt.scrollstyle: plain
 URxvt.scrollBar: true
 URxvt.scrollBar_right: true
 URxvt.cursorBlink: true
-
-! Xautolock config
-Xautolock.noclose: true
-Xautolock.notify: 10
-Xautolock.notifier: $HOME/.config/i3/scripts/locker notify
-Xautolock.time: 10
-Xautolock.locker: $HOME/.config/i3/scripts/locker lock
-Xautolock.killtime: 10
-Xautolock.killer: $HOME/.config/i3/scripts/locker suspend
