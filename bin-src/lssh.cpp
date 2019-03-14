@@ -81,7 +81,7 @@ private:
 
 public:
     vector<Profile> profiles;
-    vector<string> ssh_options;
+    vector<string> ssh_opts;
 
     template<typename... T>
         static void error(T...);
@@ -186,7 +186,7 @@ vector<json> Config::parse_obj_array(json& j, string key) {
 
 void Config::parse_config(json config) {
     if (!config["ssh_options"].is_null())
-        this->ssh_options = this->parse_str_array(config, "ssh_options");
+        this->ssh_opts = this->parse_str_array(config, "ssh_options");
 
     if (config["profiles"].is_null())
         this->error("Config must specify an array of profiles");
@@ -209,7 +209,7 @@ void Config::error(T... ts) {
 
 Config::Config(string& fn) {
     this->config_fn = fn;
-    this->ssh_options = {"-oConnectTimeout=5"};
+    this->ssh_opts = {"-oConnectTimeout=5"};
     this->parse_config(this->get_config());
 }
 
@@ -296,13 +296,14 @@ int main() {
     string addr = select_host(config);
 
     // Combine all arguments into one char*[]
-    char *args[2+config.ssh_options.size()+1] = {
+    int opts_len = config.ssh_opts.size();
+    char *args[2+opts_len+1] = {
         (char*)"ssh",
         const_cast<char*>(addr.c_str())
     };
-    for (unsigned i=0; i<config.ssh_options.size(); i++)
-        args[i+2] = const_cast<char*>(config.ssh_options[i].c_str());
-    args[2+config.ssh_options.size()] = NULL;
+    for (int i=0; i<opts_len; i++)
+        args[i+2] = const_cast<char*>(config.ssh_opts[i].c_str());
+    args[2+opts_len] = NULL;
 
     attempt_ssh(args);
 
