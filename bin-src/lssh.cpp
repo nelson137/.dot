@@ -43,28 +43,6 @@ void print_config_help() {
 }
 
 
-char **args_for_exec(vector<string>& strings) {
-    char **args = (char**) malloc(sizeof(char*) * (strings.size()+1));
-    unsigned i, len;
-    for (i=0; i<strings.size(); i++) {
-        len = strings[i].length();
-        args[i] = (char*) malloc(sizeof(char) * (len+1));
-        strcpy(args[i], strings[i].c_str());
-        args[i][len] = '\0';
-    }
-    args[i] = NULL;
-    return args;
-}
-
-
-char **free_args_for_exec(char **args) {
-    for (int i=0; args[i]; i++)
-        free(args[i]);
-    free(args);
-    return NULL;
-}
-
-
 /*************************************************
  * Classes
  ************************************************/
@@ -267,7 +245,6 @@ string get_home_dir() {
 
 
 string select_profile(Config& config) {
-    cout << endl;
     vector<string> profile_names = config.get_profile_names();
     int profile_i = Listbox(profile_names).run();
     cout << endl;
@@ -321,6 +298,7 @@ int main() {
     string config_fn = get_home_dir() + "/.lsshrc";
     Config config(config_fn);
 
+    cout << endl;
     string addr = select_profile(config);
     attempt_ssh(addr, config.ssh_options);
 
