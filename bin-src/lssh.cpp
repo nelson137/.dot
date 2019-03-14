@@ -268,24 +268,18 @@ string select_host(Config& config) {
 }
 
 
-void attempt_ssh(string const& addr, vector<string> str_opts) {
-    str_opts.insert(str_opts.begin(), "ssh");
-    str_opts.push_back(addr);
-    char **opts = args_for_exec(str_opts);
-
+void attempt_ssh(char *args[]) {
     int stat, pid = fork();
     if (pid < 0) {
         die("Could not fork()");
     } else if (pid == 0) {
         // Child
-        execv("/usr/bin/ssh", opts);
+        execv("/usr/bin/ssh", args);
         _exit(127);
     } else {
         // Parent
         wait(&stat);
     }
-
-    opts = free_args_for_exec(opts);
 }
 
 
@@ -300,7 +294,17 @@ int main() {
 
     cout << endl;
     string addr = select_host(config);
-    attempt_ssh(addr, config.ssh_options);
+
+    // Combine all arguments into one char*[]
+    char *args[2+config.ssh_options.size()+1] = {
+        (char*)"ssh",
+        const_cast<char*>(addr.c_str())
+    };
+    for (unsigned i=0; i<config.ssh_options.size(); i++)
+        args[i+2] = const_cast<char*>(config.ssh_options[i].c_str());
+    args[2+config.ssh_options.size()] = NULL;
+
+    attempt_ssh(args);
 
     return 0;
 }
