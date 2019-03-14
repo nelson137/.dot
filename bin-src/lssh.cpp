@@ -76,8 +76,6 @@ struct Profile {
     string user;
     vector<string> hosts;
 
-    void validate_data(json::iterator::reference&);
-
     Profile(json::iterator::reference&);
 
 };
@@ -122,30 +120,25 @@ public:
  ************************************************/
 
 
-void Profile::validate_data(json::iterator::reference& j_profile) {
+Profile::Profile(json::iterator::reference& j_profile) {
     if (j_profile.find("name") == j_profile.end())
         Config::error("Profiles must specify a name");
     if (!j_profile["name"].is_string())
         Config::error("Profile names must be of type string");
+    this->name = j_profile["name"];
 
     if (j_profile.find("username") == j_profile.end())
         Config::error("Profiles must specify a username");
     if (!j_profile["username"].is_string())
         Config::error("Profile usernames must be of type string");
+    this->user = j_profile["username"];
 
     if (j_profile.find("hosts") == j_profile.end())
         Config::error("Profiles must specify an array of hosts");
-    if (!j_profile["hosts"].is_array())
+    json j_hosts = j_profile["hosts"];
+    if (!j_hosts.is_array())
         Config::error("Profile hosts must be an array of strings");
-}
-
-
-Profile::Profile(json::iterator::reference& j_profile) {
-    this->validate_data(j_profile);
-    this->name = j_profile["name"];
-    this->user = j_profile["username"];
-    json hosts = j_profile["hosts"];
-    for (auto&& it=hosts.begin(); it!=hosts.end(); it++)
+    for (auto&& it=j_hosts.begin(); it!=j_hosts.end(); it++)
         this->hosts.push_back(it.value());
 }
 
