@@ -244,7 +244,7 @@ string get_home_dir() {
 }
 
 
-string select_profile(Config& config) {
+string select_host(Config& config) {
     vector<string> profile_names = config.get_profile_names();
     int profile_i = Listbox(profile_names).run();
     cout << endl;
@@ -299,7 +299,7 @@ int main() {
     Config config(config_fn);
 
     cout << endl;
-    string addr = select_profile(config);
+    string addr = select_host(config);
     attempt_ssh(addr, config.ssh_options);
 
     return 0;
