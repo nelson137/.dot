@@ -53,6 +53,7 @@ struct Profile {
     string name;
     string user;
     vector<string> hosts;
+    string keyfile;
 
     Profile(json::iterator::reference&);
 
@@ -153,6 +154,13 @@ Profile::Profile(json::iterator::reference& j_profile) {
         Config::error("Profile hosts must be an array of strings");
     for (auto&& it=j_hosts.begin(); it!=j_hosts.end(); it++)
         this->hosts.push_back(it.value());
+
+    if (j_profile.find("keyfile") != j_profile.end()) {
+        json j_kf = j_profile["keyfile"];
+        if (!j_kf.is_string())
+            Config::error("Profile keyfile must be of type string");
+        this->keyfile = j_kf.get<string>();
+    }
 }
 
 
@@ -238,16 +246,23 @@ string get_home_dir() {
 }
 
 
-string select_host(Config& config) {
+vector<string> select_host(Config& config) {
     vector<string> profile_names = config.get_profile_names();
     int profile_i = Listbox(profile_names).run();
     cout << endl;
     if (profile_i < 0)
         die();
 
-    Profile& profile = config.profiles[profile_i];
-    string addr = profile.user + '@';
+    vector<string> chosen_opts;
 
+    Profile& profile = config.profiles[profile_i];
+
+    if (profile.keyfile.size()) {
+        chosen_opts.push_back("-i");
+        chosen_opts.push_back(profile.keyfile);
+    }
+
+    string addr = profile.user + '@';
     if (profile.hosts.size() == 1) {
         addr += profile.hosts[0];
     } else {
@@ -257,8 +272,9 @@ string select_host(Config& config) {
             die();
         addr += profile.hosts[addr_i];
     }
+    chosen_opts.push_back(addr);
 
-    return addr;
+    return chosen_opts;
 }
 
 
@@ -287,17 +303,18 @@ int main() {
     Config config(config_fn);
 
     cout << endl;
-    string addr = select_host(config);
+    vector<string> chosen_opts = select_host(config);
 
-    // Combine all arguments into one char*[]
-    int opts_len = config.ssh_opts.size();
-    char *args[2+opts_len+1] = {
-        (char*)"ssh",
-        const_cast<char*>(addr.c_str())
-    };
-    for (int i=0; i<opts_len; i++)
-        args[i+2] = const_cast<char*>(config.ssh_opts[i].c_str());
-    args[2+opts_len] = NULL;
+    // Combine all arguments into one vector
+    vector<string> all_opts = config.ssh_opts;
+    all_opts.insert(all_opts.end(), chosen_opts.begin(), chosen_opts.end());
+    // Get the arguments as a char*[]
+    int args_len = 1 + all_opts.size() + 1;
+    char *args[args_len] = { (char*)"ssh" };
+    for (unsigned i=0; i<all_opts.size(); i++)
+        args[i+1] = const_cast<char*>(all_opts[i].c_str());
+    // Array has to be NULL-terminated for exec()
+    args[args_len-1] = NULL;
 
     attempt_ssh(args);
 
