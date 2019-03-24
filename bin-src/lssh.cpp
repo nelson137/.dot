@@ -187,10 +187,10 @@ json Config::get_config() {
 
 
 void Config::parse_config(json config) {
-    if (!config["ssh_options"].is_null())
+    if (config.find("ssh_options") != config.end())
         this->ssh_opts = parse_str_array(config, "ssh_options");
 
-    if (config["profiles"].is_null())
+    if (config.find("profiles") == config.end())
         this->error("Config must specify an array of profiles");
     this->profiles = parse_obj_array<Profile>(config, "profiles",
         [](json j)->Profile{ return Profile(j); });
