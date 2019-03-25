@@ -87,7 +87,6 @@ class Config {
 private:
     string config_fn;
 
-    string get_home_dir();
     json get_config();
 
     void parse_config(json);
