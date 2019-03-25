@@ -76,7 +76,7 @@ void from_json(const json& j, Profile& p) {
         p.hosts.push_back(it.value());
 
     if (j.find("keyfile") != j.end())
-        p.keyfile = j["keyfile"];
+        p.keyfile = j["keyfile"].get<string>();
 }
 
 }  // namespace profile
