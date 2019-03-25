@@ -74,7 +74,7 @@ c_search_libs=(
     -lmylib
 )
 export C_SEARCH_LIBS="${(j: :)c_search_libs}"
-export CPLUS_SEARCH_LIBS=-lmylib++
+export CPLUS_SEARCH_LIBS=-lmylib
 
 # Fix nice error
 unsetopt BG_NICE

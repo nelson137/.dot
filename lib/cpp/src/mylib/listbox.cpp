@@ -5,7 +5,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-#include "mylib++.hpp"
+#include "mylib.hpp"
 
 using namespace std;
 
