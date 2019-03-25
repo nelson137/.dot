@@ -202,7 +202,6 @@ private:
     string cursor;
     vector<string> choices;
 
-    void print_instructs();
     string cursor_spaces();
     void print(string, bool=false);
     void draw(unsigned);

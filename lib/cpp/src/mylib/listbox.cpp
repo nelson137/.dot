@@ -14,14 +14,6 @@ const string Listbox::DEFAULT_CURSOR = "*";
 const string Listbox::NO_TITLE = "__NO_TITLE";
 
 
-void Listbox::print_instructs() {
-    cout << "Press k/j or up/down arrows to move up and down." << endl;
-    cout << "Press q to quit." << endl;
-    cout << "Press Enter to confirm the selection." << endl;
-    cout << endl;
-}
-
-
 string Listbox::cursor_spaces() {
     return string(this->cursor.length(), ' ');
 }
@@ -58,8 +50,12 @@ Listbox::Listbox(string title, vector<string>& choices, string cursor) {
 
 
 int Listbox::run(bool show_instructs) {
-    if (show_instructs)
-        this->print_instructs();
+    if (show_instructs) {
+        cout << "Press k/j or up/down arrows to move up and down." << endl
+             << "Press q to quit." << endl
+             << "Press Enter to confirm the selection." << endl
+             << endl;
+    }
 
     if (this->show_title) {
         // Print the title
