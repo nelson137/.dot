@@ -10,8 +10,8 @@
 using namespace std;
 
 
-const string Listbox::df_cursor = "*";
-const string Listbox::df_title = "__DEFAULT_TITLE";
+const string Listbox::DEFAULT_CURSOR = "*";
+const string Listbox::NO_TITLE = "__NO_TITLE";
 
 
 void Listbox::print_instructs() {
@@ -84,9 +84,9 @@ void Listbox::redraw(unsigned current_i) {
 }
 
 
-Listbox::Listbox(vector<string>& choices, string title, string cursor) {
+Listbox::Listbox(string title, vector<string>& choices, string cursor) {
     this->title = title;
-    this->show_title = title != df_title;
+    this->show_title = title != this->NO_TITLE;
     this->cursor = cursor;
     this->choices = choices;
 }

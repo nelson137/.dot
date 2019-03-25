@@ -216,12 +216,12 @@ private:
 
 public:
 
-    static const string df_cursor;
-    static const string df_title;
+    static const string DEFAULT_CURSOR;
+    static const string NO_TITLE;
 
     int chosen;
 
-    Listbox(vector<string>&, string=df_title, string=df_cursor);
+    Listbox(string, vector<string>&, string=DEFAULT_CURSOR);
 
     int run(bool=true);
 
