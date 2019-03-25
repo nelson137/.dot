@@ -47,22 +47,6 @@ void Listbox::save_term_attrs() {
 }
 
 
-void Listbox::setup_term() {
-    this->save_term_attrs();
-    struct termios newt = {0};
-    // Copy the old settings
-    newt = this->oldt;
-    // Disable canonical mode and echo
-    newt.c_lflag &= ~(ICANON|ECHO);
-    // Minimum number of character to read
-    newt.c_cc[VMIN] = 1;
-    // Block until read is performed
-    newt.c_cc[VTIME] = 0;
-    // Apply the new settings
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-}
-
-
 void Listbox::restore_term() {
     tcsetattr(STDIN_FILENO, TCSANOW, &this->oldt);
 }
@@ -99,7 +83,18 @@ int Listbox::run(bool show_instructs) {
     if (this->show_title)
         this->print_title();
 
-    this->setup_term();
+    this->save_term_attrs();
+    struct termios newt = {0};
+    // Copy the old settings
+    newt = this->oldt;
+    // Disable canonical mode and echo
+    newt.c_lflag &= ~(ICANON|ECHO);
+    // Minimum number of character to read
+    newt.c_cc[VMIN] = 1;
+    // Block until read is performed
+    newt.c_cc[VTIME] = 0;
+    // Apply the new settings
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 
     char c;
     bool will_redraw, quit = false;

@@ -209,7 +209,6 @@ private:
     void print(string, bool=false);
     void print_title();
     void save_term_attrs();
-    void setup_term();
     void restore_term();
     void draw(unsigned);
     void redraw(unsigned);
