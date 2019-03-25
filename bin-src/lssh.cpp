@@ -13,6 +13,9 @@
 using namespace std;
 using namespace nlohmann;
 
+namespace profile {}
+using namespace profile;
+
 
 /*************************************************
  * Helper Functions
@@ -48,6 +51,8 @@ void print_config_help() {
  ************************************************/
 
 
+namespace profile {
+
 struct Profile {
 
     string name;
@@ -55,9 +60,26 @@ struct Profile {
     vector<string> hosts;
     string keyfile;
 
-    Profile(json::iterator::reference&);
+    static void validate_data(const json&);
 
 };
+
+void from_json(const json& j, Profile& p) {
+    Profile::validate_data(j);
+
+    p.name = j["name"];
+
+    p.user = j["username"];
+
+    json j_hosts = j["hosts"];
+    for (auto&& it=j_hosts.begin(); it!=j_hosts.end(); it++)
+        p.hosts.push_back(it.value());
+
+    if (j.find("keyfile") != j.end())
+        p.keyfile = j["keyfile"];
+}
+
+}  // namespace profile
 
 
 class Config {
@@ -89,43 +111,14 @@ public:
  ************************************************/
 
 
-template<typename T, typename U>
-vector<U> parse_array(json& j, string key, string type,
-                      function<U(T)> predicate) {
-    json j_arr = j[key];
+template<typename U>
+vector<U> parse_array(string key, json& j_arr) {
     if (!j_arr.is_array())
         Config::error("Value for key '"+key+"' must be of type 'array'");
-    vector<U> arr;
-    for (auto&& it=j_arr.begin(); it!=j_arr.end(); it++) {
-        if (it.value().type_name() == type)
-            arr.push_back(predicate(it.value()));
-        else
-            Config::error("Elements of array '"+key+"' must be of type '"
-                          +type+"'");
-    }
+    vector<U> arr(j_arr.size());
+    transform(j_arr.begin(), j_arr.end(), arr.begin(),
+        [](json j){ return j.get<U>(); });
     return arr;
-}
-
-
-template<typename T>
-vector<T> parse_obj_array(json& j, string key, function<T(json)> predicate) {
-    return parse_array<json>(j, key, "object", predicate);
-}
-
-
-template<typename T>
-vector<T> parse_array(json& j, string key, string type) {
-    return parse_array<T,T>(j, key, type, [](T t)->T{ return t; });
-}
-
-
-vector<string> parse_str_array(json& j, string key) {
-    return parse_array<string>(j, key, "string");
-}
-
-
-vector<json> parse_obj_array(json& j, string key) {
-    return parse_array<json>(j, key, "object");
 }
 
 
@@ -134,33 +127,25 @@ vector<json> parse_obj_array(json& j, string key) {
  ************************************************/
 
 
-Profile::Profile(json::iterator::reference& j_profile) {
+void Profile::validate_data(const json& j_profile) {
     if (j_profile.find("name") == j_profile.end())
         Config::error("Profiles must specify a name");
     if (!j_profile["name"].is_string())
         Config::error("Profile names must be of type string");
-    this->name = j_profile["name"];
 
     if (j_profile.find("username") == j_profile.end())
         Config::error("Profiles must specify a username");
     if (!j_profile["username"].is_string())
         Config::error("Profile usernames must be of type string");
-    this->user = j_profile["username"];
 
     if (j_profile.find("hosts") == j_profile.end())
         Config::error("Profiles must specify an array of hosts");
-    json j_hosts = j_profile["hosts"];
-    if (!j_hosts.is_array())
+    if (!j_profile["hosts"].is_array())
         Config::error("Profile hosts must be an array of strings");
-    for (auto&& it=j_hosts.begin(); it!=j_hosts.end(); it++)
-        this->hosts.push_back(it.value());
 
-    if (j_profile.find("keyfile") != j_profile.end()) {
-        json j_kf = j_profile["keyfile"];
-        if (!j_kf.is_string())
+    if (j_profile.find("keyfile") != j_profile.end())
+        if (!j_profile["keyfile"].is_string())
             Config::error("Profile keyfile must be of type string");
-        this->keyfile = j_kf.get<string>();
-    }
 }
 
 
@@ -186,13 +171,14 @@ json Config::get_config() {
 
 
 void Config::parse_config(json config) {
-    if (config.find("ssh_options") != config.end())
-        this->ssh_opts = parse_str_array(config, "ssh_options");
+    string k_ssh_opts = "ssh_options";
+    if (config.find(k_ssh_opts) != config.end())
+        this->ssh_opts = parse_array<string>(k_ssh_opts, config[k_ssh_opts]);
 
-    if (config.find("profiles") == config.end())
+    string k_profiles = "profiles";
+    if (config.find(k_profiles) == config.end())
         this->error("Config must specify an array of profiles");
-    this->profiles = parse_obj_array<Profile>(config, "profiles",
-        [](json j)->Profile{ return Profile(j); });
+    this->profiles = parse_array<Profile>(k_profiles, config[k_profiles]);
 }
 
 
