@@ -177,8 +177,7 @@ json Config::get_config() {
     if (!file_exists(this->config_fn))
         die("Config file does not exist:", config_fn);
 
-    ifstream fs;
-    fs.open(this->config_fn);
+    ifstream fs(this->config_fn);
 
     json config;
     fs >> config;
