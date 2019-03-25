@@ -216,17 +216,14 @@ vector<string> Config::get_profile_names() {
 
 string get_home_dir() {
     string home = string(getenv("HOME"));
-    if (home.size())
-        return home;
 
-    struct passwd *pd = getpwuid(getuid());
-    if (pd != NULL)
-        return string(pd->pw_dir);
+    if (!home.size())
+        home = string(getpwuid(getuid())->pw_dir);
 
-    die("Home directory of user could not be determined");
+    if (!home.size())
+        die("Home directory of user could not be determined");
 
-    // Suppress control reaches end of non-void function error
-    return "";
+    return home;
 }
 
 
