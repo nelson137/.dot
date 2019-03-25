@@ -32,7 +32,7 @@ def FlagsForFile(filename, **kwargs):
         std = '-std=c11'
     elif ext == '.cpp':
         lang = 'c++'
-        std = '-std=c++11'
+        std = '-std=c++17'
     else:
         return {'flags': base_flags}
 
