@@ -211,8 +211,8 @@ private:
     void save_term_attrs();
     void setup_term();
     void restore_term();
-    void draw(unsigned const&);
-    void redraw(unsigned const&);
+    void draw(unsigned);
+    void redraw(unsigned);
 
 public:
 

@@ -68,19 +68,19 @@ void Listbox::restore_term() {
 }
 
 
-void Listbox::draw(unsigned const& current) {
+void Listbox::draw(unsigned current_i) {
     for (unsigned i=0; i<this->choices.size(); i++)
-        this->print(this->choices[i], i==current);
+        this->print(this->choices[i], i==current_i);
 }
 
 
-void Listbox::redraw(unsigned const& current) {
+void Listbox::redraw(unsigned current_i) {
     // Go back to the top of the listbox output
     for (unsigned i=0; i<this->choices.size(); i++)
         // Clear each line
         cout << "\33[A\33[2K";
     // Draw the listbox
-    this->draw(current);
+    this->draw(current_i);
 }
 
 
