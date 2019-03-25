@@ -287,7 +287,6 @@ int main() {
     string config_fn = get_home_dir() + "/.lsshrc";
     Config config(config_fn);
 
-    cout << endl;
     vector<string> chosen_opts = select_host(config);
 
     // Combine all arguments into one vector
