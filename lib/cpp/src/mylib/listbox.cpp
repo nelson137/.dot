@@ -41,17 +41,6 @@ void Listbox::print_title() {
 }
 
 
-void Listbox::save_term_attrs() {
-    this->oldt = {0};
-    tcgetattr(STDIN_FILENO, &this->oldt);
-}
-
-
-void Listbox::restore_term() {
-    tcsetattr(STDIN_FILENO, TCSANOW, &this->oldt);
-}
-
-
 void Listbox::draw(unsigned current_i) {
     for (unsigned i=0; i<this->choices.size(); i++)
         this->print(this->choices[i], i==current_i);
@@ -83,10 +72,12 @@ int Listbox::run(bool show_instructs) {
     if (this->show_title)
         this->print_title();
 
-    this->save_term_attrs();
-    struct termios newt = {0};
+    // Save the current terminal settings
+    struct termios oldt = {0};
+    tcgetattr(STDIN_FILENO, &oldt);
+
     // Copy the old settings
-    newt = this->oldt;
+    struct termios newt = oldt;
     // Disable canonical mode and echo
     newt.c_lflag &= ~(ICANON|ECHO);
     // Minimum number of character to read
@@ -155,6 +146,8 @@ int Listbox::run(bool show_instructs) {
             this->redraw(current);
     } while (quit == false);
 
-    this->restore_term();
+    // Restore term
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
     return this->chosen;
 }

@@ -197,8 +197,6 @@ exec_ret easy_execute(T& args, bool capture_output=false) {
 class Listbox {
 
 private:
-    struct termios oldt;
-
     bool show_title;
     string title;
     string cursor;
@@ -208,8 +206,6 @@ private:
     string cursor_spaces();
     void print(string, bool=false);
     void print_title();
-    void save_term_attrs();
-    void restore_term();
     void draw(unsigned);
     void redraw(unsigned);
 
