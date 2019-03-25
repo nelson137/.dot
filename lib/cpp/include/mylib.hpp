@@ -205,7 +205,6 @@ private:
     void print_instructs();
     string cursor_spaces();
     void print(string, bool=false);
-    void print_title();
     void draw(unsigned);
     void redraw(unsigned);
 

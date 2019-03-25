@@ -33,14 +33,6 @@ void Listbox::print(string str, bool with_cursor) {
 }
 
 
-void Listbox::print_title() {
-    // Print the title
-    this->print(this->title);
-    // Print the underline
-    this->print(string(this->title.length(), '-'));
-}
-
-
 void Listbox::draw(unsigned current_i) {
     for (unsigned i=0; i<this->choices.size(); i++)
         this->print(this->choices[i], i==current_i);
@@ -69,8 +61,12 @@ int Listbox::run(bool show_instructs) {
     if (show_instructs)
         this->print_instructs();
 
-    if (this->show_title)
-        this->print_title();
+    if (this->show_title) {
+        // Print the title
+        this->print(this->title);
+        // Print the underline
+        this->print(string(this->title.length(), '-'));
+    }
 
     // Save the current terminal settings
     struct termios oldt = {0};
