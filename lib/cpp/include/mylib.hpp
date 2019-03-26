@@ -214,6 +214,18 @@ struct LB {
              << " " << str << endl;
     }
 
+    void draw(unsigned current_i) {
+        for (unsigned i=0; i<this->choices.size(); i++)
+            this->print(this->choices[i], i==current_i);
+    }
+
+    void redraw(unsigned current_i) {
+        // Go back to the top of the listbox output, clearing each line
+        for (unsigned i=0; i<this->choices.size(); i++)
+            cout << "\33[A\33[2K";
+        this->draw(current_i);
+    }
+
     LB(string t, vector<string> cs, string c=DEFAULT_CURSOR, bool si=true)
         : title(t)
         , show_title(t != NO_TITLE)

@@ -28,20 +28,6 @@ int run_listbox(LB lb) {
         lb.print(string(lb.title.length(), '-'));
     }
 
-    auto draw = [&](unsigned current_i){
-        for (unsigned i=0; i<lb.choices.size(); i++)
-            lb.print(lb.choices[i], i==current_i);
-    };
-
-    auto redraw = [&](unsigned current_i){
-        // Go back to the top of the listbox output
-        for (unsigned i=0; i<lb.choices.size(); i++)
-            // Clear each line
-            cout << "\33[A\33[2K";
-        // Draw the listbox
-        draw(current_i);
-    };
-
     // Save the current terminal settings
     struct termios oldt = {0};
     tcgetattr(STDIN_FILENO, &oldt);
@@ -62,7 +48,7 @@ int run_listbox(LB lb) {
     unsigned current = 0;
 
     int chosen = -1;
-    draw(current);
+    lb.draw(current);
 
     do {
         c = cin.get();
@@ -113,7 +99,7 @@ int run_listbox(LB lb) {
         }
 
         if (will_redraw)
-            redraw(current);
+            lb.redraw(current);
     } while (quit == false);
 
     // Restore term
