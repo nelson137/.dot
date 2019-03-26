@@ -12,27 +12,26 @@ command ls -A "$here/files" | xargs -I % ln -fs "$HOME/.dot/files/%" "$HOME"
 
 # Make directories for libraries
 rm -rf "$HOME"/.{include,lib}
-mkdir -p "$HOME"/.include "$HOME"/.lib/{c,cpp}
-ln -fs "$here/lib/c/include" "$HOME/.include/c"
-ln -fs "$here/lib/cpp/include" "$HOME/.include/cpp"
+mkdir -p "$HOME"/.include/{c,cpp} "$HOME"/.lib/{c,cpp}
 
 # Create C and C++ libraries
 for lang in c cpp; do
-    lib_names=( $(ls "$here/lib/$lang/src") )
+    lib_names=( $(ls "$here/lib/$lang") )
     for lib in "${lib_names[@]}"; do
+        ln -fs "$here/lib/$lang/$lib/include/"* "$HOME/.include/$lang/"
         mkdir -p "$HOME/.lib/$lang/$lib"
-        src_fns=( $(ls "$here/lib/$lang/src/$lib") )
+        src_fns=( $(ls "$here/lib/$lang/$lib/src") )
         for src_fn in "${src_fns[@]}"; do
             obj_fn="$(no_ext "$src_fn").o"
             if [[ "$lang" == 'c' ]]; then
                 gcc -std=c11 -O3 -Wall -Werror -c \
                     -I"$HOME/.include/c" \
-                    "$here/lib/c/src/$lib/$src_fn" \
+                    "$here/lib/c/$lib/src/$src_fn" \
                     -o "$HOME/.lib/c/$lib/$obj_fn"
             else
                 g++ -std=c++11 -O3 -Wall -Werror -c \
                     -I"$HOME/.include/cpp" \
-                    "$here/lib/cpp/src/$lib/$src_fn" \
+                    "$here/lib/cpp/$lib/src/$src_fn" \
                     -o "$HOME/.lib/cpp/$lib/$obj_fn"
             fi
             ar rc "$HOME/.lib/$lang/lib$lib.a" "$HOME/.lib/$lang/$lib/$obj_fn"
