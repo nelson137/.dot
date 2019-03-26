@@ -203,7 +203,6 @@ private:
     vector<string> choices;
 
     string cursor_spaces();
-    void print(string, bool=false);
 
 public:
 
