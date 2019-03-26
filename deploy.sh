@@ -30,7 +30,7 @@ for lib in $(ls "$here/lib"); do
                 -o "$HOME/.lib/$lib/$obj_fn" \
                 -I"$HOME/.include"
         else
-            g++ -std=c++11 -O3 -Wall -Werror -c \
+            g++ -std=c++17 -O3 -Wall -Werror -c \
                 "$here/lib/$lib/src/$src_fn" \
                 -o "$HOME/.lib/$lib/$obj_fn" \
                 -I"$HOME/.include"
