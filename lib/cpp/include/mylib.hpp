@@ -198,7 +198,7 @@ namespace listbox {
 
 
 const string NO_TITLE = "__NO_TITLE";
-const string DEFAULT_CURSOR = "*";
+const string D_CURSOR = "*";
 
 
 template<typename T>
@@ -227,7 +227,7 @@ struct LB {
         this->draw(current_i);
     }
 
-    LB(string t, vector<T> cs, string c=DEFAULT_CURSOR, bool si=true)
+    LB(string t, vector<T> cs, string c=D_CURSOR, bool si=true)
         : title(t)
         , show_title(t != NO_TITLE)
         , choices(cs)
@@ -322,7 +322,7 @@ T run_listbox(LB<T> lb) {
 
 
 template<typename T>
-T run_listbox(string title, vector<T>& choices, string cursor=DEFAULT_CURSOR,
+T run_listbox(string title, vector<T>& choices, string cursor=D_CURSOR,
               bool show_instructs=true) {
     return run_listbox(LB<T>(title, choices, cursor, show_instructs));
 }
