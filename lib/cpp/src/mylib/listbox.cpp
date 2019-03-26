@@ -13,13 +13,9 @@ using namespace std;
 namespace listbox {
 
 
-const string Listbox::DEFAULT_CURSOR = "*";
-const string Listbox::NO_TITLE = "__NO_TITLE";
-
-
 Listbox::Listbox(string title, vector<string>& choices, string cursor) {
     this->title = title;
-    this->show_title = title != this->NO_TITLE;
+    this->show_title = title != NO_TITLE;
     this->cursor = cursor;
     this->choices = choices;
 }

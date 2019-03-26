@@ -197,6 +197,10 @@ exec_ret easy_execute(T& args, bool capture_output=false) {
 namespace listbox {
 
 
+const string NO_TITLE = "__NO_TITLE";
+const string DEFAULT_CURSOR = "*";
+
+
 class Listbox {
 
 private:
@@ -206,9 +210,6 @@ private:
     vector<string> choices;
 
 public:
-    static const string DEFAULT_CURSOR;
-    static const string NO_TITLE;
-
     Listbox(string, vector<string>&, string=DEFAULT_CURSOR);
 
     int run(bool=true);
