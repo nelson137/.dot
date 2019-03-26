@@ -203,7 +203,6 @@ private:
     vector<string> choices;
 
 public:
-
     static const string DEFAULT_CURSOR;
     static const string NO_TITLE;
 
