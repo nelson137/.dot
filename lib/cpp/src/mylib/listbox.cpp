@@ -13,44 +13,36 @@ using namespace std;
 namespace listbox {
 
 
-Listbox::Listbox(string title, vector<string>& choices, string cursor) {
-    this->title = title;
-    this->show_title = title != NO_TITLE;
-    this->cursor = cursor;
-    this->choices = choices;
-}
-
-
-int Listbox::run(bool show_instructs) {
-    if (show_instructs) {
+int run_listbox(LB lb) {
+    if (lb.show_instructs) {
         cout << "Press k/j or up/down arrows to move up and down." << endl
              << "Press q to quit." << endl
              << "Press Enter to confirm the selection." << endl
              << endl;
     }
 
-    const string cursor_spaces = string(this->cursor.length(), ' ');
+    const string cursor_spaces = string(lb.cursor.length(), ' ');
 
     auto print = [&](string str, bool with_cursor=false){
-        cout << (with_cursor ? this->cursor : cursor_spaces)
+        cout << (with_cursor ? lb.cursor : cursor_spaces)
              << " " << str << endl;
     };
 
-    if (this->show_title) {
+    if (lb.show_title) {
         // Print the title
-        print(this->title);
+        print(lb.title);
         // Print the underline
-        print(string(this->title.length(), '-'));
+        print(string(lb.title.length(), '-'));
     }
 
     auto draw = [&](unsigned current_i){
-        for (unsigned i=0; i<this->choices.size(); i++)
-            print(this->choices[i], i==current_i);
+        for (unsigned i=0; i<lb.choices.size(); i++)
+            print(lb.choices[i], i==current_i);
     };
 
     auto redraw = [&](unsigned current_i){
         // Go back to the top of the listbox output
-        for (unsigned i=0; i<this->choices.size(); i++)
+        for (unsigned i=0; i<lb.choices.size(); i++)
             // Clear each line
             cout << "\33[A\33[2K";
         // Draw the listbox
@@ -102,7 +94,7 @@ int Listbox::run(bool show_instructs) {
             // Down
             case 'j':
             case 'B':  // Down arrow
-                if (current < this->choices.size()-1)
+                if (current < lb.choices.size()-1)
                     current++;
                 else
                     will_redraw = false;
@@ -110,7 +102,7 @@ int Listbox::run(bool show_instructs) {
 
             // Bottom
             case 'J':
-                current = this->choices.size() - 1;
+                current = lb.choices.size() - 1;
                 break;
 
             // Quit

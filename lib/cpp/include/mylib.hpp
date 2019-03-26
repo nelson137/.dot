@@ -201,20 +201,24 @@ const string NO_TITLE = "__NO_TITLE";
 const string DEFAULT_CURSOR = "*";
 
 
-class Listbox {
-
-private:
-    bool show_title;
+struct LB {
     string title;
-    string cursor;
+    bool show_title;
     vector<string> choices;
+    string cursor;
+    bool show_instructs;
 
-public:
-    Listbox(string, vector<string>&, string=DEFAULT_CURSOR);
-
-    int run(bool=true);
-
+    LB(string t, vector<string> cs, string c=DEFAULT_CURSOR, bool si=true)
+        : title(t)
+        , show_title(t != NO_TITLE)
+        , choices(cs)
+        , cursor(c)
+        , show_instructs(si)
+    {}
 };
+
+
+int run_listbox(LB);
 
 
 }  // namespace listbox
