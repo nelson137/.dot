@@ -194,6 +194,9 @@ exec_ret easy_execute(T& args, bool capture_output=false) {
 }
 
 
+namespace listbox {
+
+
 class Listbox {
 
 private:
@@ -211,6 +214,9 @@ public:
     int run(bool=true);
 
 };
+
+
+}  // namespace listbox
 
 
 template<typename T>

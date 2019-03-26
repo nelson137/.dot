@@ -10,6 +10,9 @@
 using namespace std;
 
 
+namespace listbox {
+
+
 const string Listbox::DEFAULT_CURSOR = "*";
 const string Listbox::NO_TITLE = "__NO_TITLE";
 
@@ -137,3 +140,6 @@ int Listbox::run(bool show_instructs) {
 
     return chosen;
 }
+
+
+}  // namespace listbox
