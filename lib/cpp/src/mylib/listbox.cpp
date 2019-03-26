@@ -21,21 +21,16 @@ int run_listbox(LB lb) {
              << endl;
     }
 
-    auto print = [&](string str, bool with_cursor=false){
-        cout << (with_cursor ? lb.cursor : lb.cursor_spaces)
-             << " " << str << endl;
-    };
-
     if (lb.show_title) {
         // Print the title
-        print(lb.title);
+        lb.print(lb.title);
         // Print the underline
-        print(string(lb.title.length(), '-'));
+        lb.print(string(lb.title.length(), '-'));
     }
 
     auto draw = [&](unsigned current_i){
         for (unsigned i=0; i<lb.choices.size(); i++)
-            print(lb.choices[i], i==current_i);
+            lb.print(lb.choices[i], i==current_i);
     };
 
     auto redraw = [&](unsigned current_i){

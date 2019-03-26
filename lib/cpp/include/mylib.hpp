@@ -209,6 +209,11 @@ struct LB {
     string cursor_spaces;
     bool show_instructs;
 
+    void print(string str, bool prefix_cursor=false) {
+        cout << (prefix_cursor ? this->cursor : this->cursor_spaces)
+             << " " << str << endl;
+    }
+
     LB(string t, vector<string> cs, string c=DEFAULT_CURSOR, bool si=true)
         : title(t)
         , show_title(t != NO_TITLE)
