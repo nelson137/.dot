@@ -207,8 +207,6 @@ public:
     static const string DEFAULT_CURSOR;
     static const string NO_TITLE;
 
-    int chosen;
-
     Listbox(string, vector<string>&, string=DEFAULT_CURSOR);
 
     int run(bool=true);

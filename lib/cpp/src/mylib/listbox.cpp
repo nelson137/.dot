@@ -77,7 +77,7 @@ int Listbox::run(bool show_instructs) {
     bool will_redraw, quit = false;
     unsigned current = 0;
 
-    this->chosen = -1;
+    int chosen = -1;
     draw(current);
 
     do {
@@ -121,7 +121,7 @@ int Listbox::run(bool show_instructs) {
 
             // Confirm selection
             case '\n':
-                this->chosen = current;
+                chosen = current;
                 will_redraw = false;
                 quit = true;
                 break;
@@ -135,5 +135,5 @@ int Listbox::run(bool show_instructs) {
     // Restore term
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 
-    return this->chosen;
+    return chosen;
 }
