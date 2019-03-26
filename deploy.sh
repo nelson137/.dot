@@ -6,36 +6,38 @@ no_ext() {
     sed -E 's/\.(c|cpp)$//' <<< "$1"
 }
 
+lang() {
+    grep -q '\.c$' <<< "$1" && echo c || echo cpp
+}
+
 
 # Link config files
 command ls -A "$here/files" | xargs -I % ln -fs "$HOME/.dot/files/%" "$HOME"
 
 # Make directories for libraries
 rm -rf "$HOME"/.{include,lib}
-mkdir -p "$HOME"/.include/{c,cpp} "$HOME"/.lib/{c,cpp}
+mkdir "$HOME"/.{include,lib}
 
 # Create C and C++ libraries
-for lang in c cpp; do
-    for lib in $(ls "$here/lib/$lang"); do
-        ln -fs "$here/lib/$lang/$lib/include/"* "$HOME/.include/$lang/"
-        mkdir -p "$HOME/.lib/$lang/$lib"
-        for src_fn in $(ls "$here/lib/$lang/$lib/src"); do
-            obj_fn="$(no_ext "$src_fn").o"
-            if [[ "$lang" == 'c' ]]; then
-                gcc -std=c11 -O3 -Wall -Werror -c \
-                    -I"$HOME/.include/c" \
-                    "$here/lib/c/$lib/src/$src_fn" \
-                    -o "$HOME/.lib/c/$lib/$obj_fn"
-            else
-                g++ -std=c++11 -O3 -Wall -Werror -c \
-                    -I"$HOME/.include/cpp" \
-                    "$here/lib/cpp/$lib/src/$src_fn" \
-                    -o "$HOME/.lib/cpp/$lib/$obj_fn"
-            fi
-            ar rc "$HOME/.lib/$lang/lib$lib.a" "$HOME/.lib/$lang/$lib/$obj_fn"
-        done
-        ranlib "$HOME/.lib/$lang/lib$lib.a"
+for lib in $(ls "$here/lib"); do
+    ln -fs "$here/lib/$lang/$lib/include/"* "$HOME/.include/$lang/"
+    mkdir -p "$HOME/.lib/$lang/$lib"
+    for src_fn in $(ls "$here/lib/$lang/$lib/src"); do
+        obj_fn="$(no_ext "$src_fn").o"
+        if [[ "$(lang "$src_fn")" == 'c' ]]; then
+            gcc -std=c11 -O3 -Wall -Werror -c \
+                "$here/lib/$lib/src/$src_fn" \
+                -o "$HOME/.lib/$lib/$obj_fn" \
+                -I"$HOME/.include"
+        else
+            g++ -std=c++11 -O3 -Wall -Werror -c \
+                "$here/lib/$lib/src/$src_fn" \
+                -o "$HOME/.lib/$lib/$obj_fn" \
+                -I"$HOME/.include"
+        fi
+        ar rc "$HOME/.lib/lib$lib.a" "$HOME/.lib/$lib/$obj_fn"
     done
+    ranlib "$HOME/.lib/lib$lib.a"
 done
 
 # Install repository hooks

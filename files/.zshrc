@@ -58,10 +58,10 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets root)
 source $ZSH/oh-my-zsh.sh
 
 # C flags
-export C_INCLUDE_PATH=$(py_include):~/.include/c
-export CPLUS_INCLUDE_PATH=~/.include/cpp
+export C_INCLUDE_PATH=$(py_include):~/.include
+export CPLUS_INCLUDE_PATH=~/.include
 # Static libraries (*.a)
-export LIBRARY_PATH=~/.lib/c:~/.lib/cpp
+export LIBRARY_PATH=~/.lib
 # Dynamic libraries (*.so)
 export LD_LIBRARY_PATH=
 
