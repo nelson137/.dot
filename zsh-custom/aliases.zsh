@@ -36,9 +36,11 @@ alias ll="ls -pohv $color $time $groupdirs"
 alias lla="ls -pAohv $color $time $groupdirs"
 
 # git aliases
+alias gl='git pull'
 alias glop='git log -p'
 alias gcam='git add -A; git commit -m'
 alias gcam!='git add -A; git commit -v --amend'
+alias gp='git push'
 alias gstu='git stash push'
 
 # My aliases

@@ -94,20 +94,6 @@ gcl() {
 
 
 
-gl() {
-    # Pull and update pull/diverge prompt status
-    git pull "$@" && (_git_pd_status >/dev/null &)
-}
-
-
-
-gp() {
-    # Push and update pull/diverge prompt status
-    git push "$@" && (_git_pd_status >/dev/null &)
-}
-
-
-
 is_mu() {
     [[ "$(hostname)" =~ tc-m[0-9]+-(login|hpc[0-9]+)-node[0-9]+ ]]
 }
