@@ -221,6 +221,9 @@ struct LB {
 int run_listbox(LB);
 
 
+int run_listbox(string, vector<string>&, string=DEFAULT_CURSOR, bool=true);
+
+
 }  // namespace listbox
 
 

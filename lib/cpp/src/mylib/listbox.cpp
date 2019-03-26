@@ -130,4 +130,10 @@ int run_listbox(LB lb) {
 }
 
 
+int run_listbox(string title, vector<string>& choices, string cursor,
+            bool show_instructs) {
+    return run_listbox(LB(title, choices, cursor, show_instructs));
+}
+
+
 }  // namespace listbox
