@@ -204,8 +204,6 @@ private:
 
     string cursor_spaces();
     void print(string, bool=false);
-    void draw(unsigned);
-    void redraw(unsigned);
 
 public:
 

@@ -25,22 +25,6 @@ void Listbox::print(string str, bool with_cursor) {
 }
 
 
-void Listbox::draw(unsigned current_i) {
-    for (unsigned i=0; i<this->choices.size(); i++)
-        this->print(this->choices[i], i==current_i);
-}
-
-
-void Listbox::redraw(unsigned current_i) {
-    // Go back to the top of the listbox output
-    for (unsigned i=0; i<this->choices.size(); i++)
-        // Clear each line
-        cout << "\33[A\33[2K";
-    // Draw the listbox
-    this->draw(current_i);
-}
-
-
 Listbox::Listbox(string title, vector<string>& choices, string cursor) {
     this->title = title;
     this->show_title = title != this->NO_TITLE;
@@ -64,6 +48,20 @@ int Listbox::run(bool show_instructs) {
         this->print(string(this->title.length(), '-'));
     }
 
+    auto draw = [&](unsigned current_i){
+        for (unsigned i=0; i<this->choices.size(); i++)
+            this->print(this->choices[i], i==current_i);
+    };
+
+    auto redraw = [&](unsigned current_i){
+        // Go back to the top of the listbox output
+        for (unsigned i=0; i<this->choices.size(); i++)
+            // Clear each line
+            cout << "\33[A\33[2K";
+        // Draw the listbox
+        draw(current_i);
+    };
+
     // Save the current terminal settings
     struct termios oldt = {0};
     tcgetattr(STDIN_FILENO, &oldt);
@@ -84,7 +82,7 @@ int Listbox::run(bool show_instructs) {
     unsigned current = 0;
 
     this->chosen = -1;
-    this->draw(current);
+    draw(current);
 
     do {
         c = cin.get();
@@ -135,7 +133,7 @@ int Listbox::run(bool show_instructs) {
         }
 
         if (will_redraw)
-            this->redraw(current);
+            redraw(current);
     } while (quit == false);
 
     // Restore term
