@@ -14,11 +14,6 @@ const string Listbox::DEFAULT_CURSOR = "*";
 const string Listbox::NO_TITLE = "__NO_TITLE";
 
 
-string Listbox::cursor_spaces() {
-    return string(this->cursor.length(), ' ');
-}
-
-
 Listbox::Listbox(string title, vector<string>& choices, string cursor) {
     this->title = title;
     this->show_title = title != this->NO_TITLE;
@@ -35,8 +30,10 @@ int Listbox::run(bool show_instructs) {
              << endl;
     }
 
+    const string cursor_spaces = string(this->cursor.length(), ' ');
+
     auto print = [&](string str, bool with_cursor=false){
-        cout << (with_cursor ? this->cursor : this->cursor_spaces())
+        cout << (with_cursor ? this->cursor : cursor_spaces)
              << " " << str << endl;
     };
 

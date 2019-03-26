@@ -202,8 +202,6 @@ private:
     string cursor;
     vector<string> choices;
 
-    string cursor_spaces();
-
 public:
 
     static const string DEFAULT_CURSOR;
