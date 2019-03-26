@@ -54,8 +54,8 @@ void help() {
     puts("Note");
     puts("  All arguments after the last positional argument (outfile if the");
     puts("  outfile command (o) was given, lang if the lang command (x) was");
-    puts("  given) will be passed to the program if the execute command (e)");
-    puts("  is given.");
+    puts("  given, otherwise infile) will be passed to the program if the");
+    puts("  execute command (e) was given.");
     puts("");
     puts("Options");
     puts("  -h, --help   Print this help message and exit");
