@@ -21,10 +21,8 @@ int run_listbox(LB lb) {
              << endl;
     }
 
-    const string cursor_spaces = string(lb.cursor.length(), ' ');
-
     auto print = [&](string str, bool with_cursor=false){
-        cout << (with_cursor ? lb.cursor : cursor_spaces)
+        cout << (with_cursor ? lb.cursor : lb.cursor_spaces)
              << " " << str << endl;
     };
 

@@ -206,6 +206,7 @@ struct LB {
     bool show_title;
     vector<string> choices;
     string cursor;
+    string cursor_spaces;
     bool show_instructs;
 
     LB(string t, vector<string> cs, string c=DEFAULT_CURSOR, bool si=true)
@@ -213,6 +214,7 @@ struct LB {
         , show_title(t != NO_TITLE)
         , choices(cs)
         , cursor(c)
+        , cursor_spaces(string(c.size(), ' '))
         , show_instructs(si)
     {}
 };
