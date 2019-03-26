@@ -7,22 +7,22 @@
 #include "mylib.hpp"
 
 #define  COMPILE    1  // 0000 0001
-#define  EXECUTE    2  // 0000 0010
-#define  REMOVE     4  // 0000 0100
+#define  DRYRUN     2  // 0000 0010
+#define  EXECUTE    4  // 0000 0100
 #define  FORCE      8  // 0000 1000
-#define  LOUD      16  // 0001 0000
-#define  DRYRUN    32  // 0010 0000
+#define  LANG      16  // 0001 0000
+#define  LOUD      32  // 0010 0000
 #define  OUTFILE   64  // 0100 0000
-#define  LANG     128  // 1000 0000
+#define  REMOVE   128  // 1000 0000
 
 #define  HAS_COMPILE(x)  (x & COMPILE)
-#define  HAS_EXECUTE(x)  (x & EXECUTE)
-#define  HAS_REMOVE(x)   (x & REMOVE)
-#define  HAS_FORCE(x)    (x & FORCE)
-#define  HAS_LOUD(x)     (x & LOUD)
 #define  HAS_DRYRUN(x)   (x & DRYRUN)
-#define  HAS_OUTFILE(x)  (x & OUTFILE)
+#define  HAS_EXECUTE(x)  (x & EXECUTE)
+#define  HAS_FORCE(x)    (x & FORCE)
 #define  HAS_LANG(x)     (x & LANG)
+#define  HAS_LOUD(x)     (x & LOUD)
+#define  HAS_OUTFILE(x)  (x & OUTFILE)
+#define  HAS_REMOVE(x)   (x & REMOVE)
 
 #define  NASM       "/usr/bin/nasm"
 #define  LD         "/usr/bin/ld"
@@ -283,10 +283,10 @@ void Prog::parse_args(int argc, char *argv[]) {
             case 'd': this->commands |= DRYRUN;  break;
             case 'e': this->commands |= EXECUTE; break;
             case 'f': this->commands |= FORCE;   break;
+            case 'x': this->commands |= LANG;    break;
             case 'l': this->commands |= LOUD;    break;
             case 'o': this->commands |= OUTFILE; break;
             case 'r': this->commands |= REMOVE;  break;
-            case 'x': this->commands |= LANG;    break;
             default:  die("Command not recognized:", c);  break;
         }
     }
