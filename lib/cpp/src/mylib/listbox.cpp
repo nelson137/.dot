@@ -43,45 +43,36 @@ int run_listbox(LB lb) {
     // Apply the new settings
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 
-    char c;
-    bool will_redraw, quit = false;
+    bool quit = false;
     unsigned current = 0;
 
     int chosen = -1;
     lb.draw(current);
 
     do {
-        c = cin.get();
-        will_redraw = true;
-
-        switch (c) {
-
+        switch (cin.get()) {
             // Up
             case 'k':
             case 'A':  // Up arrow
                 if (current > 0)
-                    current--;
-                else
-                    will_redraw = false;
+                    lb.redraw(--current);
                 break;
 
             // Top
             case 'K':
-                current = 0;
+                lb.redraw(current = 0);
                 break;
 
             // Down
             case 'j':
             case 'B':  // Down arrow
                 if (current < lb.choices.size()-1)
-                    current++;
-                else
-                    will_redraw = false;
+                    lb.redraw(++current);
                 break;
 
             // Bottom
             case 'J':
-                current = lb.choices.size() - 1;
+                lb.redraw(current = lb.choices.size() - 1);
                 break;
 
             // Quit
@@ -92,14 +83,9 @@ int run_listbox(LB lb) {
             // Confirm selection
             case '\n':
                 chosen = current;
-                will_redraw = false;
                 quit = true;
                 break;
-
         }
-
-        if (will_redraw)
-            lb.redraw(current);
     } while (quit == false);
 
     // Restore term
