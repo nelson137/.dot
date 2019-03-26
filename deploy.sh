@@ -16,12 +16,10 @@ mkdir -p "$HOME"/.include/{c,cpp} "$HOME"/.lib/{c,cpp}
 
 # Create C and C++ libraries
 for lang in c cpp; do
-    lib_names=( $(ls "$here/lib/$lang") )
-    for lib in "${lib_names[@]}"; do
+    for lib in $(ls "$here/lib/$lang"); do
         ln -fs "$here/lib/$lang/$lib/include/"* "$HOME/.include/$lang/"
         mkdir -p "$HOME/.lib/$lang/$lib"
-        src_fns=( $(ls "$here/lib/$lang/$lib/src") )
-        for src_fn in "${src_fns[@]}"; do
+        for src_fn in $(ls "$here/lib/$lang/$lib/src"); do
             obj_fn="$(no_ext "$src_fn").o"
             if [[ "$lang" == 'c' ]]; then
                 gcc -std=c11 -O3 -Wall -Werror -c \
