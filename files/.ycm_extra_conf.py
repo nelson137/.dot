@@ -5,7 +5,7 @@ Valloric/YouCompleteMe does not implement the FlagsForFile method, resulting
 in an error. This script executes the ycm_extra_conf file then implements the
 missing method.
 
-This python code does not follow YouCompleteMe's code style.
+This script does not follow YouCompleteMe's code style.
 """
 
 import os
