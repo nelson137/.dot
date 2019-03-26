@@ -397,7 +397,7 @@ void compile_c(Prog const& prog) {
 
 void compile_cpp(Prog const& prog) {
     vector<string> gpp_args = {
-        GPP, "-xc++", "-std=c++11", "-O3", "-Wall", "-Werror",
+        GPP, "-xc++", "-std=c++17", "-O3", "-Wall", "-Werror",
         prog.src_name, "-o", prog.bin_name};
 
     string lib_flags = getenv("CPLUS_SEARCH_LIBS");
