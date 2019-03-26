@@ -7,8 +7,9 @@
         },
         {
             "name": "aws",
-            "username": "nelson",
-            "hosts": ["35.162.200.222"]
+            "username": "ubuntu",
+            "hosts": ["18.224.206.187", "nelsonearle.tk"],
+            "keyfile": "~/.ssh/main.pem"
         },
         {
             "name": "pi",
