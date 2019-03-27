@@ -481,7 +481,8 @@ int main(int argc, char *argv[]) {
     int exitstatus = 0;
 
     // Compile the program
-    to_compile(parser);
+    if (HAS_COMPILE(parser.commands))
+        to_compile(parser);
 
     // Execute the program
     if (HAS_EXECUTE(parser.commands))
