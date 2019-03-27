@@ -29,6 +29,8 @@ void catchSig(int, void *(int));
 
 bool file_exists(string);
 
+bool file_executable(string);
+
 string trim_whitespace(string);
 
 /**

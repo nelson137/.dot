@@ -28,6 +28,14 @@ bool file_exists(string fn) {
 
 
 /**
+ * Return whether a file is executable.
+ */
+bool file_executable(string fn) {
+    return !access(fn.c_str(), X_OK);
+}
+
+
+/**
  * Return the given string with all leading and trailing whitespace removed.
  */
 string trim_whitespace(string str) {
