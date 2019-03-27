@@ -443,6 +443,11 @@ int to_execute(Prog& prog) {
         return 0;
     }
 
+    if (!file_exists(prog.bin_name))
+        die("No such file or directory:", prog.bin_name);
+    if (!file_executable(prog.bin_name))
+        die("Permission denied:", prog.bin_name);
+
     if (prog.wrap_output)
         cout << "===== OUTPUT =====" << endl;
     int exitstatus = easy_execute(prog.exec_args).exitstatus;
