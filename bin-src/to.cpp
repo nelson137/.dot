@@ -341,6 +341,30 @@ void Prog::parse_args(int argc, char *argv[]) {
 
 
 /*************************************************
+ * Core Functions
+ ************************************************/
+
+
+/**
+ * Print the arguments or execute them depending on the program's bitflags.
+ * If the program has the DRYRUN flag enabled, the arguments will be printed.
+ * Otherwise, the arguments are executed and the exit status is returned.
+ */
+int execute_or_print(Prog const& prog, vector<string> args) {
+    int code = 0;
+
+    if (HAS_DRYRUN(prog.commands)) {
+        print_args(args);
+    } else {
+        check_executable_exists(args[0]);
+        code = easy_execute(args).exitstatus;
+    }
+
+    return code;
+}
+
+
+/*************************************************
  * Compile
  ************************************************/
 
@@ -356,21 +380,13 @@ void compile_asm(Prog const& prog) {
         NASM, "-f", "elf64", prog.src_name, "-o", prog.obj_name};
     vector<string> ld_args = {LD, prog.obj_name, "-o", prog.bin_name};
 
-    if (HAS_DRYRUN(prog.commands)) {
-        print_args(nasm_args);
-        print_args(ld_args);
-    } else {
-        check_executable_exists(nasm_args[0]);
-        check_executable_exists(ld_args[0]);
+    int code;
 
-        int code;
+    if ((code = execute_or_print(prog, nasm_args)))
+        die(code, "Could not create object file:", prog.obj_name);
 
-        if ((code = easy_execute(nasm_args).exitstatus))
-            die(code, "Could not create object file:", prog.obj_name);
-
-        if ((code = easy_execute(ld_args).exitstatus))
-            die(code, "Could not link object file:", prog.obj_name);
-    }
+    if ((code = execute_or_print(prog, ld_args)))
+        die(code, "Could not link object file:", prog.obj_name);
 }
 
 
@@ -383,15 +399,9 @@ void compile_c(Prog const& prog) {
     if (lib_flags.size())
         append(gcc_args, can_find_libs(split(lib_flags)));
 
-    if (HAS_DRYRUN(prog.commands)) {
-        print_args(gcc_args);
-    } else {
-        check_executable_exists(gcc_args[0]);
-
-        int code;
-        if ((code = easy_execute(gcc_args).exitstatus))
-            die(code, "Could not compile infile:", prog.src_name);
-    }
+    int code;
+    if ((code = execute_or_print(prog, gcc_args)))
+        die(code, "Could not compile infile:", prog.src_name);
 }
 
 
@@ -404,15 +414,9 @@ void compile_cpp(Prog const& prog) {
     if (lib_flags.size())
         append(gpp_args, can_find_libs(split(lib_flags)));
 
-    if (HAS_DRYRUN(prog.commands)) {
-        print_args(gpp_args);
-    } else {
-        check_executable_exists(gpp_args[0]);
-
-        int code;
-        if ((code = easy_execute(gpp_args).exitstatus))
-            die("Could not compile infile:", prog.src_name);
-    }
+    int code;
+    if ((code = execute_or_print(prog, gpp_args)))
+        die("Could not compile infile:", prog.src_name);
 }
 
 
