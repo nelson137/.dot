@@ -480,22 +480,22 @@ void to_remove(Prog const& prog) {
 
 
 int main(int argc, char *argv[]) {
-    Prog parser;
-    parser.parse_args(argc, argv);
+    Prog prog;
+    prog.parse_args(argc, argv);
 
     int exitstatus = 0;
 
     // Compile the program
-    if (HAS_COMPILE(parser.commands))
-        to_compile(parser);
+    if (HAS_COMPILE(prog.commands))
+        to_compile(prog);
 
     // Execute the program
-    if (HAS_EXECUTE(parser.commands))
-        exitstatus = to_execute(parser);
+    if (HAS_EXECUTE(prog.commands))
+        exitstatus = to_execute(prog);
 
     // Remove the generated files
-    if (HAS_REMOVE(parser.commands))
-        to_remove(parser);
+    if (HAS_REMOVE(prog.commands))
+        to_remove(prog);
 
     return exitstatus;
 }
