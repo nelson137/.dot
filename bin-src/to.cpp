@@ -350,10 +350,10 @@ void Prog::parse_args(int argc, char *argv[]) {
  * If the program has the DRYRUN flag enabled, the arguments will be printed.
  * Otherwise, the arguments are executed and the exit status is returned.
  */
-int execute_or_print(Prog const& prog, vector<string> args) {
+int execute_or_print(int commands, vector<string> args) {
     int code = 0;
 
-    if (HAS_DRYRUN(prog.commands)) {
+    if (HAS_DRYRUN(commands)) {
         print_args(args);
     } else {
         check_executable_exists(args[0]);
@@ -381,12 +381,12 @@ void compile_asm(Prog const& prog) {
 
     int code;
 
-    if ((code = execute_or_print(prog, nasm_args)))
+    if ((code = execute_or_print(prog.commands, nasm_args)))
         die(code, "Could not create object file:", prog.obj_name);
 
     if (HAS_COMPILE(prog.commands)) {
         vector<string> ld_args = {LD, prog.obj_name, "-o", prog.bin_name};
-        if ((code = execute_or_print(prog, ld_args)))
+        if ((code = execute_or_print(prog.commands, ld_args)))
             die(code, "Could not link object file:", prog.obj_name);
     }
 }
@@ -418,13 +418,13 @@ void compile_c(Prog const& prog) {
     int code;
 
     if (HAS_ASSEMBLE(prog.commands)) {
-        if ((code = execute_or_print(prog, gcc_assemble_args)))
+        if ((code = execute_or_print(prog.commands, gcc_assemble_args)))
             die(code, "Could not assemble infile:", prog.src_name);
         if (HAS_COMPILE(prog.commands))
-            if ((code = execute_or_print(prog, gcc_link_args)))
+            if ((code = execute_or_print(prog.commands, gcc_link_args)))
                 die(code, "Could not compile infile:", prog.src_name);
     } else {
-        if ((code = execute_or_print(prog, gcc_args)))
+        if ((code = execute_or_print(prog.commands, gcc_args)))
             die(code, "Could not compile infile:", prog.src_name);
     }
 }
@@ -456,13 +456,13 @@ void compile_cpp(Prog const& prog) {
     int code;
 
     if (HAS_ASSEMBLE(prog.commands)) {
-        if ((code = execute_or_print(prog, gpp_assemble_args)))
+        if ((code = execute_or_print(prog.commands, gpp_assemble_args)))
             die("Could not assemble infile:", prog.src_name);
         if (HAS_COMPILE(prog.commands))
-            if ((code = execute_or_print(prog, gpp_link_args)))
+            if ((code = execute_or_print(prog.commands, gpp_link_args)))
                 die(code, "Could not compile infile:", prog.src_name);
     } else {
-        if ((code = execute_or_print(prog, gpp_args)))
+        if ((code = execute_or_print(prog.commands, gpp_args)))
             die(code, "Could not compile infile:", prog.src_name);
     }
 }
