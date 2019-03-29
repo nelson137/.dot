@@ -356,13 +356,13 @@ void compile_asm(Prog const& prog) {
 
     int code;
 
-    if ((code = easy_execute(nasm_args).exitstatus))
+    if ((code = easy_execute(nasm_args)))
         die(code, "Could not create object file:", prog.obj_name);
 
     if (HAS_COMPILE(prog.commands)) {
         check_executable_exists(LD);
         vector<string> ld_args = {LD, prog.obj_name, "-o", prog.bin_name};
-        if ((code = easy_execute(ld_args).exitstatus))
+        if ((code = easy_execute(ld_args)))
             die(code, "Could not link object file:", prog.obj_name);
     }
 }
@@ -396,13 +396,13 @@ void compile_c(Prog const& prog) {
     int code;
 
     if (HAS_ASSEMBLE(prog.commands)) {
-        if ((code = easy_execute(gcc_assemble_args).exitstatus))
+        if ((code = easy_execute(gcc_assemble_args)))
             die(code, "Could not assemble infile:", prog.src_name);
         if (HAS_COMPILE(prog.commands))
-            if ((code = easy_execute(gcc_link_args).exitstatus))
+            if ((code = easy_execute(gcc_link_args)))
                 die(code, "Could not compile infile:", prog.src_name);
     } else {
-        if ((code = easy_execute(gcc_args).exitstatus))
+        if ((code = easy_execute(gcc_args)))
             die(code, "Could not compile infile:", prog.src_name);
     }
 }
@@ -436,13 +436,13 @@ void compile_cpp(Prog const& prog) {
     int code;
 
     if (HAS_ASSEMBLE(prog.commands)) {
-        if ((code = easy_execute(gpp_assemble_args).exitstatus))
+        if ((code = easy_execute(gpp_assemble_args)))
             die("Could not assemble infile:", prog.src_name);
         if (HAS_COMPILE(prog.commands))
-            if ((code = easy_execute(gpp_link_args).exitstatus))
+            if ((code = easy_execute(gpp_link_args)))
                 die(code, "Could not compile infile:", prog.src_name);
     } else {
-        if ((code = easy_execute(gpp_args).exitstatus))
+        if ((code = easy_execute(gpp_args)))
             die(code, "Could not compile infile:", prog.src_name);
     }
 }
