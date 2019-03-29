@@ -6,15 +6,14 @@
 
 #include "mylib.hpp"
 
-#define  ASSEMBLE    1  // 00000000 00000001
-#define  COMPILE     2  // 00000000 00000010
-#define  DRYRUN      4  // 00000000 00000100
-#define  EXECUTE     8  // 00000000 00001000
-#define  FORCE      16  // 00000000 00010000
-#define  LANG       32  // 00000000 00100000
-#define  LOUD       64  // 00000000 01000000
-#define  OUTFILE   128  // 00000000 10000000
-#define  REMOVE    256  // 00000001 00000000
+#define  ASSEMBLE    1  // 00000001
+#define  COMPILE     2  // 00000010
+#define  DRYRUN      4  // 00000100
+#define  EXECUTE     8  // 00001000
+#define  FORCE      16  // 00010000
+#define  LANG       32  // 00100000
+#define  OUTFILE    64  // 01000000
+#define  REMOVE    128  // 10000000
 
 #define  HAS_ASSEMBLE(x)  (x & ASSEMBLE)
 #define  HAS_COMPILE(x)   (x & COMPILE)
@@ -22,7 +21,6 @@
 #define  HAS_EXECUTE(x)   (x & EXECUTE)
 #define  HAS_FORCE(x)     (x & FORCE)
 #define  HAS_LANG(x)      (x & LANG)
-#define  HAS_LOUD(x)      (x & LOUD)
 #define  HAS_OUTFILE(x)   (x & OUTFILE)
 #define  HAS_REMOVE(x)    (x & REMOVE)
 
@@ -77,7 +75,6 @@ void help() {
     puts("               output is suitable for use in a shell");
     puts("  e            Execute the compiled program");
     puts("  f            Do not prompt before overwriting files");
-    puts("  l            Print the OUTPUT and END OUTPUT messages");
     puts("  o            What to name the binary");
     puts("  r            Remove the binary and all compilation files");
     puts("  x            The language of the infile");
@@ -209,7 +206,6 @@ class Prog {
         string bin_name;
         vector<string> exec_args;
         Lang lang;
-        bool wrap_output;
 
         void parse_args(int, char *[]);
 };
@@ -288,7 +284,6 @@ void Prog::parse_args(int argc, char *argv[]) {
             case 'e': this->commands |= EXECUTE;  break;
             case 'f': this->commands |= FORCE;    break;
             case 'x': this->commands |= LANG;     break;
-            case 'l': this->commands |= LOUD;     break;
             case 'o': this->commands |= OUTFILE;  break;
             case 'r': this->commands |= REMOVE;   break;
             default:  die("Command not recognized:", c);  break;
@@ -342,9 +337,6 @@ void Prog::parse_args(int argc, char *argv[]) {
         this->exec_args.push_back(pos_args.front());
         pos_args.pop();
     }
-
-    this->wrap_output =
-        HAS_LOUD(this->commands) && !HAS_DRYRUN(this->commands);
 }
 
 
@@ -508,12 +500,7 @@ int to_execute(Prog& prog) {
     if (!file_executable(prog.bin_name))
         die("Permission denied:", prog.bin_name);
 
-    if (prog.wrap_output)
-        cout << "===== OUTPUT =====" << endl;
-    int exitstatus = easy_execute(prog.exec_args).exitstatus;
-    if (prog.wrap_output)
-        cout << "===== END OUTPUT =====" << endl;
-    return exitstatus;
+    return easy_execute(prog.exec_args).exitstatus;
 }
 
 
