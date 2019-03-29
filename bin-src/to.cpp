@@ -6,23 +6,25 @@
 
 #include "mylib.hpp"
 
-#define  COMPILE    1  // 0000 0001
-#define  DRYRUN     2  // 0000 0010
-#define  EXECUTE    4  // 0000 0100
-#define  FORCE      8  // 0000 1000
-#define  LANG      16  // 0001 0000
-#define  LOUD      32  // 0010 0000
-#define  OUTFILE   64  // 0100 0000
-#define  REMOVE   128  // 1000 0000
+#define  ASSEMBLE    1  // 00000000 00000001
+#define  COMPILE     2  // 00000000 00000010
+#define  DRYRUN      4  // 00000000 00000100
+#define  EXECUTE     8  // 00000000 00001000
+#define  FORCE      16  // 00000000 00010000
+#define  LANG       32  // 00000000 00100000
+#define  LOUD       64  // 00000000 01000000
+#define  OUTFILE   128  // 00000000 10000000
+#define  REMOVE    256  // 00000001 00000000
 
-#define  HAS_COMPILE(x)  (x & COMPILE)
-#define  HAS_DRYRUN(x)   (x & DRYRUN)
-#define  HAS_EXECUTE(x)  (x & EXECUTE)
-#define  HAS_FORCE(x)    (x & FORCE)
-#define  HAS_LANG(x)     (x & LANG)
-#define  HAS_LOUD(x)     (x & LOUD)
-#define  HAS_OUTFILE(x)  (x & OUTFILE)
-#define  HAS_REMOVE(x)   (x & REMOVE)
+#define  HAS_ASSEMBLE(x)  (x & ASSEMBLE)
+#define  HAS_COMPILE(x)   (x & COMPILE)
+#define  HAS_DRYRUN(x)    (x & DRYRUN)
+#define  HAS_EXECUTE(x)   (x & EXECUTE)
+#define  HAS_FORCE(x)     (x & FORCE)
+#define  HAS_LANG(x)      (x & LANG)
+#define  HAS_LOUD(x)      (x & LOUD)
+#define  HAS_OUTFILE(x)   (x & OUTFILE)
+#define  HAS_REMOVE(x)    (x & REMOVE)
 
 #define  NASM       "/usr/bin/nasm"
 #define  LD         "/usr/bin/ld"
@@ -69,6 +71,7 @@ void help() {
     puts("  outfile      The name of the outfile");
     puts("");
     puts("Commands");
+    puts("  a            Assemble the program (gcc -c)");
     puts("  c            Compile the program");
     puts("  d            Print out the commands that would be executed,");
     puts("               output is suitable for use in a shell");
@@ -279,14 +282,15 @@ void Prog::parse_args(int argc, char *argv[]) {
     // Parse commands
     for (char c : pos_args.front()) {
         switch (c) {
-            case 'c': this->commands |= COMPILE; break;
-            case 'd': this->commands |= DRYRUN;  break;
-            case 'e': this->commands |= EXECUTE; break;
-            case 'f': this->commands |= FORCE;   break;
-            case 'x': this->commands |= LANG;    break;
-            case 'l': this->commands |= LOUD;    break;
-            case 'o': this->commands |= OUTFILE; break;
-            case 'r': this->commands |= REMOVE;  break;
+            case 'a': this->commands |= ASSEMBLE; break;
+            case 'c': this->commands |= COMPILE;  break;
+            case 'd': this->commands |= DRYRUN;   break;
+            case 'e': this->commands |= EXECUTE;  break;
+            case 'f': this->commands |= FORCE;    break;
+            case 'x': this->commands |= LANG;     break;
+            case 'l': this->commands |= LOUD;     break;
+            case 'o': this->commands |= OUTFILE;  break;
+            case 'r': this->commands |= REMOVE;   break;
             default:  die("Command not recognized:", c);  break;
         }
     }
@@ -320,6 +324,10 @@ void Prog::parse_args(int argc, char *argv[]) {
     } else {
         this->auto_lang();
     }
+
+    if (HAS_EXECUTE(this->commands) && HAS_ASSEMBLE(this->commands)
+            && !HAS_COMPILE(this->commands))
+        die("Execution requires compilation (the 'c' command)");
 
     // Get object file name
     this->obj_name = this->src_name + ".o";
@@ -378,45 +386,93 @@ void compile_asm(Prog const& prog) {
 
     vector<string> nasm_args = {
         NASM, "-f", "elf64", prog.src_name, "-o", prog.obj_name};
-    vector<string> ld_args = {LD, prog.obj_name, "-o", prog.bin_name};
 
     int code;
 
     if ((code = execute_or_print(prog, nasm_args)))
         die(code, "Could not create object file:", prog.obj_name);
 
-    if ((code = execute_or_print(prog, ld_args)))
-        die(code, "Could not link object file:", prog.obj_name);
+    if (HAS_COMPILE(prog.commands)) {
+        vector<string> ld_args = {LD, prog.obj_name, "-o", prog.bin_name};
+        if ((code = execute_or_print(prog, ld_args)))
+            die(code, "Could not link object file:", prog.obj_name);
+    }
 }
 
 
 void compile_c(Prog const& prog) {
+    vector<string> compile_args = {
+        "-xc", "-std=c11", "-O3", "-Wall", "-Werror"};
+
     vector<string> gcc_args = {
-        GCC, "-xc", "-std=c11", "-O3", "-Wall", "-Werror",
-        prog.src_name, "-o", prog.bin_name};
+        GCC, prog.src_name, "-o", prog.bin_name};
+    vector<string> gcc_assemble_args = {
+        GCC, prog.src_name, "-o", prog.obj_name, "-c"};
+    vector<string> gcc_link_args = {
+        GCC, prog.obj_name, "-o", prog.bin_name};
+
+    gcc_args.insert(
+        gcc_args.begin()+1, compile_args.begin(), compile_args.end());
+    gcc_assemble_args.insert(
+        gcc_assemble_args.begin()+1, compile_args.begin(), compile_args.end());
 
     string lib_flags = string(getenv("C_SEARCH_LIBS"));
-    if (lib_flags.size())
-        append(gcc_args, can_find_libs(split(lib_flags)));
+    if (lib_flags.size()) {
+        vector<string> libs = can_find_libs(split(lib_flags));
+        append(gcc_args, libs);
+        append(gcc_assemble_args, libs);
+    }
 
     int code;
-    if ((code = execute_or_print(prog, gcc_args)))
-        die(code, "Could not compile infile:", prog.src_name);
+
+    if (HAS_ASSEMBLE(prog.commands)) {
+        if ((code = execute_or_print(prog, gcc_assemble_args)))
+            die(code, "Could not assemble infile:", prog.src_name);
+        if (HAS_COMPILE(prog.commands))
+            if ((code = execute_or_print(prog, gcc_link_args)))
+                die(code, "Could not compile infile:", prog.src_name);
+    } else {
+        if ((code = execute_or_print(prog, gcc_args)))
+            die(code, "Could not compile infile:", prog.src_name);
+    }
 }
 
 
 void compile_cpp(Prog const& prog) {
+    vector<string> compile_args = {
+        "-xc++", "-std=c++17", "-O3", "-Wall", "-Werror"};
+
     vector<string> gpp_args = {
-        GPP, "-xc++", "-std=c++17", "-O3", "-Wall", "-Werror",
-        prog.src_name, "-o", prog.bin_name};
+        GPP, prog.src_name, "-o", prog.bin_name};
+    vector<string> gpp_assemble_args = {
+        GPP, prog.src_name, "-o", prog.obj_name, "-c"};
+    vector<string> gpp_link_args = {
+        GPP, prog.obj_name, "-o", prog.bin_name};
+
+    gpp_args.insert(
+        gpp_args.begin()+1, compile_args.begin(), compile_args.end());
+    gpp_assemble_args.insert(
+        gpp_assemble_args.begin()+1, compile_args.begin(), compile_args.end());
 
     string lib_flags = getenv("CPLUS_SEARCH_LIBS");
-    if (lib_flags.size())
-        append(gpp_args, can_find_libs(split(lib_flags)));
+    if (lib_flags.size()) {
+        vector<string> libs = can_find_libs(split(lib_flags));
+        append(gpp_args, libs);
+        append(gpp_assemble_args, libs);
+    }
 
     int code;
-    if ((code = execute_or_print(prog, gpp_args)))
-        die("Could not compile infile:", prog.src_name);
+
+    if (HAS_ASSEMBLE(prog.commands)) {
+        if ((code = execute_or_print(prog, gpp_assemble_args)))
+            die("Could not assemble infile:", prog.src_name);
+        if (HAS_COMPILE(prog.commands))
+            if ((code = execute_or_print(prog, gpp_link_args)))
+                die(code, "Could not compile infile:", prog.src_name);
+    } else {
+        if ((code = execute_or_print(prog, gpp_args)))
+            die(code, "Could not compile infile:", prog.src_name);
+    }
 }
 
 
@@ -490,7 +546,7 @@ int main(int argc, char *argv[]) {
     int exitstatus = 0;
 
     // Compile the program
-    if (HAS_COMPILE(prog.commands))
+    if (HAS_ASSEMBLE(prog.commands) || HAS_COMPILE(prog.commands))
         to_compile(prog);
 
     // Execute the program
