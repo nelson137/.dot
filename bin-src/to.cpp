@@ -6,18 +6,16 @@
 
 #include "mylib.hpp"
 
-#define  ASSEMBLE    1  // 00000001
-#define  COMPILE     2  // 00000010
-#define  DRYRUN      4  // 00000100
-#define  EXECUTE     8  // 00001000
-#define  FORCE      16  // 00010000
-#define  LANG       32  // 00100000
-#define  OUTFILE    64  // 01000000
-#define  REMOVE    128  // 10000000
+#define  ASSEMBLE   1  // 00000001
+#define  COMPILE    2  // 00000010
+#define  EXECUTE    4  // 00000100
+#define  FORCE      8  // 00001000
+#define  LANG      16  // 00010000
+#define  OUTFILE   32  // 00100000
+#define  REMOVE    64  // 01000000
 
 #define  HAS_ASSEMBLE(x)  (x & ASSEMBLE)
 #define  HAS_COMPILE(x)   (x & COMPILE)
-#define  HAS_DRYRUN(x)    (x & DRYRUN)
 #define  HAS_EXECUTE(x)   (x & EXECUTE)
 #define  HAS_FORCE(x)     (x & FORCE)
 #define  HAS_LANG(x)      (x & LANG)
@@ -280,7 +278,6 @@ void Prog::parse_args(int argc, char *argv[]) {
         switch (c) {
             case 'a': this->commands |= ASSEMBLE; break;
             case 'c': this->commands |= COMPILE;  break;
-            case 'd': this->commands |= DRYRUN;   break;
             case 'e': this->commands |= EXECUTE;  break;
             case 'f': this->commands |= FORCE;    break;
             case 'x': this->commands |= LANG;     break;
@@ -346,21 +343,11 @@ void Prog::parse_args(int argc, char *argv[]) {
 
 
 /**
- * Print the arguments or execute them depending on the program's bitflags.
- * If the program has the DRYRUN flag enabled, the arguments will be printed.
- * Otherwise, the arguments are executed and the exit status is returned.
+ * Safely execute the given arguments and return the exit status.
  */
-int execute_or_print(int commands, vector<string> args) {
-    int code = 0;
-
-    if (HAS_DRYRUN(commands)) {
-        print_args(args);
-    } else {
-        check_executable_exists(args[0]);
-        code = easy_execute(args).exitstatus;
-    }
-
-    return code;
+int safe_execute(vector<string> args) {
+    check_executable_exists(args[0]);
+    return easy_execute(args).exitstatus;
 }
 
 
@@ -376,12 +363,12 @@ void compile_asm(Prog const& prog) {
 
     int code;
 
-    if ((code = execute_or_print(prog.commands, nasm_args)))
+    if ((code = safe_execute(nasm_args)))
         die(code, "Could not create object file:", prog.obj_name);
 
     if (HAS_COMPILE(prog.commands)) {
         vector<string> ld_args = {LD, prog.obj_name, "-o", prog.bin_name};
-        if ((code = execute_or_print(prog.commands, ld_args)))
+        if ((code = safe_execute(ld_args)))
             die(code, "Could not link object file:", prog.obj_name);
     }
 }
@@ -413,13 +400,13 @@ void compile_c(Prog const& prog) {
     int code;
 
     if (HAS_ASSEMBLE(prog.commands)) {
-        if ((code = execute_or_print(prog.commands, gcc_assemble_args)))
+        if ((code = safe_execute(gcc_assemble_args)))
             die(code, "Could not assemble infile:", prog.src_name);
         if (HAS_COMPILE(prog.commands))
-            if ((code = execute_or_print(prog.commands, gcc_link_args)))
+            if ((code = safe_execute(gcc_link_args)))
                 die(code, "Could not compile infile:", prog.src_name);
     } else {
-        if ((code = execute_or_print(prog.commands, gcc_args)))
+        if ((code = safe_execute(gcc_args)))
             die(code, "Could not compile infile:", prog.src_name);
     }
 }
@@ -451,13 +438,13 @@ void compile_cpp(Prog const& prog) {
     int code;
 
     if (HAS_ASSEMBLE(prog.commands)) {
-        if ((code = execute_or_print(prog.commands, gpp_assemble_args)))
+        if ((code = safe_execute(gpp_assemble_args)))
             die("Could not assemble infile:", prog.src_name);
         if (HAS_COMPILE(prog.commands))
-            if ((code = execute_or_print(prog.commands, gpp_link_args)))
+            if ((code = safe_execute(gpp_link_args)))
                 die(code, "Could not compile infile:", prog.src_name);
     } else {
-        if ((code = execute_or_print(prog.commands, gpp_args)))
+        if ((code = safe_execute(gpp_args)))
             die(code, "Could not compile infile:", prog.src_name);
     }
 }
@@ -492,28 +479,19 @@ int main(int argc, char *argv[]) {
 
     // Execute the program
     if (HAS_EXECUTE(prog.commands)) {
-        if (HAS_DRYRUN(prog.commands)) {
-            print_args(prog.exec_args);
-        } else {
-            if (!file_exists(prog.bin_name))
-                die("No such file or directory:", prog.bin_name);
-            if (!file_executable(prog.bin_name))
-                die("Permission denied:", prog.bin_name);
+        if (!file_exists(prog.bin_name))
+            die("No such file or directory:", prog.bin_name);
+        if (!file_executable(prog.bin_name))
+            die("Permission denied:", prog.bin_name);
 
-            exitstatus = easy_execute(prog.exec_args).exitstatus;
-        }
+        exitstatus = easy_execute(prog.exec_args).exitstatus;
     }
 
     // Remove the generated files
     if (HAS_REMOVE(prog.commands)) {
-        if (HAS_DRYRUN(prog.commands)) {
-            vector<string> args = {"/bin/rm", prog.bin_name};
-            print_args(args);
-        } else {
-            rm(prog.bin_name);
-            if (prog.lang == LANG_ASM)
-                rm(prog.obj_name);
-        }
+        rm(prog.bin_name);
+        if (prog.lang == LANG_ASM)
+            rm(prog.obj_name);
     }
 
     return exitstatus;
