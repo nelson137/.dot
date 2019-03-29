@@ -364,11 +364,6 @@ int execute_or_print(int commands, vector<string> args) {
 }
 
 
-/*************************************************
- * Compile
- ************************************************/
-
-
 void compile_asm(Prog const& prog) {
     // Ask to remove the object file if it already exists
     if (file_exists(prog.obj_name) && !HAS_FORCE(prog.commands)) {
@@ -468,59 +463,6 @@ void compile_cpp(Prog const& prog) {
 }
 
 
-void to_compile(Prog const& prog) {
-    // Ask to remove the outfile if it already exists
-    if (file_exists(prog.bin_name) && !HAS_FORCE(prog.commands)) {
-        cout << "Outfile exists: " << prog.bin_name << endl;
-        ask_rm_file(prog.bin_name);
-    }
-
-    switch(prog.lang) {
-        case LANG_ASM: compile_asm(prog); break;
-        case LANG_C:   compile_c  (prog); break;
-        case LANG_CPP: compile_cpp(prog); break;
-        default: die("Compilation not implemented for", prog.lang);
-    }
-}
-
-
-/*************************************************
- * Execute
- ************************************************/
-
-
-int to_execute(Prog& prog) {
-    if (HAS_DRYRUN(prog.commands)) {
-        print_args(prog.exec_args);
-        return 0;
-    }
-
-    if (!file_exists(prog.bin_name))
-        die("No such file or directory:", prog.bin_name);
-    if (!file_executable(prog.bin_name))
-        die("Permission denied:", prog.bin_name);
-
-    return easy_execute(prog.exec_args).exitstatus;
-}
-
-
-/*************************************************
- * Remove
- ************************************************/
-
-
-void to_remove(Prog const& prog) {
-    if (HAS_DRYRUN(prog.commands)) {
-        vector<string> args = {"/bin/rm", prog.bin_name};
-        print_args(args);
-    } else {
-        rm(prog.bin_name);
-        if (prog.lang == LANG_ASM)
-            rm(prog.obj_name);
-    }
-}
-
-
 /*************************************************
  * Main
  ************************************************/
@@ -533,16 +475,46 @@ int main(int argc, char *argv[]) {
     int exitstatus = 0;
 
     // Compile the program
-    if (HAS_ASSEMBLE(prog.commands) || HAS_COMPILE(prog.commands))
-        to_compile(prog);
+    if (HAS_ASSEMBLE(prog.commands) || HAS_COMPILE(prog.commands)) {
+        // Ask to remove the outfile if it already exists
+        if (file_exists(prog.bin_name) && !HAS_FORCE(prog.commands)) {
+            cout << "Outfile exists: " << prog.bin_name << endl;
+            ask_rm_file(prog.bin_name);
+        }
+
+        switch(prog.lang) {
+            case LANG_ASM: compile_asm(prog); break;
+            case LANG_C:   compile_c  (prog); break;
+            case LANG_CPP: compile_cpp(prog); break;
+            default: die("Compilation not implemented for", prog.lang);
+        }
+    }
 
     // Execute the program
-    if (HAS_EXECUTE(prog.commands))
-        exitstatus = to_execute(prog);
+    if (HAS_EXECUTE(prog.commands)) {
+        if (HAS_DRYRUN(prog.commands)) {
+            print_args(prog.exec_args);
+        } else {
+            if (!file_exists(prog.bin_name))
+                die("No such file or directory:", prog.bin_name);
+            if (!file_executable(prog.bin_name))
+                die("Permission denied:", prog.bin_name);
+
+            exitstatus = easy_execute(prog.exec_args).exitstatus;
+        }
+    }
 
     // Remove the generated files
-    if (HAS_REMOVE(prog.commands))
-        to_remove(prog);
+    if (HAS_REMOVE(prog.commands)) {
+        if (HAS_DRYRUN(prog.commands)) {
+            vector<string> args = {"/bin/rm", prog.bin_name};
+            print_args(args);
+        } else {
+            rm(prog.bin_name);
+            if (prog.lang == LANG_ASM)
+                rm(prog.obj_name);
+        }
+    }
 
     return exitstatus;
 }
