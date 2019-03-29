@@ -22,6 +22,8 @@ struct exec_ret {
     int exitstatus;
     string out;
     string err;
+
+    operator int() { return this->exitstatus; }
 };
 
 
