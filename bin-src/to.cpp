@@ -342,16 +342,9 @@ void Prog::parse_args(int argc, char *argv[]) {
  ************************************************/
 
 
-/**
- * Safely execute the given arguments and return the exit status.
- */
-int safe_execute(vector<string> args) {
-    check_executable_exists(args[0]);
-    return easy_execute(args).exitstatus;
-}
-
-
 void compile_asm(Prog const& prog) {
+    check_executable_exists(NASM);
+
     // Ask to remove the object file if it already exists
     if (file_exists(prog.obj_name) && !HAS_FORCE(prog.commands)) {
         cout << "Object file exists: " << prog.obj_name << endl;
@@ -363,18 +356,21 @@ void compile_asm(Prog const& prog) {
 
     int code;
 
-    if ((code = safe_execute(nasm_args)))
+    if ((code = easy_execute(nasm_args).exitstatus))
         die(code, "Could not create object file:", prog.obj_name);
 
     if (HAS_COMPILE(prog.commands)) {
+        check_executable_exists(LD);
         vector<string> ld_args = {LD, prog.obj_name, "-o", prog.bin_name};
-        if ((code = safe_execute(ld_args)))
+        if ((code = easy_execute(ld_args).exitstatus))
             die(code, "Could not link object file:", prog.obj_name);
     }
 }
 
 
 void compile_c(Prog const& prog) {
+    check_executable_exists(GCC);
+
     vector<string> compile_args = {
         "-xc", "-std=c11", "-O3", "-Wall", "-Werror"};
 
@@ -400,19 +396,21 @@ void compile_c(Prog const& prog) {
     int code;
 
     if (HAS_ASSEMBLE(prog.commands)) {
-        if ((code = safe_execute(gcc_assemble_args)))
+        if ((code = easy_execute(gcc_assemble_args).exitstatus))
             die(code, "Could not assemble infile:", prog.src_name);
         if (HAS_COMPILE(prog.commands))
-            if ((code = safe_execute(gcc_link_args)))
+            if ((code = easy_execute(gcc_link_args).exitstatus))
                 die(code, "Could not compile infile:", prog.src_name);
     } else {
-        if ((code = safe_execute(gcc_args)))
+        if ((code = easy_execute(gcc_args).exitstatus))
             die(code, "Could not compile infile:", prog.src_name);
     }
 }
 
 
 void compile_cpp(Prog const& prog) {
+    check_executable_exists(GPP);
+
     vector<string> compile_args = {
         "-xc++", "-std=c++17", "-O3", "-Wall", "-Werror"};
 
@@ -438,13 +436,13 @@ void compile_cpp(Prog const& prog) {
     int code;
 
     if (HAS_ASSEMBLE(prog.commands)) {
-        if ((code = safe_execute(gpp_assemble_args)))
+        if ((code = easy_execute(gpp_assemble_args).exitstatus))
             die("Could not assemble infile:", prog.src_name);
         if (HAS_COMPILE(prog.commands))
-            if ((code = safe_execute(gpp_link_args)))
+            if ((code = easy_execute(gpp_link_args).exitstatus))
                 die(code, "Could not compile infile:", prog.src_name);
     } else {
-        if ((code = safe_execute(gpp_args)))
+        if ((code = easy_execute(gpp_args).exitstatus))
             die(code, "Could not compile infile:", prog.src_name);
     }
 }
