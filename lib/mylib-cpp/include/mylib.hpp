@@ -206,8 +206,8 @@ const string D_CURSOR = "*";
 
 
 template<typename T>
-T run_listbox(string title, vector<T>& choices, string cursor=D_CURSOR,
-              bool show_instructs=true) {
+int run_listbox(string title, vector<T>& choices, string cursor=D_CURSOR,
+                bool show_instructs=true) {
     const string cursor_spaces = string(cursor.size(), ' ');
 
     auto print = [&] (T obj, bool prefix_cursor=false) {
@@ -304,7 +304,7 @@ T run_listbox(string title, vector<T>& choices, string cursor=D_CURSOR,
     // Restore term
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 
-    return choices[chosen];
+    return chosen;
 }
 
 
