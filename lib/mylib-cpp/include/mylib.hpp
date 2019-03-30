@@ -206,56 +206,39 @@ const string D_CURSOR = "*";
 
 
 template<typename T>
-struct LB {
-    string title;
-    bool show_title;
-    vector<T> choices;
-    string cursor;
-    string cursor_spaces;
-    bool show_instructs;
+T run_listbox(string title, vector<T>& choices, string cursor=D_CURSOR,
+              bool show_instructs=true) {
+    const string cursor_spaces = string(cursor.size(), ' ');
 
-    void print(string str, bool prefix_cursor=false) {
-        cout << (prefix_cursor ? this->cursor : this->cursor_spaces)
-             << " " << str << endl;
-    }
+    auto print = [&] (T obj, bool prefix_cursor=false) {
+        cout << (prefix_cursor ? cursor : cursor_spaces)
+             << " " << string(obj) << endl;
+    };
 
-    void draw(unsigned current_i) {
-        for (unsigned i=0; i<this->choices.size(); i++)
-            this->print(string(this->choices[i]), i==current_i);
-    }
+    auto draw = [&] (unsigned current_i) {
+        for (unsigned i=0; i<choices.size(); i++)
+            print(choices[i], cursor, i==current_i);
+    };
 
-    void redraw(unsigned current_i) {
+    auto redraw = [&] (unsigned current_i) {
         // Go back to the top of the listbox output, clearing each line
-        for (unsigned i=0; i<this->choices.size(); i++)
+        for (unsigned i=0; i<choices.size(); i++)
             cout << "\33[A\33[2K";
-        this->draw(current_i);
-    }
+        draw(current_i);
+    };
 
-    LB(string t, vector<T> cs, string c=D_CURSOR, bool si=true)
-        : title(t)
-        , show_title(t != NO_TITLE)
-        , choices(cs)
-        , cursor(c)
-        , cursor_spaces(string(c.size(), ' '))
-        , show_instructs(si)
-    {}
-};
-
-
-template<typename T>
-T run_listbox(LB<T> lb) {
-    if (lb.show_instructs) {
+    if (show_instructs) {
         cout << "Press k/j or up/down arrows to move up and down." << endl
              << "Press q to quit." << endl
              << "Press Enter to confirm the selection." << endl
              << endl;
     }
 
-    if (lb.show_title) {
+    if (title != NO_TITLE) {
         // Print the title
-        lb.print(lb.title);
+        print(title);
         // Print the underline
-        lb.print(string(lb.title.length(), '-'));
+        print(string(title.length(), '-'));
     }
 
     // Save the current terminal settings
@@ -277,7 +260,7 @@ T run_listbox(LB<T> lb) {
     unsigned current = 0;
 
     int chosen = -1;
-    lb.draw(current);
+    draw(current);
 
     do {
         switch (cin.get()) {
@@ -285,24 +268,24 @@ T run_listbox(LB<T> lb) {
             case 'k':
             case 'A':  // Up arrow
                 if (current > 0)
-                    lb.redraw(--current);
+                    redraw(--current);
                 break;
 
             // Top
             case 'K':
-                lb.redraw(current = 0);
+                redraw(current = 0);
                 break;
 
             // Down
             case 'j':
             case 'B':  // Down arrow
-                if (current < lb.choices.size()-1)
-                    lb.redraw(++current);
+                if (current < choices.size()-1)
+                    redraw(++current);
                 break;
 
             // Bottom
             case 'J':
-                lb.redraw(current = lb.choices.size() - 1);
+                redraw(current = choices.size() - 1);
                 break;
 
             // Quit
@@ -321,14 +304,7 @@ T run_listbox(LB<T> lb) {
     // Restore term
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 
-    return lb.choices[chosen];
-}
-
-
-template<typename T>
-T run_listbox(string title, vector<T>& choices, string cursor=D_CURSOR,
-              bool show_instructs=true) {
-    return run_listbox(LB<T>(title, choices, cursor, show_instructs));
+    return choices[chosen];
 }
 
 
