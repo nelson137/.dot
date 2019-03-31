@@ -210,14 +210,14 @@ int run_listbox(string title, vector<T>& choices, string cursor=D_CURSOR,
                 bool show_instructs=true) {
     const string cursor_spaces = string(cursor.size(), ' ');
 
-    auto print = [&] (T obj, bool prefix_cursor=false) {
+    auto print = [&] (string str, bool prefix_cursor=false) {
         cout << (prefix_cursor ? cursor : cursor_spaces)
-             << " " << string(obj) << endl;
+             << " " << str << endl;
     };
 
     auto draw = [&] (unsigned current_i) {
         for (unsigned i=0; i<choices.size(); i++)
-            print(choices[i], cursor, i==current_i);
+            print(string(choices[i]), i==current_i);
     };
 
     auto redraw = [&] (unsigned current_i) {
