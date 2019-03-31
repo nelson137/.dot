@@ -307,6 +307,16 @@ int run_listbox(string title, vector<T>& choices, string cursor=D_CURSOR,
 }
 
 
+template<typename T>
+T run_listbox_critical(string title, vector<T>& choices,
+                       string cursor=D_CURSOR, bool show_instructs=true) {
+    int i = run_listbox(title, choices, cursor, show_instructs);
+    if (i < 0)
+        exit(1);
+    return choices[i];
+}
+
+
 }  // namespace listbox
 
 
