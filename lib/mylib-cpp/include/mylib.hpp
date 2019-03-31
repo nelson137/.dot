@@ -200,17 +200,20 @@ exec_ret easy_execute(T& args, bool capture_output=false) {
 namespace listbox {
 
 
+extern string LB_CURSOR;
+extern bool   LB_SHOW_INSTRUCTS;
+
+
 const string NO_TITLE = "__NO_TITLE";
 const string D_CURSOR = "*";
 
 
 template<typename T>
-int run_listbox(string title, vector<T>& choices, string cursor=D_CURSOR,
-                bool show_instructs=true) {
-    const string cursor_spaces = string(cursor.size(), ' ');
+int run_listbox(string title, vector<T>& choices) {
+    const string cursor_spaces = string(LB_CURSOR.size(), ' ');
 
     auto print = [&] (string str, bool prefix_cursor=false) {
-        cout << (prefix_cursor ? cursor : cursor_spaces)
+        cout << (prefix_cursor ? LB_CURSOR : cursor_spaces)
              << " " << str << endl;
     };
 
@@ -226,7 +229,7 @@ int run_listbox(string title, vector<T>& choices, string cursor=D_CURSOR,
         draw(current_i);
     };
 
-    if (show_instructs) {
+    if (LB_SHOW_INSTRUCTS) {
         cout << "Press k/j or up/down arrows to move up and down." << endl
              << "Press q to quit." << endl
              << "Press Enter to confirm the selection." << endl
@@ -308,9 +311,8 @@ int run_listbox(string title, vector<T>& choices, string cursor=D_CURSOR,
 
 
 template<typename T>
-T run_listbox_critical(string title, vector<T>& choices,
-                       string cursor=D_CURSOR, bool show_instructs=true) {
-    int i = run_listbox(title, choices, cursor, show_instructs);
+T run_listbox_critical(string title, vector<T>& choices) {
+    int i = run_listbox(title, choices);
     if (i < 0)
         exit(1);
     return choices[i];
