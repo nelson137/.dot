@@ -102,8 +102,6 @@ public:
 
     Config(string&);
 
-    vector<string> get_profile_names();
-
 };
 
 
@@ -202,15 +200,6 @@ Config::Config(string& fn) {
 }
 
 
-vector<string> Config::get_profile_names() {
-    vector<string> names;
-    names.reserve(this->profiles.size());
-    for (auto& p : this->profiles)
-        names.push_back(p.name);
-    return names;
-}
-
-
 /*************************************************
  * Core Functions
  ************************************************/
@@ -230,15 +219,10 @@ string get_home_dir() {
 
 
 vector<string> select_host(Config& config) {
-    vector<string> profile_names = config.get_profile_names();
-    int profile_i = Listbox(profile_names).run();
+    Profile profile = run_listbox_critical(NO_TITLE, config.profiles);
     cout << endl;
-    if (profile_i < 0)
-        die();
 
     vector<string> chosen_opts;
-
-    Profile& profile = config.profiles[profile_i];
 
     if (profile.keyfile.size()) {
         chosen_opts.push_back("-i");
@@ -249,11 +233,9 @@ vector<string> select_host(Config& config) {
     if (profile.hosts.size() == 1) {
         addr += profile.hosts[0];
     } else {
-        int addr_i = Listbox(profile.hosts).run();
+        LB_SHOW_INSTRUCTS = false;
+        addr += run_listbox_critical(NO_TITLE, profile.hosts);
         cout << endl;
-        if (addr_i < 0)
-            die();
-        addr += profile.hosts[addr_i];
     }
     chosen_opts.push_back(addr);
 
