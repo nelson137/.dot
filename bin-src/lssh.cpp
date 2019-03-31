@@ -111,11 +111,11 @@ public:
 
 
 template<typename U>
-vector<U> parse_array(string key, json& j_arr) {
-    if (!j_arr.is_array())
+vector<U> parse_array(string key, json& value) {
+    if (!value.is_array())
         Config::error("Value for key '"+key+"' must be of type 'array'");
-    vector<U> arr(j_arr.size());
-    transform(j_arr.begin(), j_arr.end(), arr.begin(),
+    vector<U> arr(value.size());
+    transform(value.begin(), value.end(), arr.begin(),
         [](json j){ return j.get<U>(); });
     return arr;
 }
