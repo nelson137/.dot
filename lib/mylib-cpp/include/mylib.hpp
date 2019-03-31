@@ -17,6 +17,26 @@
 using namespace std;
 
 
+template<typename T>
+struct is_string_castable {
+
+private:
+    typedef true_type yes;
+    typedef false_type no;
+
+    template<typename U>
+    static auto test(char c) -> decltype(string(declval<U>()), yes());
+
+    template<typename C>
+    static no test(...);
+
+public:
+    using type = decltype(test<T>(0));
+    static constexpr bool value = is_same<type,yes>::value;
+
+};
+
+
 struct exec_ret {
     int exitstatus;
     string out;
