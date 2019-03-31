@@ -1,6 +1,5 @@
-#ifndef __MYLIBPP_H
-
-#define __MYLIBPP_H
+#ifndef MYLIB_CPP_H
+#define MYLIB_CPP_H
 
 
 #include <algorithm>
