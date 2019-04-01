@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -14,9 +15,23 @@
 
 using namespace std;
 using namespace nlohmann;
+using namespace listbox;
 
 namespace profile {}
 using namespace profile;
+
+
+map<json::value_t,string> TYPE_NAMES = {
+    {json::value_t::null,            "null"},
+    {json::value_t::object,          "object"},
+    {json::value_t::array,           "array"},
+    {json::value_t::string,          "string"},
+    {json::value_t::boolean,         "boolean"},
+    {json::value_t::number_integer,  "number integer"},
+    {json::value_t::number_unsigned, "number unsigned"},
+    {json::value_t::number_float,    "number float"},
+    {json::value_t::discarded,       "discarded"}
+};
 
 
 /*************************************************
@@ -61,6 +76,14 @@ struct Profile {
     string user;
     vector<string> hosts;
     string keyfile;
+
+    operator string() { return this->name; }
+
+    static void validate_field(const json&, string, json::value_t, bool=false);
+
+    static void validate_array(const json&, string, json::value_t, bool=false);
+
+    static void validate_string(const json&, string, bool=false);
 
     static void validate_data(const json&);
 
@@ -126,25 +149,43 @@ vector<U> parse_array(string key, json& value) {
  ************************************************/
 
 
+void Profile::validate_field(const json& j, string key, json::value_t type,
+                             bool required) {
+    string value_error =
+        "Profiles must specify the key '"+key+"' with value of type '"
+        +TYPE_NAMES[type]+"'";
+
+    if (j.find(key) == j.end()) {
+        if (required)
+            Config::error(value_error);
+        else
+            return;
+    }
+    if (j[key].type() != type)
+        Config::error(value_error);
+}
+
+
+void Profile::validate_string(const json& j, string key, bool required) {
+    validate_field(j, key, json::value_t::string, required);
+}
+
+
+void Profile::validate_array(const json& j, string key, json::value_t type,
+                             bool required) {
+    validate_field(j, key, json::value_t::array, required);
+    for (auto it=j[key].begin(); it!=j[key].end(); it++)
+        if (it.value().type() != type)
+            Config::error("Elements of array '"+key+"' must be of type '"
+                          +TYPE_NAMES[type]+"'");
+}
+
+
 void Profile::validate_data(const json& j_profile) {
-    if (j_profile.find("name") == j_profile.end())
-        Config::error("Profiles must specify a name");
-    if (!j_profile["name"].is_string())
-        Config::error("Profile names must be of type string");
-
-    if (j_profile.find("username") == j_profile.end())
-        Config::error("Profiles must specify a username");
-    if (!j_profile["username"].is_string())
-        Config::error("Profile usernames must be of type string");
-
-    if (j_profile.find("hosts") == j_profile.end())
-        Config::error("Profiles must specify an array of hosts");
-    if (!j_profile["hosts"].is_array())
-        Config::error("Profile hosts must be an array of strings");
-
-    if (j_profile.find("keyfile") != j_profile.end())
-        if (!j_profile["keyfile"].is_string())
-            Config::error("Profile keyfile must be of type string");
+    Profile::validate_string(j_profile, "name");
+    Profile::validate_string(j_profile, "username");
+    Profile::validate_array(j_profile, "hosts", json::value_t::string);
+    Profile::validate_string(j_profile, "keyfile", false);
 }
 
 
