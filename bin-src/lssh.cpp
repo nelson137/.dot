@@ -190,7 +190,7 @@ void Profile::validate_data(const json& j_profile) {
 
 
 /*************************************************
- * Config Private Methods
+ * Config Methods
  ************************************************/
 
 
@@ -220,11 +220,6 @@ void Config::parse_config(json config) {
         this->error("Config must specify an array of profiles");
     this->profiles = parse_array<Profile>(k_profiles, config[k_profiles]);
 }
-
-
-/*************************************************
- * Config Public Methods
- ************************************************/
 
 
 template<typename... T>
