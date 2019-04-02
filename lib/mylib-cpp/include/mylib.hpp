@@ -331,7 +331,8 @@ int run_listbox(string title, vector<T>& choices) {
 }
 
 
-template<typename T>
+template<typename T,
+         typename = std::enable_if_t<is_string_castable<T>::value>>
 T run_listbox_critical(string title, vector<T>& choices) {
     int i = run_listbox(title, choices);
     if (i < 0)
