@@ -6,7 +6,7 @@
 ## CONFIGURATION ##############################################################
 
 # Options to pass to i3lock
-i3lock_options="-eni $HOME/.config/i3/assets/lockscreen/lockscreen.png"
+i3lock_options="-ei $HOME/.config/i3/assets/lockscreen/lockscreen.png"
 
 # Run before starting the locker
 pre_lock() {
