@@ -36,7 +36,6 @@ alias ll="ls -pohv $color $time $groupdirs"
 alias lla="ls -pAohv $color $time $groupdirs"
 
 # git aliases
-alias gl='git pull'
 alias glop='git log -p'
 alias gcam='git add -A; git commit -m'
 alias gcam!='git add -A; git commit -v --amend'
@@ -66,6 +65,4 @@ fi
 
 # Unaliases
 unalias gcl  # From ~/.oh-my-zsh/plugins/git
-unalias gl  # From ~/.oh-my-zsh/plugins/git
-unalias gp  # From ~/.oh-my-zsh/plugins/git
 unalias l  # From ~/.oh-my-zsh/lib/directories.zsh
