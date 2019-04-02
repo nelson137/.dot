@@ -165,13 +165,49 @@ mode "resize" {
 }
 
 
+set $mode_confirm_logout Logout now? [y]es [n]o
+mode "$mode_confirm_logout" {
+    bindsym y      $exec_noid i3-msg exit
+    bindsym Return $exec_noid i3-msg exit
+    bindsym n      mode default
+    bindsym Escape mode default
+}
+
+
+set $mode_confirm_hibernate Hibernate now? [y]es [n]o
+mode "$mode_confirm_hibernate" {
+    bindsym y      $exec_noid systemctl suspend
+    bindsym Return $exec_noid systemctl suspend
+    bindsym n      mode default
+    bindsym Escape mode default
+}
+
+
+set $mode_confirm_shutdown Shutdown now? [y]es [n]o
+mode "$mode_confirm_shutdown" {
+    bindsym y      $exec_noid shutdown now
+    bindsym Return $exec_noid shutdown now
+    bindsym n      mode default
+    bindsym Escape mode default
+}
+
+
+set $mode_confirm_reboot Reboot now? [y]es [n]o
+mode "$mode_confirm_reboot" {
+    bindsym y      $exec_noid reboot
+    bindsym Return $exec_noid reboot
+    bindsym n      mode default
+    bindsym Escape mode default
+}
+
+
 set $mode_system System: [l]ogout [h]ibernate [s]hutdown [r]eboot
 bindsym $mod+Control+l mode "$mode_system"
 mode "$mode_system" {
-    bindsym l $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to logout?' -b Yes 'i3-msg exit'"; mode default
-    bindsym h $exec_noid systemctl suspend; mode default
-    bindsym s $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to shutdown?' -b Yes 'shutdown now'"; mode default
-    bindsym r $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to reboot?' -b Yes reboot"; mode default
+    bindsym l mode "$mode_confirm_logout"
+    bindsym h mode "$mode_confirm_hibernate"
+    bindsym s mode "$mode_confirm_shutdown"
+    bindsym r mode "$mode_confirm_reboot"
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
