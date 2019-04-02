@@ -46,7 +46,6 @@ plugins=(
     git
     git-prompt
     java-utils
-    listbox
     web-search
     zsh-autosuggestions
     zsh-syntax-highlighting
