@@ -229,7 +229,7 @@ const string D_CURSOR = "*";
 
 
 template<typename T,
-         typename = enable_if_t<is_string_castable<T>::value> >
+         typename = std::enable_if_t<is_string_castable<T>::value>>
 int run_listbox(string title, vector<T>& choices) {
     const string cursor_spaces = string(LB_CURSOR.size(), ' ');
 
