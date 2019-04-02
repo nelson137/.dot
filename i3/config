@@ -171,7 +171,7 @@ mode "$mode_system" {
     bindsym l $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to logout?' -b Yes 'i3-msg exit'"; mode default
     bindsym h $exec_noid systemctl suspend; mode default
     bindsym s $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to shutdown?' -b Yes 'true'"; mode default
-    bindsym r $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to reboot?' -b Yes true"; mode default
+    bindsym r $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to reboot?' -b Yes reboot"; mode default
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
