@@ -165,10 +165,11 @@ mode "resize" {
 }
 
 
-set $mode_system System: [l]ogout [s]hutdown [r]eboot
+set $mode_system System: [l]ogout [h]ibernate [s]hutdown [r]eboot
 bindsym $mod+Control+l mode "$mode_system"
 mode "$mode_system" {
     bindsym l $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to logout?' -b Yes 'i3-msg exit'"; mode default
+    bindsym h $exec_noid systemctl suspend; mode default
     bindsym s $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to shutdown?' -b Yes 'true'"; mode default
     bindsym r $exec_noid "i3-nagbar -t warning -f 'pango:Hack 12' -m 'Do you want to reboot?' -b Yes true"; mode default
     bindsym Return mode "default"
