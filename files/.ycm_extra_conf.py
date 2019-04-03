@@ -37,5 +37,5 @@ def FlagsForFile(filename, **kwargs):
         return {'flags': base_flags}
 
     return {
-        'flags': ['-x', lang, std] + base_flags
+        'flags': ['-x'+lang, std] + base_flags
     }
