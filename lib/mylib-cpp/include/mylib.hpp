@@ -183,11 +183,7 @@ public:
 
 template<typename T>
 int execute(exec_ret& er, T& args, bool capture_output=false) {
-    // Get args as a vector<char*>
-    vector<char*> argv(args.size() + 1);
-    transform(args.begin(), args.end(), argv.begin(),
-        [](string& s){ return const_cast<char*>(s.c_str()); });
-    argv.push_back(NULL);
+    ExecArgs ea(args);
 
     int pipes[2][2];
     int *out_pipe = pipes[0];
@@ -226,7 +222,7 @@ int execute(exec_ret& er, T& args, bool capture_output=false) {
         close(parent_out_fd);
         close(parent_err_fd);
 
-        execv(argv[0], argv.data());
+        execv(ea.bin, ea.get());
         _exit(0);
     } else {
         /**
