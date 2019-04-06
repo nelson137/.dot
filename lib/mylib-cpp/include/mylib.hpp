@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include <string.h>
 #include <sys/stat.h>
 #include <termios.h>
 #include <unistd.h>
@@ -130,6 +131,55 @@ void die(T t, Ts... ts) {
 
 
 bool read_fd(int, string&);
+
+
+class ExecArgs {
+
+private:
+    vector<char*> args;
+
+    char *string_copy(string& str) {
+        char *s = new char[str.size()+1];
+        strcpy(s, str.c_str());
+        s[str.size()] = '\0';
+        return s;
+    }
+
+public:
+    char *bin;
+
+    template<typename T>
+    ExecArgs(string bin, T new_args) {
+        this->bin = this->string_copy(bin);
+        this->args = {this->bin, nullptr};
+
+        this->args.reserve(this->args.size() + new_args.size());
+        for (auto it=new_args.begin(); it!=new_args.end(); it++)
+            this->push_back(*it);
+    }
+
+    template<
+        typename... Str,
+        typename = enable_if_t<(... && std::is_convertible_v<Str, string>)>
+    >
+    ExecArgs(string bin, const Str... strs)
+        : ExecArgs(bin, vector<string>{strs...}) {}
+
+    ~ExecArgs() {
+        for (char *s : this->args)
+            delete[] s;
+    }
+
+    void push_back(string str) {
+        this->args.insert(this->args.end()-1, this->string_copy(str));
+    }
+
+    char **get() {
+        return this->args.data();
+    }
+
+};
+
 
 template<typename T>
 int execute(exec_ret& er, T& args, bool capture_output=false) {
