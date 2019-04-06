@@ -350,7 +350,9 @@ ostream& operator<<(ostream& os, const vector<T>& vec) {
     if (vec.size()) {
         os << '"' << vec[0] << '"';
         for (unsigned i=1; i<vec.size(); i++)
-            os << ", " << '"' << vec[i] << '"';
+            os << ", \""
+               << (vec[i] == nullptr ? "(null)" : vec[i])
+               << '"';
     }
     os << "}";
     return os;
