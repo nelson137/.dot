@@ -216,9 +216,6 @@ inoremap   <C-l>   <Esc><C-w>l
 " Thank you Derek Wyatt
 inoremap   jj   <Esc>
 
-" Quickly save without leaving insert mode
-inoremap   jw   <Esc>:w<CR>li
-
 " Better paste in insert mode
 inoremap   <C-p>   <C-r>"
 
