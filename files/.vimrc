@@ -105,7 +105,6 @@ function! CompileAndRun()
         let l:filetype = &filetype == '' ? expand('%:e') : &filetype
     endif
 
-    silent exe 'w'
     if l:filetype == 'c' || l:filetype == 'cpp' || l:filetype == 'asm'
         exe 'AsyncRun to cero %' system('mktemp --dry-run')
     elseif l:filetype == 'sh' || l:filetype == 'zsh'
@@ -387,6 +386,7 @@ let g:gundo_prefer_python3 = 1
 
 " AsyncRun
 let g:asyncrun_open = 8
+let g:asyncrun_save = 2
 
 " ALE
 let g:ale_lint_on_save = 1
