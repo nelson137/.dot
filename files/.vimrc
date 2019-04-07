@@ -105,24 +105,15 @@ function! CompileAndRun()
         let l:filetype = &filetype != '' ? &filetype : expand('%:e')
     endif
 
-    exe 'w'
-    " % = filename
-    " %< = filename without extension
-    if l:filetype == 'c'
-        exe 'AsyncRun gcc % -o %< && {./%<; rm %<}'
-    elseif l:filetype == 'cpp'
-        exe 'AsyncRun g++ % -o %< && {./%<; rm %<}'
-    elseif l:filetype == 'asm'
-        let l:compile = 'nasm -f elf64 % -o %<.o'
-        let l:link = 'ld %<.o -o %<'
-        let l:clean = 'rm %<.o %<'
-        exe 'AsyncRun '.l:compile.' && '.l:link.' && {./%<; '.l:clean.';}'
+    silent exe 'w'
+    if l:filetype == 'c' || l:filetype == 'cpp' || l:filetype == 'asm'
+        exe 'AsyncRun to cero %' system('mktemp --dry-run')
     elseif l:filetype == 'sh' || l:filetype == 'zsh'
         if !IsX()
-            let l:prompt = '"Do you want to make this file executable [y/n]? "'
-            exe 'let l:choice = input('.l:prompt.')'
-            if l:choice == 'y' | silent exe '!chmod +x %' | endif
-            silent exe 'redraw!'
+            let l:prompt = 'File is not executable. Change permissions [y/n]? '
+            if input(l:prompt) != 'y' | redraw! | return | endif
+            redraw!
+            exe 'call system("chmod +x '.expand('%:p').'")'
         endif
         exe 'AsyncRun ./%'
     elseif l:filetype == 'tex'
