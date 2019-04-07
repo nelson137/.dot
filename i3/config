@@ -176,8 +176,8 @@ mode "$mode_confirm_logout" {
 
 set $mode_confirm_hibernate Hibernate now? [y]es [n]o
 mode "$mode_confirm_hibernate" {
-    bindsym y      $exec_noid systemctl suspend
-    bindsym Return $exec_noid systemctl suspend
+    bindsym y      $exec_noid systemctl suspend; mode default
+    bindsym Return $exec_noid systemctl suspend; mode default
     bindsym n      mode default
     bindsym Escape mode default
 }
