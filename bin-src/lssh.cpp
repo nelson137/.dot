@@ -279,13 +279,15 @@ vector<string> select_host(Config& config) {
 }
 
 
-void attempt_ssh(char *args[]) {
+void attempt_ssh(vector<string> args) {
+    ExecArgs ea("/usr/bin/ssh", args);
+
     int stat, pid = fork();
     if (pid < 0) {
         die("Could not fork()");
     } else if (pid == 0) {
         // Child
-        execv("/usr/bin/ssh", args);
+        execv(ea.bin, ea.get());
         _exit(127);
     } else {
         // Parent
@@ -305,18 +307,7 @@ int main() {
 
     vector<string> chosen_opts = select_host(config);
 
-    // Combine all arguments into one vector
-    vector<string> all_opts = config.ssh_opts;
-    all_opts.insert(all_opts.end(), chosen_opts.begin(), chosen_opts.end());
-    // Get the arguments as a char*[]
-    int args_len = 1 + all_opts.size() + 1;
-    char *args[args_len] = { (char*)"ssh" };
-    for (unsigned i=0; i<all_opts.size(); i++)
-        args[i+1] = const_cast<char*>(all_opts[i].c_str());
-    // Array has to be NULL-terminated for exec()
-    args[args_len-1] = NULL;
-
-    attempt_ssh(args);
+    attempt_ssh(config.ssh_opts + chosen_opts);
 
     return 0;
 }
