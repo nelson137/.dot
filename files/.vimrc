@@ -142,9 +142,22 @@ function! GetTodo()
 endfunction
 
 function! IsX()
-    silent exe '!test -x' expand('%:p')
-    silent exe 'redraw!'
-    return v:shell_error ? 0 : 1
+    let l:perms = getfperm(expand('%:p'))
+
+    if !strlen(l:perms)
+        return 0
+    endif
+
+    if l:perms[2] == 'x'  " Owner has execute permissions
+        let l:owner = trim(system('stat -c "%U" '.expand('%:p')))
+        return l:owner == $USER
+    elseif l:perms[5] == 'x'  " Group has execute permissions
+        let l:group = system('stat -c "%G" '.expand('%:p'))
+        let l:user_groups = split(system('groups '.$USER))[2:]
+        return index(l:user_groups, l:group) >= 0
+    elseif l:perms[8] == 'x'  " Everyone else has execute permissions
+        return 1
+    endif
 endfunction
 
 function! OnExitVimrm(...)
