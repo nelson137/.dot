@@ -391,7 +391,7 @@ T run_listbox_critical(string title, vector<T>& choices) {
 
 
 template<typename T>
-ostream& operator<<(ostream& os, const vector<T>& vec) {
+ostream& operator<<(ostream& os, const vector<T*>& vec) {
     os << "{";
     if (vec.size()) {
         os << '"' << vec[0] << '"';
@@ -399,6 +399,25 @@ ostream& operator<<(ostream& os, const vector<T>& vec) {
             os << ", \""
                << (vec[i] == nullptr ? "(null)" : vec[i])
                << '"';
+    }
+    os << "}";
+    return os;
+}
+
+
+template<typename T>
+ostream& operator<<(ostream& os, const vector<T*>&& vec) {
+    return operator<<(os, vec);
+}
+
+
+template<typename T>
+ostream& operator<<(ostream& os, const vector<T>& vec) {
+    os << "{";
+    if (vec.size()) {
+        os << '"' << vec[0] << '"';
+        for (unsigned i=1; i<vec.size(); i++)
+            os << ", \"" << vec[i] << '"';
     }
     os << "}";
     return os;
