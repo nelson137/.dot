@@ -394,7 +394,9 @@ let g:ale_lint_on_text_change = 'always'
 let g:ale_c_parse_makefile = 1
 let g:ale_c_gcc_options =
 \    '-std=c11 -O3 -Wall -Werror ' .
-\    system('echo -n $C_SEARCH_LIBS') . ' ' .
+\    system('echo -n $C_SEARCH_LIBS')
+let g:ale_cpp_gcc_options =
+\    '-std=c++17 -Wall -Werror' .
 \    system('echo -n $CPLUS_SEARCH_LIBS')
 let g:ale_linters = { 'python': ['flake8', 'pycodestyle', 'pylint', 'pyls'] }
 let g:ale_use_global_executables = 1
