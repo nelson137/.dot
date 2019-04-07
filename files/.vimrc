@@ -102,7 +102,7 @@ function! CompileAndRun()
         call Error('Error: file has no name')
         return
     else
-        let l:filetype = &filetype != '' ? &filetype : expand('%:e')
+        let l:filetype = &filetype == '' ? expand('%:e') : &filetype
     endif
 
     silent exe 'w'
@@ -119,7 +119,7 @@ function! CompileAndRun()
     elseif l:filetype == 'tex'
         exe 'AsyncRun pdflatex %'
     else
-        exe 'call Error("Error: I don''t know how to run' l:filetype 'files")'
+        exe 'call Error("Error filetype not supported: '.l:filetype.')'
     endif
 endfunction
 
