@@ -260,6 +260,10 @@ $i3msg 'workspace $wsMail; append_layout ~/.config/i3/layouts/wsMail.json'
 for_window [class="Spotify"] move to workspace $wsSpotify
 
 
+# Make Web Workspace tabbed
+exec_always --no-startup-id i3-msg "workspace $wsWeb; layout tabbed"
+
+
 # Start xautolock, config in ~/.Xresource
 $exec_noid xautolock -noclose -notify 10 -notifier /home/nelson/.config/i3/scripts/dimmer -time 10 -locker 'i3lock -eni /home/nelson/.config/i3/assets/lockscreen/lockscreen.png'
 $exec_noid xautolock -noclose -time 12 -locker 'systemctl suspend'
