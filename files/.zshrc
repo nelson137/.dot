@@ -41,7 +41,6 @@ ZSH_CUSTOM="$HOME/.dot/zsh-custom"
 
 plugins=(
     colored-man-pages
-    c-utils
     extract
     git
     git-prompt
