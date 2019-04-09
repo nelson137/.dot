@@ -121,7 +121,7 @@ bindsym $mod+Return exec urxvt
 bindsym $mod+backslash exec google-chrome
 
 # Start dmenu
-bindsym $mod+p $exec_noid i3-dmenu-desktop
+bindsym $mod+p $exec_noid i3-dmenu-desktop --dmenu 'rofi -dmenu -i'
 
 # Reload the config file
 bindsym $mod+q reload
