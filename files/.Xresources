@@ -8,4 +8,5 @@ URxvt.visualBell: false
 URxvt.scrollstyle: plain
 URxvt.scrollBar: true
 URxvt.scrollBar_right: true
+URxvt.secondaryScroll: false
 URxvt.cursorBlink: true
