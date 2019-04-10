@@ -197,7 +197,7 @@ public:
 
 
 template<typename T>
-int execute(exec_ret& er, T& args, bool capture_output=false) {
+int execute(exec_ret& er, const T& args, bool capture_output=false) {
     ExecArgs ea(args);
 
     int pipes[2][2];
@@ -270,8 +270,9 @@ int execute(exec_ret& er, T& args, bool capture_output=false) {
     return er.exitstatus;
 }
 
+
 template<typename T>
-exec_ret easy_execute(T& args, bool capture_output=false) {
+exec_ret easy_execute(const T& args, bool capture_output=false) {
     exec_ret er;
     execute(er, args, capture_output);
     return er;
