@@ -148,14 +148,19 @@ private:
 public:
     char *bin;
 
-    template<typename T>
-    ExecArgs(string bin, T new_args) {
+    template<template<> typename T>
+    void init(string bin, T<string> args) {
         this->bin = this->string_copy(bin);
         this->args = {this->bin, nullptr};
 
-        this->args.reserve(this->args.size() + new_args.size());
-        for (auto it=new_args.begin(); it!=new_args.end(); it++)
+        this->args.reserve(this->args.size() + args.size());
+        for (auto it=args.begin(); it!=args.end(); it++)
             this->push_back(*it);
+    }
+
+    template<template<> typename T>
+    ExecArgs(string bin, T<string> args) {
+        init(bin, args);
     }
 
     template<
@@ -164,6 +169,16 @@ public:
     >
     ExecArgs(string bin, const Str... strs)
         : ExecArgs(bin, vector<string>{strs...}) {}
+
+    template<template<> typename T>
+    ExecArgs(T<string> args) {
+        string bin;
+        if (args.size()) {
+            bin = args[0];
+            args.erase(args.begin());
+        }
+        init(bin, args);
+    }
 
     ~ExecArgs() {
         for (char *s : this->args)
