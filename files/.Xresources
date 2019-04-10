@@ -10,3 +10,5 @@ URxvt.scrollBar: true
 URxvt.scrollBar_right: true
 URxvt.secondaryScroll: false
 URxvt.cursorBlink: true
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
