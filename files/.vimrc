@@ -334,6 +334,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'jiangmiao/auto-pairs'          " Manage quotes, parens, etc in pair
     Plugin 'justinmk/vim-sneak'            " The missing vim motion
     Plugin 'mhinz/vim-signify'             " Show added/modified/removed lines
+    Plugin 'octol/vim-cpp-enhanced-highlight'  " Better C++ syntax highlighting
     Plugin 'python-mode/python-mode'       " Python IDE
     Plugin 'scrooloose/nerdcommenter'      " Quickly (un)comment lines
     Plugin 'scrooloose/nerdtree'           " File system explorer
@@ -362,6 +363,9 @@ let g:vim_json_syntax_conceal = 0
 
 " markdown-preview.vim
 let g:mkdp_path_to_chrome = 'google-chrome --new-window'
+
+" vim-cpp-enhanced-highlight
+" let g:cpp_member_variable_highlight = 1
 
 " python-mode
 let g:pymode_doc_bind = 'pd'
