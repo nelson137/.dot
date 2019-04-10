@@ -73,9 +73,9 @@ for fn in "${to_compile[@]}"; do
     ext="$(get_ext "$fn")"
     exe="$(no_ext <<< "$fn")"
     if [[ "$ext" == c ]]; then
-        to cof "bin/compiled/$exe" "bin-src/$fn"
+        to cof "bin-src/$fn" "bin/compiled/$exe"
     elif [[ "$ext" == cpp ]]; then
-        to cof "bin/compiled/$exe" "bin-src/$fn"
+        to cof "bin-src/$fn" "bin/compiled/$exe"
     else
         printf "\r\033[A"
         echo "compile.sh: filetype not recognized: $fn" >&2
