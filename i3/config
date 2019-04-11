@@ -137,8 +137,8 @@ bindsym XF86AudioRaiseVolume $exec_noid $volumeCmd 10%+ unmute && $volumeChanged
 bindsym XF86AudioLowerVolume $exec_noid $volumeCmd 10%- unmute && $volumeChanged
 bindsym XF86AudioMute $exec_noid $volumeCmd toggle
 bindsym XF86AudioPlay $exec_noid $audioCmd.PlayPause
-bindsym $mod+bracketright $exec_noid $audioCmd.Next
-bindsym $mod+bracketleft $exec_noid $audioCmd.Previous
+bindsym $mod+Shift+period $exec_noid $audioCmd.Next
+bindsym $mod+Shift+comma $exec_noid $audioCmd.Previous
 set $lockscreen /home/nelson/.config/i3/assets/lockscreen/lockscreen.png
 bindsym $mod+Shift+z $exec_noid i3lock -eni $lockscreen
 
