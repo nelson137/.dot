@@ -3,6 +3,7 @@
 D='DISPLAY=:0'
 
 # Command aliases
+alias bc='bc -ql'
 alias cp='cp -ir'
 alias du='du -h --max-depth=1'
 alias grep='grep -E'
