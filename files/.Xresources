@@ -13,3 +13,7 @@ URxvt.secondaryScroll: false
 URxvt.cursorBlink: true
 URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
 URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+URxvt.perl-ext-common: default,matcher
+URxvt.url-matcher: xdg-open
+URxvt.matcher.button: 1
+URxvt.matcher.rend.0: Uline fg35
