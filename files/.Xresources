@@ -3,7 +3,8 @@ URxvt.transparent: true
 URxvt.shading: 12
 URxvt.background: black
 URxvt.foreground: white
-URxvt.font: xft:Source Code Pro for Powerline:size=12
+URxvt.font: xft:Source Code Pro for Powerline:size=12, \
+            xft:Inconsolata Nerd Font Mono:size=14
 URxvt.visualBell: false
 URxvt.scrollstyle: plain
 URxvt.scrollBar: true
