@@ -67,3 +67,4 @@ fi
 # Unaliases
 unalias gcl  # From ~/.oh-my-zsh/plugins/git
 unalias l  # From ~/.oh-my-zsh/lib/directories.zsh
+unalias sp  # From ~/.oh-my-zsh/plugins/web-search
