@@ -3,7 +3,7 @@ URxvt.transparent: true
 URxvt.shading: 12
 URxvt.background: black
 URxvt.foreground: white
-URxvt.font: xft:FiraMono-Regular:size=12
+URxvt.font: xft:Source Code Pro for Powerline:size=12
 URxvt.visualBell: false
 URxvt.scrollstyle: plain
 URxvt.scrollBar: true
