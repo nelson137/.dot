@@ -230,6 +230,7 @@ mode "Move" {
 
 
 # Default workspaces for programs
+for_window [window_role="^pop-up$"] floating enable
 for_window [class="^Nm-connection-editor$"] floating enable
 for_window [class="^VirtualBox Machine$"] move to workspace $ws3
 
