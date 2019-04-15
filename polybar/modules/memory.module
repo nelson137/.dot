@@ -1,0 +1,8 @@
+; vim:ft=dosini
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = MEM
+format-prefix-foreground = ${colors.foreground-alt}
+label = %percentage_used:3%%

@@ -1,0 +1,38 @@
+; vim:ft=dosini
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+format-volume = <ramp-volume> <bar-volume>
+
+format-muted = ﱝ muted
+label-muted-foreground = #ff5555
+
+bar-volume-gradient = false
+
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+ramp-volume-3 = 
+ramp-volume-4 = 
+ramp-volume-5 = 
+ramp-volume-6 = 
+
+bar-volume-width = 10
+bar-volume-indicator = |
+bar-volume-indicator-font = 1
+
+bar-volume-fill = ─
+bar-volume-fill-font = 2
+
+bar-volume-empty = ─
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.foreground-alt}
+
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #ff5555

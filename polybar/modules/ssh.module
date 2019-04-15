@@ -1,0 +1,9 @@
+; vim:ft=dosini
+
+[module/ssh]
+type = custom/script
+exec = ~/.config/polybar/scripts/ssh.sh
+interval = 3
+
+format-prefix = "SSH "
+format-prefix-foreground = ${colors.foreground-alt}

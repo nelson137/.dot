@@ -1,0 +1,12 @@
+; vim:ft=dosini
+
+[module/network]
+type = internal/network
+interface = ${settings.wifi-iface}
+interval = 3
+
+format-connected = <label-connected>
+label-connected = %{A1:nm-connection-editor:} %essid%/%{F#0f0}%local_ip%%{F-}/%{A}
+
+format-disconnected = <label-disconnected>
+label-disconnected = %{A1:nm-connection-editor:}%ifname% 睊%{A}

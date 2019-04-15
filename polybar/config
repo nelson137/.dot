@@ -1,0 +1,102 @@
+;==========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains a lot of information
+;
+;==========================================================
+
+
+include-file = ~/.config/polybar/modules/battery.module
+include-file = ~/.config/polybar/modules/cpu.module
+include-file = ~/.config/polybar/modules/date.module
+include-file = ~/.config/polybar/modules/i3.module
+include-file = ~/.config/polybar/modules/memory.module
+include-file = ~/.config/polybar/modules/network-traffic.module
+include-file = ~/.config/polybar/modules/network.module
+include-file = ~/.config/polybar/modules/pulseaudio.module
+include-file = ~/.config/polybar/modules/spotify.module
+include-file = ~/.config/polybar/modules/ssh.module
+include-file = ~/.config/polybar/modules/xbacklight.module
+
+
+[settings]
+screenchange-reload = true
+wifi-iface = wlp3s0
+eth-iface = enp2s0f1
+
+
+[colors]
+foreground = #dfdfdf
+foreground-alt = #555
+background = #222
+background-alt = #444
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+
+[bar/template]
+width = 100%
+height = 27
+fixed-center = false
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = #f00
+
+padding-left = 0
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 2
+
+; Font for text
+font-0 = Monofur for Powerline:size=16;0
+; Font for icons and glyphs
+font-1 = Monofur Nerd Font Mono:size=22;2
+
+
+[bar/top]
+inherit = bar/template
+wm-name = polybar-top
+
+modules-left = spotify pulseaudio
+modules-right = xbacklight ssh network-traffic memory cpu
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+
+[bar/bottom]
+inherit = bar/template
+wm-name = polybar-bottom
+
+bottom = true
+height = 30
+
+modules-left = i3
+modules-right = network battery date
+
+tray-position = right
+tray-detached = false
+
+
+; vim:ft=dosini

@@ -235,24 +235,6 @@ for_window [class="^Nm-connection-editor$"] floating enable
 for_window [class="^VirtualBox Machine$"] move to workspace $ws3
 
 
-# i3blocks config
-bar {
-    status_command i3blocks -c ~/.config/i3/i3blocks.conf
-    strip_workspace_numbers yes
-    colors {
-        background #232f34  # Bar background color
-        statusline #eceff1  # Text color
-        separator  #00acc1  # Status separator color
-
-        # Color class       Border   BG       Text
-        focused_workspace   #0098a7  #006064  #ffffff
-        active_workspace    #00adc1  #00848f  #ffffff
-        inactive_workspace  #6a6377  #282334  #ffffff
-        urgent_workspace    #c8615c  #ac1714  #ffffff
-    }
-}
-
-
 # Layouts
 $i3msg 'workspace $wsDev; append_layout ~/.config/i3/layouts/wsDev.json'
 $i3msg 'workspace $wsWeb; append_layout ~/.config/i3/layouts/wsWeb.json'
@@ -269,6 +251,8 @@ exec_always --no-startup-id i3-msg "workspace $wsWeb; layout tabbed"
 # Start xautolock, config in ~/.Xresource
 $exec_noid xautolock -noclose -notify 10 -notifier /home/nelson/.config/i3/scripts/dimmer -time 10 -locker 'i3lock -eni /home/nelson/.config/i3/assets/lockscreen/lockscreen.png'
 $exec_noid xautolock -noclose -time 12 -locker 'systemctl suspend'
+
+$exec_noid ~/.config/polybar/launch.sh
 
 # Set the background
 exec_always --no-startup-id nitrogen --set-zoom-fill --random ~/.config/i3/assets/backgrounds

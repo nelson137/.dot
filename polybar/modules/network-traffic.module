@@ -1,0 +1,12 @@
+; vim:ft=dosini
+
+[module/network-traffic]
+type = internal/network
+interface = ${settings.wifi-iface}
+interval = 1
+
+format-connected = <label-connected>
+label-connected = %{O-3}ﰵ%{O3}%upspeed% %{O-3}ﰬ%{O3}%downspeed%
+
+format-disconnected = <label-disconnected>
+label-disconnected = ${self.label-connected}
