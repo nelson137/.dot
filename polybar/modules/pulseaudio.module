@@ -5,7 +5,8 @@ type = internal/pulseaudio
 
 format-volume = <ramp-volume> <bar-volume>
 
-format-muted = ﱝ muted
+format-muted = <label-muted>
+label-muted = ﱝ muted
 label-muted-foreground = #ff5555
 
 bar-volume-gradient = false
