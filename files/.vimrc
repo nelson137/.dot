@@ -5,6 +5,7 @@ set backspace=indent,eol,start
 set clipboard=unnamedplus   " Use the system clipboard (requires vim-gtk*)
 set encoding=utf-8
 set history=500             " Remember 500 ex commands
+set ignorecase              " Ignore case in searches
 set incsearch               " Highlight search matches while typing
 set nocompatible            " Be iMproved
 set noswapfile              " I like to live dangerously
