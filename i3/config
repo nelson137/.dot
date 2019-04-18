@@ -261,7 +261,7 @@ exec_always --no-startup-id nitrogen --set-zoom-fill --random ~/.config/i3/asset
 exec gnome-keyring-daemon --start
 
 # Start the compositor
-exec compton
+exec compton --paint-on-overlay
 
 # Start NetworkManager
 $exec_noid nm-applet
