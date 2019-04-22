@@ -7,8 +7,7 @@ URxvt.font: xft:Source Code Pro for Powerline:size=12, \
             xft:Inconsolata Nerd Font Mono:size=14
 URxvt.visualBell: false
 URxvt.scrollstyle: plain
-URxvt.scrollBar: true
-URxvt.scrollBar_right: true
+URxvt.scrollBar: false
 URxvt.secondaryScroll: false
 URxvt.cursorBlink: true
 URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
