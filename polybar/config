@@ -95,8 +95,5 @@ height = 30
 modules-left = i3
 modules-right = network battery date
 
-tray-position = right
-tray-detached = false
-
 
 ; vim:ft=dosini
