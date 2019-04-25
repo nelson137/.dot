@@ -84,6 +84,10 @@ augroup close_qf_win
     au BufUnload * if getqflist() != [] | exe ':cclose' | endif
 augroup end
 
+augroup gitcommit_no_listchars
+    au!
+    au FileType gitcommit set nolist
+augroup end
 
 
 " Filetype Configs
