@@ -154,6 +154,12 @@ bindsym $mod+i $exec_noid i3resize up
 bindsym $mod+o $exec_noid i3resize right
 
 
+bindsym $mod+Shift+y move left 30
+bindsym $mod+Shift+u move down 30
+bindsym $mod+Shift+i move up 30
+bindsym $mod+Shift+o move right 30
+
+
 set $mode_confirm_logout Logout now? [y]es [n]o
 mode "$mode_confirm_logout" {
     bindsym y      $exec_noid i3-msg exit
@@ -199,21 +205,6 @@ mode "$mode_system" {
     bindsym r mode "$mode_confirm_reboot"
     bindsym Return mode "default"
     bindsym Escape mode "default"
-}
-
-
-bindsym $mod+Control+m mode "Move"
-mode "Move" {
-    bindsym h move left
-    bindsym j move down
-    bindsym k move up
-    bindsym l move right
-    bindsym Shift+h move left 64px
-    bindsym Shift+j move down 64px
-    bindsym Shift+k move up 64px
-    bindsym Shift+l move right 64px
-    bindsym Return mode default
-    bindsym Escape mode default
 }
 
 
