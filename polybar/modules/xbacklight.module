@@ -11,13 +11,13 @@ ramp-2 = 
 ramp-3 = 
 
 bar-width = 10
-bar-indicator = |
-bar-indicator-font = 1
-bar-indicator-foreground = ${root.foreground}
+bar-indicator = ─
+bar-indicator-font = 2
+bar-indicator-foreground = #9f78e1
 
 bar-fill = ─
 bar-fill-font = 2
-bar-fill-foreground = #9f78e1
+bar-fill-foreground = ${self.bar-indicator-foreground}
 
 bar-empty = ─
 bar-empty-font = 2
