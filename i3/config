@@ -148,22 +148,10 @@ bindsym XF86MonBrightnessUp $exec_noid xbacklight -inc 10
 bindsym XF86MonBrightnessDown $exec_noid xbacklight -dec 10
 
 
-# Resize the focused window
-bindsym $mod+r mode "resize"
-mode "resize" {
-    # h: Decrease width
-    # j: Decrease height
-    # k: Increase height
-    # l: Increase width
-    bindsym h resize shrink width  5 px or 5 ppt
-    bindsym j resize shrink height 5 px or 5 ppt
-    bindsym k resize grow   height 5 px or 5 ppt
-    bindsym l resize grow   width  5 px or 5 ppt
-
-    # Enter or Escape exits resize mode
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
+bindsym $mod+y $exec_noid i3resize left
+bindsym $mod+u $exec_noid i3resize down
+bindsym $mod+i $exec_noid i3resize up
+bindsym $mod+o $exec_noid i3resize right
 
 
 set $mode_confirm_logout Logout now? [y]es [n]o
