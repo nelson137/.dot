@@ -86,7 +86,7 @@ augroup end
 
 augroup gitcommit_no_listchars
     au!
-    au FileType gitcommit set nolist
+    au FileType gitcommit,make set nolist
 augroup end
 
 
