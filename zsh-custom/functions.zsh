@@ -239,4 +239,23 @@ vimrm() {
 
 
 
+xset() {
+    [[ $# == 2 && $1 == q ]] || { /usr/bin/xset "$@"; return $?; }
+
+    local setting
+    case "$2" in
+        keyboard) setting='Keyboard Control' ;;
+        mouse)    setting='Pointer Control' ;;
+        s)        setting='Screen Saver' ;;
+        p)        setting='Colors' ;;
+        fp)       setting='Font Path' ;;
+        dpms)     setting='DPMS \(Energy Star\)' ;;
+        *)        echo "xset setting not recognized: $2" >&2; return 1 ;;
+    esac
+
+    xset q | sed -E "/$setting:/,/^\\S/!d" | sed -E '$s/^(\S)/\1/;Te;d;:e'
+}
+
+
+
 setopt aliases  # Turn aliases back on
