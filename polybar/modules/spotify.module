@@ -2,4 +2,4 @@
 
 [module/spotify]
 type = custom/script
-exec = sp current | sed -nE 's/^(Artist|Title)\s+(.+)$/\2/p' | sed 'N;s/\n/ - /g'
+exec = sp current 2>/dev/null | sed -nE 's/^(Artist|Title)\s+(.+)$/\2/p' | sed 'N;s/\n/ - /g'
