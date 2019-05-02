@@ -19,9 +19,9 @@ ramp-volume-4 = 
 ramp-volume-5 = 
 ramp-volume-6 = 
 
-bar-volume-width = 10
-bar-volume-indicator = |
-bar-volume-indicator-font = 1
+bar-volume-width = 11
+
+bar-volume-indicator =
 
 bar-volume-fill = ─
 bar-volume-fill-font = 2
