@@ -72,7 +72,7 @@ for_window [title="^ranger$"] move to scratchpad
 bindsym $mod+n [title="^ranger$"] scratchpad show, resize set 1640 800, move position center
 
 for_window [instance="^FloatingTerm$"] move to scratchpad
-bindsym $mod+t $exec_noid /home/nelson/.config/i3/scripts/floatingTerm
+bindsym $mod+t $exec_noid ~/bin/floatingTerm
 
 # Change the focused window
 bindsym $mod+h focus left
