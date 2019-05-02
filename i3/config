@@ -148,16 +148,16 @@ bindsym XF86MonBrightnessUp $exec_noid xbacklight -inc 10
 bindsym XF86MonBrightnessDown $exec_noid xbacklight -dec 10
 
 
-bindsym $mod+y $exec_noid i3resize left
-bindsym $mod+u $exec_noid i3resize down
-bindsym $mod+i $exec_noid i3resize up
-bindsym $mod+o $exec_noid i3resize right
+bindsym $mod+Shift+y $exec_noid i3resize left
+bindsym $mod+Shift+u $exec_noid i3resize down
+bindsym $mod+Shift+i $exec_noid i3resize up
+bindsym $mod+Shift+o $exec_noid i3resize right
 
 
-bindsym $mod+Shift+y move left 30
-bindsym $mod+Shift+u move down 30
-bindsym $mod+Shift+i move up 30
-bindsym $mod+Shift+o move right 30
+bindsym $mod+y move left 30
+bindsym $mod+u move down 30
+bindsym $mod+i move up 30
+bindsym $mod+o move right 30
 
 
 bindsym $mod+Control+l $exec_noid logoutmgr
