@@ -19,8 +19,10 @@ set $wsSpotify "8:"
 set $wsMail    "9:"
 set $ws10      "10:10"
 
-set $exec_noid exec --no-startup-id
-set $i3msg     exec --no-startup-id i3-msg
+set $exec_n   exec        --no-startup-id
+set $exec_a_n exec_always --no-startup-id
+set $exec_a   exec_always
+set $i3msg    exec --no-startup-id i3-msg
 
 # i3-gaps
 for_window [class="^.*"] border pixel 2
@@ -71,7 +73,7 @@ for_window [title="^ranger$"] move to scratchpad
 bindsym $mod+n [title="^ranger$"] scratchpad show, resize set 1640 800, move position center
 
 for_window [instance="^FloatingTerm$"] move to scratchpad
-bindsym $mod+t $exec_noid ~/bin/floatingTerm
+bindsym $mod+t $exec_n ~/bin/floatingTerm
 
 # Change the focused window
 bindsym $mod+h focus left
@@ -120,7 +122,7 @@ bindsym $mod+Return exec urxvt
 bindsym $mod+backslash exec google-chrome
 
 # Start dmenu
-bindsym $mod+p $exec_noid i3-dmenu-desktop --dmenu 'rofi -dmenu -i'
+bindsym $mod+p $exec_n i3-dmenu-desktop --dmenu 'rofi -dmenu -i'
 
 # Reload the config file
 bindsym $mod+q reload
@@ -132,25 +134,25 @@ set $volumeCmd amixer -qc 0 -D pulse set Master
 set $volumeChanged play /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
 set $audioCmd dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player
 
-bindsym XF86AudioRaiseVolume $exec_noid $volumeCmd 10%+ unmute && $volumeChanged
-bindsym XF86AudioLowerVolume $exec_noid $volumeCmd 10%- unmute && $volumeChanged
-bindsym XF86AudioMute $exec_noid $volumeCmd toggle
-bindsym XF86AudioPlay $exec_noid $audioCmd.PlayPause
-bindsym $mod+Shift+period $exec_noid $audioCmd.Next
-bindsym $mod+Shift+comma $exec_noid $audioCmd.Previous
-bindsym $mod+Shift+slash $exec_noid $audioCmd.PlayPause
+bindsym XF86AudioRaiseVolume $exec_n $volumeCmd 10%+ unmute && $volumeChanged
+bindsym XF86AudioLowerVolume $exec_n $volumeCmd 10%- unmute && $volumeChanged
+bindsym XF86AudioMute $exec_n $volumeCmd toggle
+bindsym XF86AudioPlay $exec_n $audioCmd.PlayPause
+bindsym $mod+Shift+period $exec_n $audioCmd.Next
+bindsym $mod+Shift+comma $exec_n $audioCmd.Previous
+bindsym $mod+Shift+slash $exec_n $audioCmd.PlayPause
 set $lockscreen /home/nelson/.config/i3/assets/lockscreen/lockscreen.png
-bindsym $mod+Shift+z $exec_noid i3lock -eni $lockscreen
+bindsym $mod+Shift+z $exec_n i3lock -eni $lockscreen
 
 # Brightness keys
-bindsym XF86MonBrightnessUp $exec_noid xbacklight -inc 10
-bindsym XF86MonBrightnessDown $exec_noid xbacklight -dec 10
+bindsym XF86MonBrightnessUp $exec_n xbacklight -inc 10
+bindsym XF86MonBrightnessDown $exec_n xbacklight -dec 10
 
 
-bindsym $mod+Shift+y $exec_noid i3resize left
-bindsym $mod+Shift+u $exec_noid i3resize down
-bindsym $mod+Shift+i $exec_noid i3resize up
-bindsym $mod+Shift+o $exec_noid i3resize right
+bindsym $mod+Shift+y $exec_n i3resize left
+bindsym $mod+Shift+u $exec_n i3resize down
+bindsym $mod+Shift+i $exec_n i3resize up
+bindsym $mod+Shift+o $exec_n i3resize right
 
 
 bindsym $mod+y move left 30
@@ -159,7 +161,7 @@ bindsym $mod+i move up 30
 bindsym $mod+o move right 30
 
 
-bindsym $mod+Control+l $exec_noid logoutmgr
+bindsym $mod+Control+l $exec_n logoutmgr
 
 
 # Default workspaces for programs
@@ -182,14 +184,14 @@ exec_always --no-startup-id i3-msg "workspace $wsWeb; layout tabbed"
 
 
 # Start locker
-exec_always --no-startup-id xset s 300 30
-exec_always --no-startup-id xss-lock -ln ~/.config/i3/scripts/dimmer -- ~/.config/i3/scripts/locker
-exec_always --no-startup-id xautolock -time 7 -locker 'systemctl suspend'
+$exec_n xset s 300 30
+$exec_n xss-lock -ln ~/.config/i3/scripts/dimmer -- ~/.config/i3/scripts/locker
+$exec_n xautolock -time 7 -locker 'systemctl suspend'
 
-$exec_noid ~/.config/polybar/launch.sh
+$exec_n ~/.config/polybar/launch.sh
 
 # Set the background
-exec_always --no-startup-id nitrogen --set-zoom-fill --random ~/.config/i3/assets/backgrounds
+$exec_a_n nitrogen --set-zoom-fill --random ~/.config/i3/assets/backgrounds
 
 # Start the GNOME keyring for Chrome and other programs
 exec gnome-keyring-daemon --start
@@ -198,15 +200,15 @@ exec gnome-keyring-daemon --start
 exec compton --paint-on-overlay
 
 # Start NetworkManager
-$exec_noid nm-applet
+$exec_n nm-applet
 
 # Start in the dev workspace
 $i3msg 'workspace $wsDev'
 
 # Startup programs
-$exec_noid xbacklight -set 20
-$exec_noid xrdb -merge ~/.Xresources
-$exec_noid dunst -config ~/.dunstrc
+$exec_n xbacklight -set 20
+$exec_n xrdb -merge ~/.Xresources
+$exec_n dunst -config ~/.dunstrc
 exec urxvt
 exec spotify
 exec urxvt -e ranger
