@@ -9,4 +9,6 @@ set_brightness()  { xbacklight -steps 1 -set $1; }
 
 trap "set_brightness $(get_brightness)" EXIT TERM INT
 xbacklight -time 400 -steps 20 -set 0
-xset dpms force off
+
+sleep 2147483647 &
+wait
