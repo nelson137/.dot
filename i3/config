@@ -3,7 +3,6 @@
 set $mod Mod4
 
 # Font for window titles and the status bar
-# Can be overridden in the bar {} block
 font pango:monospace, FontAwesome 12
 
 # Use Mouse+$mod to drag floating windows around
