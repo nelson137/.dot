@@ -140,8 +140,7 @@ bindsym XF86AudioPlay        $exec_n sp play
 bindsym $mod+Shift+period    $exec_n sp next
 bindsym $mod+Shift+comma     $exec_n sp prev
 bindsym $mod+Shift+slash     $exec_n sp play
-set $lockscreen /home/nelson/.config/i3/assets/lockscreen/lockscreen.png
-bindsym $mod+Shift+z         $exec_n i3lock -eni $lockscreen
+bindsym $mod+Shift+z         $exec_n locker
 
 # Brightness keys
 bindsym XF86MonBrightnessUp $exec_n xbacklight -inc 10
