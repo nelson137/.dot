@@ -136,13 +136,13 @@ set $audioCmd dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.spotify
 
 bindsym XF86AudioRaiseVolume $exec_n $volumeCmd 10%+ unmute && $volumeChanged
 bindsym XF86AudioLowerVolume $exec_n $volumeCmd 10%- unmute && $volumeChanged
-bindsym XF86AudioMute $exec_n $volumeCmd toggle
-bindsym XF86AudioPlay $exec_n $audioCmd.PlayPause
-bindsym $mod+Shift+period $exec_n $audioCmd.Next
-bindsym $mod+Shift+comma $exec_n $audioCmd.Previous
-bindsym $mod+Shift+slash $exec_n $audioCmd.PlayPause
+bindsym XF86AudioMute        $exec_n $volumeCmd toggle
+bindsym XF86AudioPlay        $exec_n $audioCmd.PlayPause
+bindsym $mod+Shift+period    $exec_n $audioCmd.Next
+bindsym $mod+Shift+comma     $exec_n $audioCmd.Previous
+bindsym $mod+Shift+slash     $exec_n $audioCmd.PlayPause
 set $lockscreen /home/nelson/.config/i3/assets/lockscreen/lockscreen.png
-bindsym $mod+Shift+z $exec_n i3lock -eni $lockscreen
+bindsym $mod+Shift+z         $exec_n i3lock -eni $lockscreen
 
 # Brightness keys
 bindsym XF86MonBrightnessUp $exec_n xbacklight -inc 10
