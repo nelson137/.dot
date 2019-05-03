@@ -181,9 +181,10 @@ for_window [class="Spotify"] move to workspace $wsSpotify
 exec_always --no-startup-id i3-msg "workspace $wsWeb; layout tabbed"
 
 
-# Start xautolock, config in ~/.Xresource
-$exec_noid xautolock -noclose -notify 10 -notifier /home/nelson/.config/i3/scripts/dimmer -time 10 -locker 'i3lock -eni /home/nelson/.config/i3/assets/lockscreen/lockscreen.png'
-$exec_noid xautolock -noclose -time 12 -locker 'systemctl suspend'
+# Start locker
+exec_always --no-startup-id xset s 300 30
+exec_always --no-startup-id xss-lock -ln ~/.config/i3/scripts/dimmer -- ~/.config/i3/scripts/locker
+exec_always --no-startup-id xautolock -time 7 -locker 'systemctl suspend'
 
 $exec_noid ~/.config/polybar/launch.sh
 
