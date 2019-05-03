@@ -184,7 +184,7 @@ exec_always --no-startup-id i3-msg "workspace $wsWeb; layout tabbed"
 
 # Start locker
 $exec_n xset s 300 30
-$exec_n xss-lock -ln ~/.config/i3/scripts/dimmer -- ~/.config/i3/scripts/locker
+$exec_n xss-lock -ln dimmer -- locker
 $exec_n xautolock -time 7 -locker 'systemctl suspend'
 
 $exec_n ~/.config/polybar/launch.sh
