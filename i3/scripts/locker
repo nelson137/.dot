@@ -5,6 +5,10 @@
 # will be blocked until the screen is locked.
 
 
+# Don't do anything if already locked
+pgrep i3lock >/dev/null && exit 0
+
+
 pre_lock() {
     # Pause dunst
     pkill -USR1 --euid "$(id -u)" --exact dunst
