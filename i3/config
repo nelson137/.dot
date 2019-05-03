@@ -132,15 +132,14 @@ bindsym $mod+Shift+q restart
 # Multimedia bindings
 set $volumeCmd amixer -qc 0 -D pulse set Master
 set $volumeChanged play /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
-set $audioCmd dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player
 
 bindsym XF86AudioRaiseVolume $exec_n $volumeCmd 10%+ unmute && $volumeChanged
 bindsym XF86AudioLowerVolume $exec_n $volumeCmd 10%- unmute && $volumeChanged
 bindsym XF86AudioMute        $exec_n $volumeCmd toggle
-bindsym XF86AudioPlay        $exec_n $audioCmd.PlayPause
-bindsym $mod+Shift+period    $exec_n $audioCmd.Next
-bindsym $mod+Shift+comma     $exec_n $audioCmd.Previous
-bindsym $mod+Shift+slash     $exec_n $audioCmd.PlayPause
+bindsym XF86AudioPlay        $exec_n sp play
+bindsym $mod+Shift+period    $exec_n sp next
+bindsym $mod+Shift+comma     $exec_n sp prev
+bindsym $mod+Shift+slash     $exec_n sp play
 set $lockscreen /home/nelson/.config/i3/assets/lockscreen/lockscreen.png
 bindsym $mod+Shift+z         $exec_n i3lock -eni $lockscreen
 
