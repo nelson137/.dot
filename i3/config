@@ -189,7 +189,7 @@ $exec_n xautolock -time 7 -locker 'systemctl suspend'
 $exec_n ~/.config/polybar/launch.sh
 
 # Set the background
-$exec_a_n nitrogen --set-zoom-fill --random ~/.config/i3/assets/backgrounds
+$exec_n nitrogen --set-zoom-fill --random ~/.config/i3/assets/backgrounds
 
 # Start the GNOME keyring for Chrome and other programs
 exec gnome-keyring-daemon --start
