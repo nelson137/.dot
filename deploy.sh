@@ -18,6 +18,9 @@ lang() {
 # Link config files
 listdir "$here/files" | xargs -I % ln -fs % "$HOME"
 
+# Link config directories
+listdir "$here/.config" | xargs -I % ln -fs % "$HOME/.config"
+
 # Make directories for libraries
 rm -rf "$HOME"/.{include,lib}
 mkdir "$HOME"/.{include,lib}
