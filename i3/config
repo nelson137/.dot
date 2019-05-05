@@ -200,6 +200,9 @@ exec compton --paint-on-overlay
 # Start NetworkManager
 $exec_n nm-applet
 
+# Start lightsOn -- reset screensaver timer if fullscreen program is detected
+$exec_n lightsOn.sh 590
+
 # Start in the dev workspace
 $i3msg 'workspace $wsDev'
 
