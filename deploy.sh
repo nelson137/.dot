@@ -2,6 +2,10 @@
 
 here="$(cd "$(dirname "$0")" && pwd)"
 
+listdir() {
+    find "$1" -maxdepth 1 | sed 1d
+}
+
 no_ext() {
     sed -E 's/\.(c|cpp)$//' <<< "$1"
 }
@@ -12,7 +16,7 @@ lang() {
 
 
 # Link config files
-command ls -A "$here/files" | xargs -I % ln -fs "$HOME/.dot/files/%" "$HOME"
+listdir "$here/files" | xargs -I % ln -fs % "$HOME"
 
 # Make directories for libraries
 rm -rf "$HOME"/.{include,lib}
