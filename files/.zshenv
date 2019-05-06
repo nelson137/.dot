@@ -2,7 +2,14 @@
 ### Environment ###
 ###################
 
-export PATH="$HOME/bin:$HOME/bin/compiled:$HOME/.local/bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.dot/components/fzf/bin:/mnt/c/Program Files/Oracle/VirtualBox:$PATH"
+path_=(
+    "$HOME"/bin{,/compiled}
+    "$HOME"/{.local,.cargo,.dot/components/fzf,go}/bin
+    '/mnt/c/Program Files/Oracle/VirtualBox'
+    "$PATH"
+)
+export PATH="${(j/:/)path_}"
+unset path_
 
 # Locale
 export LANG=en_US.UTF-8
