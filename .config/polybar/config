@@ -78,7 +78,7 @@ font-1 = Monofur Nerd Font Mono:size=22;2
 inherit = bar/template
 wm-name = polybar-top
 
-modules-left = spotify pulseaudio
+modules-left = pulseaudio spotify
 modules-right = xbacklight ssh network-traffic memory cpu
 
 cursor-click = pointer
