@@ -28,3 +28,9 @@ export ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;&'
 # Phantomjs
 export QT_QPA_PLATFORM=offscreen
 export QT_QPA_FONTDIR=/usr/share/fonts
+
+# fzf
+excludes=(.cache .npm .gem .vim/undodir)
+excludes='--exclude '${^excludes}
+export FZF_CTRL_T_COMMAND="fd --type f --hidden $excludes"
+unset excludes
