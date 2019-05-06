@@ -43,6 +43,7 @@ alias gcam='git add -A; git commit -m'
 alias gcam!='git add -A; git commit -v --amend'
 alias gp='git push'
 alias gstu='git stash push'
+alias gsu='git submodule update --init --recursive --depth 1'
 
 # My aliases
 alias aliases='vim ~/.dot/zsh-custom/aliases.zsh'
