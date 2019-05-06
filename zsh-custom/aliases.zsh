@@ -42,6 +42,7 @@ alias glop='git log -p'
 alias gcam='git add -A; git commit -m'
 alias gcam!='git add -A; git commit -v --amend'
 alias gp='git push'
+alias gsa='git submodule add --depth 1'
 alias gstu='git stash push'
 alias gsu='git submodule update --init --recursive --depth 1'
 
