@@ -72,6 +72,7 @@ force_wifi() {
 
 
 gcl() {
+    clone() { git clone --recurse-submodules -j8 "$@"; }
     # git clone username/repo(.git) or repo(.git)
     # In the case without a username, it's assumed the repo is mine
     for name in "$@"; do
@@ -84,10 +85,10 @@ gcl() {
             echo "invalid repo name: $repo" >&2
         elif [[ $repo =~ .+/.+ ]]; then
             # Clone someone else's repo
-            git clone --recursive "https://github.com/${repo}.git"
+            clone "https://github.com/${repo}.git"
         else
             # Clone my repo
-            git clone --recursive "git@github.com:nelson137/${repo}.git"
+            clone "git@github.com:nelson137/${repo}.git"
         fi
     done
 }
