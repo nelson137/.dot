@@ -29,8 +29,8 @@ export PYTHONSTARTUP="$HOME/.pythonrc"
 # Give vagrant access to WSL features
 export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS=1
 
-# Don't eat preceding space when | is typed
-export ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;&'
+# Eat suffix added by completion ([ /]) only when these chars are typed
+export ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;'
 
 # Phantomjs
 export QT_QPA_PLATFORM=offscreen
