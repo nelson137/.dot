@@ -1,8 +1,8 @@
 #!/bin/bash
 # Logout ManaGeR
-# Uses rofi to prompt to lock, logout, sleep, shutdown, or reboot.
+# Uses rofi to prompt to lock, logout, hibernate, shutdown, or reboot.
 
-choices=(Lock Logout Sleep Shutdown Reboot)
+choices=(Lock Logout Hibernate Shutdown Reboot)
 chosen="$(for c in "${choices[@]}"; do echo "$c"; done | rofi -i -dmenu)"
 
 case "$chosen" in
@@ -10,7 +10,7 @@ case "$chosen" in
         i3lock -eni ~/.config/i3/assets/lockscreen/lockscreen.png ;;
     Logout)
         i3-msg exit ;;
-    Sleep)
+    Hibernate)
         systemctl suspend ;;
     Shutdown)
         shutdown now ;;
