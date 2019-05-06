@@ -49,3 +49,6 @@ done
 
 # Install repository hooks
 "$here/install-hooks.sh"
+
+# Install fzf
+"$here/components/fzf/install" --bin --64

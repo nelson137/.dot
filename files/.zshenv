@@ -2,7 +2,7 @@
 ### Environment ###
 ###################
 
-export PATH="$HOME/bin:$HOME/bin/compiled:$HOME/.local/bin:$HOME/go/bin:$HOME/.cargo/bin:/mnt/c/Program Files/Oracle/VirtualBox:$PATH"
+export PATH="$HOME/bin:$HOME/bin/compiled:$HOME/.local/bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.dot/components/fzf/bin:/mnt/c/Program Files/Oracle/VirtualBox:$PATH"
 
 # Locale
 export LANG=en_US.UTF-8

@@ -113,4 +113,11 @@ if [[ ! -f $lastrun_f || ! -f ~/.aliases || $one_day_passed == 1 ]]; then
     (alias | sed -E '/^(\-)/d; s/(.+)/alias \1/' > ~/.aliases &)
 fi
 
+# fzf key bindings
+source "$HOME/.dot/components/fzf/shell/key-bindings.zsh"
+
+# fzf auto-completion
+[[ $- == *i* ]] &&
+    source "$HOME/.dot/components/fzf/shell/completion.zsh" 2>/dev/null
+
 true
