@@ -148,8 +148,8 @@ private:
 public:
     char *bin;
 
-    template<template<> typename T>
-    void init(string bin, T<string> args) {
+    template<template<typename,typename> typename T>
+    void init(string bin, T<string,allocator<string>> args) {
         this->bin = this->string_copy(bin);
         this->args = {this->bin, nullptr};
 
@@ -158,8 +158,8 @@ public:
             this->push_back(*it);
     }
 
-    template<template<> typename T>
-    ExecArgs(string bin, T<string> args) {
+    template<template<typename,typename> typename T>
+    ExecArgs(string bin, T<string,allocator<string>> args) {
         init(bin, args);
     }
 
@@ -167,11 +167,12 @@ public:
         typename... Str,
         typename = enable_if_t<(... && std::is_convertible_v<Str, string>)>
     >
-    ExecArgs(string bin, const Str... strs)
-        : ExecArgs(bin, vector<string>{strs...}) {}
+    ExecArgs(string bin, const Str... strs) {
+        init(bin, vector<string>{strs...});
+    }
 
-    template<template<> typename T>
-    ExecArgs(T<string> args) {
+    template<template<typename,typename> typename T>
+    ExecArgs(T<string,allocator<string>> args) {
         string bin;
         if (args.size()) {
             bin = args[0];
