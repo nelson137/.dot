@@ -3,6 +3,7 @@
 
 
 #include <algorithm>
+#include <any>
 #include <ios>
 #include <iostream>
 #include <sstream>
@@ -78,48 +79,44 @@ string join(vector<T> tokens, string delim=" ") {
 vector<string> split(string, string=" ");
 
 
-class any {
+ostream& operator<<(ostream& os, any& a) {
+    const type_info& type = a.type();
 
-private:
-    enum type {Char, Int, Float, Double, Size_t, String};
-    char   CHAR;
-    int    INT;
-    float  FLOAT;
-    double DOUBLE;
-    size_t SIZE_T;
-    string STRING;
+    if (type == typeid(char))
+        os << string(1, any_cast<char>(a));
+    else if (type == typeid(int))
+        os << to_string(any_cast<int>(a));
+    else if (type == typeid(float))
+        os << to_string(any_cast<float>(a));
+    else if (type == typeid(double))
+        os << to_string(any_cast<double>(a));
+    else if (type == typeid(size_t))
+        os << to_string(any_cast<size_t>(a));
+    else if (type == typeid(string))
+        os << any_cast<string>(a);
+    else
+        throw bad_any_cast();
 
-public:
-    type m_type;
+    return os;
+}
 
-    any(char   c) { this->m_type = Char;   this->CHAR   = c; }
-    any(int    i) { this->m_type = Int;    this->INT    = i; }
-    any(float  f) { this->m_type = Float;  this->FLOAT  = f; }
-    any(double d) { this->m_type = Double; this->DOUBLE = d; }
-    any(size_t s) { this->m_type = Size_t; this->SIZE_T = s; }
-    any(string s) { this->m_type = String; this->STRING = s; }
 
-    string str() {
-        switch (this->m_type) {
-            case Char:   return string(1, this->CHAR);
-            case Int:    return to_string(this->INT);
-            case Float:  return to_string(this->FLOAT);
-            case Double: return to_string(this->DOUBLE);
-            case Size_t: return to_string(this->SIZE_T);
-            case String: return this->STRING;
-        }
-    }
-
-};
+ostream& operator<<(ostream& os, any&& a) {
+    return operator<<(os, a);
+}
 
 
 void die(int=1);
 
 
-template<typename T, typename... Ts>
-void die(int code, T t, Ts... ts) {
-    vector<string> tokens = {any(t).str(), any(ts).str()...};
-    cerr << join(tokens) << endl;
+template<typename... T>
+void die(int code, string t, T... ts) {
+    vector<any> tokens = {any(t), any(ts)...};
+    if (tokens.size()) {
+        cerr << tokens[0] << endl;
+        for (int i=0; i<tokens.size(); i++)
+            cerr << tokens[i];
+    }
     die(code);
 }
 
