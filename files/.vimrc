@@ -74,7 +74,7 @@ augroup mine
     au BufEnter .zsh_history call ale#toggle#Disable()
 
     " Close the quickfix window when exiting
-    au BufUnload * if getqflist() != [] | exe ':cclose' | endif
+    au BufUnload * if len(getqflist()) | exe ':cclose' | endif
 
     " Disable listchars
     au FileType gitcommit,make,man,qf set nolist
