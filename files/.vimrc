@@ -87,6 +87,9 @@ augroup mine
         \ setlocal colorcolumn=+1 textwidth=79
 
     au FileType asm ALEDisable
+
+    au BufWrite .vimrc let g:vimrc_changed = 1
+    au BufEnter * call vimrc#AutoSource()
 augroup end
 
 
@@ -165,10 +168,6 @@ endfunction
 function! OnExitChhn()
     call OnExit('~/hosts.bak')
     silent exe ':xa'
-endfunction
-
-function! OpenVimrc()
-    tabedit $MYVIMRC
 endfunction
 
 function! GetPythonVersion()
@@ -287,8 +286,8 @@ noremap <silent>   <Leader>u   :GundoToggle<CR>
 
 " Opens and sources .vimrc
 " Thank you Derek Wyatt
-noremap <silent>   <Leader>ev   :call OpenVimrc()<CR>
-noremap <silent>   <Leader>sv   :so $MYVIMRC<CR>:call Info('Done')<CR>
+noremap <silent>   <Leader>ev   :call vimrc#Open()<CR>
+noremap <silent>   <Leader>sv   :call vimrc#Source()<CR>
 
 " Show map-modes
 noremap <silent>   <Leader>mm   :h map-modes<CR>

@@ -21,6 +21,10 @@ listdir "$here/files" | xargs -I % ln -fs % "$HOME"
 # Link config directories
 listdir "$here/.config" | xargs -I % ln -fs % "$HOME/.config"
 
+# Link vim autoload files
+mkdir -p "$HOME/.vim/autoload"
+ln -fs "$here/.vim/autoload/"* "$HOME/.vim/autoload"
+
 # Make directories for libraries
 rm -rf "$HOME"/.{include,lib}
 mkdir "$HOME"/.{include,lib}
