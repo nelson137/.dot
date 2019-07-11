@@ -101,6 +101,8 @@ autocmd FileType c,cpp,javascript,python,sh,vim,zsh
 
 autocmd FileType asm ALEDisable
 
+autocmd FileType man set nolist listchars=
+
 
 
 " Functions
