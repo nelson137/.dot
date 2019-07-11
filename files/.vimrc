@@ -168,8 +168,7 @@ function! OnExitChhn()
 endfunction
 
 function! OpenVimrc()
-    topleft new
-    edit $MYVIMRC
+    tabedit $MYVIMRC
 endfunction
 
 function! GetPythonVersion()
