@@ -54,54 +54,40 @@ set number         " Turn on line numbers
 
 " Autocmd
 
-" Open file to the same line I was on last time
-augroup line_return
+let g:last_closed_file = 'DEFAULT'
+augroup mine
     au!
+
+    " Open file to the same line I was on last time
     au BufReadPost *
         \ if line("'\"") > 1 && line("'\"") <= line('$') |
         \     exe 'normal! g`"' |
         \ endif
-augroup end
 
-" No ~/.vim/.netrwhist file
-augroup vimleave
-    au!
+    " No ~/.vim/.netrwhist file
     au VimLeave *
         \ if filereadable('$HOME/.vim/.netrwhist') |
         \     call delete('$HOME/.vim/.netrwhist') |
         \ endif
-augroup end
 
-" Disable ALE in ~/.zsh_history
-augroup no_lint_zshhist
-    au!
+    " Disable ALE in ~/.zsh_history
     au BufEnter .zsh_history call ale#toggle#Disable()
-augroup end
 
-" Close the quickfix window when exiting
-augroup close_qf_win
-    au!
+    " Close the quickfix window when exiting
     au BufUnload * if getqflist() != [] | exe ':cclose' | endif
+
+    " Disable listchars
+    au FileType gitcommit,make,man,qf set nolist
+
+    " Set indentation rules for HTML files
+    au BufRead,BufNewFile *.html set ts=2 sw=2 sts=2
+
+    " Show ruler for specific filetypes
+    au FileType c,cpp,javascript,python,sh,vim,zsh
+        \ setlocal colorcolumn=+1 textwidth=79
+
+    au FileType asm ALEDisable
 augroup end
-
-augroup gitcommit_no_listchars
-    au!
-    au FileType gitcommit,make set nolist
-augroup end
-
-
-" Filetype Configs
-
-" Set indentation rules for HTML files
-au BufRead,BufNewFile *.html set ts=2 sw=2 sts=2
-
-" Show ruler for specific filetypes
-autocmd FileType c,cpp,javascript,python,sh,vim,zsh
-    \ setlocal colorcolumn=+1 textwidth=79
-
-autocmd FileType asm ALEDisable
-
-autocmd FileType man set nolist listchars=
 
 
 
