@@ -15,6 +15,9 @@ lang() {
 }
 
 
+# Clone all submodules
+git submodule update --init --recursive
+
 # Link config files
 listdir "$here/files" | xargs -I % ln -fs % "$HOME"
 
