@@ -402,7 +402,10 @@ let g:ale_c_gcc_options =
 let g:ale_cpp_gcc_options =
 \    '-std=c++17 -Wall -Werror' .
 \    system('echo -n $CPLUS_SEARCH_LIBS')
-let g:ale_linters = { 'python': ['flake8', 'pycodestyle', 'pylint', 'pyls'] }
+let g:ale_linters = {
+\    'python': ['flake8', 'pycodestyle', 'pylint', 'pyls'],
+\    'cpp': ['gcc']
+\}
 let g:ale_use_global_executables = 1
 let g:ale_python_flake8_executable = GetPythonVersion()
 let g:ale_python_pylint_executable = g:ale_python_flake8_executable
