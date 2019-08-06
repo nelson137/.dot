@@ -15,9 +15,14 @@ lang() {
 }
 
 
+# Clone all submodules
+git submodule update --init --recursive
+
 # Link config files
 listdir "$here/files" | xargs -I % ln -fs % "$HOME"
 
+# Make ~/.config a directory if it isn't one/doesn't exist
+[ ! -d "$HOME/.config" ] && { rm -f "$HOME/.config"; mkdir "$HOME/.config"; }
 # Link config directories
 listdir "$here/.config" | xargs -I % ln -fs % "$HOME/.config"
 
