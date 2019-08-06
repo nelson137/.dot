@@ -78,7 +78,10 @@ font-1 = Monofur Nerd Font Mono:size=22;2
 inherit = bar/template
 wm-name = polybar-top
 
+fixed-center = true
+
 modules-left = pulseaudio spotify
+modules-center = date
 modules-right = xbacklight ssh network-traffic memory cpu
 
 cursor-click = pointer
@@ -93,7 +96,7 @@ bottom = true
 height = 30
 
 modules-left = i3
-modules-right = network battery date
+modules-right = network battery
 
 
 ; vim:ft=dosini
