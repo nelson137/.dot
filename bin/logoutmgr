@@ -1,9 +1,8 @@
 #!/bin/bash
 # Logout ManaGeR
-# Uses rofi to prompt to lock, logout, hibernate, shutdown, or reboot.
 
-choices=(Lock Logout Hibernate Shutdown Reboot)
-chosen="$(for c in "${choices[@]}"; do echo "$c"; done | rofi -i -dmenu)"
+choices='Lock|Logout|Hibernate|Shutdown|Reboot'
+chosen="$(rofi -i -sep '|' -dmenu <<< "$choices")"
 
 case "$chosen" in
     Lock)
