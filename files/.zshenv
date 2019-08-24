@@ -25,6 +25,7 @@ export TERM=xterm-256color
 #################
 
 export PYTHONSTARTUP="$HOME/.pythonrc"
+export PYTHONDONTWRITEBYTECODE=1
 
 # Give vagrant access to WSL features
 export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS=1
