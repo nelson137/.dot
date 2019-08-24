@@ -19,11 +19,6 @@ alias sqlite3='sqlite3 -header -column'
 alias wget='wget --hsts-file /dev/null'
 alias whois='whois -H'
 
-# apt aliases
-alias -g aud='apt update'
-alias -g aug='apt upgrade -y'
-alias -g ai='apt install -y'
-
 # ls aliases
 os="$(uname -s)"
 case "$os" in
