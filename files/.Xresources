@@ -1,7 +1,6 @@
 ! URxvt
-URxvt.transparent: true
-URxvt.shading: 12
-URxvt.background: black
+URxvt.depth: 32
+URxvt.background: rgba:0000/0000/0000/dddd
 URxvt.foreground: white
 URxvt.font: xft:Source Code Pro for Powerline:size=12, \
             xft:Inconsolata Nerd Font Mono:size=14
