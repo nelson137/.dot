@@ -38,8 +38,8 @@ case "$os" in
 esac
 alias ls="ls -pv $color $time $groupdirs"
 alias la="ls -pAv $color $time $groupdirs"
-alias ll="ls -pohv $color $time $groupdirs"
-alias lla="ls -pAohv $color $time $groupdirs"
+alias ll="ls -plhv $color $time $groupdirs"
+alias lla="ls -pAlhv $color $time $groupdirs"
 
 # git aliases
 alias glop='git log -p'
