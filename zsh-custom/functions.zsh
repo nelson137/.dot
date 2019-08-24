@@ -155,8 +155,6 @@ EOF
             cat <<'EOF' > "$f"
 #!/usr/bin/env python3
 
-"""Test."""
-
 
 
 EOF
