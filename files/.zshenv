@@ -42,3 +42,12 @@ excludes=(.cache .npm .gem .vim/undodir)
 excludes='--exclude '${^excludes}
 export FZF_CTRL_T_COMMAND="fd --type f --hidden $excludes"
 unset excludes
+
+export LSSH_PROFILES=(
+    nelson@192.168.2.2
+    ubuntu@18.224.206.187
+    ubuntu@nelsonearle.tk
+    nelson@192.168.2.3
+    nelson@24.182.191.122
+    nwewnh@tc.rnet.missouri.edu
+)

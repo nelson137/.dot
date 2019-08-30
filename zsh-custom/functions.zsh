@@ -107,6 +107,13 @@ is_wsl() {
 
 
 
+lssh() {
+    remote="$(echo "${(j:|:)LSSH_PROFILES}" | rofi -dmenu -sep '|')"
+    [ -n "$remote" ] && ssh "$remote"
+}
+
+
+
 mc() {
     # Make then cd into a directory
     mkdir -p "$@" && cd "${@[$#]}"
