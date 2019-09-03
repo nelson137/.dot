@@ -199,10 +199,6 @@ endfunction
 
 let mapleader = ','
 
-" For when I forget to open a file with sudo
-" Thank you Steve Losh
-cnoremap   w!!   w !sudo tee >/dev/null %<CR>
-
 " Better window nav
 inoremap   <C-h>   <Esc><C-w>h
 inoremap   <C-j>   <Esc><C-w>j
