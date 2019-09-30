@@ -7,5 +7,7 @@ while pgrep -u $UID --exact polybar; do
     sleep 1
 done
 
-polybar -r top &
-polybar -r bottom &
+for m in $(polybar -m | cut -d: -f1); do
+    MONITOR="$m" polybar -r top &
+    MONITOR="$m" polybar -r bottom &
+done
