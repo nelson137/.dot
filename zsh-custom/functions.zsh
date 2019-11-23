@@ -161,20 +161,11 @@ EOF
 
 
 ping() {
-    if [[ $# == 1 ]]; then
-        if [[ $1 == gateway ]]; then
-            # Ping the default gateway if the only argument is "gateway"
-            command ping $(ip route | awk '/default/ {print $3}')
-            return 0
-        else
-            # Ping the given host 3 times
-            command ping "$1" -c 3
-            return 0
-        fi
+    if [[ $# == 1 && "$1" == gateway ]]; then
+        /bin/ping -c3 "$(ip route | awk '/default/ {print $3}')"
+    else
+        /bin/ping "$@"
     fi
-
-    # Run ping with the passed arguments
-    command ping "$@"
 }
 
 
