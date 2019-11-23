@@ -100,13 +100,6 @@ is_wsl() {
 
 
 
-lssh() {
-    remote="$(echo "${(j:|:)LSSH_PROFILES}" | rofi -dmenu -sep '|')"
-    [ -n "$remote" ] && ssh "$remote"
-}
-
-
-
 newscript() {
     # Make a new script with boilerplate code and executable if necessary
     [[ $# == 0 ]] && files=( t.sh ) || files=( $@ )
@@ -193,6 +186,14 @@ py_include() {
     pi3=$(find_py_include 'python3*')
     pi2=$(find_py_include 'python2*')
     [[ -n "$pi3" ]] && echo "$pi3" || echo "$pi2"
+}
+
+
+
+ssh() {
+    (( $# > 0 )) && { /usr/bin/ssh "$@"; return }
+    remote="$(echo "${(j:|:)LSSH_PROFILES}" | rofi -dmenu -sep '|')"
+    [ -n "$remote" ] && /usr/bin/ssh "$remote"
 }
 
 
