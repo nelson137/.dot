@@ -115,7 +115,7 @@ function! CompileAndRun()
         endif
         exe 'AsyncRun ./%'
     elseif l:filetype == 'tex'
-        exe 'AsyncRun pdflatex %'
+        exe 'AsyncRun latexmk % && latexmk -c 2>/dev/null'
     else
         exe 'call Error("Error filetype not supported: '.l:filetype.')'
     endif
