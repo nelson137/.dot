@@ -182,9 +182,38 @@ py_include() {
 
 
 ssh() {
+    # Call ssh binary if arguments were given
     (( $# > 0 )) && { /usr/bin/ssh "$@"; return }
-    remote="$(echo "${(j:|:)LSSH_PROFILES}" | rofi -dmenu -sep '|')"
-    [ -n "$remote" ] && /usr/bin/ssh "$remote"
+
+    # Path to profiles json file
+    local PROFILES="$HOME/.config/ssh/profiles.json"
+    # Fill in missing name properties with user@addr
+    profiles_fill_names() {
+        jq 'map(if has("name") then . else .name=(.user+"@"+.addr) end)'
+    }
+    # Print each profile on its own line, properties delimited by tab
+    print_props() {
+        jq -r '.[] | [.name, .user, .addr, .key] | @tsv'
+    }
+
+    # Parse profiles into associative arrays
+    declare -A users addrs keys
+    IFS='	'
+    while read n u a k; do
+        users[$n]="$u"
+        addrs[$n]="$a"
+        keys[$n]="$k"
+    done < <(profiles_fill_names < "$PROFILES" | print_props)
+
+    # User selection
+    c="$(echo "${(kj:|:)users}" | rofi -dmenu -sep '|')"
+
+    # Execute ssh
+    if [ -n "$c" ]; then
+        cmd="/usr/bin/ssh '$users[$c]@$addrs[$c]'"
+        [ -n "$keys[$c]" ] && cmd+=" -i $keys[$c]"
+        eval "$cmd"
+    fi
 }
 
 
