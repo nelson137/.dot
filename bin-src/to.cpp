@@ -129,7 +129,7 @@ void die(int code, string t, Ts... ts) {
     vector<string> tokens = {t, ts...};
     if (tokens.size()) {
         cerr << tokens[0] << endl;
-        for (int i=0; i<tokens.size(); i++)
+        for (unsigned i=0; i<tokens.size(); i++)
             cerr << tokens[i];
     }
     die(code);
