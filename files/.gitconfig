@@ -10,3 +10,4 @@
 [color]
     diff = always
     status = always
+    ui = always
