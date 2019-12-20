@@ -1,0 +1,22 @@
+[
+    {
+        "name": "aws ubuntu main",
+        "user": "ubuntu",
+        "addr": "18.224.206.187",
+        "key": "~/.ssh/main.pem"
+    },
+    {
+        "user": "ubuntu",
+        "addr": "nelsonearle.tk",
+        "key": "~/.ssh/main.pem"
+    },
+    {
+        "name": "mizzou",
+        "user": "nwewnh",
+        "addr": "tc.rnet.missouri.edu"
+    },
+    {
+        "user": "nelson",
+        "addr": "24.182.191.122"
+    }
+]
