@@ -1,10 +1,15 @@
 #include <algorithm>
+#include <any>
+#include <cstring>
 #include <iostream>
 #include <queue>
 #include <string>
 #include <vector>
 
-#include "mylib.hpp"
+#include <unistd.h>
+#include <wait.h>
+
+#include <sys/stat.h>
 
 #define  ASSEMBLE   1  // 00000001
 #define  COMPILE    2  // 00000010
@@ -35,8 +40,248 @@ enum Lang {
     NO_LANG, LANG_ASM, LANG_C, LANG_CPP
 };
 
+string LANG_NAMES[] = { "NoLang", "ASM", "C", "C++" };
+
 
 string USAGE = "Usage: to [-h] <commands> <infile> [outfile] [lang] [ARGS...]";
+
+
+struct exec_ret {
+    int exitstatus;
+    string out;
+    string err;
+
+    operator int() { return this->exitstatus; }
+};
+
+
+class ExecArgs {
+
+private:
+    vector<char*> args;
+
+    char *string_copy(string& str) {
+        char *s = new char[str.size()+1];
+        strcpy(s, str.c_str());
+        s[str.size()] = '\0';
+        return s;
+    }
+
+public:
+    char *bin;
+
+    template<template<typename,typename> class T>
+    void init(string bin, T<string,allocator<string>> args) {
+        this->bin = this->string_copy(bin);
+        this->args = {this->bin, nullptr};
+
+        this->args.reserve(this->args.size() + args.size());
+        for (auto it=args.begin(); it!=args.end(); it++)
+            this->push_back(*it);
+    }
+
+    template<template<typename,typename> class T>
+    ExecArgs(string bin, T<string,allocator<string>> args) {
+        init(bin, args);
+    }
+
+    template<
+        typename... Str,
+        typename = enable_if_t<(... && std::is_convertible<Str, string>::value)>
+    >
+    ExecArgs(string bin, const Str... strs) {
+        init(bin, vector<string>{strs...});
+    }
+
+    template<template<typename,typename> class T>
+    ExecArgs(T<string,allocator<string>> args) {
+        string bin;
+        if (args.size()) {
+            bin = args[0];
+            args.erase(args.begin());
+        }
+        init(bin, args);
+    }
+
+    ~ExecArgs() {
+        for (char *s : this->args)
+            delete[] s;
+    }
+
+    void push_back(string str) {
+        this->args.insert(this->args.end()-1, this->string_copy(str));
+    }
+
+    char **get() {
+        return this->args.data();
+    }
+
+};
+
+
+void die(int code = 1) {
+    exit(code);
+}
+
+
+template<typename... Ts>
+void die(int code, string t, Ts... ts) {
+    vector<string> tokens = {t, ts...};
+    if (tokens.size()) {
+        cerr << tokens[0] << endl;
+        for (int i=0; i<tokens.size(); i++)
+            cerr << tokens[i];
+    }
+    die(code);
+}
+
+
+template<typename... Ts>
+void die(string t, Ts... ts) {
+    die(1, t, ts...);
+}
+
+
+template<typename L, typename R>
+void append(L& l, R const& r) {
+    l.insert(l.end(), r.begin(), r.end());
+}
+
+
+bool read_fd(int fd, string& dest) {
+    int count;
+    char buff[128];
+
+    do {
+        count = read(fd, buff, sizeof(buff)-1);
+        if (count == -1)
+            return false;
+        buff[count] = '\0';
+        dest += buff;
+    } while (count > 0);
+
+    return true;
+}
+
+
+template<typename T>
+int execute(exec_ret& er, const T& args, bool capture_output=false) {
+    ExecArgs ea(args);
+
+    int pipes[2][2];
+    int *out_pipe = pipes[0];
+    int *err_pipe = pipes[1];
+
+    // Create the stdout and stderr pipes
+    if (capture_output) {
+        if (pipe(out_pipe) < 0)
+            die("Could not create pipe for stdout");
+        if (pipe(err_pipe) < 0)
+            die("Could not create pipe for stderr");
+    }
+
+    int child_out_fd = out_pipe[1];
+    int child_err_fd = err_pipe[1];
+    int parent_out_fd = out_pipe[0];
+    int parent_err_fd = err_pipe[0];
+
+    int pid = fork();
+
+    if (pid == -1) {
+        die("Could not fork");
+
+    } else if (pid == 0) {
+        /**
+         * Child
+         */
+
+        if (capture_output) {
+            dup2(child_out_fd, STDOUT_FILENO);
+            dup2(child_err_fd, STDERR_FILENO);
+        }
+
+        close(child_out_fd);
+        close(child_err_fd);
+        close(parent_out_fd);
+        close(parent_err_fd);
+
+        execv(ea.bin, ea.get());
+        _exit(0);
+    } else {
+        /**
+         * Parent
+         */
+
+        // Child's end of the pipes are not needed
+        close(child_out_fd);
+        close(child_err_fd);
+
+        // Wait for child to complete
+        int status;
+        waitpid(pid, &status, 0);
+
+        er.exitstatus = WEXITSTATUS(status);
+
+        if (capture_output) {
+            // Read child's stdout
+            if (! read_fd(parent_out_fd, er.out))
+                die("Could not read stdout");
+            // Read child's stderr
+            if (! read_fd(parent_err_fd, er.err))
+                die("Could not read stderr");
+        }
+
+        close(parent_out_fd);
+        close(parent_err_fd);
+    }
+
+    return er.exitstatus;
+}
+
+
+template<typename T>
+exec_ret easy_execute(const T& args, bool capture_output=false) {
+    exec_ret er;
+    execute(er, args, capture_output);
+    return er;
+}
+
+
+/**
+ * Return whether a file is executable.
+ */
+bool file_executable(string fn) {
+    return !access(fn.c_str(), X_OK);
+}
+
+
+/**
+ * Return whether a file exists.
+ */
+bool file_exists(string fn) {
+    struct stat s;
+    return stat(fn.c_str(), &s) == 0;
+}
+
+
+/**
+ * Return a vector of words in str, using delim as the delimeter.
+ * The default delim is a space.
+ * Example:
+ *     vector<string> v = split("a b c");  // {"a", "b", "c"}
+ */
+vector<string> split(string str, string delim = " ") {
+    vector<string> tokens;
+    size_t prev = 0, curr = 0;
+
+    do {
+        curr = str.find(delim, prev);
+        tokens.push_back(str.substr(prev, curr-prev));
+        prev = curr + 1;
+    } while (curr != string::npos);
+
+    return tokens;
+}
 
 
 void usage() {
@@ -283,7 +528,7 @@ void Prog::parse_args(int argc, char *argv[]) {
             case 'x': this->commands |= LANG;     break;
             case 'o': this->commands |= OUTFILE;  break;
             case 'r': this->commands |= REMOVE;   break;
-            default:  die("Command not recognized:", c);  break;
+            default:  die("Command not recognized:", string(1, c));  break;
         }
     }
     pos_args.pop();
@@ -471,7 +716,8 @@ int main(int argc, char *argv[]) {
             case LANG_ASM: compile_asm(prog); break;
             case LANG_C:   compile_c  (prog); break;
             case LANG_CPP: compile_cpp(prog); break;
-            default: die("Compilation not implemented for", prog.lang);
+            default:
+                die("Compilation not implemented for", LANG_NAMES[prog.lang]);
         }
     }
 
