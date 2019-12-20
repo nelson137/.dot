@@ -4,8 +4,8 @@ D='DISPLAY=:0'
 
 # Command aliases
 alias bc='bc -ql'
-alias cp='cp -ir'
-alias du='du -h --max-depth=1'
+alias cp='cp -r'
+alias du='du -h'
 alias less='less -c'
 alias md='mkdir -p'
 alias mkx='chmod +x'
