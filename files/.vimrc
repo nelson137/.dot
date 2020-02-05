@@ -9,6 +9,7 @@ set ignorecase              " Ignore case in searches
 set incsearch               " Highlight search matches while typing
 set list
 set listchars=tab:>~        " Show tabs as >~~~
+set modeline                " Check for comments with settings
 set nocompatible            " Be iMproved
 set noswapfile              " I like to live dangerously
 set scrolloff=4             " Keep cursor 4 lines from top & bot when scrolling
