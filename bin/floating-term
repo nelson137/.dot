@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# Usage: floatingTerm NAME [COMMAND [ARGUMENTS...]]
+# If a terminal named NAME exists show its i3 scratchpad.
+# If none exists create it, executing COMMAND with ARGUMENTS if given.
+
+[ $# -eq 0 ] && exit 1
+
+NAME="$1"
+shift
+(( $# > 0 )) && CMD=( -e "$@" )
+
+termExists() {
+    xdotool search --classname "$NAME" &>/dev/null
+}
+
+createTerm() {
+    # Suppress all output
+    exec &>/dev/null
+    # Launch the terminal
+    urxvt -name "$NAME" "${CMD[@]}" & disown
+    # Wait for its window to get created
+    xdotool search --sync --classname "$NAME"
+}
+
+showTerm() {
+    i3-msg "[instance=\"^$NAME$\"] scratchpad show, resize set 1640 800, move position center"
+}
+
+
+termExists || createTerm
+showTerm
