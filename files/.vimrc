@@ -219,10 +219,6 @@ inoremap   <C-j>   <Esc><C-w>j
 inoremap   <C-k>   <Esc><C-w>k
 inoremap   <C-l>   <Esc><C-w>l
 
-" jj == <Esc> in insert mode
-" Thank you Derek Wyatt
-inoremap   jj   <Esc>
-
 " Better paste in insert mode
 inoremap   <C-p>   <C-r>"
 
