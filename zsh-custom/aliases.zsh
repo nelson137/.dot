@@ -30,6 +30,7 @@ alias ls="ls -pv $color $time $groupdirs"
 alias la="ls -pAv $color $time $groupdirs"
 alias ll="ls -plhv $color $time $groupdirs"
 alias lla="ls -pAlhv $color $time $groupdirs"
+alias lld="ls -lhdv $color $time"
 
 # git aliases
 alias glop='git log -p'
