@@ -52,7 +52,7 @@ diff() {
 
 
 feh() {
-    DISPLAY=:0 nohup /usr/bin/feh --scale-down --borderless "$@" &>/dev/null &|
+    DISPLAY=:0 /usr/bin/feh --scale-down -x "$@" &>/dev/null &|
 }
 
 
