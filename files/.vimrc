@@ -81,7 +81,7 @@ augroup mine
     au FileType gitcommit,make,man,qf set nolist
 
     " Set indentation rules for HTML files
-    au BufRead,BufNewFile *.html set ts=2 sw=2 sts=2
+    au BufRead,BufNewFile *.html,*.yml,*.yaml set ts=2 sw=2 sts=2
 
     " Show ruler for specific filetypes
     au FileType c,cpp,javascript,python,sh,vim,zsh
