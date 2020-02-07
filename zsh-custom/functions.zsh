@@ -57,6 +57,16 @@ feh() {
 
 
 
+file_birth() {
+    inode="$(stat -c %i "$1")"
+    dev="$(df --output=source "$1" | tail -1)"
+    sudo debugfs -R "stat <$inode>" "$dev" \
+      | grep crtime \
+      | cut -d ' ' -f 4-
+}
+
+
+
 force_wifi() {
     # Open http site to force WAP portal redirect
     dc xdg-open 'http://icanhazip.com'
