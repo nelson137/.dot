@@ -47,10 +47,10 @@ set indentkeys-=0#  " /
 
 syntax on
 colorscheme default
-set laststatus=2   " Always show status line
-set nohlsearch     " Don't highlight all search matches
-set number         " Turn on line numbers
-
+set background=dark  " Fix colors changing with terminal opacity
+set laststatus=2     " Always show status line
+set nohlsearch       " Don't highlight all search matches
+set number           " Turn on line numbers
 
 
 " Autocmd
