@@ -20,7 +20,7 @@ pre_lock() {
 
 lock() {
     local imgpath="$HOME/.config/i3/assets/lockscreen/lockscreen.png"
-    i3lock -ei "$imgpath" -p default
+    i3lock -eti "$imgpath" -p default
 }
 
 

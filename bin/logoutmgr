@@ -6,7 +6,7 @@ chosen="$(rofi -i -sep '|' -dmenu <<< "$choices")"
 
 case "$chosen" in
     Lock)
-        i3lock -eni ~/.config/i3/assets/lockscreen/lockscreen.png ;;
+        i3lock -enti ~/.config/i3/assets/lockscreen/lockscreen.png ;;
     Logout)
         i3-msg exit ;;
     Hibernate)
