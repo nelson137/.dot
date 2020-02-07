@@ -15,22 +15,16 @@ alias wget='wget --hsts-file /dev/null'
 alias whois='whois -H'
 
 # ls aliases
-os="$(uname -s)"
-case "$os" in
-    Linux*)
-        color='--color'
-        time='--time-style=long-iso'
-        groupdirs='--group-directories-first' ;;
-    Darwin*)
-        color='-G'
-        time=''
-        groupdirs='' ;;
+ls="/bin/ls -vhp"
+case "$(uname -s)" in
+    Linux*) ls="$ls --color=auto --time-style=long-iso --group-directories-first" ;;
+    Darwin*) ls="$ls -G" ;;
 esac
-alias ls="ls -pv $color $time $groupdirs"
-alias la="ls -pAv $color $time $groupdirs"
-alias ll="ls -plhv $color $time $groupdirs"
-alias lla="ls -pAlhv $color $time $groupdirs"
-alias lld="ls -lhdv $color $time"
+alias ls="$ls"
+alias la="$ls -A"
+alias ll="$ls -l"
+alias lla="$ls -lA"
+alias lld="$ls -ld"
 
 # git aliases
 alias glop='git log -p'
