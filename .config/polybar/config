@@ -69,7 +69,7 @@ module-margin-left = 1
 module-margin-right = 2
 
 ; Font for text
-font-0 = Monofur for Powerline:size=16;0
+font-0 = monofur for Powerline:size=16;0
 ; Font for icons and glyphs
 font-1 = Monofur Nerd Font Mono:size=22;2
 
