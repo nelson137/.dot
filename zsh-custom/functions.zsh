@@ -38,6 +38,52 @@ ckeys() {
 
 
 
+cp() {
+    local dryrun=0
+
+    local srcs=()
+    for arg in "$@"; do
+        case "$arg" in
+            # Ignore extra recursive option
+            -r|--recursive) ;;
+
+            # Print the command what would be executed
+            -d|--dry-run) dryrun=1 ;;
+
+            # Call cp if there are any unrecognized options
+            -*) /bin/cp "$@"; return ;;
+
+            # Add positional args to srcs
+            *) srcs+=( "$arg" ) ;;
+        esac
+    done
+
+    # At least 2 positional arguments are required
+    [ "$#srcs" -lt 2 ] && return 1
+
+    set -o pipefail
+    # Get total size of all srcs except the last (it's the dest)
+    size="$(/usr/bin/du -scLB 1 "${(@)srcs[1,-2]}" | awk '{s=$1}END{print s}')"
+    # Exit if du fails to stat any file or dir
+    [ $? -eq 0 ] || return
+
+    local cmd=()
+    # If size < 250MB
+    if (( size < 250*1024*1024 )); then
+        cmd=( /bin/cp -r )
+    else
+        cmd=( /usr/bin/rsync -rP )
+    fi
+
+    if [ "$dryrun" -eq 1 ]; then
+        echo "${cmd[@]}" "$@"
+    else
+        eval "${cmd[@]}" "$@"
+    fi
+}
+
+
+
 dc() {
     # Execute arguments completely disconnect from this terminal
     nohup "$@" &>/dev/null &!
