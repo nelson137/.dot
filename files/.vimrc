@@ -13,6 +13,7 @@ set modeline                " Check for comments with settings
 set nocompatible            " Be iMproved
 set noswapfile              " I like to live dangerously
 set scrolloff=4             " Keep cursor 4 lines from top & bot when scrolling
+set signcolumn=yes
 set shell=zsh               " Shell to use for !
 set showmode                " Show current mode (normal, visual, insert, etc)
 set smartcase               " Ignore ignorecase when capital letters are used
@@ -86,6 +87,10 @@ augroup mine
     " Show ruler for specific filetypes
     au FileType c,cpp,javascript,python,sh,vim,zsh
         \ setlocal colorcolumn=+1 textwidth=79
+
+    au BufReadPost *.pdf
+        \ silent execute "!zathura --fork" expand('%') |
+        \ execute 'q'
 
     au FileType asm ALEDisable
 
