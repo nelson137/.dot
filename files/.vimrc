@@ -191,6 +191,14 @@ function! GetPythonVersion()
     endif
 endfunction
 
+function! HLNext(blinktime)
+    set cursorline
+    redraw
+    exec 'sleep ' . float2nr(a:blinktime) . 'm'
+    set nocursorline
+    redraw
+endfunction
+
 function! VimSupportsYouCompleteMe()
     return empty(matchstr(system('uname -m'), '\varmv\dl')) &&
     \    v:version >= 800 || (v:version >= 704 && has('patch1578'))
@@ -201,6 +209,9 @@ endfunction
 " Key bindings
 
 let mapleader = ','
+
+nnoremap <silent>   n   n:call HLNext(200)<CR>
+nnoremap <silent>   N   N:call HLNext(200)<CR>
 
 " Better window nav
 inoremap   <C-h>   <Esc><C-w>h
