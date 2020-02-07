@@ -1,28 +1,34 @@
 #!/bin/bash
 
-here="$(cd "$(dirname "$0")" && pwd)"
+set -e
 
-listdir() {
-    find "$1" -maxdepth 1 | sed 1d
+ln_dir_contents() {
+    # Make sure src and dest are absolute dir paths
+    local src="$(cd "$1" && pwd)"
+    local dest="$(cd "$2" && pwd)"
+    # Link files
+    find "$src" -mindepth 1 -maxdepth 1 -exec ln -fst "$dest" '{}' \+
 }
 
-# Clone all submodules
-git submodule update --init --recursive
+pushd "$(dirname "${BASH_SOURCE[0]}")"
 
-# Link config files
-listdir "$here/files" | xargs -I % ln -fs % "$HOME"
+    # Clone all submodules
+    git submodule update --init --recursive
 
-# Make ~/.config a directory if it isn't one/doesn't exist
-[ ! -d "$HOME/.config" ] && { rm -f "$HOME/.config"; mkdir "$HOME/.config"; }
-# Link config directories
-listdir "$here/.config" | xargs -I % ln -fs % "$HOME/.config"
+    # Link config files
+    ln_dir_contents files "$HOME"
 
-# Link vim autoload files
-mkdir -p "$HOME/.vim/autoload"
-ln -fs "$here/.vim/autoload/"* "$HOME/.vim/autoload"
+    # Link config directories
+    ln_dir_contents .config "$HOME/.config"
 
-# Install repository hooks
-"$here/install-hooks.sh"
+    # Link vim autoload files
+    mkdir -p "$HOME/.vim/autoload"
+    ln_dir_contents .vim/autoload "$HOME/.vim/autoload"
 
-# Install fzf
-"$here/components/fzf/install" --bin --64
+    # Install repository hooks
+    ./install-hooks.sh
+
+    # Install fzf
+    ./components/fzf/install --bin --64
+
+popd
