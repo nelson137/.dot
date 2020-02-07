@@ -54,6 +54,14 @@ set nohlsearch       " Don't highlight all search matches
 set number           " Turn on line numbers
 
 
+
+" Color Column
+
+highlight ColorColumn cterm=reverse
+match ColorColumn /\%80v[^\n]\+/
+
+
+
 " Autocmd
 
 let g:last_closed_file = 'DEFAULT'
@@ -83,10 +91,6 @@ augroup mine
 
     " Set indentation rules for HTML files
     au BufRead,BufNewFile *.html,*.yml,*.yaml set ts=2 sw=2 sts=2
-
-    " Show ruler for specific filetypes
-    au FileType c,cpp,javascript,python,sh,vim,zsh
-        \ setlocal colorcolumn=+1 textwidth=79
 
     au BufReadPost *.pdf
         \ silent execute "!zathura --fork" expand('%') |
