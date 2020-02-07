@@ -84,13 +84,6 @@ cp() {
 
 
 
-dc() {
-    # Execute arguments completely disconnect from this terminal
-    nohup "$@" &>/dev/null &!
-}
-
-
-
 diff() {
     git diff --no-index -- "$@"
 }
@@ -115,7 +108,7 @@ file_birth() {
 
 force_wifi() {
     # Open http site to force WAP portal redirect
-    dc xdg-open 'http://icanhazip.com'
+    xdg-open 'https://google.com' &>/dev/null &|
 }
 
 
