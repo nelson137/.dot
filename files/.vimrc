@@ -275,6 +275,18 @@ noremap <silent>   tH   :tabfirst<CR>
 " Tab last
 noremap <silent>   tL   :tablast<CR>
 
+" Tab move left
+noremap <silent>   Th   :tabm -<CR>
+
+" Tab move right
+noremap <silent>   Tl   :tabm +<CR>
+
+" Tab move to beginning
+noremap <silent>   TH   :tabm 0<CR>
+
+" Tab move to end
+noremap <silent>   TL   :tabm $<CR>
+
 " New window below
 noremap <silent>   <Leader>wn   :new<CR>
 
