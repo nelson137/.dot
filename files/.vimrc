@@ -92,7 +92,7 @@ augroup mine
     " Set indentation rules for HTML files
     au BufRead,BufNewFile *.html,*.yml,*.yaml set ts=2 sw=2 sts=2
 
-    au BufReadPost *.pdf
+    au FileType pdf
         \ silent execute "!zathura --fork" expand('%') |
         \ execute 'q'
 
