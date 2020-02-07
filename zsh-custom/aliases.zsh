@@ -49,6 +49,7 @@ alias socwd='command du -csh . | tail -1'
 alias setbg="nitrogen --set-zoom-fill --random ~/.config/i3/assets/backgrounds"
 alias vimrc='vim ~/.vimrc'
 alias wifi='nohup nm-connection-editor &>/dev/null &!'
+alias zathura='zathura --fork'
 alias zshhist='vim ~/.zsh_history'
 alias zshenv='vim ~/.zshenv'
 alias zshrc='vim ~/.zshrc'
