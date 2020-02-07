@@ -8,7 +8,7 @@ set history=500             " Remember 500 ex commands
 set ignorecase              " Ignore case in searches
 set incsearch               " Highlight search matches while typing
 set list
-set listchars=tab:>~        " Show tabs as >~~~
+exec "set listchars=tab:\uBB\uBB,trail:\uB7,nbsp:~"
 set modeline                " Check for comments with settings
 set nocompatible            " Be iMproved
 set noswapfile              " I like to live dangerously
