@@ -6,7 +6,7 @@ function! vimrc#Source()
     source $MYVIMRC
     call lightline#colorscheme()
     redraw
-    call Info('Done')
+    call Info('Sourced vimrc')
 endfunction
 
 function! vimrc#AutoSource()
