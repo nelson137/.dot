@@ -8,6 +8,8 @@ font pango:monospace, FontAwesome 12
 # Use Mouse+$mod to drag floating windows around
 floating_modifier $mod
 
+workspace_auto_back_and_forth yes
+
 set $wsDev     "1:"
 set $wsWeb     "2:"
 set $ws3       "3:3"
