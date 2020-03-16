@@ -8,6 +8,6 @@
 [push]
 	default = simple
 [color]
-    diff = always
-    status = always
-    ui = always
+    diff = auto
+    status = auto
+    ui = auto
