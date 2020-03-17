@@ -1,6 +1,4 @@
-#!/bin/zsh
-
-unsetopt aliases  # Turn aliases off while defining functions
+#!/bin/bash
 
 
 
@@ -15,9 +13,9 @@ chhn() {
         return 1
 
     local old="$(hostname)"
-    local new; read -r 'new?New hostname: '
+    local new
+    read -rp 'New hostname: ' new
 
-    # Change hostname
     echo "$new" | sudo tee /etc/hostname >/dev/null
     sudo sed -i.bak "s/${old}/${new}/g" /etc/hosts
 
@@ -38,60 +36,21 @@ ckeys() {
 
 
 
-cp() {
-    local dryrun=0
-
-    local srcs=()
-    for arg in "$@"; do
-        case "$arg" in
-            # Ignore extra recursive option
-            -r|--recursive) ;;
-
-            # Print the command what would be executed
-            -d|--dry-run) dryrun=1 ;;
-
-            # Call cp if there are any unrecognized options
-            -*) /bin/cp "$@"; return ;;
-
-            # Add positional args to srcs
-            *) srcs+=( "$arg" ) ;;
-        esac
-    done
-
-    # At least 2 positional arguments are required
-    [ "$#srcs" -lt 2 ] && return 1
-
-    set -o pipefail
-    # Get total size of all srcs except the last (it's the dest)
-    size="$(/usr/bin/du -scLB 1 "${(@)srcs[1,-2]}" | awk '{s=$1}END{print s}')"
-    # Exit if du fails to stat any file or dir
-    [ $? -eq 0 ] || return
-
-    local cmd=()
-    # If size < 250MB
-    if (( size < 250*1024*1024 )); then
-        cmd=( /bin/cp -r )
-    else
-        cmd=( /usr/bin/rsync -rP )
-    fi
-
-    if [ "$dryrun" -eq 1 ]; then
-        echo "${cmd[@]}" "$@"
-    else
-        eval "${cmd[@]}" "$@"
-    fi
+cpstat() {
+    # Use rsync to cp and show progress
+    rsync -r --info=progress2 "$@"
 }
 
 
 
 diff() {
-    git diff --no-index -- "$@"
+    git diff --no-index "$@"
 }
 
 
 
 feh() {
-    DISPLAY=:0 /usr/bin/feh --scale-down -x "$@" &>/dev/null &|
+    DISPLAY=:0 /usr/bin/feh --scale-down -x "$@" &>/dev/null & disown
 }
 
 
@@ -108,31 +67,44 @@ file_birth() {
 
 force_wifi() {
     # Open http site to force WAP portal redirect
-    xdg-open 'https://google.com' &>/dev/null &|
+    xdg-open 'https://google.com' &>/dev/null & disown
 }
 
 
 
-gcl() {
-    clone() { git clone --recurse-submodules -j8 "$@"; }
-    # git clone username/repo(.git) or repo(.git)
-    # In the case without a username, it's assumed the repo is mine
-    for name in "$@"; do
-        local repo="${name%.git}"
-        if [[ $repo =~ ^.*/$ || $repo =~ ^/.+$ ]]; then
-            # Invalid repo names:
-            #  abc/
-            #  /abc
-            #  /
-            echo "invalid repo name: $repo" >&2
-        elif [[ $repo =~ .+/.+ ]]; then
-            # Clone someone else's repo
-            clone "https://github.com/${repo}.git"
-        else
-            # Clone my repo
-            clone "git@github.com:nelson137/${repo}.git"
-        fi
-    done
+# gcl() {
+    # local gc='git clone --recurse-submodules'
+    # # git clone username/repo(.git) or repo(.git)
+    # # In the case without a username, it's assumed the repo is mine
+    # for name in "$@"; do
+        # local repo="${name%.git}"
+        # if [[ $repo =~ ^.*/$ || $repo =~ ^/.+$ ]]; then
+            # # Invalid repo names:
+            # #  abc/
+            # #  /abc
+            # #  /
+            # echo "invalid repo name: $repo" >&2
+        # elif [[ $repo =~ .+/.+ ]]; then
+            # # Clone someone else's repo
+            # eval "$gc" "https://github.com/${repo}.git"
+        # else
+            # # Clone my repo
+            # eval "$gc" "git@github.com:nelson137/${repo}.git"
+        # fi
+    # done
+# }
+
+
+
+getip() {
+    # Get public and private ip addresses
+    echo "Public:  $(curl -s https://icanhazip.com)"
+    local private_ip="$(
+        ip route get 1 |
+        grep -oE '192\.168(\.[0-9]{1,3}){2}' |
+        grep -v '^192\.168\.1\.1$'
+    )"
+    echo "Private: $private_ip"
 }
 
 
@@ -219,6 +191,15 @@ ping() {
 
 
 
+ps() {
+    # Remove 1 line containing "grep -E " from ps output so that
+    # `ps aux | grep ...` can be run without seeing the grep call in
+    # the ps output
+    command ps "$@" | grep -Evm 1 'grep -E '
+}
+
+
+
 py_include() {
     find_py_include() {
         find /usr/include -maxdepth 1 -name "$1" | sort -n | head -1
@@ -249,4 +230,25 @@ xset() {
 
 
 
-setopt aliases  # Turn aliases back on
+update() {
+    if [[ -z "$1" ]]; then
+        update system
+        return
+    fi
+
+    case "$1" in
+        dot)
+            git -C ~/.dot/pull ;;
+        system)
+            sudo apt update && sudo apt upgrade -y ;;
+        *)
+            echo "target not recognized: $1" >&2 ;;
+    esac
+}
+
+
+
+vimrm() {
+    # vim a file, prompting to rm it when the user exits
+    vim -c 'set nomodifiable' -c 'autocmd QuitPre * call OnExitVimrm()' "$@"
+}

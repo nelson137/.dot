@@ -55,25 +55,6 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets root)
 
 source $ZSH/oh-my-zsh.sh
 
-# C flags
-export C_INCLUDE_PATH=$(py_include):~/.include
-export CPLUS_INCLUDE_PATH=~/.include
-# Static libraries (*.a)
-export LIBRARY_PATH=~/.lib
-# Dynamic libraries (*.so)
-export LD_LIBRARY_PATH=
-
-# gcc -l flags for the c-utils plugin
-c_search_libs=(
-    -lm
-    $(is_mu || echo '-ljson-c')
-    $(pkg-config --libs-only-l python3 2>/dev/null)
-    $(pkg-config --cflags --libs-only-l gtk+-2.0 2>/dev/null)
-    -lmylib-c
-)
-export C_SEARCH_LIBS="${(j: :)c_search_libs}"
-export CPLUS_SEARCH_LIBS=-lmylib-cpp
-
 # Fix nice error
 unsetopt BG_NICE
 
@@ -100,18 +81,16 @@ bindkey '^W' my-backward-delete-word
 # Create vim undodir if it doesn't exist
 [[ ! -d ~/.vim/undodir ]] && mkdir -p ~/.vim/undodir
 
-# Update ~/.aliases daily for use in bash
-now="$(date +%s)"
-lastrun_f=~/.bash_aliases.lastrun
-[[ ! -f $lastrun_f ]] && echo "$now" > "$lastrun_f"
-one_day_passed="$(( now - $(< "$lastrun_f") > 86400 ))"
-if [[ ! -f $lastrun_f || ! -f ~/.aliases || $one_day_passed == 1 ]]; then
-    date +%s > "$lastrun_f"
-    # sed scripts:
-    # - Ignore all lines starting with "-"
-    # - Put "alias" in front of each line
-    (alias | sed -E '/^(\-)/d; s/(.+)/alias \1/' > ~/.aliases &)
-fi
+# User config files
+bash_files=( .aliases .functions )
+for bf in "${bash_files[@]}"; do
+    bf="$HOME/$bf"
+    if [ -f "$bf" ]; then
+        source "$bf"
+    else
+        echo "config file not found: $bf" >&2
+    fi
+done
 
 # fzf key bindings
 source "$HOME/.dot/components/fzf/shell/key-bindings.zsh"

@@ -1,0 +1,117 @@
+# vim: ft=bash
+
+# System-specific aliases
+if [[ -d /mnt/c/Users ]]; then
+    alias desktop="cd /mnt/c/Users/$USER"
+else
+    alias desktop='cd ~/Desktop'
+fi
+
+# Mine
+alias aliases='vim ~/.dot/zsh-custom/aliases.zsh'
+alias dot='cd ~/.dot'
+alias funcs='vim ~/.dot/zsh-custom/functions.zsh'
+alias socwd='command du -csh . | tail -1'
+alias setbg="nitrogen --set-zoom-fill --random ~/.config/i3/assets/backgrounds"
+alias vimrc='vim ~/.vimrc'
+alias wifi='nohup nm-connection-editor &>/dev/null &!'
+alias zshhist='vim ~/.zsh_history'
+alias zshenv='vim ~/.zshenv'
+alias zshrc='vim ~/.zshrc'
+
+# Commands
+alias bc='bc -ql'
+alias du='du -h'
+alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
+alias less='less -c'
+alias mv='mv -i'
+alias pdflatex='pdflatex -file-line-error'
+alias sqlite3='sqlite3 -header -column'
+alias whois='whois -H'
+alias zathura='zathura --fork'
+
+# ls
+LS="/bin/ls -vhp"
+case "$(uname -s)" in
+    Linux*) LS="$LS --color=auto --time-style=long-iso --group-directories-first" ;;
+    Darwin*) LS="$LS -G" ;;
+esac
+alias ls="$LS"
+alias la="$LS -A"
+alias ll="$LS -l"
+alias lla="$LS -lA"
+alias lld="$LS -ld"
+
+# git
+alias g=git
+
+alias ga='git add --all'
+alias gapa='git add --patch'
+
+alias gbs='git bisect'
+alias gbsb='git bisect bad'
+alias gbsg='git bisect good'
+alias gbsr='git bisect reset'
+alias gbss='git bisect start'
+
+alias gb='git branch'
+alias gbd='git branch --delete'
+alias 'gbd!'='git branch --delete --force'
+
+alias gco='git checkout'
+alias gcob='git checkout -b'
+
+alias gc='git commit -v'
+alias gca='git commit -v -a'
+alias 'gc!'='git commit -v --amend'
+alias 'gca!'='git commit -v -a --amend'
+alias 'gc!!'='git commit -v --amend --no-edit'
+alias gcmsg='git commit -m'
+
+alias gcf='git config --list'
+
+alias gd='git diff'
+alias gdca='git diff --cached'
+
+alias glo='git log --oneline --decorate'
+alias glop='git log -p'
+alias glgg='git log --graph'
+alias glog='git log --graph --oneline --decorate'
+alias gloga='git log --graph --oneline --decorate --all'
+
+alias gm='git merge'
+alias gma='git merge --abort'
+
+alias gl='git pull'
+
+alias gp='git push'
+alias 'gp!'='git push --force'
+alias gpd='git push --dry-run'
+alias gpsup='git push --set-upstream origin $(git_current_branch)'
+
+alias gr='git remote'
+alias gra='git remote add'
+alias grset='git remote set-url'
+
+alias grh='git reset'
+alias grhh='git reset --hard'
+
+alias grm='git rm'
+
+alias gsta='git stash push'
+alias gstaa='git stash apply'
+alias gstd='git stash drop'
+alias gstp='git stash pop'
+alias gstl='git stash list'
+alias gsts='git stash show --text'
+alias gstc='git stash clear'
+
+alias gst='git status'
+alias gss='git status -s'
+
+alias gsa='git submodule add --depth 1'
+alias gsu='git submodule update --init --recursive --depth 1'
+
+alias gcam='git add -A; git commit -m'
+alias gcam!='git add -A; git commit -v --amend'
+alias grt='cd "$(git rev-parse --show-toplevel || echo .)"'

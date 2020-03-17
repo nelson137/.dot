@@ -1,14 +1,9 @@
-#!/bin/bash
+# vim: ft=bash
 
+aliases_f="$HOME/.aliases"
+[ -f "$aliases_f" ] && source "$aliases_f"
 
-aliases_f=~/.aliases
-if [[ -f $aliases_f ]]; then
-    source "$aliases_f"
-else
-    echo "Warning: $aliases_f does not exist" >&2
-fi
-
-
+# cd ancestor
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
