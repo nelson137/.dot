@@ -44,7 +44,6 @@ plugins=(
     extract
     git
     git-prompt
-    java-utils
     web-search
     zsh-autosuggestions
     zsh-syntax-highlighting
