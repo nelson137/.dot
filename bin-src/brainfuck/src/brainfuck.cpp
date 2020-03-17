@@ -378,13 +378,12 @@ int main(int argc, char **argv) {
     vector<string> orig_args(argv, argv+argc);
     vector<string> args = split_options(orig_args);
 
-    Options options = {
-        .width = get_term_width(),
-        .delay = 0,
-        .dump_tape = false,
-        .show_tape = false,
-        .use_input = false,
-    };
+    Options opts;
+    opts.width = get_term_width();
+    opts.delay = 0;
+    opts.dump_tape = false;
+    opts.show_tape = false;
+    opts.use_input = false;
 
     vector<string> infiles;
     bool read_code = false;
@@ -414,14 +413,14 @@ int main(int argc, char **argv) {
             // If there are no arguments after "-d"
             if (++i == argc)
                 die(err);
-            options.delay = get_num(argv[i], err);
+            opts.delay = get_num(argv[i], err);
             delay_changed = true;
         } else if (cmd == "--dump-tape") {
-            options.dump_tape = true;
+            opts.dump_tape = true;
         } else if (cmd == "--show-tape") {
-            options.show_tape = true;
+            opts.show_tape = true;
         } else if (cmd == "-i" || cmd == "--input") {
-            options.use_input = true;
+            opts.use_input = true;
             if (++i == argc)
                 die("Option -i/--input requires a value");
             // TODO: is this broken? can this be improved?
@@ -431,27 +430,27 @@ int main(int argc, char **argv) {
             const char *err = "Option -w/--width requires an integer";
             if (++i == argc)
                 die(err);
-            options.width = get_num(argv[i], err);
+            opts.width = get_num(argv[i], err);
         } else {
             die("Unknown option: %s", cmd);
         }
     }
 
     // Terminal width is too small for even 1 cell
-    if (options.width < 7)
+    if (opts.width < 7)
         die("Terminal is not wide enough");
 
     // --dump-tape and --show-tape were both given
-    if (options.dump_tape && options.show_tape)
+    if (opts.dump_tape && opts.show_tape)
         die("Options --dump-tape and --show-tape cannot be used together");
 
     // -i/--input was given without --show-tape
-    if (options.use_input && !options.show_tape)
+    if (opts.use_input && !opts.show_tape)
         die("Option -i/--input can only be used with --show-tape");
 
     // Auto set delay if --show-tape and delay wasn't changed by user
-    if (options.show_tape && !delay_changed)
-        options.delay = 125;
+    if (opts.show_tape && !delay_changed)
+        opts.delay = 125;
 
     // All code to evaluate
     vector<vector<char>> to_eval;
@@ -492,7 +491,7 @@ int main(int argc, char **argv) {
 
     // Evaluate all code
     for (vector<char> code : to_eval)
-        evaluate(code, input, &options);
+        evaluate(code, input, &opts);
 
     return 0;
 }
