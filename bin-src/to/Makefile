@@ -21,10 +21,6 @@ build/%.o: src/%.cpp | build_dirs
 	@echo "$< -> $@"
 	@$(CXX) $(CFLAGS) -c -MMD $< -o $@
 
-install:
-	@echo TODO
-.PHONY: install
-
 clean:
 	rm -rf build
 .PHONY: clean
