@@ -69,6 +69,13 @@ void rm(string fn);
 
 
 /**
+ * Return the value for the environment variable named key.
+ * If no variable is defined return an empty string.
+ */
+string safe_getenv(const string& key);
+
+
+/**
  * Return a vector of words in str, using delim as the delimeter.
  * The default delim is a space.
  * Example:

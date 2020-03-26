@@ -2,7 +2,8 @@
 
 
 vector<string> include_args() {
-    vector<string> include_paths = split(getenv("CPLUS_INCLUDE_PATH"), ":");
+    vector<string> include_paths =
+        split(safe_getenv("CPLUS_INCLUDE_PATH"), ":");
     for (unsigned i=0; i<include_paths.size(); i++)
         include_paths[i] = "-I" + include_paths[i];
     return include_paths;
@@ -10,7 +11,7 @@ vector<string> include_args() {
 
 
 vector<string> library_args() {
-    vector<string> library_paths = split(getenv("LIBRARY_PATH"), ":");
+    vector<string> library_paths = split(safe_getenv("LIBRARY_PATH"), ":");
     for (unsigned i=0; i<library_paths.size(); i++)
         library_paths[i] = "-L" + library_paths[i];
     return library_paths;
@@ -27,8 +28,7 @@ bool can_find_lib(string name) {
 
 vector<string> can_find_libs(vector<string> libs) {
     vector<string> found_libs;
-    copy_if(libs.begin(), libs.end(), back_inserter(found_libs),
-        [](string& a){ return can_find_lib(a); });
+    copy_if(libs.begin(), libs.end(), back_inserter(found_libs), can_find_lib);
     return found_libs;
 }
 
@@ -86,7 +86,7 @@ void compile_c(Prog const& prog) {
     gcc_assemble_args.insert(
         gcc_assemble_args.begin()+1, compile_args.begin(), compile_args.end());
 
-    string lib_flags = string(getenv("C_SEARCH_LIBS"));
+    string lib_flags = safe_getenv("C_SEARCH_LIBS");
     if (lib_flags.size()) {
         vector<string> libs = can_find_libs(split(lib_flags));
         append(gcc_args, libs);
@@ -126,7 +126,7 @@ void compile_cpp(Prog const& prog) {
     gpp_assemble_args.insert(
         gpp_assemble_args.begin()+1, compile_args.begin(), compile_args.end());
 
-    string lib_flags = getenv("CPLUS_SEARCH_LIBS");
+    string lib_flags = safe_getenv("C_SEARCH_LIBS");
     if (lib_flags.size()) {
         vector<string> libs = can_find_libs(split(lib_flags));
         append(gpp_args, libs);

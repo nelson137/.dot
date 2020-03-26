@@ -47,6 +47,12 @@ void rm(string fn) {
 }
 
 
+string safe_getenv(const string& key) {
+    char *v = getenv(key.c_str());
+    return v == nullptr ? "" : v;
+}
+
+
 vector<string> split(string str, string delim) {
     vector<string> tokens;
     size_t prev = 0, curr = 0;
