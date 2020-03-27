@@ -1,4 +1,4 @@
-#include "prog.hpp"
+#include "to.hpp"
 
 
 string LANG_NAMES[] = { "NoLang", "ASM", "C", "C++" };
@@ -45,13 +45,13 @@ static void check_executable_exists(string exe) {
 }
 
 
-void Prog::auto_bin_name() {
+void To::auto_bin_name() {
     this->bin_name = this->src_name[0] == '/' ? "" : "./";
     this->bin_name += this->src_name + ".to";
 }
 
 
-void Prog::set_lang(string lang) {
+void To::set_lang(string lang) {
     transform(lang.begin(), lang.end(), lang.begin(), ::tolower);
     if (lang == "s" || lang == "asm" || lang == "assembly")
         this->lang = LANG_ASM;
@@ -64,7 +64,7 @@ void Prog::set_lang(string lang) {
 }
 
 
-void Prog::auto_lang() {
+void To::auto_lang() {
     size_t pos = this->src_name.rfind(".");
     string lang;
     if (pos != string::npos)
@@ -73,7 +73,7 @@ void Prog::auto_lang() {
 }
 
 
-void Prog::compile_asm() {
+void To::compile_asm() {
     check_executable_exists(NASM);
 
     // Ask to remove the object file if it already exists
@@ -99,7 +99,7 @@ void Prog::compile_asm() {
 }
 
 
-void Prog::compile_c() {
+void To::compile_c() {
     check_executable_exists(GCC);
 
     vector<string> compile_args = {
@@ -139,7 +139,7 @@ void Prog::compile_c() {
 }
 
 
-void Prog::compile_cpp() {
+void To::compile_cpp() {
     check_executable_exists(GPP);
 
     vector<string> compile_args = {
@@ -179,7 +179,7 @@ void Prog::compile_cpp() {
 }
 
 
-void Prog::parse_args(int argc, char *argv[]) {
+void To::parse_args(int argc, char *argv[]) {
     this->commands = 0;
     this->lang = NO_LANG;
     bool show_help = false;
@@ -267,22 +267,22 @@ void Prog::parse_args(int argc, char *argv[]) {
 }
 
 
-bool Prog::should_compile() {
+bool To::should_compile() {
     return HAS_ASSEMBLE(this->commands) || HAS_COMPILE(this->commands);
 }
 
 
-bool Prog::should_execute() {
+bool To::should_execute() {
     return HAS_EXECUTE(this->commands);
 }
 
 
-bool Prog::should_remove() {
+bool To::should_remove() {
     return HAS_REMOVE(this->commands);
 }
 
 
-void Prog::compile() {
+void To::compile() {
     // Ask to remove the outfile if it already exists
     if (file_exists(this->bin_name) && !HAS_FORCE(this->commands)) {
         cout << "Outfile exists: " << this->bin_name << endl;
@@ -299,7 +299,7 @@ void Prog::compile() {
 }
 
 
-int Prog::execute() {
+int To::execute() {
     if (!file_exists(this->bin_name))
         die("No such file or directory:", this->bin_name);
     if (!file_executable(this->bin_name))
@@ -309,7 +309,7 @@ int Prog::execute() {
 }
 
 
-void Prog::remove() {
+void To::remove() {
     rm(this->bin_name);
     if (this->lang == LANG_ASM)
         rm(this->obj_name);

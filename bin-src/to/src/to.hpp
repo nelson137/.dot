@@ -1,5 +1,5 @@
-#ifndef PROG_HPP
-#define PROG_HPP
+#ifndef TO_HPP
+#define TO_HPP
 
 
 #include <algorithm>
@@ -22,7 +22,7 @@ enum Lang {
 };
 
 
-class Prog {
+class To {
 
     private:
         void auto_bin_name();
