@@ -2,12 +2,7 @@
 #define MAIN_HPP
 
 
-#include <string>
-#include <vector>
-
-#include "prog.hpp"
-
-using namespace std;
+#include "to.hpp"
 
 
 #endif

@@ -26,7 +26,7 @@ class To {
 
     private:
         void auto_bin_name();
-        void set_lang(string);
+        void set_lang(string lang);
         void auto_lang();
 
         void compile_asm();
@@ -41,7 +41,9 @@ class To {
         vector<string> exec_args;
         Lang lang;
 
-        void parse_args(int, char *[]);
+        static int run(int argc, char *argv[]);
+
+        void parse(int argc, char *argv[]);
 
         bool should_compile();
         bool should_execute();

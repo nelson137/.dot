@@ -179,7 +179,26 @@ void To::compile_cpp() {
 }
 
 
-void To::parse_args(int argc, char *argv[]) {
+int To::run(int argc, char *argv[]) {
+    To to;
+    to.parse(argc, argv);
+
+    int exitstatus = 0;
+
+    if (to.should_compile())
+        to.compile();
+
+    if (to.should_execute())
+        exitstatus = to.execute();
+
+    if (to.should_remove())
+        to.remove();
+
+    return exitstatus;
+}
+
+
+void To::parse(int argc, char *argv[]) {
     this->commands = 0;
     this->lang = NO_LANG;
     bool show_help = false;
