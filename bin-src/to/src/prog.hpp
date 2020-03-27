@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "consts.hpp"
+#include "exec.hpp"
 #include "util.hpp"
 
 using namespace std;
@@ -22,12 +23,15 @@ enum Lang {
 
 
 class Prog {
-    private:
-        bool parsing_opts = true;
 
+    private:
         void auto_bin_name();
         void set_lang(string);
         void auto_lang();
+
+        void compile_asm();
+        void compile_c();
+        void compile_cpp();
 
     public:
         int commands;
@@ -38,6 +42,15 @@ class Prog {
         Lang lang;
 
         void parse_args(int, char *[]);
+
+        bool should_compile();
+        bool should_execute();
+        bool should_remove();
+
+        void compile();
+        int execute();
+        void remove();
+
 };
 
 

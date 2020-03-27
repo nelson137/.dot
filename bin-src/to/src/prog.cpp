@@ -4,6 +4,46 @@
 string LANG_NAMES[] = { "NoLang", "ASM", "C", "C++" };
 
 
+static vector<string> include_args() {
+    vector<string> include_paths =
+        split(safe_getenv("CPLUS_INCLUDE_PATH"), ":");
+    for (unsigned i=0; i<include_paths.size(); i++)
+        include_paths[i] = "-I" + include_paths[i];
+    return include_paths;
+}
+
+
+static vector<string> library_args() {
+    vector<string> library_paths = split(safe_getenv("LIBRARY_PATH"), ":");
+    for (unsigned i=0; i<library_paths.size(); i++)
+        library_paths[i] = "-L" + library_paths[i];
+    return library_paths;
+}
+
+
+static bool can_find_lib(string name) {
+    vector<string> args = {"/usr/bin/ld", "-o", "/dev/null", name};
+    append(args, include_args());
+    append(args, library_args());
+    return easy_execute(args, true).exitstatus == 0;
+}
+
+
+static vector<string> can_find_libs(vector<string> libs) {
+    vector<string> found_libs;
+    copy_if(libs.begin(), libs.end(), back_inserter(found_libs), can_find_lib);
+    return found_libs;
+}
+
+
+/**
+ * Die and print an error message if the given executable does not exist.
+ */
+static void check_executable_exists(string exe) {
+    if (!file_exists(exe))
+        die("Executable does not exist:", exe);
+}
+
 
 void Prog::auto_bin_name() {
     this->bin_name = this->src_name[0] == '/' ? "" : "./";
@@ -33,6 +73,112 @@ void Prog::auto_lang() {
 }
 
 
+void Prog::compile_asm() {
+    check_executable_exists(NASM);
+
+    // Ask to remove the object file if it already exists
+    if (file_exists(this->obj_name) && !HAS_FORCE(this->commands)) {
+        cout << "Object file exists: " << this->obj_name << endl;
+        ask_rm_file(this->obj_name);
+    }
+
+    vector<string> nasm_args = {
+        NASM, "-f", "elf64", this->src_name, "-o", this->obj_name};
+
+    int code;
+
+    if ((code = easy_execute(nasm_args)))
+        die(code, "Could not create object file:", this->obj_name);
+
+    if (HAS_COMPILE(this->commands)) {
+        check_executable_exists(LD);
+        vector<string> ld_args = {LD, this->obj_name, "-o", this->bin_name};
+        if ((code = easy_execute(ld_args)))
+            die(code, "Could not link object file:", this->obj_name);
+    }
+}
+
+
+void Prog::compile_c() {
+    check_executable_exists(GCC);
+
+    vector<string> compile_args = {
+        "-xc", "-std=c11", "-O3", "-Wall", "-Werror"};
+
+    vector<string> gcc_args = {
+        GCC, this->src_name, "-o", this->bin_name};
+    vector<string> gcc_assemble_args = {
+        GCC, this->src_name, "-o", this->obj_name, "-c"};
+    vector<string> gcc_link_args = {
+        GCC, this->obj_name, "-o", this->bin_name};
+
+    gcc_args.insert(
+        gcc_args.begin()+1, compile_args.begin(), compile_args.end());
+    gcc_assemble_args.insert(
+        gcc_assemble_args.begin()+1, compile_args.begin(), compile_args.end());
+
+    string lib_flags = safe_getenv("C_SEARCH_LIBS");
+    if (lib_flags.size()) {
+        vector<string> libs = can_find_libs(split(lib_flags));
+        append(gcc_args, libs);
+        append(gcc_assemble_args, libs);
+    }
+
+    int code;
+
+    if (HAS_ASSEMBLE(this->commands)) {
+        if ((code = easy_execute(gcc_assemble_args)))
+            die(code, "Could not assemble infile:", this->src_name);
+        if (HAS_COMPILE(this->commands))
+            if ((code = easy_execute(gcc_link_args)))
+                die(code, "Could not compile infile:", this->src_name);
+    } else {
+        if ((code = easy_execute(gcc_args)))
+            die(code, "Could not compile infile:", this->src_name);
+    }
+}
+
+
+void Prog::compile_cpp() {
+    check_executable_exists(GPP);
+
+    vector<string> compile_args = {
+        "-xc++", "-std=c++17", "-O3", "-Wall", "-Werror"};
+
+    vector<string> gpp_args = {
+        GPP, this->src_name, "-o", this->bin_name};
+    vector<string> gpp_assemble_args = {
+        GPP, this->src_name, "-o", this->obj_name, "-c"};
+    vector<string> gpp_link_args = {
+        GPP, this->obj_name, "-o", this->bin_name};
+
+    gpp_args.insert(
+        gpp_args.begin()+1, compile_args.begin(), compile_args.end());
+    gpp_assemble_args.insert(
+        gpp_assemble_args.begin()+1, compile_args.begin(), compile_args.end());
+
+    string lib_flags = safe_getenv("C_SEARCH_LIBS");
+    if (lib_flags.size()) {
+        vector<string> libs = can_find_libs(split(lib_flags));
+        append(gpp_args, libs);
+        append(gpp_assemble_args, libs);
+    }
+
+    int code;
+
+    if (HAS_ASSEMBLE(this->commands)) {
+        if ((code = easy_execute(gpp_assemble_args)))
+            die("Could not assemble infile:", this->src_name);
+        if (HAS_COMPILE(this->commands))
+            if ((code = easy_execute(gpp_link_args)))
+                die(code, "Could not compile infile:", this->src_name);
+    } else {
+        if ((code = easy_execute(gpp_args)))
+            die(code, "Could not compile infile:", this->src_name);
+    }
+}
+
+
 void Prog::parse_args(int argc, char *argv[]) {
     this->commands = 0;
     this->lang = NO_LANG;
@@ -46,8 +192,6 @@ void Prog::parse_args(int argc, char *argv[]) {
 
         if (arg == "-h" || arg == "--help")
             show_help = true;
-        else if (arg == "--")
-            ;  // Do nothing
         else
             pos_args.push(arg);
     }
@@ -120,6 +264,55 @@ void Prog::parse_args(int argc, char *argv[]) {
         this->exec_args.push_back(pos_args.front());
         pos_args.pop();
     }
+}
+
+
+bool Prog::should_compile() {
+    return HAS_ASSEMBLE(this->commands) || HAS_COMPILE(this->commands);
+}
+
+
+bool Prog::should_execute() {
+    return HAS_EXECUTE(this->commands);
+}
+
+
+bool Prog::should_remove() {
+    return HAS_REMOVE(this->commands);
+}
+
+
+void Prog::compile() {
+    // Ask to remove the outfile if it already exists
+    if (file_exists(this->bin_name) && !HAS_FORCE(this->commands)) {
+        cout << "Outfile exists: " << this->bin_name << endl;
+        ask_rm_file(this->bin_name);
+    }
+
+    switch(this->lang) {
+        case LANG_ASM: this->compile_asm(); break;
+        case LANG_C:   this->compile_c  (); break;
+        case LANG_CPP: this->compile_cpp(); break;
+        default:
+            die("Compilation not implemented for", LANG_NAMES[this->lang]);
+    }
+}
+
+
+int Prog::execute() {
+    if (!file_exists(this->bin_name))
+        die("No such file or directory:", this->bin_name);
+    if (!file_executable(this->bin_name))
+        die("Permission denied:", this->bin_name);
+
+    return easy_execute(this->exec_args).exitstatus;
+}
+
+
+void Prog::remove() {
+    rm(this->bin_name);
+    if (this->lang == LANG_ASM)
+        rm(this->obj_name);
 }
 
 
