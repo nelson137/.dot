@@ -36,15 +36,6 @@ static vector<string> can_find_libs(vector<string> libs) {
 }
 
 
-/**
- * Die and print an error message if the given executable does not exist.
- */
-static void check_executable_exists(string exe) {
-    if (!file_exists(exe))
-        die("Executable does not exist:", exe);
-}
-
-
 void To::auto_bin_name() {
     this->bin_name = this->src_name[0] == '/' ? "" : "./";
     this->bin_name += this->src_name + ".to";
@@ -74,8 +65,6 @@ void To::auto_lang() {
 
 
 void To::compile_asm() {
-    check_executable_exists(NASM);
-
     // Ask to remove the object file if it already exists
     if (file_exists(this->obj_name) && !HAS_FORCE(this->commands)) {
         cout << "Object file exists: " << this->obj_name << endl;
@@ -91,7 +80,6 @@ void To::compile_asm() {
         die(code, "Could not create object file:", this->obj_name);
 
     if (HAS_COMPILE(this->commands)) {
-        check_executable_exists(LD);
         vector<string> ld_args = {LD, this->obj_name, "-o", this->bin_name};
         if ((code = easy_execute(ld_args)))
             die(code, "Could not link object file:", this->obj_name);
@@ -100,8 +88,6 @@ void To::compile_asm() {
 
 
 void To::compile_c() {
-    check_executable_exists(GCC);
-
     vector<string> compile_args = {
         "-xc", "-std=c11", "-O3", "-Wall", "-Werror"};
 
@@ -140,8 +126,6 @@ void To::compile_c() {
 
 
 void To::compile_cpp() {
-    check_executable_exists(GPP);
-
     vector<string> compile_args = {
         "-xc++", "-std=c++17", "-O3", "-Wall", "-Werror"};
 
