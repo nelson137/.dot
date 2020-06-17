@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Print the first line that is non-blank or whitespace only
+# Putting the result in a variable trims surrounding whitespace
+msg="$(cat "$1" | sed -n '/^\s*$/!{p;q}')"
+
+# The number of characers in msg
+msg_len="$(printf "${msg}" | wc -m)"
+
+if (( msg_len > 50 )); then
+    echo "Commit message too long ($msg_len/50)" >&2
+    exit 1
+fi
