@@ -8,7 +8,7 @@ else
 fi
 
 # Mine
-alias aliases='vim ~/.dot/zsh-custom/aliases.zsh'
+alias aliases='vim ~/.dot/files/.aliases'
 alias dot='cd ~/.dot'
 alias funcs='vim ~/.dot/zsh-custom/functions.zsh'
 alias socwd='command du -csh . | tail -1'
