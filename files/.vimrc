@@ -80,9 +80,6 @@ augroup mine
         \     call delete('$HOME/.vim/.netrwhist') |
         \ endif
 
-    " Disable ALE in ~/.zsh_history
-    au BufEnter .zsh_history call ale#toggle#Disable()
-
     " Close the quickfix window when exiting
     au BufUnload * if len(getqflist()) | exe ':cclose' | endif
 
@@ -95,8 +92,6 @@ augroup mine
     au FileType pdf
         \ silent execute "!zathura --fork" expand('%') |
         \ execute 'q'
-
-    au FileType asm ALEDisable
 
     au BufWrite .vimrc let g:vimrc_changed = 1
     au BufEnter * call vimrc#AutoSource()
@@ -328,9 +323,6 @@ noremap <silent>   <Leader>mp   :MarkdownPreview<CR>
 " Stop previewing markdown file
 noremap <silent>   <Leader>ms   :MarkdownPreviewStop<CR>
 
-" Toggle ALE linting
-noremap <silent>   <Leader>at   :ALEToggle<CR>
-
 
 
 " Vundle
@@ -340,9 +332,6 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     set runtimepath+=~/.vim/bundle/Vundle.vim
     call vundle#begin()
     Plugin 'VundleVim/Vundle.vim'          " Package manager
-    if VimSupportsYouCompleteMe()
-        Plugin 'Valloric/YouCompleteMe'    " Code completion engine
-    endif
     Plugin 'ap/vim-css-color'              " Show colors of CSS color codes
     Plugin 'apeschel/vim-syntax-apache'    " Syntax highlighting for apache
     Plugin 'elzr/vim-json'                 " JSON highlighting and quote hiding
@@ -352,6 +341,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'jiangmiao/auto-pairs'          " Manage quotes, parens, etc in pair
     Plugin 'justinmk/vim-sneak'            " The missing vim motion
     Plugin 'mhinz/vim-signify'             " Show added/modified/removed lines
+    Plugin 'neoclide/coc.nvim', {'branch': 'release'}  " Conquer of Completion
     Plugin 'octol/vim-cpp-enhanced-highlight'  " Better C++ syntax highlighting
     Plugin 'python-mode/python-mode'       " Python IDE
     Plugin 'scrooloose/nerdcommenter'      " Quickly (un)comment lines
@@ -362,7 +352,6 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'tommcdo/vim-exchange'          " Easily swap 2 regions of text
     Plugin 'tpope/vim-surround'            " Surrounds selected text for you
     Plugin 'vim-scripts/a.vim'             " Switch between source/header files
-    Plugin 'w0rp/ale'                      " Asynchronous Lint Engine
     call vundle#end()
 endif
 filetype plugin indent on
@@ -370,11 +359,6 @@ filetype plugin indent on
 
 
 " Plugin Configs
-
-" YouCompleteMe
-let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_show_diagnostics_ui = 0
 
 " vim-json
 let g:vim_json_syntax_conceal = 0
@@ -409,61 +393,3 @@ let g:gundo_prefer_python3 = 1
 " AsyncRun
 let g:asyncrun_open = 8
 let g:asyncrun_save = 2
-
-" ALE
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_text_change = 'always'
-let g:ale_c_parse_makefile = 1
-let g:ale_c_gcc_options =
-\    '-std=c11 -O3 -Wall -Werror ' .
-\    system('echo -n $C_SEARCH_LIBS')
-let g:ale_cpp_gcc_options =
-\    '-std=c++17 -Wall -Werror' .
-\    system('echo -n $CPLUS_SEARCH_LIBS')
-let g:ale_linters = {
-\    'python': ['flake8', 'pycodestyle', 'pylint', 'pyls'],
-\    'cpp': ['gcc']
-\}
-let g:ale_use_global_executables = 1
-let g:ale_python_flake8_executable = GetPythonVersion()
-let g:ale_python_pylint_executable = g:ale_python_flake8_executable
-let g:ale_command_wrapper = 'nice -n 3'
-let g:ale_echo_msg_format = '%linter%: %code: %%s'
-let g:ale_loclist_msg_format = g:ale_echo_msg_format
-let s:pylint_disabled = [
-\    'eval-used',
-\    'exec-used',
-\    'invalid-name',
-\    'line-too-long',
-\    'missing-docstring',
-\    'multiple-imports',
-\    'no-else-return',
-\    'no-self-use',
-\    'possibly-unused-variable',
-\    'protected-access',
-\    'redefined-outer-name',
-\    'too-few-public-methods',
-\    'too-many-branches',
-\    'too-many-locals',
-\    'too-many-instance-attributes',
-\    'unused-argument'
-\]
-let g:ale_python_pylint_options = '--disable=' . join(s:pylint_disabled, ',')
-" The first line of errors and warnings is what is ignored by default,
-" however, --ignore overrides the default
-" My flake8 ignores:
-"     D107: missing docstring in __init__
-"     D413: missing blank line after last section
-"     E114: indentation is not a multiple of four (comment)
-"     E115: expected an indented block (comment)
-"     E116: unexpected indentation (comment)
-let g:ale_python_flake8_options = '--ignore=' .
-\    'E121,E123,E126,E226,E24,E704,W503,W504,' .
-\    'D107,D413,E114,E115,E116'
-let g:ale_fixers = {
-\    'python': ['isort', 'remove_trailing_lines', 'trim_whitespace'],
-\    '*': ['remove_trailing_lines', 'trim_whitespace']
-\}
-let g:ale_fix_on_save = 1
-let g:ale_sign_column_always = 1
-let g:ale_change_sign_column_color = 1
