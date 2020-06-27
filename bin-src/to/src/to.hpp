@@ -10,16 +10,10 @@
 
 #include "consts.hpp"
 #include "exec.hpp"
+#include "steps.hpp"
 #include "util.hpp"
 
 using namespace std;
-
-
-extern string LANG_NAMES[];
-
-enum Lang {
-    NO_LANG, LANG_ASM, LANG_C, LANG_CPP
-};
 
 
 class To {
@@ -36,10 +30,10 @@ class To {
     public:
         int commands;
         string src_name;
-        string obj_name;
         string bin_name;
         vector<string> exec_args;
-        Lang lang;
+        list<BuildStep> build_steps;
+        list<string> intermediate_files;
 
         static int run(int argc, char *argv[]);
 

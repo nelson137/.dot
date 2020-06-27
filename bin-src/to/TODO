@@ -1,0 +1,4 @@
+rename project to sfc
+rename To::bin_name -> exe_name
+command 'r' only removes intermediate files
+second 'r' command removes executable

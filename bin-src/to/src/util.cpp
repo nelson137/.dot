@@ -9,8 +9,8 @@ void ask_rm_file(string file) {
 }
 
 
-void die(int code) {
-    exit(code);
+void die() {
+    exit(1);
 }
 
 
@@ -25,25 +25,10 @@ bool file_exists(string fn) {
 }
 
 
-bool read_fd(int fd, string& dest) {
-    int count;
-    char buff[128];
-
-    do {
-        count = read(fd, buff, sizeof(buff)-1);
-        if (count == -1)
-            return false;
-        buff[count] = '\0';
-        dest += buff;
-    } while (count > 0);
-
-    return true;
-}
-
-
 void rm(string fn) {
-    if (remove(fn.c_str()))
-        die("Could not remove file:", fn);
+    if (file_exists(fn))
+        if (remove(fn.c_str()))
+            die("Could not remove file:", fn);
 }
 
 

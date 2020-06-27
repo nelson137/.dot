@@ -28,3 +28,19 @@ void ExecArgs::push_back(string str) {
 char **ExecArgs::get() {
     return this->args.data();
 }
+
+
+bool read_fd(int fd, string& dest) {
+    int count;
+    char buff[128];
+
+    do {
+        count = read(fd, buff, sizeof(buff)-1);
+        if (count == -1)
+            return false;
+        buff[count] = '\0';
+        dest += buff;
+    } while (count > 0);
+
+    return true;
+}

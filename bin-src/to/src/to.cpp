@@ -1,41 +1,6 @@
 #include "to.hpp"
 
 
-string LANG_NAMES[] = { "NoLang", "ASM", "C", "C++" };
-
-
-static vector<string> include_args() {
-    vector<string> include_paths =
-        split(safe_getenv("CPLUS_INCLUDE_PATH"), ":");
-    for (unsigned i=0; i<include_paths.size(); i++)
-        include_paths[i] = "-I" + include_paths[i];
-    return include_paths;
-}
-
-
-static vector<string> library_args() {
-    vector<string> library_paths = split(safe_getenv("LIBRARY_PATH"), ":");
-    for (unsigned i=0; i<library_paths.size(); i++)
-        library_paths[i] = "-L" + library_paths[i];
-    return library_paths;
-}
-
-
-static bool can_find_lib(string name) {
-    vector<string> args = {"/usr/bin/ld", "-o", "/dev/null", name};
-    append(args, include_args());
-    append(args, library_args());
-    return easy_execute(args, true).exitstatus == 0;
-}
-
-
-static vector<string> can_find_libs(vector<string> libs) {
-    vector<string> found_libs;
-    copy_if(libs.begin(), libs.end(), back_inserter(found_libs), can_find_lib);
-    return found_libs;
-}
-
-
 void To::auto_bin_name() {
     this->bin_name = this->src_name[0] == '/' ? "" : "./";
     this->bin_name += this->src_name + ".to";
@@ -44,14 +9,25 @@ void To::auto_bin_name() {
 
 void To::set_lang(string lang) {
     transform(lang.begin(), lang.end(), lang.begin(), ::tolower);
-    if (lang == "s" || lang == "asm" || lang == "assembly")
-        this->lang = LANG_ASM;
-    else if (lang == "c")
-        this->lang = LANG_C;
-    else if (lang == "cpp" || lang == "c++")
-        this->lang = LANG_CPP;
-    else
+    if (lang == "s" || lang == "asm" || lang == "assembly") {
+        string obj_name = this->src_name + ".o";
+        this->build_steps.emplace_back(
+            obj_name,
+            list<string>{ NASM, "-f", "elf64", "-o", obj_name });
+        this->build_steps.emplace_back(
+            this->bin_name,
+            list<string>{ LD, "-o", this->bin_name });
+    } else if (lang == "c") {
+        this->build_steps.emplace_back(
+            this->bin_name,
+            list<string>{ GCC, "-xc", C_ARGS, "-o", this->bin_name });
+    } else if (lang == "cpp" || lang == "c++") {
+        this->build_steps.emplace_back(
+            this->bin_name,
+            list<string>{ GPP, "-xc++", C_ARGS, "-o", this->bin_name });
+    } else {
         die("Language not recognized:", lang);
+    }
 }
 
 
@@ -61,105 +37,6 @@ void To::auto_lang() {
     if (pos != string::npos)
         lang = this->src_name.substr(pos+1);
     this->set_lang(lang);
-}
-
-
-void To::compile_asm() {
-    // Ask to remove the object file if it already exists
-    if (file_exists(this->obj_name) && !HAS_FORCE(this->commands)) {
-        cout << "Object file exists: " << this->obj_name << endl;
-        ask_rm_file(this->obj_name);
-    }
-
-    vector<string> nasm_args = {
-        NASM, "-f", "elf64", this->src_name, "-o", this->obj_name};
-
-    int code;
-
-    if ((code = easy_execute(nasm_args)))
-        die(code, "Could not create object file:", this->obj_name);
-
-    if (HAS_COMPILE(this->commands)) {
-        vector<string> ld_args = {LD, this->obj_name, "-o", this->bin_name};
-        if ((code = easy_execute(ld_args)))
-            die(code, "Could not link object file:", this->obj_name);
-    }
-}
-
-
-void To::compile_c() {
-    vector<string> compile_args = {
-        "-xc", "-std=c11", "-O3", "-Wall", "-Werror"};
-
-    vector<string> gcc_args = {
-        GCC, this->src_name, "-o", this->bin_name};
-    vector<string> gcc_assemble_args = {
-        GCC, this->src_name, "-o", this->obj_name, "-c"};
-    vector<string> gcc_link_args = {
-        GCC, this->obj_name, "-o", this->bin_name};
-
-    gcc_args.insert(
-        gcc_args.begin()+1, compile_args.begin(), compile_args.end());
-    gcc_assemble_args.insert(
-        gcc_assemble_args.begin()+1, compile_args.begin(), compile_args.end());
-
-    string lib_flags = safe_getenv("C_SEARCH_LIBS");
-    if (lib_flags.size()) {
-        vector<string> libs = can_find_libs(split(lib_flags));
-        append(gcc_args, libs);
-        append(gcc_assemble_args, libs);
-    }
-
-    int code;
-
-    if (HAS_ASSEMBLE(this->commands)) {
-        if ((code = easy_execute(gcc_assemble_args)))
-            die(code, "Could not assemble infile:", this->src_name);
-        if (HAS_COMPILE(this->commands))
-            if ((code = easy_execute(gcc_link_args)))
-                die(code, "Could not compile infile:", this->src_name);
-    } else {
-        if ((code = easy_execute(gcc_args)))
-            die(code, "Could not compile infile:", this->src_name);
-    }
-}
-
-
-void To::compile_cpp() {
-    vector<string> compile_args = {
-        "-xc++", "-std=c++17", "-O3", "-Wall", "-Werror"};
-
-    vector<string> gpp_args = {
-        GPP, this->src_name, "-o", this->bin_name};
-    vector<string> gpp_assemble_args = {
-        GPP, this->src_name, "-o", this->obj_name, "-c"};
-    vector<string> gpp_link_args = {
-        GPP, this->obj_name, "-o", this->bin_name};
-
-    gpp_args.insert(
-        gpp_args.begin()+1, compile_args.begin(), compile_args.end());
-    gpp_assemble_args.insert(
-        gpp_assemble_args.begin()+1, compile_args.begin(), compile_args.end());
-
-    string lib_flags = safe_getenv("C_SEARCH_LIBS");
-    if (lib_flags.size()) {
-        vector<string> libs = can_find_libs(split(lib_flags));
-        append(gpp_args, libs);
-        append(gpp_assemble_args, libs);
-    }
-
-    int code;
-
-    if (HAS_ASSEMBLE(this->commands)) {
-        if ((code = easy_execute(gpp_assemble_args)))
-            die("Could not assemble infile:", this->src_name);
-        if (HAS_COMPILE(this->commands))
-            if ((code = easy_execute(gpp_link_args)))
-                die(code, "Could not compile infile:", this->src_name);
-    } else {
-        if ((code = easy_execute(gpp_args)))
-            die(code, "Could not compile infile:", this->src_name);
-    }
 }
 
 
@@ -184,7 +61,6 @@ int To::run(int argc, char *argv[]) {
 
 void To::parse(int argc, char *argv[]) {
     this->commands = 0;
-    this->lang = NO_LANG;
     bool show_help = false;
 
     queue<string> pos_args;
@@ -241,6 +117,10 @@ void To::parse(int argc, char *argv[]) {
         pos_args.pop();
     }
 
+    // Determine the binary filename if it wasn't specified by the user
+    if (this->bin_name.empty())
+        this->auto_bin_name();
+
     if (HAS_LANG(this->commands)) {
         if (!pos_args.size())
             usage();  // print error message?
@@ -253,13 +133,6 @@ void To::parse(int argc, char *argv[]) {
     if (HAS_EXECUTE(this->commands) && HAS_ASSEMBLE(this->commands)
             && !HAS_COMPILE(this->commands))
         die("Execution requires compilation (the 'c' command)");
-
-    // Get object file name
-    this->obj_name = this->src_name + ".o";
-
-    // Determine the binary filename if it wasn't specified by the user
-    if (this->bin_name.empty())
-        this->auto_bin_name();
 
     this->exec_args.reserve(1 + pos_args.size());
     this->exec_args.push_back(this->bin_name);
@@ -292,13 +165,15 @@ void To::compile() {
         ask_rm_file(this->bin_name);
     }
 
-    switch(this->lang) {
-        case LANG_ASM: this->compile_asm(); break;
-        case LANG_C:   this->compile_c  (); break;
-        case LANG_CPP: this->compile_cpp(); break;
-        default:
-            die("Compilation not implemented for", LANG_NAMES[this->lang]);
-    }
+    bool force = HAS_FORCE(this->commands);
+    list<BuildStep>::iterator it = this->build_steps.begin();
+
+    string of = it->perform_step(this->src_name, force);
+    this->intermediate_files.push_back(of);
+
+    for (it++; it!=this->build_steps.end(); it++)
+        this->intermediate_files.push_back(
+            it->perform_step(this->intermediate_files.back(), force));
 }
 
 
@@ -314,8 +189,8 @@ int To::execute() {
 
 void To::remove() {
     rm(this->bin_name);
-    if (this->lang == LANG_ASM)
-        rm(this->obj_name);
+    for (const string& fn : this->intermediate_files)
+        rm(fn);
 }
 
 
@@ -340,14 +215,13 @@ void help() {
     puts("  outfile      The name of the outfile");
     puts("");
     puts("Commands");
-    puts("  a            Assemble the program (gcc -c)");
-    puts("  c            Compile the program");
-    puts("  d            Print out the commands that would be executed,");
+    puts("  c            Compile the program and generate an executable");
+    puts("  d            Print the commands that would be executed,");
     puts("               output is suitable for use in a shell");
-    puts("  e            Execute the compiled program");
+    puts("  e            Run the generated executable");
     puts("  f            Do not prompt before overwriting files");
-    puts("  o            What to name the binary");
-    puts("  r            Remove the binary and all compilation files");
+    puts("  o            Provide a custom name for the executable");
+    puts("  r            Remove the executable and all compilation files");
     puts("  x            The language of the infile");
     exit(0);
 }

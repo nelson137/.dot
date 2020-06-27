@@ -2,6 +2,7 @@
 #define UTIL_HPP
 
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -9,6 +10,8 @@
 #include <unistd.h>
 
 #include <sys/stat.h>
+
+#include "consts.hpp"
 
 using namespace std;
 
@@ -25,24 +28,26 @@ void append(L& l, R const& r) {
 void ask_rm_file(string file);
 
 
-void die(int code = 1);
+void die();
 
 
-template<typename... Ts>
-void die(int code, string t, Ts... ts) {
-    vector<string> tokens = {t, ts...};
+template<typename... Strings>
+void die(int code, Strings... msg) {
+    vector<string> tokens = { msg... };
     if (tokens.size()) {
-        cerr << tokens[0] << endl;
-        for (unsigned i=0; i<tokens.size(); i++)
-            cerr << tokens[i];
+        auto it = tokens.cbegin();
+        cerr << *it++;
+        for (; it!=tokens.cend(); it++)
+            cerr << ' ' << *it;
     }
-    die(code);
+    cerr << endl;
+    exit(code);
 }
 
 
-template<typename... Ts>
-void die(string t, Ts... ts) {
-    die(1, t, ts...);
+template<typename... Strings>
+void die(const string& m, Strings... msg) {
+    die(1, m, msg...);
 }
 
 
@@ -56,9 +61,6 @@ bool file_executable(string fn);
  * Return whether a file exists.
  */
 bool file_exists(string fn);
-
-
-bool read_fd(int fd, string& dest);
 
 
 /**

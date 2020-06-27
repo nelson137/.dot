@@ -51,11 +51,8 @@ public:
         init(bin, args);
     }
 
-    template<
-        typename... Str,
-        typename = enable_if_t<(... && std::is_convertible<Str, string>::value)>
-    >
-    ExecArgs(string bin, const Str... strs) {
+    template<typename... StringT>
+    ExecArgs(string bin, const StringT&... strs) {
         init(bin, vector<string>{strs...});
     }
 
@@ -63,7 +60,7 @@ public:
     ExecArgs(T<string,allocator<string>> args) {
         string bin;
         if (args.size()) {
-            bin = args[0];
+            bin = args.front();
             args.erase(args.begin());
         }
         init(bin, args);
@@ -76,6 +73,9 @@ public:
     char **get();
 
 };
+
+
+bool read_fd(int fd, string& dest);
 
 
 template<typename T>
