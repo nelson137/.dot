@@ -4,10 +4,10 @@
 [core]
 	editor = vim
 [init]
-    templateDir = ~/.git_templates
+	templateDir = ~/.git_templates
 [push]
 	default = simple
 [color]
-    diff = auto
-    status = auto
-    ui = auto
+	diff = auto
+	status = auto
+	ui = auto
