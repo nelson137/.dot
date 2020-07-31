@@ -13,6 +13,7 @@ set modeline                " Check for comments with settings
 set nocompatible            " Be iMproved
 set noshowmode              " Lightline plugin takes care of this
 set noswapfile              " I like to live dangerously
+set rtp+=~/.dot/components/fzf
 set scrolloff=4             " Keep cursor 4 lines from top & bot when scrolling
 set signcolumn=yes
 set shell=zsh               " Shell to use for !
@@ -298,8 +299,8 @@ noremap <silent>   <Leader>wn   :new<CR>
 " New window to the right
 noremap <silent>   <Leader>wv   :vnew<CR>
 
-" Toggle line numbers
-noremap <silent>   <Leader>n   :set nu!<CR>
+" Open fzf
+noremap <silent>   <C-f>   :Files<CR>
 
 " Toggle the colorcolumn
 noremap <silent>   <Leader>gt  :let &cc = &cc == '' ? '+1' : ''<CR>
@@ -348,6 +349,8 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'iamcco/markdown-preview.vim'   " Preview markdown files live
     Plugin 'itchyny/lightline.vim'         " The pretty statusline
     Plugin 'jiangmiao/auto-pairs'          " Manage quotes, parens, etc in pair
+    Plugin 'junegunn/fzf.vim'              " Fuzzy file finder
+    Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plugin 'justinmk/vim-sneak'            " The missing vim motion
     Plugin 'mhinz/vim-signify'             " Show added/modified/removed lines
     Plugin 'neoclide/coc.nvim', {'branch': 'release'}  " Conquer of Completion
