@@ -247,6 +247,12 @@ noremap   K   gg
 " L goes to end of line
 noremap   L   $
 
+" Buffer nav
+noremap <silent>   gl   :bn<CR>
+noremap <silent>   gh   :bp<CR>
+noremap <silent>   gq   :bd<CR>
+noremap <silent>   gx   :w<CR>:bd<CR>
+
 " Better window nav
 noremap   <C-h>   <C-w>h
 noremap   <C-j>   <C-w>j
