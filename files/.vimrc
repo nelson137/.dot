@@ -18,6 +18,7 @@ set scrolloff=4             " Keep cursor 4 lines from top & bot when scrolling
 set signcolumn=yes
 set shell=zsh               " Shell to use for !
 set shortmess=aoOtT
+set showtabline=2           " Always show tabline
 set smartcase               " Ignore ignorecase when capital letters are used
 set splitbelow              " Open horizontal splits below
 set splitright              " Open vertical splits to the right
