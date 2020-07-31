@@ -24,6 +24,7 @@ set timeoutlen=500          " Max period of 500ms between keystrokes
 set undodir=~/.vim/undodir  " Put undo files in ~/.vim/undodir
 set undofile                " Persistent file history
 set undolevels=1000         " Remember 1000 changes to file
+set updatetime=100          " Timeout in ms with no typing (for plugins)
 set visualbell              " No beep beep
 set wildmenu                " Zsh-like buffer completion
 runtime ftplugin/man.vim    " Enable man plugin
