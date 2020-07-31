@@ -347,7 +347,6 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'ap/vim-css-color'              " Show colors of CSS color codes
     Plugin 'apeschel/vim-syntax-apache'    " Syntax highlighting for apache
     Plugin 'gabrielelana/vim-markdown'     " Better Markdown syntax highlight
-    Plugin 'godlygeek/tabular'             " Handles md tables for you
     Plugin 'iamcco/markdown-preview.vim'   " Preview markdown files live
     Plugin 'itchyny/lightline.vim'         " The pretty statusline
     Plugin 'jiangmiao/auto-pairs'          " Manage quotes, parens, etc in pair
