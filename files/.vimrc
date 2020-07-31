@@ -95,6 +95,8 @@ augroup mine
         \ silent execute "!zathura --fork" expand('%') |
         \ execute 'q'
 
+    au BufWrite *.py exe ':CocCommand python.sortImports'
+
     au BufWrite .vimrc let g:vimrc_changed = 1
     au BufEnter * call vimrc#AutoSource()
 augroup end
