@@ -98,10 +98,17 @@ augroup mine
         \ execute 'q'
 
     au BufWrite *.py exe ':CocCommand python.sortImports'
-
-    au BufWrite .vimrc let g:vimrc_changed = 1
-    au BufEnter * call vimrc#AutoSource()
 augroup end
+
+
+
+" Commands
+
+command!   Vimrc    edit $MYVIMRC
+command!   VimrcS   source $MYVIMRC |
+                      \ call lightline#colorscheme() |
+                      \ redraw |
+                      \ call Info('Sourced vimrc')
 
 
 

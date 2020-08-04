@@ -21,10 +21,6 @@ pushd "$(dirname "${BASH_SOURCE[0]}")"
     # Link config directories
     ln_dir_contents .config "$HOME/.config"
 
-    # Link vim autoload files
-    mkdir -p "$HOME/.vim/autoload"
-    ln_dir_contents .vim/autoload "$HOME/.vim/autoload"
-
     # Install repository hooks
     ./install-hooks.sh
 
