@@ -384,6 +384,10 @@ filetype plugin indent on
 " vim-json
 let g:vim_json_syntax_conceal = 0
 
+" vim-markdown
+let g:markdown_enable_spell_checking = 0
+let g:markdown_enable_conceal = 1
+
 " markdown-preview.vim
 let g:mkdp_path_to_chrome = 'google-chrome --new-window'
 
