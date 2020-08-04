@@ -360,6 +360,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'junegunn/fzf.vim'              " Fuzzy file finder
     Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plugin 'justinmk/vim-sneak'            " The missing vim motion
+    Plugin 'mengelbrecht/lightline-bufferline'
     Plugin 'mhinz/vim-signify'             " Show added/modified/removed lines
     Plugin 'neoclide/coc.nvim', {'branch': 'release'}  " Conquer of Completion
     Plugin 'octol/vim-cpp-enhanced-highlight'  " Better C++ syntax highlighting
@@ -388,6 +389,21 @@ let g:mkdp_path_to_chrome = 'google-chrome --new-window'
 
 " vim-cpp-enhanced-highlight
 " let g:cpp_member_variable_highlight = 1
+
+" lightline
+let g:lightline = {
+\    'colorscheme': 'one',
+\    'tabline': {
+\        'left': [ ['buffers'] ],
+\        'right': [ ['close'] ]
+\    },
+\    'component_expand': {
+\        'buffers': 'lightline#bufferline#buffers'
+\    },
+\    'component_type': {
+\        'buffers': 'tabsel'
+\    }
+\}
 
 " python-mode
 let g:pymode_doc_bind = 'pd'
