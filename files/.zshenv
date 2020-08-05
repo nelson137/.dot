@@ -6,16 +6,15 @@ path_=(
     "$HOME"/bin{,/compiled}
     "$HOME"/{.local,.cargo,.dot/components/fzf,go}/bin
     '/mnt/c/Program Files/Oracle/VirtualBox'
-    "$PATH"
 )
-export PATH="${(j/:/)path_}"
+export PATH="${(j/:/)path_}:$PATH"
 unset path_
 
 # Locale
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-export EDITOR='vim'
+export EDITOR=vim
 
 # Fix zsh-autosuggestions plugin coloring in tmux
 export TERM=xterm-256color
