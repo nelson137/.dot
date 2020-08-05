@@ -52,10 +52,14 @@ set indentkeys-=0#  " /
 
 syntax on
 colorscheme default
-set background=dark  " Fix colors changing with terminal opacity
-set laststatus=2     " Always show status line
-set nohlsearch       " Don't highlight all search matches
-set number           " Turn on line numbers
+set background=dark         " Fix colors changing with terminal opacity
+highlight clear SignColumn  " Fix colors for gitgutter plugin
+highlight   GitGutterAdd      ctermfg=Green
+highlight   GitGutterChange   ctermfg=Magenta
+highlight   GitGutterDelete   ctermfg=Red
+set laststatus=2            " Always show status line
+set nohlsearch              " Don't highlight all search matches
+set number                  " Turn on line numbers
 
 
 
@@ -351,6 +355,7 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     set runtimepath+=~/.vim/bundle/Vundle.vim
     call vundle#begin()
     Plugin 'VundleVim/Vundle.vim'          " Package manager
+    Plugin 'airblade/vim-gitgutter'        " Show git diff for buffer
     Plugin 'ap/vim-css-color'              " Show colors of CSS color codes
     Plugin 'apeschel/vim-syntax-apache'    " Syntax highlighting for apache
     Plugin 'gabrielelana/vim-markdown'     " Better Markdown syntax highlight
@@ -361,7 +366,6 @@ if !empty(glob('$HOME/.vim/bundle/Vundle.vim'))
     Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plugin 'justinmk/vim-sneak'            " The missing vim motion
     Plugin 'mengelbrecht/lightline-bufferline'
-    Plugin 'mhinz/vim-signify'             " Show added/modified/removed lines
     Plugin 'neoclide/coc.nvim', {'branch': 'release'}  " Conquer of Completion
     Plugin 'octol/vim-cpp-enhanced-highlight'  " Better C++ syntax highlighting
     Plugin 'python-mode/python-mode'       " Python IDE
