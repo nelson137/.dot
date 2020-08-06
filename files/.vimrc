@@ -398,18 +398,19 @@ let g:mkdp_path_to_chrome = 'google-chrome --new-window'
 " let g:cpp_member_variable_highlight = 1
 
 " lightline
-let g:lightline = {
-\    'colorscheme': 'one',
-\    'tabline': {
-\        'left': [ ['buffers'] ],
-\        'right': [ ['close'] ]
-\    },
-\    'component_expand': {
-\        'buffers': 'lightline#bufferline#buffers'
-\    },
-\    'component_type': {
-\        'buffers': 'tabsel'
-\    }
+let g:lightline = {}
+let g:lightline.colorscheme = 'one'
+let g:lightline.tabline = {
+\    'left': [ ['buffers'] ],
+\    'right': [ ['tabs'] ]
+\}
+let g:lightline.component_expand = {
+\    'buffers': 'lightline#bufferline#buffers',
+\    'tabs': 'lightline#tabs'
+\}
+let g:lightline.component_type = {
+\    'buffers': 'tabsel',
+\    'tabs': 'tabsel'
 \}
 
 " python-mode
