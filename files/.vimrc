@@ -180,6 +180,15 @@ function! IsX()
     endif
 endfunction
 
+function! LightlineFugitive()
+    if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && &ft !~? 'vimfiler' && exists('*FugitiveHead')
+        let branch = FugitiveHead()
+        return branch !=# '' ? ' '.branch : ''
+    else
+        return ''
+    endif
+endfunction
+
 function! LightlineTabs()
     let before = []
     let active = []
@@ -424,9 +433,23 @@ let g:mkdp_path_to_chrome = 'google-chrome --new-window'
 " lightline
 let g:lightline = {}
 let g:lightline.colorscheme = 'one'
+let g:lightline.active = {
+\    'left': [
+\        ['mode', 'paste'],
+\        ['readonly', 'filename', 'modified']
+\    ],
+\    'right': [
+\        ['lineinfo'],
+\        ['percent'],
+\        ['fileformat', 'fileencoding', 'filetype', 'gitbranch']
+\    ]
+\}
 let g:lightline.tabline = {
 \    'left': [ ['buffers'] ],
 \    'right': [ ['mytabs'] ]
+\}
+let g:lightline.component_function = {
+\    'gitbranch': 'LightlineFugitive',
 \}
 let g:lightline.component_expand = {
 \    'buffers': 'lightline#bufferline#buffers',
