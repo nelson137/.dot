@@ -274,11 +274,29 @@ inoremap   <C-l>   <Esc><C-w>l
 " Better paste in insert mode
 inoremap   <C-p>   <C-r>"
 
+" Navigate in completion popup
+inoremap <silent><expr>   <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <silent><expr>   <S-Tab>   pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" Confirm completion
+inoremap <silent><expr>   <CR>   pumvisible() ? coc#_select_confirm()
+    \ : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Trigger completion
+inoremap <silent><expr>   <C-Space>   coc#refresh()
+
 " Encodes selected text in Base64 and replaces it
 vnoremap   <Leader>64   c<C-r>=system('base64 --decode', @")<CR><C-h><Esc>
 
 " Don't swap selection and register " when pasting
 xnoremap   p   pgvy
+
+" Jump to next/previous warning/error
+nmap <silent>   ]g   <Plug>(coc-diagnostic-next)
+nmap <silent>   [g   <Plug>(coc-diagnostic-prev)
 
 " Replace f and F with sneak
 noremap   <Leader>f   <Plug>Sneak_s
