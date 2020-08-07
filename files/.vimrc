@@ -180,13 +180,20 @@ function! IsX()
     endif
 endfunction
 
-function! LightlineFugitive()
-    if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && &ft !~? 'vimfiler' && exists('*FugitiveHead')
+function! LightlineGitSummary()
+    let component = []
+
+    if exists('*FugitiveHead') && expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && &ft !~? 'vimfiler'
         let branch = FugitiveHead()
-        return branch !=# '' ? ' '.branch : ''
-    else
-        return ''
+        let component += [branch !=# '' ? ' ('.branch.')' : '']
     endif
+
+    if exists('*GitGutterGetHunkSummary')
+        let [added, modified, removed] = GitGutterGetHunkSummary()
+        let component += ['+'.added.' ~'.modified.' -'.removed]
+    endif
+
+    return join(component)
 endfunction
 
 function! LightlineTabs()
@@ -441,7 +448,7 @@ let g:lightline.active = {
 \    'right': [
 \        ['lineinfo'],
 \        ['percent'],
-\        ['fileformat', 'fileencoding', 'filetype', 'gitbranch']
+\        ['fileformat', 'fileencoding', 'filetype', 'gitsummary']
 \    ]
 \}
 let g:lightline.tabline = {
@@ -449,7 +456,7 @@ let g:lightline.tabline = {
 \    'right': [ ['mytabs'] ]
 \}
 let g:lightline.component_function = {
-\    'gitbranch': 'LightlineFugitive',
+\    'gitsummary': 'LightlineGitSummary',
 \}
 let g:lightline.component_expand = {
 \    'buffers': 'lightline#bufferline#buffers',
