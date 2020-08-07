@@ -180,6 +180,30 @@ function! IsX()
     endif
 endfunction
 
+function! LightlineTabs()
+    let before = []
+    let active = []
+    let after = []
+    let found_active = 0
+
+    for tabi in range(1, tabpagenr('$'))
+        let fn = lightline#tab#filename(tabi)
+        let title = tabi.' '.fn
+        if tabi == tabpagenr()
+            let active = add(active, title)
+            let found_active = 1
+        else
+            if found_active
+                let after = add(after, title)
+            else
+                let before = add(before, title)
+            endif
+        endif
+    endfor
+
+    return [after, active, before]
+endfunc
+
 function! OnExitChhn()
     call OnExit('~/hosts.bak')
     silent exe ':xa'
@@ -402,16 +426,18 @@ let g:lightline = {}
 let g:lightline.colorscheme = 'one'
 let g:lightline.tabline = {
 \    'left': [ ['buffers'] ],
-\    'right': [ ['tabs'] ]
+\    'right': [ ['mytabs'] ]
 \}
 let g:lightline.component_expand = {
 \    'buffers': 'lightline#bufferline#buffers',
-\    'tabs': 'lightline#tabs'
+\    'mytabs': 'LightlineTabs'
 \}
 let g:lightline.component_type = {
 \    'buffers': 'tabsel',
-\    'tabs': 'tabsel'
+\    'mytabs': 'tabsel'
 \}
+let g:lightline#colorscheme#one#palette.tabline.right =
+\    g:lightline#colorscheme#one#palette.tabline.left
 
 " python-mode
 let g:pymode_doc_bind = 'pd'
