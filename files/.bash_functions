@@ -12,12 +12,6 @@ bat() {
 
 
 
-dc() {
-    nohup "$@" &>/dev/null & disown
-}
-
-
-
 gcl() {
     # git clone username/repo(.git) or repo(.git)
     # In the case without a username, it's assumed the repo is mine
