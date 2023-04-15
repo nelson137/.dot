@@ -12,13 +12,6 @@ bat() {
 
 
 
-cpstat() {
-    # Use rsync to cp and show progress
-    rsync -r --info=progress2 "$@"
-}
-
-
-
 dc() {
     nohup "$@" &>/dev/null & disown
 }
