@@ -100,7 +100,7 @@ fi
 bash_files=(
     .bash_additions
     .aliases .bash_aliases
-    .functions .bash_functions
+    .functions
 )
 for bf in "${bash_files[@]}"; do
     bf="$HOME/$bf"
