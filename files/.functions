@@ -18,12 +18,6 @@ cpstat() {
 
 
 
-diff() {
-    git diff --no-index "$@"
-}
-
-
-
 feh() {
     DISPLAY=:0 /usr/bin/feh --scale-down -x "$@" &>/dev/null & disown
 }
