@@ -2,31 +2,6 @@
 
 
 
-chhn() {
-    # Change hostname
-
-    # Cache sudo password
-    sudo echo >/dev/null
-
-    # Exit if password not cached
-    [[ $? != 0 ]] &&
-        return 1
-
-    local old="$(hostname)"
-    local new
-    read -rp 'New hostname: ' new
-
-    echo "$new" | sudo tee /etc/hostname >/dev/null
-    sudo sed -i.bak "s/${old}/${new}/g" /etc/hosts
-
-    # Vim new and old /etc/hosts file
-    # Prompt to delete old on exit
-    local cmd1='autocmd QuitPre * call OnExitChhn()'
-    sudo vim -c "$cmd1" -c 'topleft vnew /etc/hosts' /etc/hosts.bak
-}
-
-
-
 ckeys() {
     # Run xev but show only key presses
     local regex='^.+(keycode) ([0-9]+) \((keysym) ([^,]+), ([^\)]+)\).+$'

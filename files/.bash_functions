@@ -12,23 +12,6 @@ bat() {
 
 
 
-chhn() {
-    # Change hostname
-    sudo echo >/dev/null  # Cache sudo password
-    [[ $? != 0 ]] && return  # Exit if password not cached
-    local old="$(hostname)"
-    local new
-    read -rp 'New hostname: ' new
-    echo "$new" | sudo tee /etc/hostname >/dev/null
-    sudo sed -i.bak "s/${old}/${new}/g" /etc/hosts
-    # Vim new and old /etc/hosts file
-    # Prompt to delete old on exit
-    local cmd1='autocmd QuitPre * call OnExitChhn()'
-    sudo vim -c "$cmd1" -c 'topleft vnew /etc/hosts' /etc/hosts.bak
-}
-
-
-
 cpstat() {
     # Use rsync to cp and show progress
     rsync -r --info=progress2 "$@"
