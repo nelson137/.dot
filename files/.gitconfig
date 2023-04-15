@@ -5,6 +5,8 @@
 	editor = vim
 [init]
 	templateDir = ~/.git_templates
+[pull]
+	rebase = true
 [push]
 	default = simple
 [color]
