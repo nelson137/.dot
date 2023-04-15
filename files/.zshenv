@@ -2,13 +2,13 @@
 ### Environment ###
 ###################
 
-path_=(
+path_additions=(
     "$HOME"/bin{,/compiled}
     "$HOME"/{.local,.cargo,.dot/components/fzf,go}/bin
     '/mnt/c/Program Files/Oracle/VirtualBox'
 )
-export PATH="${(j/:/)path_}:$PATH"
-unset path_
+export PATH="${(j/:/)path_additions}:$PATH"
+unset path_additions
 
 # Locale
 export LANG=en_US.UTF-8
