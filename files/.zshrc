@@ -1,9 +1,11 @@
+######################################################################
+# Oh My Zsh
+######################################################################
+
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# Set name of the theme to load. Optionally, if you set this to "random"
-# it'll load a random theme each time that oh-my-zsh is loaded.
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+# Set name of the theme to load.
 ZSH_THEME="custom"
 
 # Uncomment the following line to use case-sensitive completion.
@@ -52,10 +54,11 @@ plugins=(
 # zsh-syntax-highlighting config
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets root)
 
-source $ZSH/oh-my-zsh.sh
+source "$ZSH/oh-my-zsh.sh"
 
-# Fix nice error
-unsetopt BG_NICE
+######################################################################
+# Zsh
+######################################################################
 
 # Delete duplicate history items before unique ones
 setopt HIST_EXPIRE_DUPS_FIRST
@@ -63,11 +66,11 @@ setopt HIST_EXPIRE_DUPS_FIRST
 # Don't add commands to history if they have a leading space
 setopt HIST_IGNORE_SPACE
 
-# echo 'ab''c'  # output: ab'c
-setopt RC_QUOTES
+# Fix nice error
+setopt NO_BG_NICE
 
-# awscli completions
-[[ -d /opt/aws-cli ]] && source /opt/aws-cli/bin/aws_zsh_completer.sh
+# Allow `''` in a single-quoted string to signify one single quote
+setopt RC_QUOTES
 
 # Change what characters are considered a word
 my-backward-delete-word () {
@@ -77,25 +80,26 @@ my-backward-delete-word () {
 zle -N my-backward-delete-word
 bindkey '^W' my-backward-delete-word
 
+######################################################################
+# User configuration
+######################################################################
+
+# FZF
+source "$HOME/.dot/components/fzf/shell/key-bindings.zsh"
+[[ $- == *i* ]] &&
+    source "$HOME/.dot/components/fzf/shell/completion.zsh" 2>/dev/null
+
+# awscli completions
+[[ -d /opt/aws-cli ]] && source /opt/aws-cli/bin/aws_zsh_completer.sh
+
 # Create vim undodir if it doesn't exist
 [[ ! -d ~/.vim/undodir ]] && mkdir -p ~/.vim/undodir
 
 # User config files
-bash_files=( .aliases .functions )
-for bf in "${bash_files[@]}"; do
-    bf="$HOME/$bf"
-    if [ -f "$bf" ]; then
-        source "$bf"
-    else
-        echo "config file not found: $bf" >&2
-    fi
+for f in .aliases .functions; do
+    f="$HOME/.dot/files/$f"
+    [[ -f "$f" ]] && source "$f"
 done
-
-# fzf key bindings
-source "$HOME/.dot/components/fzf/shell/key-bindings.zsh"
-
-# fzf auto-completion
-[[ $- == *i* ]] &&
-    source "$HOME/.dot/components/fzf/shell/completion.zsh" 2>/dev/null
+unset f
 
 true
