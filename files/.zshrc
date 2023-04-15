@@ -94,6 +94,9 @@ setopt INTERACTIVE_COMMENTS
 # Allow `''` in a single-quoted string to signify one single quote
 setopt RC_QUOTES
 
+# Vim mode
+bindkey -v
+
 # Change what characters are considered a word
 my-backward-delete-word () {
     local WORDCHARS='&*|'
