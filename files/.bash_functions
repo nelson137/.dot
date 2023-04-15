@@ -52,13 +52,6 @@ getip() {
 
 
 
-mkcd() {
-    # Make then cd into a directory
-    mkdir "$1" && cd "$1"
-}
-
-
-
 newscript() {
     # Make a new script with boilerplate code and make it executable
     #  if necessary
