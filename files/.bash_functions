@@ -87,15 +87,6 @@ newscript() {
 
 
 
-ps() {
-    # Remove 1 line containing "grep -E " from ps output so that
-    # `ps aux | grep ...` can be run without seeing the grep call in
-    # the ps output
-    command ps "$@" | grep -Evm 1 'grep -E '
-}
-
-
-
 update() {
     if [[ -z "$1" ]]; then
         update system
