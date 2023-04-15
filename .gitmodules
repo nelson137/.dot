@@ -7,6 +7,3 @@
 [submodule "components/fzf"]
 	path = components/fzf
 	url = https://github.com/junegunn/fzf
-[submodule "bin-src/to"]
-	path = bin-src/to
-	url = git@github.com:nelson137/to
