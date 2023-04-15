@@ -112,6 +112,10 @@ ZLE_SPACE_SUFFIX_CHARS=$'&|'
 # User configuration
 ######################################################################
 
+# Starship
+export SPACESHIP_PROMPT_ADD_NEWLINE=false
+eval "$(starship init zsh)"
+
 # FZF
 source "$HOME/.dot/components/fzf/shell/key-bindings.zsh"
 [[ $- == *i* ]] &&
