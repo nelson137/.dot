@@ -75,8 +75,19 @@ gcl() {
 
 
 
+# Get public and private ip addresses
+case "$(uname -s)" in
+Darwin)
 getip() {
-    # Get public and private ip addresses
+    echo "Public:  $(curl -s https://icanhazip.com)"
+    echo -n "Private:"
+    ifconfig \
+      | grep 'inet ' \
+      | awk '$2!="127.0.0.1"{printf " %s",$2} END{printf "\n"}'
+}
+;;
+*)
+getip() {
     echo "Public:  $(curl -s https://icanhazip.com)"
     local private_ip="$(
         ip route get 1 |
@@ -85,6 +96,8 @@ getip() {
     )"
     echo "Private: $private_ip"
 }
+;;
+esac
 
 
 
