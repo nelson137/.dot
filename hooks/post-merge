@@ -1,8 +1,0 @@
-#!/bin/bash
-
-# <git dir>/hooks
-hooks="$(dirname "$0")"
-
-
-# Update plugins if changes were made in plugin section of files/.vimrc
-"${hooks}/update-vim-plugins.sh"
