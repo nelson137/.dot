@@ -121,11 +121,4 @@ update() {
 
 
 
-vimrm() {
-    # vim a file, prompting to rm it when the user exits
-    vim -c 'set nomodifiable' -c 'autocmd QuitPre * call OnExitVimrm()' "$@"
-}
-
-
-
 # setopt aliases  # TODO: Turn aliases back on
