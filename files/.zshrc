@@ -116,6 +116,11 @@ ZLE_SPACE_SUFFIX_CHARS=$'&|'
 export SPACESHIP_PROMPT_ADD_NEWLINE=false
 eval "$(starship init zsh)"
 
+# Node Version Manager
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+
 # FZF
 source "$HOME/.dot/components/fzf/shell/key-bindings.zsh"
 [[ $- == *i* ]] &&
