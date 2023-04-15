@@ -1,6 +1,14 @@
-###################
-### Environment ###
-###################
+######################################################################
+# System
+######################################################################
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+export EDITOR=vim
+
+# Fix zsh-autosuggestions plugin coloring in tmux
+export TERM=xterm-256color
 
 path_additions=(
     "$HOME"/bin
@@ -10,22 +18,15 @@ path_additions=(
 export PATH="${(j/:/)path_additions}:$PATH"
 unset path_additions
 
-# Locale
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
+######################################################################
+# Programs
+######################################################################
 
-export EDITOR=vim
-
-# Fix zsh-autosuggestions plugin coloring in tmux
-export TERM=xterm-256color
-
-#################
-### My Config ###
-#################
-
+# Python
 export PYTHONSTARTUP="$HOME/.pythonrc"
 export PYTHONDONTWRITEBYTECODE=1
 
+# Vagrant
 # Give vagrant access to WSL features
 export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS=1
 
@@ -33,7 +34,7 @@ export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS=1
 export QT_QPA_PLATFORM=offscreen
 export QT_QPA_FONTDIR=/usr/share/fonts
 
-# fzf
+# FZF
 excludes=(.cache .npm .gem .vim/undodir)
 excludes='--exclude '${^excludes}
 export FZF_CTRL_T_COMMAND="fd --type f --hidden $excludes"
