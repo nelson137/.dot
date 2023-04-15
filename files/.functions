@@ -2,11 +2,17 @@
 
 
 
+case "$(uname -s)" in
+Darwin)
+;;
+*)
 battery() {
     # Get battery stats
     upower -i "$(upower -e | grep BAT)" |
         grep -E --color=never 'state|to empty|percentage'
 }
+;;
+esac
 
 
 
