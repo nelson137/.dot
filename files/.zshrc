@@ -36,7 +36,7 @@ ZSH_THEME="custom"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Ignore false positive security risks with completions
-export ZSH_DISABLE_COMPFIX=true
+# export ZSH_DISABLE_COMPFIX=true
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -48,10 +48,6 @@ ZSH_CUSTOM="$HOME/.dot/zsh-custom"
 
 plugins=(
     colored-man-pages
-    extract
-    git
-    git-prompt
-    web-search
     zsh-autosuggestions
     zsh-syntax-highlighting
 )
