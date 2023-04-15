@@ -61,14 +61,35 @@ source "$ZSH/oh-my-zsh.sh"
 # Zsh
 ######################################################################
 
+# If the command doesn't exist and is a directory then `cd` it
+setopt AUTO_CD
+
+# push the previous directory to the stack on `cd`
+setopt AUTO_PUSHD
+
+# Fix nice error
+setopt NO_BG_NICE
+
+# Try to correct typos in commands by prompting with fix
+setopt CORRECT
+
 # Delete duplicate history items before unique ones
 setopt HIST_EXPIRE_DUPS_FIRST
 
 # Don't add commands to history if they have a leading space
 setopt HIST_IGNORE_SPACE
 
-# Fix nice error
-setopt NO_BG_NICE
+# Remove superfluous blanks in commands before adding to history
+setopt HIST_REDUCE_BLANKS
+
+# Add commands to history when they're run instead of at shell exit
+setopt INC_APPEND_HISTORY
+
+# Wait for commands to finish to add to history for accurate command duration reporting
+setopt INC_APPEND_HISTORY_TIME
+
+# Allow comments in interactive sessions
+setopt INTERACTIVE_COMMENTS
 
 # Allow `''` in a single-quoted string to signify one single quote
 setopt RC_QUOTES
