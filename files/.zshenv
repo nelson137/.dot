@@ -1,26 +1,4 @@
 ######################################################################
-# System
-######################################################################
-
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
-export EDITOR=vim
-
-# Fix zsh-autosuggestions plugin coloring in tmux
-export TERM=xterm-256color
-
-path_additions=(
-    "$HOME"/bin
-    "$HOME"/{.local,.cargo,.dot/components/fzf,go}/bin
-    '/mnt/c/Program Files/Oracle/VirtualBox'
-)
-export PATH="${(j/:/)path_additions}:$PATH"
-unset path_additions
-
-export DYLD_LIBRARY_PATH="$(rustc --print sysroot)/lib:$DYLD_LIBRARY_PATH"
-
-######################################################################
 # Programs
 ######################################################################
 
@@ -44,3 +22,25 @@ excludes=(.cache .npm .gem .vim/undodir)
 excludes='--exclude '${^excludes}
 export FZF_CTRL_T_COMMAND="fd --type f --hidden $excludes"
 unset excludes
+
+######################################################################
+# System
+######################################################################
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+export EDITOR=vim
+
+# Fix zsh-autosuggestions plugin coloring in tmux
+export TERM=xterm-256color
+
+path_additions=(
+    "$HOME"/bin
+    "$HOME"/{.local,.cargo,.dot/components/fzf,go}/bin
+    '/mnt/c/Program Files/Oracle/VirtualBox'
+)
+export PATH="${(j/:/)path_additions}:$PATH"
+unset path_additions
+
+export DYLD_LIBRARY_PATH="$(rustc --print sysroot)/lib:$DYLD_LIBRARY_PATH"
