@@ -105,6 +105,9 @@ my-backward-delete-word () {
 zle -N my-backward-delete-word
 bindkey '^W' my-backward-delete-word
 
+ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;'
+ZLE_SPACE_SUFFIX_CHARS=$'&|'
+
 ######################################################################
 # User configuration
 ######################################################################
