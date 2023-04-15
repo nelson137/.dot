@@ -29,9 +29,6 @@ export PYTHONDONTWRITEBYTECODE=1
 # Give vagrant access to WSL features
 export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS=1
 
-# Eat suffix added by completion ([ /]) only when these chars are typed
-export ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;'
-
 # Phantomjs
 export QT_QPA_PLATFORM=offscreen
 export QT_QPA_FONTDIR=/usr/share/fonts
