@@ -125,6 +125,10 @@ export NVM_DIR="$HOME/.nvm"
 export BUN_INSTALL="$HOME/.bun"
 [ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
+# Homebrew
+alias axbrew='arch -x86_64 /usr/local/homebrew/bin/brew'
+export HOMEBREW_NO_ANALYTICS=1
+
 # FZF
 source "$HOME/.dot/components/fzf/shell/key-bindings.zsh"
 [[ $- == *i* ]] &&
