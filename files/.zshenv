@@ -18,6 +18,8 @@ path_additions=(
 export PATH="${(j/:/)path_additions}:$PATH"
 unset path_additions
 
+export DYLD_LIBRARY_PATH="$(rustc --print sysroot)/lib:$DYLD_LIBRARY_PATH"
+
 ######################################################################
 # Programs
 ######################################################################
