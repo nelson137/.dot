@@ -25,6 +25,13 @@ feh() {
 
 
 
+case "$(uname -s)" in
+Darwin)
+file_birth() {
+    stat -f '%SB' -t '%Y-%m-%d %I:%M:%S %p' "$@"
+}
+;;
+*)
 file_birth() {
     inode="$(stat -c %i "$1")"
     dev="$(df --output=source "$1" | tail -1)"
@@ -32,6 +39,8 @@ file_birth() {
       | grep crtime \
       | cut -d ' ' -f 4-
 }
+;;
+esac
 
 
 
