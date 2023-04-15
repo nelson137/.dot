@@ -61,12 +61,6 @@ source "$ZSH/oh-my-zsh.sh"
 # Zsh
 ######################################################################
 
-# If the command doesn't exist and is a directory then `cd` it
-setopt AUTO_CD
-
-# push the previous directory to the stack on `cd`
-setopt AUTO_PUSHD
-
 # Fix nice error
 setopt NO_BG_NICE
 
