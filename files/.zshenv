@@ -22,6 +22,9 @@ unset path_additions
 # Programs
 ######################################################################
 
+# Cargo
+[[ -d "$HOME/.cargo" ]] && source "$HOME/.cargo/env"
+
 # Python
 export PYTHONSTARTUP="$HOME/.pythonrc"
 export PYTHONDONTWRITEBYTECODE=1
