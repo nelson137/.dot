@@ -87,22 +87,4 @@ newscript() {
 
 
 
-update() {
-    if [[ -z "$1" ]]; then
-        update system
-        return
-    fi
-
-    case "$1" in
-        dot)
-            git -C ~/.dot/pull ;;
-        system)
-            sudo apt update && sudo apt upgrade -y ;;
-        *)
-            echo "target not recognized: $1" >&2 ;;
-    esac
-}
-
-
-
 # setopt aliases  # TODO: Turn aliases back on
