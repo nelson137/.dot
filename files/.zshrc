@@ -88,9 +88,6 @@ setopt INC_APPEND_HISTORY
 # Wait for commands to finish to add to history for accurate command duration reporting
 setopt INC_APPEND_HISTORY_TIME
 
-# Allow comments in interactive sessions
-setopt INTERACTIVE_COMMENTS
-
 # Allow `''` in a single-quoted string to signify one single quote
 setopt RC_QUOTES
 
