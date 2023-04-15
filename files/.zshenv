@@ -3,7 +3,7 @@
 ###################
 
 path_additions=(
-    "$HOME"/bin{,/compiled}
+    "$HOME"/bin
     "$HOME"/{.local,.cargo,.dot/components/fzf,go}/bin
     '/mnt/c/Program Files/Oracle/VirtualBox'
 )
