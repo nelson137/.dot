@@ -85,6 +85,8 @@ alias gloga='git log --graph --oneline --decorate --all'
 alias gm='git merge'
 alias gma='git merge --abort'
 
+alias gmv='git mv'
+
 alias gl='git pull'
 
 alias gp='git push'
