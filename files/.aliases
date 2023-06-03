@@ -40,7 +40,7 @@ alias ls="$LS"
 alias la="$LS -A"
 alias ll="$LS -l"
 alias lla="$LS -lA"
-alias lld="$LS -ld"
+alias llD="$LS -ld"
 
 # git
 alias g=git
