@@ -104,7 +104,7 @@ alias grset='git remote set-url'
 alias grh='git reset'
 alias grhh='git reset --hard'
 
-alias grm='git rm'
+alias grm='git rm -r'
 
 alias gsta='git stash push'
 alias gstaa='git stash apply'
