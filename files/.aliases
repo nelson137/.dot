@@ -94,6 +94,9 @@ alias 'gp!'='git push --force'
 alias gpd='git push --dry-run'
 alias gpsup='git push --set-upstream origin $(git_current_branch)'
 
+alias grbi='git rebase --interactive --autostash'
+alias grbc='git rebase --continue'
+
 alias gr='git remote'
 alias gra='git remote add'
 alias grset='git remote set-url'
