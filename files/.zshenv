@@ -35,12 +35,12 @@ export EDITOR=vim
 # Fix zsh-autosuggestions plugin coloring in tmux
 export TERM=xterm-256color
 
-path_additions=(
+path_prepend=(
     "$HOME"/bin
     "$HOME"/{.local,.cargo,.bun,go}/bin
     '/mnt/c/Program Files/Oracle/VirtualBox'
 )
-export PATH="${(j/:/)path_additions}:$PATH"
+export PATH="${(j/:/)path_prepend}:$PATH"
 unset path_additions
 
 export DYLD_LIBRARY_PATH="$(rustc --print sysroot)/lib:$DYLD_LIBRARY_PATH"
