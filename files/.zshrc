@@ -118,6 +118,7 @@ export NVM_DIR="$HOME/.nvm"
 # Homebrew
 alias axbrew='arch -x86_64 /usr/local/homebrew/bin/brew'
 export HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_NO_AUTO_UPDATE=1
 
 # FZF
 source "$HOME/.dot/components/fzf/shell/key-bindings.zsh"
