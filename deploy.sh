@@ -2,6 +2,8 @@
 
 set -e
 
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
 ln_dir_contents() {
     # Make sure src and dest are absolute dir paths
     local src="$(cd "$1" && pwd)"
@@ -12,22 +14,18 @@ ln_dir_contents() {
 
 mkdir -p "$HOME/bin"
 
-pushd "$(dirname "${BASH_SOURCE[0]}")"
+# Clone all submodules
+git submodule update --init --recursive
 
-    # Clone all submodules
-    git submodule update --init --recursive
+# Link config files
+ln_dir_contents files "$HOME"
 
-    # Link config files
-    ln_dir_contents files "$HOME"
+# Link config directories
+ln_dir_contents config "$HOME/.config"
 
-    # Link config directories
-    ln_dir_contents config "$HOME/.config"
+# Install repository hooks
+./install-hooks.sh
 
-    # Install repository hooks
-    ./install-hooks.sh
-
-    # Install fzf
-    ./components/fzf/install --bin --64
-    ln -s "$PWD/components/fzf/bin/fzf" "$HOME/bin/fzf"
-
-popd
+# Install fzf
+./components/fzf/install --bin --64
+ln -s "$PWD/components/fzf/bin/fzf" "$HOME/bin/fzf"
