@@ -8,6 +8,9 @@ ${custom.username_hostname_seperator}\
 $hostname\
 $localip\
 $directory\
+$git_branch\
+$git_state\
+$git_status\
 $battery\
 \n\
 $character\
