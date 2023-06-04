@@ -35,6 +35,8 @@ export EDITOR=vim
 # Fix zsh-autosuggestions plugin coloring in tmux
 export TERM=xterm-256color
 
+export PAGER='less -XF'
+
 path_prepend=(
     "$HOME"/bin
     "$HOME"/{.local,.cargo,.bun,go}/bin
