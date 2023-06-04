@@ -2,7 +2,7 @@
 	email = nelson.earle137@gmail.com
 	name = Nelson Earle
 [core]
-	editor = vim
+	editor = nvim
 [init]
 	templateDir = ~/.git_templates
 [pull]
