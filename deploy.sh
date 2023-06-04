@@ -10,6 +10,8 @@ ln_dir_contents() {
     find "$src" -mindepth 1 -maxdepth 1 -exec ln -fst "$dest" '{}' \+
 }
 
+mkdir -p "$HOME/bin"
+
 pushd "$(dirname "${BASH_SOURCE[0]}")"
 
     # Clone all submodules
@@ -26,5 +28,6 @@ pushd "$(dirname "${BASH_SOURCE[0]}")"
 
     # Install fzf
     ./components/fzf/install --bin --64
+    ln -s "$PWD/components/fzf/bin/fzf" "$HOME/bin/fzf"
 
 popd

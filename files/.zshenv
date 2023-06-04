@@ -37,7 +37,7 @@ export TERM=xterm-256color
 
 path_additions=(
     "$HOME"/bin
-    "$HOME"/{.local,.cargo,.bun,.dot/components/fzf,go}/bin
+    "$HOME"/{.local,.cargo,.bun,go}/bin
     '/mnt/c/Program Files/Oracle/VirtualBox'
 )
 export PATH="${(j/:/)path_additions}:$PATH"
