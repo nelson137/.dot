@@ -1,0 +1,62 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = true
+
+format = """
+$username\
+${custom.username_hostname_seperator}\
+$hostname\
+$localip\
+$directory\
+$battery\
+\n\
+$character\
+"""
+
+right_format = """
+$cmd_duration\
+$package\
+$c\
+$cmake\
+$rust\
+$time
+"""
+
+[battery]
+disabled = false
+display = [{ threshold = 40 }]
+
+[custom.username_hostname_seperator]
+#when = true
+when = '[ -n "${SSH_CONNECTION}${SSH_CLIENT}${SSH_TTY}" ]'
+format = '@'
+
+[c]
+format = 'via [$name $version]($style)'
+detect_extensions = ['c', 'h']
+
+[cmd_duration]
+format = '\[[$duration]($style)\]  '
+
+[directory]
+truncation_length = 6
+truncate_to_repo = true
+
+[hostname]
+ssh_only = true
+format = '[$ssh_symbol$hostname]($style) '
+
+[localip]
+disabled = false
+ssh_only = true
+format = '([$localipv4]($style)) '
+
+[time]
+disabled = false
+format = ' [$time]($style) '
+style = 'fg:242'
+use_12hr = true
+
+[username]
+show_always = false
+format = '[$user]($style)'

@@ -22,7 +22,7 @@ ln_dir_contents files "$HOME"
 
 # Link config directories
 declare -a CONFIG_ITEMS
-CONFIG_ITEMS=(nvim)
+CONFIG_ITEMS=(nvim starship.toml)
 case "$(uname -s)" in
     Darwin)
         CONFIG_ITEMS+=()
