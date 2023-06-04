@@ -16,7 +16,6 @@ $character\
 """
 
 right_format = """
-$cmd_duration\
 $package\
 $c\
 $cmake\
@@ -36,9 +35,6 @@ format = '@'
 [c]
 format = 'via [$name $version]($style)'
 detect_extensions = ['c', 'h']
-
-[cmd_duration]
-format = '\[[$duration]($style)\]  '
 
 [directory]
 truncation_length = 6
