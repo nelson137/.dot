@@ -107,6 +107,7 @@ alias grhh='git reset --hard'
 alias grm='git rm -r'
 
 alias gsta='git stash push'
+alias gstam='git stash push -m'
 alias gstaa='git stash apply'
 alias gstd='git stash drop'
 alias gstp='git stash pop'
