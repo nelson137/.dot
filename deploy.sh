@@ -21,7 +21,18 @@ git submodule update --init --recursive
 ln_dir_contents files "$HOME"
 
 # Link config directories
+declare -a CONFIG_ITEMS
+CONFIG_ITEMS=(nvim)
+case "$(uname -s)" in
+    Darwin)
+        CONFIG_ITEMS+=()
+        ;;
+    Linux)
+        CONFIG_ITEMS+=(compton.conf i3 zathura)
+        ;;
+esac
 ln_dir_contents config "$HOME/.config"
+unset CONFIG_ITEMS
 
 # Install repository hooks
 ./install-hooks.sh
