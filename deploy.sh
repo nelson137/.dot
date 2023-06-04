@@ -21,7 +21,7 @@ pushd "$(dirname "${BASH_SOURCE[0]}")"
     ln_dir_contents files "$HOME"
 
     # Link config directories
-    ln_dir_contents .config "$HOME/.config"
+    ln_dir_contents config "$HOME/.config"
 
     # Install repository hooks
     ./install-hooks.sh
