@@ -485,8 +485,10 @@ let g:lightline.component_type = {
 \    'buffers': 'tabsel',
 \    'mytabs': 'tabsel'
 \}
-let g:lightline#colorscheme#one#palette.tabline.right =
-\    g:lightline#colorscheme#one#palette.tabline.left
+if get(g:, 'lightline#colorscheme#one#palette', v:null) isnot v:null
+    let g:lightline#colorscheme#one#palette.tabline.right =
+    \    g:lightline#colorscheme#one#palette.tabline.left
+endif
 
 " python-mode
 let g:pymode_doc_bind = 'pd'
