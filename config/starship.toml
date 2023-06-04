@@ -27,7 +27,6 @@ disabled = false
 display = [{ threshold = 40 }]
 
 [custom.username_hostname_seperator]
-#when = true
 when = '[ -n "${SSH_CONNECTION}${SSH_CLIENT}${SSH_TTY}" ]'
 format = '@'
 
