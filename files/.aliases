@@ -31,7 +31,7 @@ alias whois='whois -H'
 alias zathura='zathura --fork'
 
 # ls
-LS="/bin/ls -vhp"
+LS="command ls -vhp"
 case "$(uname -s)" in
     Linux*) LS="$LS --color=auto --time-style=long-iso --group-directories-first" ;;
     Darwin*) LS="$LS -G" ;;
