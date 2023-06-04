@@ -22,7 +22,7 @@ $package\
 $c\
 $cmake\
 $rust\
-$time
+$time\
 """
 
 [battery]
