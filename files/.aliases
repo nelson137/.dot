@@ -92,7 +92,7 @@ alias gmv='git mv'
 alias gl='git pull'
 
 alias gp='git push'
-alias 'gp!'='git push --force'
+alias 'gp!'='git push --force-with-lease'
 alias gpd='git push --dry-run'
 alias gpsup='git push --set-upstream origin $(git_current_branch)'
 
