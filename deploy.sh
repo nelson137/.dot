@@ -13,7 +13,7 @@ ln_dir_contents() {
     find "$src" -mindepth 1 -maxdepth 1 -exec ln -fst "$dest" '{}' \+
 }
 
-mkdir -p "$HOME/bin"
+mkdir -p "$HOME/bin" "$HOME/.config"
 
 # Clone all submodules
 git submodule update --init --recursive
