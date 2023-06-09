@@ -5,9 +5,10 @@ set -e
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 ln_dir_contents() {
+    local src dest
     # Make sure src and dest are absolute dir paths
-    local src="$(cd "$1" && pwd)"
-    local dest="$(cd "$2" && pwd)"
+    src="$(cd "$1" && pwd)"
+    dest="$(cd "$2" && pwd)"
     # Link files
     find "$src" -mindepth 1 -maxdepth 1 -exec ln -fst "$dest" '{}' \+
 }
