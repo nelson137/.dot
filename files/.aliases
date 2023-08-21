@@ -118,7 +118,6 @@ alias gstp='git stash pop'
 alias gstl='git stash list'
 alias gstls='git stash show --compact-summary'
 alias gsts='git stash show --text'
-alias gstc='git stash clear'
 
 alias gst='git status'
 alias gss='git status -s'
