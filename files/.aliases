@@ -119,7 +119,7 @@ alias gstl='git stash list'
 alias gstls='git stash show --compact-summary'
 alias gsts='git stash show --text'
 
-alias gst='git status'
+alias gs='git status'
 alias gss='git status -s'
 
 alias gsa='git submodule add --depth 1'
