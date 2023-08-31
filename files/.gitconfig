@@ -9,6 +9,7 @@
 	rebase = true
 [push]
 	default = simple
+	autoSetupRemote = true
 [color]
 	diff = auto
 	status = auto
