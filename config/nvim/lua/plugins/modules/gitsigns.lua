@@ -33,10 +33,11 @@ return {
 
             -- Actions
             map('n', '<Leader>hs', gs.stage_hunk, { desc = 'Stage hunk' })
-            map('n', '<Leader>hr', gs.reset_hunk, { desc = 'Discard hunk changes' })
-            map('n', '<Leader>hu', gs.undo_stage_hunk, { desc = 'Unstage hunk' })
             map('n', '<Leader>hS', gs.stage_buffer, { desc = 'Stage entire buffer'})
-            map('n', '<Leader>hp', gs.preview_hunk, { desc = '' })
+            map('n', '<Leader>hr', gs.reset_hunk, { desc = 'Discard hunk changes' })
+            map('n', '<Leader>hR', gs.reset_buffer, { desc = 'Discard buffer changes' })
+            map('n', '<Leader>hu', gs.undo_stage_hunk, { desc = 'Unstage hunk' })
+            map('n', '<Leader>hp', gs.preview_hunk, { desc = 'Preview hunk' })
             map('n', '<Leader>hd', gs.diffthis)
 
             -- Text objects
