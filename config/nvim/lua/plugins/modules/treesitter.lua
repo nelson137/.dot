@@ -19,6 +19,7 @@ return {
         ensure_installed = {
             'bash',
             'c',
+            'css',
             'diff',
             'git_config',
             'git_rebase',
@@ -30,6 +31,9 @@ return {
             'markdown_inline',
             'python',
             'rust',
+            'scss',
+            'svelte',
+            'typescript',
             'vim',
             'vimdoc',
             'yaml',
