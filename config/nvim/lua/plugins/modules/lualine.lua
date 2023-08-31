@@ -3,5 +3,14 @@
 return {
     'nvim-lualine/lualine.nvim',
 
-    config = true,
+    opts = {
+        sections = {
+            -- Sections:
+            -- +-------------------------------------------------+
+            -- | A | B | C                             X | Y | Z |
+            -- +-------------------------------------------------+
+            lualine_b = {'branch', 'diagnostics'},
+            lualine_x = {'filetype', 'fileformat'},
+        },
+    },
 }
