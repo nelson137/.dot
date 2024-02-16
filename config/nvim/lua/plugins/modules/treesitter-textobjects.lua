@@ -25,9 +25,7 @@ return {
                     ['ax'] = '@comment.outer',
                 },
 
-                include_surrounding_whitespace = function(selection)
-                    return selection.query_string:endswith('.outer')
-                end,
+                include_surrounding_whitespace = false
             },
 
             swap = {
