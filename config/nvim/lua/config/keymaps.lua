@@ -38,6 +38,7 @@ local repeatSearch_Prev = function() repeatSearch('N') end
 vim.keymap.set('n', 'gl', ':bn<CR>', { silent = true, desc = 'Next buffer' })
 vim.keymap.set('n', 'gh', ':bp<CR>', { silent = true, desc = 'Previous buffer' })
 vim.keymap.set('n', 'gd', ':bd<CR>', { silent = true, desc = 'Close buffer' })
+vim.keymap.set('n', 'gD', ':bd!<CR>', { silent = true, desc = 'Force close buffer' })
 
 -- Better tab control
 vim.keymap.set('n', 'tn', ':tabnew<CR>', { desc = 'New tab' })
