@@ -22,6 +22,7 @@ return {
                     ['af'] = '@function.outer',
                     ['ic'] = '@class.inner',
                     ['ac'] = '@class.outer',
+                    ['ax'] = '@comment.outer',
                 },
 
                 include_surrounding_whitespace = function(selection)
