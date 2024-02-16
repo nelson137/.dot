@@ -15,8 +15,8 @@ $git_status\
 $character\
 """
 
+# $package\
 right_format = """
-$package\
 $c\
 $cmake\
 $rust\
