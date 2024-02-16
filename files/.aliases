@@ -15,6 +15,10 @@ case "$(uname -s)" in
     *) ;;
 esac
 
+if command -v kitten &>/dev/null; then
+    alias imgcat='kitten icat'
+fi
+
 # Mine
 alias aliases='vim ~/.dot/files/.aliases'
 alias dot='cd ~/.dot'
