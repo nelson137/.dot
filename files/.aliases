@@ -1,11 +1,19 @@
 # vim: ft=bash
 
 # System-specific aliases
+
 if [[ -d /mnt/c/Users ]]; then
     alias desktop="cd /mnt/c/Users/$USER"
 else
     alias desktop='cd ~/Desktop'
 fi
+
+case "$(uname -s)" in
+    Darwin*)
+        alias win10wine='MTL_HUD_ENABLED=0 WINEESYNC=1 WINEPREFIX=/opt/Windows10 /usr/local/opt/game-porting-toolkit/bin/wine64'
+        ;;
+    *) ;;
+esac
 
 # Mine
 alias aliases='vim ~/.dot/files/.aliases'
