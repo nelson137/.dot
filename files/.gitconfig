@@ -5,11 +5,15 @@
 	editor = nvim
 [init]
 	templateDir = ~/.git_templates
+[merge]
+	autoStash = true
 [pull]
 	rebase = true
 [push]
 	default = simple
 	autoSetupRemote = true
+[rebase]
+	autoStash = true
 [color]
 	diff = auto
 	status = auto
