@@ -24,6 +24,64 @@ end
 --     return copy
 -- end
 
+--- Dump value of a variable in a formatted string
+--
+--- @param o       any         Dumpable object
+--- @param indent  string|nil  Tabulation string, '  ' by default
+--- @param depth   number|nil  Initial tabulation level, 0 by default
+--- @param lines   table|nil
+--- @param prefix  string|nil
+--- @return        string
+function dump(o, indent, depth, lines, prefix)
+    lines = lines or {}
+    prefix = prefix or ''
+
+    local t = type(o)
+    if t == 'string' then
+        table.insert(lines, prefix .. '"' .. o .. '"')
+        return lines
+    elseif t ~= 'table' then
+        table.insert(lines, prefix .. tostring(o))
+        return lines
+    end
+
+    if not next(o) then
+        table.insert(lines, prefix .. '{}')
+        return lines
+    end
+
+    depth = depth or 0
+    indent = indent or '  '
+    local indent_ = function() return indent:rep(depth) end
+
+    table.insert(lines, prefix .. '{')
+
+    depth = depth + 1
+    for k, v in pairs(o) do
+        if type(k) == 'string' then k = '"' .. k .. '"' end
+        local p = indent_() .. '[' .. k .. '] = '
+        if k == '"fs_stat"' then
+        elseif k == '"parent"' then
+        elseif depth < 5 then
+            dump(v, indent, depth, lines, p)
+        else
+            table.insert(lines, p .. '...')
+        end
+    end
+    depth = depth - 1
+
+    table.insert(lines, indent_() .. '}')
+    return lines
+end
+
+function display(thing)
+    vim.cmd('split')
+    local win = vim.api.nvim_get_current_win()
+    local buf = vim.api.nvim_create_buf(true, true)
+    vim.api.nvim_win_set_buf(win, buf)
+    vim.api.nvim_buf_set_lines(buf, 0, 1, false, dump(thing))
+end
+
 ----------------------------------------------------------------------
 --- String Methods
 ----------------------------------------------------------------------
