@@ -126,5 +126,6 @@ alias gsa='git submodule add --depth 1'
 alias gsu='git submodule update --init --recursive --depth 1'
 
 alias gw='git switch'
+alias gwc='git switch --create'
 
 alias grt='cd "$(git rev-parse --show-toplevel || echo .)"'
