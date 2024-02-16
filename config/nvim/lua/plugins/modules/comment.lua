@@ -7,14 +7,18 @@
 return {
     'numToStr/Comment.nvim',
 
-    event = 'VeryLazy',
+    dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
 
-    opts = {
-        toggler = {
-            line = '<Leader>/',
-        },
-        opleader = {
-            line = 'gc',
-        },
-    },
+    event = 'BufReadPost',
+
+    opts = function()
+        local commenter = require('ts_context_commentstring.integrations.comment_nvim')
+        return {
+            toggler = {
+                line = '<Leader>/',
+            },
+
+            pre_hook = commenter.create_pre_hook(),
+        }
+    end,
 }
