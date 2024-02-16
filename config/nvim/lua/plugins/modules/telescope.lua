@@ -17,11 +17,6 @@ return {
             -- layout_config = {
             --     layout_config = { width = 0.9 },
             -- },
-            mappings = {
-                i = {
-                    ['<CR>'] = 'select_tab',
-                },
-            },
         },
     },
 
