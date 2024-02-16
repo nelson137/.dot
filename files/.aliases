@@ -62,6 +62,7 @@ alias 'gbd!'='git branch --delete --force'
 
 alias gco='git checkout'
 alias gcob='git checkout -b'
+alias gcop='git checkout --patch'
 
 alias gc='git commit -v'
 alias gca='git commit -v --all'
