@@ -61,6 +61,9 @@ source "$ZSH/oh-my-zsh.sh"
 # Zsh
 ######################################################################
 
+# Always jump to the end if a completion is made
+setopt ALWAYS_TO_END
+
 # Fix nice error
 setopt NO_BG_NICE
 
