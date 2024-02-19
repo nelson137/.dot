@@ -43,6 +43,15 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 HIST_STAMPS="yyyy-mm-dd"
 
+# The history file
+HISTFILE="$HOME/.zsh_history"
+
+# The number of lines of history to keep.
+# If `HIST_EXPIRE_DUPS_FIRST` is enabled then `HISTSIZE - SAVEHIST` duplicates
+# are buffered before being deleted.
+HISTSIZE=11000
+SAVEHIST=10000
+
 # Would you like to use another custom folder than $ZSH/custom?
 ZSH_CUSTOM="$HOME/.dot/zsh-custom"
 
