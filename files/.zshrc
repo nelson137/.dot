@@ -64,7 +64,7 @@ plugins=(
 # zsh-syntax-highlighting config
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets root)
 
-source "$ZSH/oh-my-zsh.sh"
+[ -s "$ZSH/oh-my-zsh.sh" ] && source "$ZSH/oh-my-zsh.sh"
 
 ######################################################################
 # Zsh
