@@ -41,6 +41,7 @@ alias mv='mv -i'
 alias pdflatex='pdflatex -file-line-error'
 alias sqlite3='sqlite3 -header -column'
 alias vim='nvim'
+alias wget="wget --hsts-file $HOME/.local/cache/wget-hsts"
 alias whois='whois -H'
 alias zathura='zathura --fork'
 
