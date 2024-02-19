@@ -13,7 +13,7 @@ ln_dir_contents() {
     find "$src" -mindepth 1 -maxdepth 1 -exec ln -fst "$dest" '{}' \+
 }
 
-mkdir -p "$HOME/bin" "$HOME/.config"
+mkdir -p "$HOME/.local/bin" "$HOME/.config"
 
 # Clone all submodules
 git submodule update --init --recursive
@@ -40,4 +40,4 @@ unset CONFIG_ITEMS
 
 # Install fzf
 ./components/fzf/install --bin --64
-ln -s "$PWD/components/fzf/bin/fzf" "$HOME/bin/fzf"
+ln -s "$PWD/components/fzf/bin/fzf" "$HOME/.local/bin/fzf"

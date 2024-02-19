@@ -49,7 +49,6 @@ export TERM=xterm-256color
 export PAGER='less -XF'
 
 path_prepend=(
-    "$HOME"/bin
     "$HOME"/{.local,.cargo,.bun,go}/bin
     '/mnt/c/Program Files/Oracle/VirtualBox'
 )
