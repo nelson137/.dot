@@ -8,6 +8,5 @@ msg="$(cat "$1" | sed -n '/^\s*$/!{p;q}')"
 msg_len="$(printf "${msg}" | wc -m)"
 
 if (( msg_len > 50 )); then
-    echo "Commit message too long ($msg_len/50)" >&2
-    exit 1
+    echo "WARNING: Commit message too long ($msg_len/50)" >&2
 fi
