@@ -3,6 +3,8 @@
 ######################################################################
 
 # Homebrew
+export HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_NO_AUTO_UPDATE=1
 if command -v arch &>/dev/null && [[ $(arch) == arm64 ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [ -f /usr/local/bin/brew ]; then
