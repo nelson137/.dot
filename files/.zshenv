@@ -39,9 +39,6 @@ LESSHISTFILE="$HOME/.local/cache/lesshst"
 # System
 ######################################################################
 
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
 if command -v nvim &>/dev/null; then
     export EDITOR=nvim
 fi
