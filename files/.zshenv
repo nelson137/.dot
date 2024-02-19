@@ -55,4 +55,6 @@ path_prepend=(
 export PATH="${(j/:/)path_prepend}:$PATH"
 unset path_additions
 
-export DYLD_LIBRARY_PATH="$(rustc --print sysroot)/lib:$DYLD_LIBRARY_PATH"
+if command -v rustc &>/dev/null; then
+    export DYLD_LIBRARY_PATH="$(rustc --print sysroot)/lib:$DYLD_LIBRARY_PATH"
+fi
