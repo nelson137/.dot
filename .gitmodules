@@ -7,3 +7,6 @@
 [submodule "components/fzf"]
 	path = components/fzf
 	url = https://github.com/junegunn/fzf
+[submodule "zsh-custom/plugins/zsh-nvm-lazy-load"]
+	path = zsh-custom/plugins/zsh-nvm-lazy-load
+	url = https://github.com/undg/zsh-nvm-lazy-load

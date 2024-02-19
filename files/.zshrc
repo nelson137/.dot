@@ -59,6 +59,7 @@ plugins=(
     colored-man-pages
     zsh-autosuggestions
     zsh-syntax-highlighting
+    zsh-nvm-lazy-load
 )
 
 # zsh-syntax-highlighting config
@@ -126,11 +127,6 @@ if command -v starship &>/dev/null; then
     export SPACESHIP_PROMPT_ADD_NEWLINE=false
     eval "$(starship init zsh)"
 fi
-
-# Node Version Manager
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
 
 # Bun
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
