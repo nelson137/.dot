@@ -3,8 +3,6 @@
 	name = Nelson Earle
 [core]
 	editor = nvim
-[init]
-	templateDir = ~/.git_templates
 [credential "https://tfs.p.vu.local"]
 	helper = store
 	username = nelson.earle
