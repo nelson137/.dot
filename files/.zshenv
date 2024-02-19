@@ -42,7 +42,9 @@ LESSHISTFILE="$HOME/.local/cache/lesshst"
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-export EDITOR=nvim
+if command -v nvim &>/dev/null; then
+    export EDITOR=nvim
+fi
 
 # Fix zsh-autosuggestions plugin coloring in tmux
 export TERM=xterm-256color
