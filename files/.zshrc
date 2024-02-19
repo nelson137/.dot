@@ -122,8 +122,10 @@ ZLE_SPACE_SUFFIX_CHARS=$'&|'
 ######################################################################
 
 # Starship
-export SPACESHIP_PROMPT_ADD_NEWLINE=false
-eval "$(starship init zsh)"
+if command -v starship &>/dev/null; then
+    export SPACESHIP_PROMPT_ADD_NEWLINE=false
+    eval "$(starship init zsh)"
+fi
 
 # Node Version Manager
 export NVM_DIR="$HOME/.nvm"
