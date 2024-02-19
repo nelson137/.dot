@@ -5,10 +5,18 @@
 	editor = nvim
 [init]
 	templateDir = ~/.git_templates
+[credential "https://tfs.p.vu.local"]
+	helper = store
+	username = nelson.earle
+[credential "https://gitlab.redchimney.com"]
+	username = nelson.earle
+[http "https://tfs.p.vu.local"]
+	sslcainfo = /home/nelson/.ssl/certs/ca-bundle.crt
 [merge]
 	autoStash = true
 [pull]
 	rebase = true
+	default = "current"
 [push]
 	default = simple
 	autoSetupRemote = true
