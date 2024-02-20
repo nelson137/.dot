@@ -35,7 +35,7 @@ export FZF_CTRL_T_COMMAND="fd --type f --hidden $excludes"
 unset excludes
 
 # Less
-LESSHISTFILE="$HOME/.local/cache/lesshst"
+LESSHISTFILE="$HOME/.local/share/less/lesshst"
 
 ######################################################################
 # System
