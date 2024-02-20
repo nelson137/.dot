@@ -1,1 +1,81 @@
+# Change the location of the python REPL history file.
+#
+# Python version 3.13 adds support for the `PYTHON_HISTORY` environment
+# variable. This reimplements the interactive hook with support for this env var
+# for compatibility with lower versions.
+#
+# The implementation is based on the original CPython function in the last
+# minor version before support for the env var was merged:
+#
+#     https://github.com/python/cpython/blob/v3.12.2/Lib/site.py#L447
+#
+# and the release candidates that contain support for it.
+#
+# The implementation uses `PYTHON_HISTORY` if it is defined or falls back to
+# the usual default value: `~/.python_history`.
+#
+# Inspired by: https://unix.stackexchange.com/a/747364
 
+import sys
+import os
+from pathlib import Path
+
+def get_history_file():
+    if not sys.flags.ignore_environment:
+        env_history = os.environ.get('PYTHON_HISTORY')
+        if env_history:
+            return Path(env_history)
+    return Path.home() / '.python_history'
+
+def register_readline():
+    import atexit
+    try:
+        import readline
+        import rlcompleter
+    except ImportError:
+        return
+
+    # Reading the initialization (config) file may not be enough to set a
+    # completion key, so we set one first and then read the file.
+    readline.parse_and_bind('tab: complete')
+
+    try:
+        readline.read_init_file()
+    except OSError:
+        # An OSError here could have many causes, but the most likely one
+        # is that there's no .inputrc file (or .editrc file in the case of
+        # Mac OS X + libedit) in the expected location.  In that case, we
+        # want to ignore the exception.
+        pass
+
+    if readline.get_current_history_length() == 0:
+        # If no history was loaded, default to the PYTHON_HISTORY
+        # environment variable or ~/.python_history.
+        # The guard is necessary to avoid doubling history size at
+        # each interpreter exit when readline was already configured
+        # through a PYTHONSTARTUP hook, see:
+        # http://bugs.python.org/issue5845#msg198636
+        history = get_history_file()
+        try:
+            history.parent.mkdir(parents=True, exist_ok=True)
+        except OSError as e:
+            print(f'Failed to create directories for history file: {e}')
+
+        try:
+            readline.read_history_file(history)
+        except OSError:
+            pass
+
+        readline.set_history_length(5000)
+
+        def write_history():
+            try:
+                readline.write_history_file(history)
+            except OSError:
+                # bpo-19891, bpo-41193: Home directory does not exist
+                # or is not writable, or the filesystem is read-only.
+                pass
+
+        atexit.register(write_history)
+
+sys.__interactivehook__ = register_readline

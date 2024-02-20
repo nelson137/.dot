@@ -18,6 +18,7 @@ fi
 
 # Python
 export PYTHONSTARTUP="$HOME/.pythonrc"
+export PYTHON_HISTORY="$HOME/.local/share/python/python_history"
 export PYTHONDONTWRITEBYTECODE=1
 
 # Vagrant
