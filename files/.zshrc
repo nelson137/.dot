@@ -58,11 +58,7 @@ ZSH_CUSTOM="$HOME/.dot/zsh-custom"
 plugins=(
     colored-man-pages
     zsh-autosuggestions
-    zsh-syntax-highlighting
 )
-
-# zsh-syntax-highlighting config
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets root)
 
 [ -s "$ZSH/oh-my-zsh.sh" ] && source "$ZSH/oh-my-zsh.sh"
 
