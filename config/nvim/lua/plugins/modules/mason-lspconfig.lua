@@ -3,9 +3,11 @@
 return {
     'williamboman/mason-lspconfig',
 
-    lazy = false,
+    event = { 'BufReadPre', 'BufNewFile' },
 
-    config = {
+    dependencies = { 'williamboman/mason.nvim' },
+
+    opts = {
         ensure_installed = {
             'eslint',
             'lua_ls',

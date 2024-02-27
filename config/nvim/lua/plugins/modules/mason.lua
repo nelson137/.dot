@@ -3,7 +3,9 @@
 return {
     'williamboman/mason.nvim',
 
-    lazy = false,
+    event = { 'BufReadPre', 'BufNewFile' },
+
+    dependencies = { 'neovim/nvim-lspconfig' },
 
     config = true,
 }
