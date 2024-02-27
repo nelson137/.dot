@@ -1,4 +1,4 @@
--- LSP status visualizer
+-- Language server progress visualizer
 
 return {
     'j-hui/fidget.nvim',
@@ -7,4 +7,3 @@ return {
 
     config = true,
 }
-

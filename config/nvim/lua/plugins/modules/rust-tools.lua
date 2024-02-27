@@ -1,4 +1,4 @@
--- Configure Rust LSP through rust-tools.
+-- Configure Rust language server through rust-tools.
 -- See [config options](https://github.com/simrat39/rust-tools.nvim#configuration)
 
 local function on_attach(client, buffer)
@@ -48,7 +48,7 @@ return {
         -- Config for nvim-lspconfig, these override the defaults from rust-tools
         -- see https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#rust_analyzer
         server = {
-            on_attach = on_attach, -- called when the LSP attaches to the buffer
+            on_attach = on_attach, -- called when the server attaches to the buffer
             settings = {
                 ['rust-analyzer'] = rust_analyzer_settings,
             },

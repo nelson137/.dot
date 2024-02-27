@@ -1,4 +1,4 @@
--- Common LSP configs
+-- Common language server configs
 
 -- TODO
 
@@ -58,9 +58,9 @@ end
 return {
     'neovim/nvim-lspconfig',
 
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-
     event = { 'BufReadPre', 'BufNewFile' },
+
+    dependencies = { 'nvim-telescope/telescope.nvim' },
 
     init = function()
         vim.api.nvim_create_autocmd({ 'BufWritePre' }, {

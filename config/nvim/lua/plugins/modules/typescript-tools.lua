@@ -1,4 +1,4 @@
--- Typescript LSP that improves on `typescript-language-server`
+-- Typescript language server that improves on `typescript-language-server`
 
 return {
     'pmizio/typescript-tools.nvim',

@@ -1,4 +1,4 @@
--- LSP completion
+-- Language server completion
 
 return {
     'hrsh7th/cmp-nvim-lsp',
