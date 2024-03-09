@@ -24,20 +24,20 @@ return {
                 if vim.wo.diff then return ']c' end
                 vim.schedule(function() gs.next_hunk() end)
                 return '<Ignore>'
-            end)
+            end, { desc = "Git: next hunk"})
             map('n', '[c', function()
                 if vim.wo.diff then return '[c' end
                 vim.schedule(function() gs.prev_hunk() end)
                 return '<Ignore>'
-            end)
+            end, { desc = "Git: previous hunk"})
 
             -- Actions
-            map('n', '<Leader>hs', gs.stage_hunk, { desc = 'Stage hunk' })
-            map('n', '<Leader>hS', gs.stage_buffer, { desc = 'Stage entire buffer'})
-            map('n', '<Leader>hr', gs.reset_hunk, { desc = 'Discard hunk changes' })
-            map('n', '<Leader>hR', gs.reset_buffer, { desc = 'Discard buffer changes' })
-            map('n', '<Leader>hu', gs.undo_stage_hunk, { desc = 'Unstage hunk' })
-            map('n', '<Leader>hp', gs.preview_hunk, { desc = 'Preview hunk' })
+            map('n', '<Leader>hs', gs.stage_hunk, { desc = 'Git: stage hunk' })
+            map('n', '<Leader>hS', gs.stage_buffer, { desc = 'Git: stage entire buffer'})
+            map('n', '<Leader>hr', gs.reset_hunk, { desc = 'Git: discard hunk changes' })
+            map('n', '<Leader>hR', gs.reset_buffer, { desc = 'Git: discard buffer changes' })
+            map('n', '<Leader>hu', gs.undo_stage_hunk, { desc = 'Git: unstage hunk' })
+            map('n', '<Leader>hp', gs.preview_hunk, { desc = 'Git: preview hunk' })
             map('n', '<Leader>hd', gs.diffthis)
 
             -- Text objects
