@@ -13,5 +13,14 @@ return {
             'lua_ls',
             'rust_analyzer',
         },
+
+        handlers = {
+            function(server)
+                require('lspconfig')[server].setup({})
+            end,
+            ['rust_analyzer'] = function()
+                -- noop
+            end,
+        },
     },
 }
