@@ -146,8 +146,8 @@ alias gsts='git stash show --text'
 alias gs='git status'
 alias gss='git status -s'
 
-alias gsa='git submodule add --depth 1'
-alias gsu='git submodule update --init --recursive --depth 1'
+alias gsa='git submodule add --depth=1'
+alias gsu='git submodule update --init --recursive --depth=1'
 
 alias gw='git switch'
 alias gwc='git switch --create'
