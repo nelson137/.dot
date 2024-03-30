@@ -9,9 +9,18 @@ vim.api.nvim_create_autocmd({ 'BufReadPost' }, {
 
 -- ColorColumn in git buffers
 vim.api.nvim_create_autocmd({ 'FileType' }, {
-    group = vim.api.nvim_create_augroup('ColorColumn', {}),
+    group = vim.api.nvim_create_augroup('GitColorColumn', {}),
     pattern = { 'gitcommit', 'git-rebase-todo' },
     callback = function()
         vim.opt.colorcolumn = { 73 }
+    end,
+})
+
+-- Filetype-specific config: Markdown
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+    group = vim.api.nvim_create_augroup('Ft_Markdown', {}),
+    pattern = { 'markdown' },
+    callback = function()
+        vim.bo.shiftwidth = 2
     end,
 })
