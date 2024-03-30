@@ -48,12 +48,12 @@ format = '([\[$all_status$ahead_behind\]]($style) )'
 
 [hostname]
 ssh_only = true
-format = '[$ssh_symbol$hostname]($style) '
+format = '[$hostname]($style) '
 
 [localip]
 disabled = false
 ssh_only = true
-format = '([$localipv4]($style)) '
+format = '\([$localipv4]($style)\) '
 
 [time]
 disabled = false
