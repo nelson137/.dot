@@ -32,6 +32,9 @@ alias zshenv='vim ~/.zshenv'
 alias zshrc='vim ~/.zshrc'
 
 # Commands
+if (( $+commands[bat] )); then
+    alias cat='bat'
+fi
 alias bc='bc -ql'
 alias diff='git diff --no-index'
 alias du='du -h'
