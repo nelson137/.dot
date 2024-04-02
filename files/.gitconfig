@@ -25,4 +25,4 @@
 	status = auto
 	ui = auto
 [pretty]
-    oneline-full = %C(yellow)%h%C(reset) %s  %C(magenta)%D%C(reset)  %C(brightblack)%ah%C(reset)
+    oneline-full = %C(yellow)%h%C(reset) %s  %C(brightblack)%ah%C(reset)  %C(magenta)%D%C(reset)
