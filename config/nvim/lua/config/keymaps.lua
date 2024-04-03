@@ -55,17 +55,6 @@ vim.keymap.set('n', 'TL', ':tabmove $<CR>', { desc = 'Move tab to end' })
 -- Don't swap selection and register " when pasting
 vim.keymap.set('x', 'p', 'pgvy')
 
--- -- Better window nav
--- local _modes = { 'n', 'v', 'x' }
--- vim.keymap.set(_modes, '<Leader>h', '<C-w>h', { desc = 'Select window left' })
--- vim.keymap.set(_modes, '<Leader>j', '<C-w>j', { desc = 'Select window down' })
--- vim.keymap.set(_modes, '<Leader>k', '<C-w>k', { desc = 'Select window up' })
--- vim.keymap.set(_modes, '<Leader>l', '<C-w>l', { desc = 'Select window right' })
--- vim.keymap.set('i', '<C-h>', '<ESC><C-w>h', { desc = 'Select window left' })
--- vim.keymap.set('i', '<C-j>', '<ESC><C-w>j', { desc = 'Select window down' })
--- vim.keymap.set('i', '<C-k>', '<ESC><C-w>k', { desc = 'Select window up' })
--- vim.keymap.set('i', '<C-l>', '<ESC><C-w>l', { desc = 'Select window right' })
-
 -- Paste in insert mode
 vim.keymap.set('i', '<C-p>', '<C-r>"', { desc = 'Paste' })
 
