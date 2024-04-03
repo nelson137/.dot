@@ -56,11 +56,8 @@ end
 
 return {
     'neovim/nvim-lspconfig',
-
     event = { 'BufReadPre', 'BufNewFile' },
-
     dependencies = { 'nvim-telescope/telescope.nvim' },
-
     init = function()
         vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
             group = vim.api.nvim_create_augroup('FormatOnSave', {}),

@@ -2,11 +2,8 @@
 
 return {
     'williamboman/mason-lspconfig',
-
     event = { 'BufReadPre', 'BufNewFile' },
-
     dependencies = { 'williamboman/mason.nvim' },
-
     opts = {
         ensure_installed = {
             'angularls@15.2.0',
@@ -14,7 +11,6 @@ return {
             'lua_ls',
             'rust_analyzer',
         },
-
         handlers = {
             function(server)
                 require('lspconfig')[server].setup({})
@@ -29,7 +25,7 @@ return {
 
                 local default_probe_dir = get_probe_dir(vim.fn.getcwd())
 
-                require('lspconfig')['angularls'].setup({
+                require('lspconfig').angularls.setup({
                     cmd = {
                         'ngserver',
                         '--stdio',
@@ -48,7 +44,17 @@ return {
                     end,
                 })
             end,
-            ['rust_analyzer'] = function()
+            lua_ls = function()
+                require('lspconfig').lua_ls.setup({
+                    settings = {
+                        Lua = {
+                            runtime = { version = 'LuaJIT' },
+                            telemetry = { enable = false },
+                        },
+                    },
+                })
+            end,
+            rust_analyzer = function()
                 -- noop
             end,
         },

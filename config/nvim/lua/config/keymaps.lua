@@ -2,10 +2,10 @@
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>')
 
 -- H and L go to the beginning and end of the line
-vim.keymap.set({ 'n', 'v' }, 'H', '^',  { desc = 'To the first non-blank character of the line' })
-vim.keymap.set({ 'n', 'v' }, 'J', 'G',  { desc = 'To the last line' })
+vim.keymap.set({ 'n', 'v' }, 'H', '^', { desc = 'To the first non-blank character of the line' })
+vim.keymap.set({ 'n', 'v' }, 'J', 'G', { desc = 'To the last line' })
 vim.keymap.set({ 'n', 'v' }, 'K', 'gg', { desc = 'To the first line' })
-vim.keymap.set({ 'n', 'v' }, 'L', '$',  { desc = 'To the end of the line' })
+vim.keymap.set({ 'n', 'v' }, 'L', '$', { desc = 'To the end of the line' })
 
 vim.keymap.set({ 'n', 'v' }, '<C-j>', 'J', { desc = 'Join lines' })
 

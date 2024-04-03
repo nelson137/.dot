@@ -12,12 +12,10 @@ require('lazy').setup('plugins.modules', {
         missing = true,
         colorscheme = { 'sonokai' },
     },
-
     checker = {
-       enabled = true,
-       notify = false,
+        enabled = true,
+        notify = false,
     },
-
     change_detection = {
         enabled = true,
         notify = false,

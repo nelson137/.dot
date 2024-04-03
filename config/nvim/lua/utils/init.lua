@@ -87,7 +87,7 @@ end
 ----------------------------------------------------------------------
 
 function string:endswith(suffix)
-    return self:sub(-#suffix) == suffix
+    return self:sub(- #suffix) == suffix
 end
 
 ----------------------------------------------------------------------
