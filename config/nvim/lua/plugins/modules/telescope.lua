@@ -17,6 +17,13 @@ return {
             -- layout_config = {
             --     layout_config = { width = 0.9 },
             -- },
+            mappings = {
+                i = {
+                    ['<C-t>'] = function(...)
+                        require('trouble.providers.telescope').open_with_trouble(...)
+                    end,
+                },
+            },
         },
     },
 
