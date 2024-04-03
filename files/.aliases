@@ -128,6 +128,7 @@ alias grbif='git rebase --interactive --autosquash'
 alias gr='git remote'
 alias gra='git remote add'
 alias grset='git remote set-url'
+alias grpa='git remote | xargs git remote prune'
 
 alias grh='git reset'
 alias grhh='git reset --hard'
