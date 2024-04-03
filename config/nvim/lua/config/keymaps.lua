@@ -18,21 +18,22 @@ vim.keymap.set('n', '<C-n>', ':nohlsearch<CR>', { silent = true, desc = '' })
 
 -- Flash the cursorline when selecting the next/prev search match
 local repeatSearch = function(direction_cmd)
-    status, _ = pcall(vim.cmd, 'normal! ' .. direction_cmd)
+    local status, _ = pcall(function() vim.cmd('normal! ' .. direction_cmd) end)
     if status then
         vim.api.nvim_exec2([[
             set cursorline!
             redraw
-            exec 'sleep ' . float2nr(150) . 'm'
+            exec 'sleep ' . float2nr(200) . 'm'
             set cursorline!
             redraw
-        ]])
+        ]], {})
     end
 end
 local repeatSearch_Next = function() repeatSearch('n') end
 local repeatSearch_Prev = function() repeatSearch('N') end
--- vim.keymap.set('n', 'n', repeatSearch_Next, { silent = true, desc = 'Repeat the last search and flash the cursor line' })
--- vim.keymap.set('n', 'N', repeatSearch_Prev, { silent = true, desc = 'Repeat the last search in the opposite direction and flash the cursor line' })
+vim.keymap.set('n', 'n', repeatSearch_Next, { silent = true, desc = 'Repeat the last search and flash the cursor line' })
+vim.keymap.set('n', 'N', repeatSearch_Prev,
+    { silent = true, desc = 'Repeat the last search in the opposite direction and flash the cursor line' })
 
 -- Better buffer control
 vim.keymap.set('n', 'gl', ':bn<CR>', { silent = true, desc = 'Next buffer' })
