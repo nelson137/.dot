@@ -78,6 +78,7 @@ alias 'gbd!'='git branch --delete --force'
 alias gbm='git branch --move'
 alias gbu='git branch --set-upstream-to'
 alias gbUU='git branch --unset-upstream'
+alias gbv='git branch -vv'
 
 alias gco='git checkout'
 alias gcob='git checkout -b'
