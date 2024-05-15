@@ -41,6 +41,7 @@ return {
     opts = function()
         local cmp = require('cmp')
         return {
+            preselect = cmp.PreselectMode.None,
             snippet = {
                 expand = function(args)
                     vim.fn['vsnip#anonymous'](args.body)
@@ -64,7 +65,7 @@ return {
 
                 ['<CR>'] = cmp.mapping.confirm({
                     behavior = cmp.ConfirmBehavior.Insert,
-                    select = true,
+                    select = false,
                 }),
             },
 
