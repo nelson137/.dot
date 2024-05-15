@@ -73,7 +73,7 @@ vim.opt.softtabstop = 4
 
 -- Open new horizontal splits below & vertical splits to the right
 vim.opt.splitbelow = true
---vim.opt.splitright = true
+vim.opt.splitright = true
 
 -- Indents are 4 spaces
 vim.opt.tabstop = 4
