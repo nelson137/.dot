@@ -103,7 +103,8 @@ alias gdcas='git diff --cached --stat'
 
 alias gf='git fetch'
 
-alias glo='git log --pretty=oneline-full'
+alias glo='git log --pretty=oneline-full -24'
+alias gloa='git log --pretty=oneline-full'
 alias glop='git log -p'
 alias glos='git log --compact-summary'
 alias glgg='git log --graph'
