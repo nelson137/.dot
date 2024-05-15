@@ -12,6 +12,6 @@ return {
         vim.g.sonokai_better_performance = 1
         vim.g.sonokai_enable_italic = 1
         vim.g.sonokai_dim_inactive_windows = 1
-        vim.cmd([[ colorscheme sonokai ]])
+        vim.cmd.colorscheme('sonokai')
     end,
 }

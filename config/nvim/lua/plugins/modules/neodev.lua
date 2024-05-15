@@ -2,8 +2,11 @@
 
 return {
     'folke/neodev.nvim',
+
     lazy = false,
+
     priority = 100,
+
     opts = {
         setup_jsonls = true,
         pathStrict = true,

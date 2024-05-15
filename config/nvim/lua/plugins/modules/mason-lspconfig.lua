@@ -2,8 +2,11 @@
 
 return {
     'williamboman/mason-lspconfig',
+
     event = { 'BufReadPre', 'BufNewFile' },
+
     dependencies = { 'williamboman/mason.nvim' },
+
     opts = {
         ensure_installed = {
             'angularls@17.3.1',
@@ -11,11 +14,13 @@ return {
             'lua_ls',
             'rust_analyzer',
         },
+
         handlers = {
             function(server)
                 require('lspconfig')[server].setup({})
             end,
-            ['angularls'] = function()
+
+            angularls = function()
                 local util = require('lspconfig.util')
 
                 local get_probe_dir = function(root_dir)
@@ -44,6 +49,7 @@ return {
                     end,
                 })
             end,
+
             lua_ls = function()
                 require('lspconfig').lua_ls.setup({
                     settings = {
@@ -54,6 +60,7 @@ return {
                     },
                 })
             end,
+
             rust_analyzer = function()
                 -- noop
             end,

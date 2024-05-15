@@ -9,8 +9,8 @@ return {
             -- +-------------------------------------------------+
             -- | A | B | C                             X | Y | Z |
             -- +-------------------------------------------------+
-            lualine_b = {'branch', 'diagnostics'},
-            lualine_x = {'filetype', 'fileformat'},
+            lualine_b = { 'branch', 'diagnostics' },
+            lualine_x = { 'filetype', 'fileformat' },
         },
     },
 }

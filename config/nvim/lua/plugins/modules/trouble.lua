@@ -1,12 +1,10 @@
 -- A diagnostic, reference, telescope result, etc. list
 
-local function t() return require('trouble') end
-
-local function t_toggle() t().toggle() end
-local function t_close() t().close() end
-local function t_toggle_ws() t().toggle('workspace_diagnostics') end
-local function t_toggle_doc() t().toggle('document_diagnostics') end
-local function t_toggle_refs() t().toggle('lsp_references') end
+local function t_toggle() require('trouble').toggle() end
+local function t_close() require('trouble').close() end
+local function t_toggle_ws() require('trouble').toggle('workspace_diagnostics') end
+local function t_toggle_doc() require('trouble').toggle('document_diagnostics') end
+local function t_toggle_refs() require('trouble').toggle('lsp_references') end
 
 return {
     'folke/trouble.nvim',

@@ -13,7 +13,7 @@ return {
     opts = {
         options = {
             diagnostics = 'nvim_lsp',
-            diagnostics_indicator = function(count, level, diagnostics_dict)
+            diagnostics_indicator = function(_, _, diagnostics_dict)
                 local errors = diagnostics_dict['error']
                 local warnings = diagnostics_dict['warning']
                 local infos = diagnostics_dict['info']

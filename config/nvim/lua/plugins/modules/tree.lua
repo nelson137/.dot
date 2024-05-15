@@ -25,12 +25,12 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     end,
 })
 
-local function get_api() return require('nvim-tree.api') end
-local function get_lib() return require('nvim-tree.lib') end
-local function get_utils() return require('nvim-tree.utils') end
+local function tree_api() return require('nvim-tree.api') end
+local function tree_lib() return require('nvim-tree.lib') end
+local function tree_utils() return require('nvim-tree.utils') end
 
 local tree_toggle = function()
-    get_api().tree.toggle(tree_opts)
+    tree_api().tree.toggle(tree_opts)
 end
 
 -- FILE: /full/path/to/file.txt
@@ -47,19 +47,20 @@ end
 --   :e  extension only
 
 local on_attach = function(bufnr)
-    local api = get_api()
-    local lib = get_lib()
-    local utils = get_utils()
+    local api = tree_api()
+    local lib = tree_lib()
+    local utils = tree_utils()
     local Event = api.events.Event
 
-    -- local function opts(desc)
-    --     return {
-    --         desc = 'nvim-tree: ' .. desc,
+    -- local function map(mode, lhs, rhs, desc)
+    --     local opts = {
     --         buffer = bufnr,
+    --         desc = 'nvim-tree: ' .. desc,
     --         noremap = true,
     --         silent = true,
     --         nowait = true,
     --     }
+    --     vim.keymap.set('n', lhs, rhs, opts)
     -- end
 
     api.config.mappings.default_on_attach(bufnr)
