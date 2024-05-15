@@ -39,7 +39,18 @@ vim.keymap.set('n', 'N', repeatSearch_Prev,
 vim.keymap.set('n', 'gl', ':bn<CR>', { silent = true, desc = 'Next buffer' })
 vim.keymap.set('n', 'gh', ':bp<CR>', { silent = true, desc = 'Previous buffer' })
 vim.keymap.set('n', 'gd', ':bd<CR>', { silent = true, desc = 'Close buffer' })
-vim.keymap.set('n', 'gD', ':bd!<CR>', { silent = true, desc = 'Force close buffer' })
+vim.keymap.set('n', 'gDD', ':%bd<CR>', { silent = true, desc = 'Close all buffers' })
+vim.keymap.set('n', 'gDO', function ()
+    local curr_bufnr = vim.fn.bufnr()
+    local to_delete = {}
+    for _, n in ipairs(vim.api.nvim_list_bufs()) do
+        if n ~= curr_bufnr and vim.fn.buflisted(n) then
+            table.insert(to_delete, n)
+        end
+    end
+    vim.cmd.bdelete(to_delete)
+    vim.cmd.redrawtabline()
+end, { silent = true, desc = 'Close other buffers' })
 
 -- Better tab control
 vim.keymap.set('n', 'tn', ':tabnew<CR>', { desc = 'New tab' })
