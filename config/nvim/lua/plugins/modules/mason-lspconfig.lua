@@ -6,7 +6,7 @@ return {
     dependencies = { 'williamboman/mason.nvim' },
     opts = {
         ensure_installed = {
-            'angularls@15.2.0',
+            'angularls@17.3.1',
             'eslint',
             'lua_ls',
             'rust_analyzer',
