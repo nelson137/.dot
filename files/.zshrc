@@ -72,8 +72,8 @@ setopt ALWAYS_TO_END
 # Fix nice error
 setopt NO_BG_NICE
 
-# Try to correct typos in commands by prompting with fix
-setopt CORRECT
+# Disable prompt to fix typos in commands
+setopt NO_CORRECT
 
 # Delete duplicate history items before unique ones
 setopt HIST_EXPIRE_DUPS_FIRST
