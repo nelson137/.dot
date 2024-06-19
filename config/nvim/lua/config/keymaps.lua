@@ -41,14 +41,13 @@ vim.keymap.set('n', 'gh', ':bp<CR>', { silent = true, desc = 'Previous buffer' }
 vim.keymap.set('n', 'gd', ':bd<CR>', { silent = true, desc = 'Close buffer' })
 vim.keymap.set('n', 'gDD', ':%bd<CR>', { silent = true, desc = 'Close all buffers' })
 vim.keymap.set('n', 'gDO', function ()
-    local curr_bufnr = vim.fn.bufnr()
-    local to_delete = {}
-    for _, n in ipairs(vim.api.nvim_list_bufs()) do
-        if n ~= curr_bufnr and vim.fn.buflisted(n) then
-            table.insert(to_delete, n)
-        end
-    end
-    vim.cmd.bdelete(to_delete)
+    local curr_bufnr = vim.api.nvim_get_current_buf()
+    vim.cmd.bwipeout(vim.tbl_filter(
+        function(bufnr)
+            return vim.fn.buflisted(bufnr) and bufnr ~= curr_bufnr
+        end,
+        vim.api.nvim_list_bufs()
+    ))
     vim.cmd.redrawtabline()
 end, { silent = true, desc = 'Close other buffers' })
 
