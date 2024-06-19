@@ -26,6 +26,9 @@ vim.opt.copyindent = true
 -- Team spaces
 vim.opt.expandtab = true
 
+-- Set which motion commands can cause a fold to open
+vim.opt.foldopen = 'hor,insert,mark,percent,quickfix,search,tag,undo'
+
 -- Don't highlight all search matches
 vim.opt.hlsearch = false
 
