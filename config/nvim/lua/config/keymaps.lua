@@ -14,7 +14,7 @@ vim.keymap.set({ 'n', 'v' }, '<C-j>', 'J', { desc = 'Join lines' })
 -- vim.keymap.set('n', '<Leader>F', '<Plug>Sneak_S', { desc = '' })
 
 -- Disable highlight search
-vim.keymap.set('n', '<C-n>', ':nohlsearch<CR>', { silent = true, desc = '' })
+vim.keymap.set('n', '<C-n>', '<Cmd>nohlsearch<CR>', { silent = true, desc = '' })
 
 -- Flash the cursorline when selecting the next/prev search match
 local repeatSearch = function(direction_cmd)
@@ -36,10 +36,10 @@ vim.keymap.set('n', 'N', repeatSearch_Prev,
     { silent = true, desc = 'Repeat the last search in the opposite direction and flash the cursor line' })
 
 -- Better buffer control
-vim.keymap.set('n', 'gl', ':bn<CR>', { silent = true, desc = 'Next buffer' })
-vim.keymap.set('n', 'gh', ':bp<CR>', { silent = true, desc = 'Previous buffer' })
-vim.keymap.set('n', 'gd', ':bd<CR>', { silent = true, desc = 'Close buffer' })
-vim.keymap.set('n', 'gDD', ':%bd<CR>', { silent = true, desc = 'Close all buffers' })
+vim.keymap.set('n', 'gl', '<Cmd>bn<CR>', { silent = true, desc = 'Next buffer' })
+vim.keymap.set('n', 'gh', '<Cmd>bp<CR>', { silent = true, desc = 'Previous buffer' })
+vim.keymap.set('n', 'gd', '<Cmd>bd<CR>', { silent = true, desc = 'Close buffer' })
+vim.keymap.set('n', 'gDD', '<Cmd>%bd<CR>', { silent = true, desc = 'Close all buffers' })
 vim.keymap.set('n', 'gDO', function ()
     local curr_bufnr = vim.api.nvim_get_current_buf()
     vim.cmd.bwipeout(vim.tbl_filter(
@@ -52,16 +52,16 @@ vim.keymap.set('n', 'gDO', function ()
 end, { silent = true, desc = 'Close other buffers' })
 
 -- Better tab control
-vim.keymap.set('n', 'tn', ':tabnew<CR>', { desc = 'New tab' })
-vim.keymap.set('n', 'td', ':tabclose<CR>', { desc = 'New tab' })
-vim.keymap.set('n', 'th', ':tabprevious<CR>', { desc = 'Next tab' })
-vim.keymap.set('n', 'tl', ':tabnext<CR>', { desc = 'Previous tab' })
-vim.keymap.set('n', 'tH', ':tabfirst<CR>', { desc = 'First tab' })
-vim.keymap.set('n', 'tL', ':tablast<CR>', { desc = 'Last tab' })
-vim.keymap.set('n', 'Th', ':tabmove -<CR>', { desc = 'Move tab left' })
-vim.keymap.set('n', 'Tl', ':tabmove +<CR>', { desc = 'Move tab right' })
-vim.keymap.set('n', 'TH', ':tabmove 0<CR>', { desc = 'Move tab to beginning' })
-vim.keymap.set('n', 'TL', ':tabmove $<CR>', { desc = 'Move tab to end' })
+vim.keymap.set('n', 'tn', '<Cmd>tabnew<CR>', { desc = 'New tab' })
+vim.keymap.set('n', 'td', '<Cmd>tabclose<CR>', { desc = 'New tab' })
+vim.keymap.set('n', 'th', '<Cmd>tabprevious<CR>', { desc = 'Next tab' })
+vim.keymap.set('n', 'tl', '<Cmd>tabnext<CR>', { desc = 'Previous tab' })
+vim.keymap.set('n', 'tH', '<Cmd>tabfirst<CR>', { desc = 'First tab' })
+vim.keymap.set('n', 'tL', '<Cmd>tablast<CR>', { desc = 'Last tab' })
+vim.keymap.set('n', 'Th', '<Cmd>tabmove -<CR>', { desc = 'Move tab left' })
+vim.keymap.set('n', 'Tl', '<Cmd>tabmove +<CR>', { desc = 'Move tab right' })
+vim.keymap.set('n', 'TH', '<Cmd>tabmove 0<CR>', { desc = 'Move tab to beginning' })
+vim.keymap.set('n', 'TL', '<Cmd>tabmove $<CR>', { desc = 'Move tab to end' })
 
 -- Don't swap selection and register " when pasting
 vim.keymap.set('x', 'p', 'pgvy')
