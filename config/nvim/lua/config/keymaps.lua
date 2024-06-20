@@ -78,3 +78,44 @@ vim.keymap.set('x', 'p', 'pgvy')
 
 -- Paste in insert mode
 vim.keymap.set('i', '<C-p>', '<C-r>"', { desc = 'Paste' })
+
+-- Move lines up/down
+--
+-- Source: https://vim.fandom.com/wiki/Moving_lines_up_or_down#Mappings_to_move_lines
+--
+-- IDE Bindings:
+--   * VS Code: <M-Up>
+--   * Sublime Text: <C-S-Up>
+vim.keymap.set('n', '<M-Down>', '<Cmd>move .+1<CR>',      { desc = 'Move Line: down' })
+vim.keymap.set('n', '<M-Up>',   '<Cmd>move .-2<CR>',      { desc = 'Move Line: up'   })
+vim.keymap.set('v', '<M-Down>', ":move '>+1<CR>gv=gv",    { desc = 'Move Line: down' })
+vim.keymap.set('v', '<M-Up>',   ":move '<-2<CR>gv=gv",    { desc = 'Move Line: up'   })
+vim.keymap.set('i', '<M-Down>', '<Esc>:move .+1<CR>==gi', { desc = 'Move Line: down' })
+vim.keymap.set('i', '<M-Up>',   '<Esc>:move .-2<CR>==gi', { desc = 'Move Line: up'   })
+
+vim.keymap.set('n', '<M-Right>', '<Cmd>><CR>', { desc = 'Move Line: right one `shiftwidth` level' })
+vim.keymap.set('n', '<M-Left>',  '<Cmd><<CR>', { desc = 'Move Line: left one `shiftwidth` level'  })
+vim.keymap.set('v', '<M-Right>', ':><CR>gv^',  { desc = 'Move Line: right one `shiftwidth` level' })
+vim.keymap.set('v', '<M-Left>',  ':<<CR>gv^',  { desc = 'Move Line: left one `shiftwidth` level'  })
+vim.keymap.set(
+    'i',
+    '<M-Right>',
+    function()
+        local shift = vim.o.shiftwidth
+        local offset_cmd = string.rep('<Right>', (shift or 0))
+        local keys = vim.api.nvim_replace_termcodes('<Esc>' .. ':><CR>gi' .. offset_cmd, true, false, true)
+        vim.api.nvim_feedkeys(keys, 'n', false)
+    end,
+    { desc = 'Move Line: right one `shiftwidth` level' }
+)
+vim.keymap.set(
+    'i',
+    '<M-Left>',
+    function()
+        local shift = vim.o.shiftwidth
+        local offset_cmd = string.rep('<Left>', (shift or 0))
+        local keys = vim.api.nvim_replace_termcodes(offset_cmd .. '<Esc>' .. ':<<CR>gi', true, false, true)
+        vim.api.nvim_feedkeys(keys, 'n', false)
+    end,
+    { desc = 'Move Line: left one `shiftwidth` level' }
+)
