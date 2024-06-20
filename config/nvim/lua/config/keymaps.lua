@@ -68,5 +68,3 @@ vim.keymap.set('x', 'p', 'pgvy')
 
 -- Paste in insert mode
 vim.keymap.set('i', '<C-p>', '<C-r>"', { desc = 'Paste' })
-
-vim.keymap.del('i', '<C-w>')
