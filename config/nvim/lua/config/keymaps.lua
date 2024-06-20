@@ -1,3 +1,10 @@
+local function create_keymapper(label, mode)
+    return function(lhs, rhs, desc)
+        local opts = { desc = label .. ': ' .. desc }
+        vim.keymap.set(mode, lhs, rhs, opts)
+    end
+end
+
 -- Space is `<Leader>`, unmap it's alias to `h`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>')
 
@@ -36,11 +43,8 @@ vim.keymap.set('n', 'N', repeatSearch_Prev,
     { silent = true, desc = 'Repeat the last search in the opposite direction and flash the cursor line' })
 
 -- Better buffer control
-vim.keymap.set('n', 'gl', '<Cmd>bn<CR>', { silent = true, desc = 'Next buffer' })
-vim.keymap.set('n', 'gh', '<Cmd>bp<CR>', { silent = true, desc = 'Previous buffer' })
-vim.keymap.set('n', 'gd', '<Cmd>bd<CR>', { silent = true, desc = 'Close buffer' })
-vim.keymap.set('n', 'gDD', '<Cmd>%bd<CR>', { silent = true, desc = 'Close all buffers' })
-vim.keymap.set('n', 'gDO', function ()
+local buf_keymapper = create_keymapper('Buffers', 'n')
+local function buf_close_others()
     local curr_bufnr = vim.api.nvim_get_current_buf()
     vim.cmd.bwipeout(vim.tbl_filter(
         function(bufnr)
@@ -49,19 +53,25 @@ vim.keymap.set('n', 'gDO', function ()
         vim.api.nvim_list_bufs()
     ))
     vim.cmd.redrawtabline()
-end, { silent = true, desc = 'Close other buffers' })
+end
+buf_keymapper('gl', '<Cmd>bn<CR>', 'next')
+buf_keymapper('gh', '<Cmd>bp<CR>', 'previous')
+buf_keymapper('gd', '<Cmd>bd<CR>', 'close')
+buf_keymapper('gDD', '<Cmd>%bd<CR>', 'close all')
+buf_keymapper('gDO', buf_close_others, 'close other')
 
 -- Better tab control
-vim.keymap.set('n', 'tn', '<Cmd>tabnew<CR>', { desc = 'New tab' })
-vim.keymap.set('n', 'td', '<Cmd>tabclose<CR>', { desc = 'New tab' })
-vim.keymap.set('n', 'th', '<Cmd>tabprevious<CR>', { desc = 'Next tab' })
-vim.keymap.set('n', 'tl', '<Cmd>tabnext<CR>', { desc = 'Previous tab' })
-vim.keymap.set('n', 'tH', '<Cmd>tabfirst<CR>', { desc = 'First tab' })
-vim.keymap.set('n', 'tL', '<Cmd>tablast<CR>', { desc = 'Last tab' })
-vim.keymap.set('n', 'Th', '<Cmd>tabmove -<CR>', { desc = 'Move tab left' })
-vim.keymap.set('n', 'Tl', '<Cmd>tabmove +<CR>', { desc = 'Move tab right' })
-vim.keymap.set('n', 'TH', '<Cmd>tabmove 0<CR>', { desc = 'Move tab to beginning' })
-vim.keymap.set('n', 'TL', '<Cmd>tabmove $<CR>', { desc = 'Move tab to end' })
+local tab_keymapper = create_keymapper('Tabs', 'n')
+tab_keymapper('tn', '<Cmd>tabnew<CR>', 'new')
+tab_keymapper('td', '<Cmd>tabclose<CR>', 'new')
+tab_keymapper('th', '<Cmd>tabprevious<CR>', 'next')
+tab_keymapper('tl', '<Cmd>tabnext<CR>', 'previous')
+tab_keymapper('tH', '<Cmd>tabfirst<CR>', 'first')
+tab_keymapper('tL', '<Cmd>tablast<CR>', 'last')
+tab_keymapper('Th', '<Cmd>tabmove -<CR>', 'move left')
+tab_keymapper('Tl', '<Cmd>tabmove +<CR>', 'move right')
+tab_keymapper('TH', '<Cmd>tabmove 0<CR>', 'move to beginning')
+tab_keymapper('TL', '<Cmd>tabmove $<CR>', 'move to end')
 
 -- Don't swap selection and register " when pasting
 vim.keymap.set('x', 'p', 'pgvy')
