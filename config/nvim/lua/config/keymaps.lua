@@ -1,27 +1,39 @@
-local function create_keymapper(label, mode)
-    return function(lhs, rhs, desc)
-        local opts = { desc = label .. ': ' .. desc }
-        vim.keymap.set(mode, lhs, rhs, opts)
-    end
+---Create a keymap.
+---@param label string The mapping label, or used as the description if `description` is `nil`.
+---@param mode string|table Mode short-name, see |nvim_set_keymap()|.
+---@param lhs string Left-hand |{lhs}| of the mapping.
+---@param rhs string|function Right-hand |{rhs}| of the mapping, can be a Lua function.
+---@param description string|nil Appended to `label` with `': '`, if given, for the description.
+---@param other_opts table|nil Table of |:map-arguments|.
+local function map(label, mode, lhs, rhs, description, other_opts)
+    local desc = label
+    if description then desc = desc .. ': ' .. description end
+    local opts = vim.tbl_extend(
+        'force',
+        other_opts or {},
+        { desc = desc }
+    )
+    vim.keymap.set(mode, lhs, rhs, opts)
 end
 
--- Space is `<Leader>`, unmap it's alias to `h`
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>')
+-- Space is |<Leader>|; remap to |<Nop>| since it behaves like |h|
+map('Leader', { 'n', 'v' }, '<Space>', '<Nop>')
 
--- H and L go to the beginning and end of the line
-vim.keymap.set({ 'n', 'v' }, 'H', '^', { desc = 'To the first non-blank character of the line' })
-vim.keymap.set({ 'n', 'v' }, 'J', 'G', { desc = 'To the last line' })
-vim.keymap.set({ 'n', 'v' }, 'K', 'gg', { desc = 'To the first line' })
-vim.keymap.set({ 'n', 'v' }, 'L', '$', { desc = 'To the end of the line' })
+-- Jump to beginning/end of the current line or first/last line of the buffer
+map('Jump', { 'n', 'v' }, 'H', '^',  'to the first non-blank character of the line')
+map('Jump', { 'n', 'v' }, 'J', 'G',  'to the last line')
+map('Jump', { 'n', 'v' }, 'K', 'gg', 'to the first line')
+map('Jump', { 'n', 'v' }, 'L', '$',  'to the end of the line')
 
-vim.keymap.set({ 'n', 'v' }, '<C-j>', 'J', { desc = 'Join lines' })
+-- Re-map join lines
+map('Join lines', { 'n', 'v' }, '<C-j>', 'J')
 
 -- TODO: Use sneak plugin for f and F
 -- vim.keymap.set('n', '<Leader>f', '<Plug>Sneak_s', { desc = '' })
 -- vim.keymap.set('n', '<Leader>F', '<Plug>Sneak_S', { desc = '' })
 
 -- Disable highlight search
-vim.keymap.set('n', '<C-n>', '<Cmd>nohlsearch<CR>', { silent = true, desc = '' })
+map('Disable hlsearch', 'n', '<C-n>', '<Cmd>nohlsearch<CR>')
 
 -- Flash the cursorline when selecting the next/prev search match
 local repeatSearch = function(direction_cmd)
@@ -38,12 +50,10 @@ local repeatSearch = function(direction_cmd)
 end
 local repeatSearch_Next = function() repeatSearch('n') end
 local repeatSearch_Prev = function() repeatSearch('N') end
-vim.keymap.set('n', 'n', repeatSearch_Next, { silent = true, desc = 'Repeat the last search and flash the cursor line' })
-vim.keymap.set('n', 'N', repeatSearch_Prev,
-    { silent = true, desc = 'Repeat the last search in the opposite direction and flash the cursor line' })
+map('Repeat last search', 'n', 'n', repeatSearch_Next, 'forward and flash the cursor line')
+map('Repeat last search', 'n', 'N', repeatSearch_Prev, 'backward and flash the cursor line')
 
 -- Better buffer control
-local buf_keymapper = create_keymapper('Buffers', 'n')
 local function buf_close_others()
     local curr_bufnr = vim.api.nvim_get_current_buf()
     vim.cmd.bwipeout(vim.tbl_filter(
@@ -54,30 +64,29 @@ local function buf_close_others()
     ))
     vim.cmd.redrawtabline()
 end
-buf_keymapper('gl', '<Cmd>bn<CR>', 'next')
-buf_keymapper('gh', '<Cmd>bp<CR>', 'previous')
-buf_keymapper('gd', '<Cmd>bd<CR>', 'close')
-buf_keymapper('gDD', '<Cmd>%bd<CR>', 'close all')
-buf_keymapper('gDO', buf_close_others, 'close other')
+map('Buffers', 'n', 'gl', '<Cmd>bn<CR>', 'next')
+map('Buffers', 'n', 'gh', '<Cmd>bp<CR>', 'previous')
+map('Buffers', 'n', 'gd', '<Cmd>bd<CR>', 'close')
+map('Buffers', 'n', 'gDD', '<Cmd>%bd<CR>', 'close all')
+map('Buffers', 'n', 'gDO', buf_close_others, 'close other')
 
 -- Better tab control
-local tab_keymapper = create_keymapper('Tabs', 'n')
-tab_keymapper('tn', '<Cmd>tabnew<CR>', 'new')
-tab_keymapper('td', '<Cmd>tabclose<CR>', 'new')
-tab_keymapper('th', '<Cmd>tabprevious<CR>', 'next')
-tab_keymapper('tl', '<Cmd>tabnext<CR>', 'previous')
-tab_keymapper('tH', '<Cmd>tabfirst<CR>', 'first')
-tab_keymapper('tL', '<Cmd>tablast<CR>', 'last')
-tab_keymapper('Th', '<Cmd>tabmove -<CR>', 'move left')
-tab_keymapper('Tl', '<Cmd>tabmove +<CR>', 'move right')
-tab_keymapper('TH', '<Cmd>tabmove 0<CR>', 'move to beginning')
-tab_keymapper('TL', '<Cmd>tabmove $<CR>', 'move to end')
+map('Tabs', 'n', 'tn', '<Cmd>tabnew<CR>',      'new')
+map('Tabs', 'n', 'td', '<Cmd>tabclose<CR>',    'new')
+map('Tabs', 'n', 'th', '<Cmd>tabprevious<CR>', 'next')
+map('Tabs', 'n', 'tl', '<Cmd>tabnext<CR>',     'previous')
+map('Tabs', 'n', 'tH', '<Cmd>tabfirst<CR>',    'first')
+map('Tabs', 'n', 'tL', '<Cmd>tablast<CR>',     'last')
+map('Tabs', 'n', 'Th', '<Cmd>tabmove -<CR>',   'move left')
+map('Tabs', 'n', 'Tl', '<Cmd>tabmove +<CR>',   'move right')
+map('Tabs', 'n', 'TH', '<Cmd>tabmove 0<CR>',   'move to beginning')
+map('Tabs', 'n', 'TL', '<Cmd>tabmove $<CR>',   'move to end')
 
 -- Don't swap selection and register " when pasting
-vim.keymap.set('x', 'p', 'pgvy')
+map('Paste and keep register', 'x', 'p', 'pgvy')
 
 -- Paste in insert mode
-vim.keymap.set('i', '<C-p>', '<C-r>"', { desc = 'Paste' })
+map('Paste', 'i', '<C-p>', '<C-r>"', 'Paste')
 
 -- Move lines up/down
 --
@@ -86,36 +95,28 @@ vim.keymap.set('i', '<C-p>', '<C-r>"', { desc = 'Paste' })
 -- IDE Bindings:
 --   * VS Code: <M-Up>
 --   * Sublime Text: <C-S-Up>
-vim.keymap.set('n', '<M-Down>', '<Cmd>move .+1<CR>',      { desc = 'Move Line: down' })
-vim.keymap.set('n', '<M-Up>',   '<Cmd>move .-2<CR>',      { desc = 'Move Line: up'   })
-vim.keymap.set('v', '<M-Down>', ":move '>+1<CR>gv=gv",    { desc = 'Move Line: down' })
-vim.keymap.set('v', '<M-Up>',   ":move '<-2<CR>gv=gv",    { desc = 'Move Line: up'   })
-vim.keymap.set('i', '<M-Down>', '<Esc>:move .+1<CR>==gi', { desc = 'Move Line: down' })
-vim.keymap.set('i', '<M-Up>',   '<Esc>:move .-2<CR>==gi', { desc = 'Move Line: up'   })
+map('Move Line', 'n', '<M-Down>',  '<Cmd>move  .+1<CR>',      'down')
+map('Move Line', 'n', '<M-Up>',    '<Cmd>move  .-2<CR>',      'up'  )
+map('Move Line', 'v', '<M-Down>',      ":move '>+1<CR>gv=gv", 'down')
+map('Move Line', 'v', '<M-Up>',        ":move '<-2<CR>gv=gv", 'up'  )
+map('Move Line', 'i', '<M-Down>', '<Esc>:move  .+1<CR>==gi',  'down')
+map('Move Line', 'i', '<M-Up>',   '<Esc>:move  .-2<CR>==gi',  'up'  )
 
-vim.keymap.set('n', '<M-Right>', '<Cmd>><CR>', { desc = 'Move Line: right one `shiftwidth` level' })
-vim.keymap.set('n', '<M-Left>',  '<Cmd><<CR>', { desc = 'Move Line: left one `shiftwidth` level'  })
-vim.keymap.set('v', '<M-Right>', ':><CR>gv^',  { desc = 'Move Line: right one `shiftwidth` level' })
-vim.keymap.set('v', '<M-Left>',  ':<<CR>gv^',  { desc = 'Move Line: left one `shiftwidth` level'  })
-vim.keymap.set(
-    'i',
-    '<M-Right>',
-    function()
-        local shift = vim.o.shiftwidth
-        local offset_cmd = string.rep('<Right>', (shift or 0))
-        local keys = vim.api.nvim_replace_termcodes('<Esc>' .. ':><CR>gi' .. offset_cmd, true, false, true)
-        vim.api.nvim_feedkeys(keys, 'n', false)
-    end,
-    { desc = 'Move Line: right one `shiftwidth` level' }
-)
-vim.keymap.set(
-    'i',
-    '<M-Left>',
-    function()
-        local shift = vim.o.shiftwidth
-        local offset_cmd = string.rep('<Left>', (shift or 0))
-        local keys = vim.api.nvim_replace_termcodes(offset_cmd .. '<Esc>' .. ':<<CR>gi', true, false, true)
-        vim.api.nvim_feedkeys(keys, 'n', false)
-    end,
-    { desc = 'Move Line: left one `shiftwidth` level' }
-)
+local function insert_move_right()
+    local shift = vim.o.shiftwidth
+    local offset_cmd = string.rep('<Right>', (shift or 0))
+    local keys = vim.api.nvim_replace_termcodes('<Esc>' .. ':><CR>gi' .. offset_cmd, true, false, true)
+    vim.api.nvim_feedkeys(keys, 'n', false)
+end
+local function insert_move_left()
+    local shift = vim.o.shiftwidth
+    local offset_cmd = string.rep('<Left>', (shift or 0))
+    local keys = vim.api.nvim_replace_termcodes(offset_cmd .. '<Esc>' .. ':<<CR>gi', true, false, true)
+    vim.api.nvim_feedkeys(keys, 'n', false)
+end
+map('Move Line', 'n', '<M-Right>', '<Cmd>><CR>',      'right one `shiftwidth` level')
+map('Move Line', 'n', '<M-Left>',  '<Cmd><<CR>',      'left one `shiftwidth` level' )
+map('Move Line', 'v', '<M-Right>',     ':><CR>gv^',   'right one `shiftwidth` level')
+map('Move Line', 'v', '<M-Left>',      ':<<CR>gv^',   'left one `shiftwidth` level' )
+map('Move Line', 'i', '<M-Right>', insert_move_right, 'right one `shiftwidth` level')
+map('Move Line', 'i', '<M-Left>',  insert_move_left,  'left one `shiftwidth` level')
