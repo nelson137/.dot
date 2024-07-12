@@ -1,11 +1,5 @@
 -- A diagnostic, reference, telescope result, etc. list
 
-local function t_toggle() require('trouble').toggle() end
-local function t_close() require('trouble').close() end
-local function t_toggle_ws() require('trouble').toggle('workspace_diagnostics') end
-local function t_toggle_doc() require('trouble').toggle('document_diagnostics') end
-local function t_toggle_refs() require('trouble').toggle('lsp_references') end
-
 return {
     'folke/trouble.nvim',
 
@@ -16,18 +10,49 @@ return {
     event = 'BufReadPre',
 
     keys = {
-        { '<Leader>xx', t_toggle,      desc = 'Trouble: toggle' },
-        { '<Leader>xc', t_close,       desc = 'Trouble: close' },
-        { '<Leader>xd', t_toggle_doc,  desc = 'Trouble: toggle document diagnostics' },
-        { '<Leader>xw', t_toggle_ws,   desc = 'Trouble: toggle workspace diagnostics' },
-        { '<Leader>xr', t_toggle_refs, desc = 'Trouble: toggle LSP references' },
+        {
+            '<Leader>xx',
+            '<cmd>Trouble diagnostics toggle<CR>',
+            desc = 'Trouble: toggle diagnostics',
+        },
+        {
+            '<Leader>xc',
+            '<cmd>Trouble diagnostics close<CR>',
+            desc = 'Trouble: close diagnostics'},
+        {
+            '<Leader>xX',
+            '<cmd>Trouble diagnostics toggle filter.buf=0<CR>',
+            desc = 'Trouble: toggle diagnostics for this buffer',
+        },
+        {
+            '<Leader>cs',
+            '<cmd>Trouble symbols toggle focus=false<CR>',
+            desc = 'Trouble: toggle buffer symbols',
+        },
+        {
+            '<Leader>cl',
+            '<cmd>Trouble lsp toggle win.position=right<CR>',
+            desc = 'Trouble: toggle LSP definitions/references/calls/...',
+        },
+        {
+            '<Leader>cr',
+            '<cmd>Trouble lsp_references toggle win.position=right<CR>',
+            desc = 'Trouble: toggle LSP definitions',
+        },
     },
 
     opts = {
-        action_keys = {
-            jump = { '<Tab>', '<2-LeftMouse>' },
-            jump_close = { '<CR>', 'o' },
+        focus = true,
+        preview = {
+            type = 'float',
+            scratch = true,
+            relative = 'editor',
+            position = { 4, 10 },
+            size = { width = 0.4, height = 0.6 },
+            border = 'rounded',
+            title = 'Preview',
+            title_pos = 'center',
+            focusable = false,
         },
-        auto_open = false,
     },
 }
