@@ -19,14 +19,9 @@ end
 -- Space is |<Leader>|; remap to |<Nop>| since it behaves like |h|
 map('Leader', { 'n', 'v' }, '<Space>', '<Nop>')
 
--- Jump to beginning/end of the current line or first/last line of the buffer
+-- Jump to beginning/end of the current line
 map('Jump', { 'n', 'v' }, 'H', '^',  'to the first non-blank character of the line')
-map('Jump', { 'n', 'v' }, 'J', 'G',  'to the last line')
-map('Jump', { 'n', 'v' }, 'K', 'gg', 'to the first line')
 map('Jump', { 'n', 'v' }, 'L', '$',  'to the end of the line')
-
--- Re-map join lines
-map('Join lines', { 'n', 'v' }, '<C-j>', 'J')
 
 -- TODO: Use sneak plugin for f and F
 -- vim.keymap.set('n', '<Leader>f', '<Plug>Sneak_s', { desc = '' })
