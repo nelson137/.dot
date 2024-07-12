@@ -20,7 +20,7 @@ return {
             mappings = {
                 i = {
                     ['<C-t>'] = function(...)
-                        require('trouble.providers.telescope').open_with_trouble(...)
+                        require('trouble.sources.telescope').open(...)
                     end,
                 },
             },
