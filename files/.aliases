@@ -85,6 +85,10 @@ alias gco='git checkout'
 alias gcob='git checkout -b'
 alias gcop='git checkout --patch'
 
+alias gpi='git cherry-pick'
+alias gpia='git cherry-pick --abort'
+alias gpic='git cherry-pick --continue'
+
 alias gc='git commit -v'
 alias gca='git commit -v --all'
 alias gcam='git commit -v --all -m'
