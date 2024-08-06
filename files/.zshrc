@@ -49,6 +49,10 @@ bindkey '^W' my-backward-delete-word
 ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;'
 ZLE_SPACE_SUFFIX_CHARS=$'&|'
 
+autoload -U promptinit
+promptinit
+prompt adam1
+
 ######################################################################
 # Oh My Zsh
 ######################################################################
