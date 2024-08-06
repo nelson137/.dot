@@ -1,22 +1,25 @@
 -- Terminal window manager
 
----@type Terminal|nil
-local _lazy_git_term = nil
+---@return Terminal
+local function create_lazy_git_term()
+    local Terminal = require('toggleterm.terminal').Terminal
+    return Terminal:new({
+        display_name = 'lazygit',
+        cmd = 'lazygit',
+        direction = 'float',
+        float_opts = { border = 'curved' },
+    })
+end
 
 ---Get the singleton instance of the LazyGit terminal.
 ---
 ---@return Terminal
 local function get_lazy_git_term()
-    if not _lazy_git_term then
-        local Terminal = require('toggleterm.terminal').Terminal
-        _lazy_git_term = Terminal:new({
-            cmd = 'lazygit',
-            direction = 'float',
-            float_opts = { border = 'curved' },
-            on_exit = function() _lazy_git_term = nil end
-        })
-    end
-    return _lazy_git_term
+    local Terminal = require('toggleterm.terminal')
+    return vim.tbl_find(
+        function(term) return term:_display_name() == 'lazygit' end,
+        Terminal.get_all(true)
+    ) or create_lazy_git_term()
 end
 
 -- Open a custom terminal with lazy git

@@ -1,4 +1,25 @@
 ----------------------------------------------------------------------
+--- Standard Library
+----------------------------------------------------------------------
+
+--- Find an entry in a table using a predicate function
+---
+---@generic T
+---@param func fun(value: T): boolean (function) Function
+---@param t table<any, T> (table) Table
+---@return T|nil (value) The first element that passes the predicate or nil
+function vim.tbl_find(func, t)
+  vim.validate({ func = { func, 'c' }, t = { t, 't' } })
+
+  for _, entry in ipairs(t) do
+    if func(entry) then
+      return entry
+    end
+  end
+  return nil
+end
+
+----------------------------------------------------------------------
 --- Common
 ----------------------------------------------------------------------
 
