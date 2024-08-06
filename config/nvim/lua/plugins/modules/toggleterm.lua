@@ -11,15 +11,21 @@ local function create_lazy_git_term()
     })
 end
 
+--- Get the singleton instance of the LazyGit terminal if it exists.
+---
+---@return Terminal|nil
+local function find_lazy_git_term()
+    local Terminal = require('toggleterm.terminal')
+    return Terminal.find(
+        function(term) return term:_display_name() == 'lazygit' end
+    )
+end
+
 ---Get the singleton instance of the LazyGit terminal.
 ---
 ---@return Terminal
 local function get_lazy_git_term()
-    local Terminal = require('toggleterm.terminal')
-    return vim.tbl_find(
-        function(term) return term:_display_name() == 'lazygit' end,
-        Terminal.get_all(true)
-    ) or create_lazy_git_term()
+    return find_lazy_git_term() or create_lazy_git_term()
 end
 
 -- Open a custom terminal with lazy git
@@ -34,9 +40,13 @@ vim.api.nvim_create_autocmd({ 'TermOpen' }, {
             local opts = { buffer = 0, desc = 'ToggleTerm: ' .. desc }
             vim.keymap.set('t', lhs, rhs, opts)
         end
-        -- map('<Esc>', [[<C-\><C-n>]], 'escape')
-        map('<C-w>', [[<C-\><C-n><C-w>]], 'window command leader')
-        map('<F4>', toggle_lazy_git_term, 'lazy git')
+        local lazy_git_term = find_lazy_git_term()
+        if lazy_git_term and lazy_git_term:is_open() then
+            map('<F4>', toggle_lazy_git_term, 'lazy git')
+        else
+            -- map('<C-w>', [[<C-\><C-n>]], 'escape')
+            map('<C-w>', [[<C-\><C-n><C-w>]], 'window command leader')
+        end
     end,
 })
 
