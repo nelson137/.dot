@@ -139,8 +139,8 @@ return {
                 enable = true,
             },
             width = {
-                min = 30,
-                max = 60,
+                min = 40,
+                max = 100,
             },
         },
     },
