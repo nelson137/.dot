@@ -2,6 +2,29 @@
 --- Standard Library
 ----------------------------------------------------------------------
 
+--- Looks for the last match of `pattern` in the string.
+---
+--- Behaves like `string.find` but starts searching at the end of the string.
+---
+--- See [find documentation](http://www.lua.org/manual/5.1/manual.html#pdf-string.find).
+---
+---@param s       string|number
+---@param pattern string|number
+---@param init?   integer
+---@param plain?  boolean
+---@return integer|nil start
+---@return integer|nil end
+---@return any|nil ... captured
+---@nodiscard
+function string.rfind(s, pattern, init, plain)
+    if type(init) == 'number' then init = -1 * init end
+    local i, j = s:reverse():find(pattern:reverse(), init, plain)
+    if type(i) == 'number' and type(j) == 'number' then
+        return #s + 1 - j, #s + 1 - i
+    end
+    return nil
+end
+
 --- Find an entry in a table using a predicate function
 ---
 ---@generic T
