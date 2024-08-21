@@ -39,7 +39,7 @@ return {
 
         vim.keymap.del('n', 'gh');
         vim.keymap.del('n', 'gl');
-        vim.keymap.set('n', 'gh', '<Cmd>BufferLineCyclePrev<CR>')
-        vim.keymap.set('n', 'gl', '<Cmd>BufferLineCycleNext<CR>')
+        Map('BufferLine', 'n', 'gh', '<Cmd>BufferLineCyclePrev<CR>', 'previous')
+        Map('BufferLine', 'n', 'gl', '<Cmd>BufferLineCycleNext<CR>', 'next')
     end,
 }

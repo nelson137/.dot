@@ -46,6 +46,24 @@ end
 --- Common
 ----------------------------------------------------------------------
 
+---Create a keymap.
+---@param label string The mapping label, or used as the description if `description` is `nil`.
+---@param mode string|table Mode short-name, see |nvim_set_keymap()|.
+---@param lhs string Left-hand |{lhs}| of the mapping.
+---@param rhs string|function Right-hand |{rhs}| of the mapping, can be a Lua function.
+---@param description string|nil Appended to `label` with `': '`, if given, for the description.
+---@param other_opts table|nil Table of |:map-arguments|.
+function Map(label, mode, lhs, rhs, description, other_opts)
+    local desc = label
+    if description then desc = desc .. ': ' .. description end
+    local opts = vim.tbl_extend(
+        'force',
+        other_opts or {},
+        { desc = desc }
+    )
+    vim.keymap.set(mode, lhs, rhs, opts)
+end
+
 function pinspect(...)
     for _, value in ipairs({ ... }) do
         print(vim.inspect(value))
