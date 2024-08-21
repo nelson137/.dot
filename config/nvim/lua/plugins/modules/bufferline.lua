@@ -33,8 +33,13 @@ return {
             sort_by = 'insert_at_end',
         },
     },
+
+    config = function(_, opts)
+        require('bufferline').setup(opts)
+
+        vim.keymap.del('n', 'gh');
+        vim.keymap.del('n', 'gl');
+        vim.keymap.set('n', 'gh', '<Cmd>BufferLineCyclePrev<CR>')
+        vim.keymap.set('n', 'gl', '<Cmd>BufferLineCycleNext<CR>')
+    end,
 }
-
-
-
-
