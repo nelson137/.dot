@@ -29,6 +29,8 @@ return {
                 reveal = { 'close' },
             },
             left_trunc_marker = '⟵',
+            max_name_length = 42,
+            max_prefix_length = 16,
             right_trunc_marker = '⟶',
             sort_by = 'insert_at_end',
         },
