@@ -3,5 +3,10 @@
 return {
     'NvChad/nvim-colorizer.lua',
 
-    config = true,
+    opts = {
+        filetypes = {
+            'css',
+            'scss',
+        },
+    },
 }
