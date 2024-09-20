@@ -3,6 +3,31 @@
 vim.opt.termguicolors = true
 vim.opt.mousemoveevent = true
 
+local formatters = {
+    -- Angular Modules
+    { suffix = '.module.ts',         replacement = '[mod]' },
+    { suffix = '.module.spec.ts',    replacement = '[mod]test' },
+    { suffix = '.module.test.ts',    replacement = '[mod]test' },
+    -- Angular Services
+    { suffix = '.service.ts',        replacement = '[svc]' },
+    { suffix = '.service.spec.ts',   replacement = '[svc]test' },
+    { suffix = '.service.test.ts',   replacement = '[svc]test' },
+    -- NgRx Store
+    { suffix = '.selector.ts',       replacement = '[sel]' },
+    { suffix = '.selector.spec.ts',  replacement = '[sel]test' },
+    { suffix = '.selector.test.ts',  replacement = '[sel]test' },
+    { suffix = '.reducer.ts',        replacement = '[red]' },
+    { suffix = '.reducer.spec.ts',   replacement = '[red]test' },
+    { suffix = '.reducer.test.ts',   replacement = '[red]test' },
+    -- Angular Components
+    { suffix = '.component.ts',      replacement = '[C]ts' },
+    { suffix = '.component.html',    replacement = '[C]html' },
+    { suffix = '.component.css',     replacement = '[C]css' },
+    { suffix = '.component.scss',    replacement = '[C]scss' },
+    { suffix = '.component.spec.ts', replacement = '[C]test' },
+    { suffix = '.component.test.ts', replacement = '[C]test' },
+}
+
 return {
     'akinsho/bufferline.nvim',
 
@@ -31,6 +56,14 @@ return {
             left_trunc_marker = '⟵',
             max_name_length = 42,
             max_prefix_length = 16,
+            name_formatter = function(buf)
+                for _, f in pairs(formatters) do
+                    if vim.endswith(buf.name, f.suffix) then
+                        return string.sub(buf.name, 1, #buf.name - #f.suffix) .. f.replacement
+                    end
+                end
+                return buf.name
+            end,
             right_trunc_marker = '⟶',
             sort_by = 'insert_at_end',
         },
