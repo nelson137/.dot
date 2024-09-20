@@ -10,6 +10,8 @@ return {
     event = 'BufReadPost',
 
     opts = {
+        current_line_blame = true,
+
         on_attach = function(bufnr)
             local gs = require('gitsigns')
 
