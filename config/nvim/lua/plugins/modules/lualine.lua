@@ -3,12 +3,13 @@
 return {
     'nvim-lualine/lualine.nvim',
 
+    -- Sections:
+    -- +-------------------------------------------------+
+    -- | A | B | C                             X | Y | Z |
+    -- +-------------------------------------------------+
     opts = {
         sections = {
-            -- Sections:
-            -- +-------------------------------------------------+
-            -- | A | B | C                             X | Y | Z |
-            -- +-------------------------------------------------+
+            lualine_a = { 'mode' },
             lualine_b = { 'branch', 'diagnostics' },
             lualine_x = { 'filetype', 'fileformat' },
         },
