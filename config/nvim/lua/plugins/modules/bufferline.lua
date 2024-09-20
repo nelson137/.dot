@@ -20,7 +20,7 @@ return {
                 local sections = {}
                 if errors and errors > 0 then table.insert(sections, errors .. '') end
                 if warnings and warnings > 0 then table.insert(sections, warnings .. '') end
-                if infos and infos > 0 then table.insert(sections, infos .. '') end
+                if infos and infos > 0 then table.insert(sections, infos .. '🛈 ') end
                 return table.concat(sections, ' ')
             end,
             hover = {
