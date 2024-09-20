@@ -8,12 +8,16 @@ end
 local function jump_next_placeholder()
     if vim.fn['vsnip#jumpable'](1) == 1 then
         feedkey('<Plug>(vsnip-jump-next)')
+    else
+        feedkey('<C-t>', 'nt')
     end
 end
 
 local function jump_prev_placeholder()
     if vim.fn['vsnip#jumpable'](-1) == 1 then
         feedkey('<Plug>(vsnip-jump-prev)')
+    else
+        feedkey('<C-d>', 'nt')
     end
 end
 
