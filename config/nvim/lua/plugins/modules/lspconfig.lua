@@ -18,7 +18,7 @@ local on_attach = function(ev)
     client.server_capabilities.semanticTokensProvider = nil
 
     -- Code actions
-    vim.keymap.set('n', '<Leader>.', vim.lsp.buf.code_action, key_opts)
+    vim.keymap.set({ 'n', 'v' }, '<Leader>.', vim.lsp.buf.code_action, key_opts)
     vim.keymap.set('n', '<Leader>r', vim.lsp.buf.rename, key_opts)
 
     -- Code info
