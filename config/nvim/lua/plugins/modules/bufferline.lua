@@ -70,11 +70,17 @@ return {
     },
 
     config = function(_, opts)
-        require('bufferline').setup(opts)
+        local b = require('bufferline')
+
+        b.setup(opts)
 
         vim.keymap.del('n', 'gh');
         vim.keymap.del('n', 'gl');
-        Map('BufferLine', 'n', 'gh', '<Cmd>BufferLineCyclePrev<CR>', 'previous')
-        Map('BufferLine', 'n', 'gl', '<Cmd>BufferLineCycleNext<CR>', 'next')
+        Map('BufferLine', 'n', 'gh', function() b.cycle(-1) end, 'previous')
+        Map('BufferLine', 'n', 'gl', function() b.cycle(1) end, 'next')
+        Map('BufferLine', 'n', 'g,', function() b.move(-1) end, 'move previous')
+        Map('BufferLine', 'n', 'g.', function() b.move(1) end, 'move next')
+        Map('BufferLine', 'n', 'g<', function() b.move_to(1) end, 'move to start')
+        Map('BufferLine', 'n', 'g>', function() b.move_to(-1) end, 'move to end')
     end,
 }
