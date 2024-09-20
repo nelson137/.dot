@@ -37,6 +37,7 @@ return {
                         '--tsProbeLocations', default_probe_dir,
                         '--ngProbeLocations', default_probe_dir,
                     },
+                    filetypes = { 'html' },
                     root_dir = util.root_pattern('angular.json', 'nx.json'),
                     on_new_config = function(new_config, new_root_dir)
                         local new_probe_dir = get_probe_dir(new_root_dir)
