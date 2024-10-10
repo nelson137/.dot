@@ -7,6 +7,7 @@ return {
 
     opts = {
         delay = 300,
+        filetypes_denylist = { 'yaml' },
     },
 
     config = function(_, opts)
