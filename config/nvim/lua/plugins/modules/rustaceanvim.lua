@@ -35,6 +35,8 @@ vim.g.rustaceanvim = {
 return {
     'mrcjkb/rustaceanvim',
 
+    lazy = false,
+
     version = '^5',
 
     ft = { 'rust' },
