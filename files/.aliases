@@ -104,6 +104,11 @@ alias gd='git diff'
 alias gds='git diff --stat'
 alias gdca='git diff --cached'
 alias gdcas='git diff --cached --stat'
+gdss() {
+    local stat="$(git diff --shortstat)"
+    [[ $stat =~ '([0-9]+) ins.* ([0-9]+) del' ]] &&
+        echo "$stat, $(( $match[1] - $match[2] )) line delta"
+}
 
 alias gf='git fetch'
 
