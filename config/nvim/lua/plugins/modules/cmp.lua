@@ -1,5 +1,16 @@
 -- Autocompletion
 
+local function scroll_docs(delta)
+    return function(fallback)
+        local cmp = require('cmp')
+        if cmp.visible_docs() then
+            cmp.scroll_docs(delta)
+        else
+            fallback()
+        end
+    end
+end
+
 return {
     'hrsh7th/nvim-cmp',
 
@@ -10,17 +21,19 @@ return {
         -- cmp.mapping
         return {
             preselect = cmp.PreselectMode.None,
+
             snippet = {
                 expand = function(args)
                     vim.fn['vsnip#anonymous'](args.body)
                 end,
             },
+
             mapping = {
                 ['<C-p>'] = cmp.mapping.select_prev_item(),
                 ['<C-n>'] = cmp.mapping.select_next_item(),
 
-                ['<C-k>'] = cmp.mapping.scroll_docs(-4),
-                ['<C-j>'] = cmp.mapping.scroll_docs(4),
+                ['<C-k>'] = scroll_docs(-4),
+                ['<C-j>'] = scroll_docs(4),
 
                 ['<C-]>'] = cmp.mapping.close(),
                 ['<CR>'] = cmp.mapping.confirm({
