@@ -21,7 +21,8 @@ export QT_QPA_FONTDIR=/usr/share/fonts
 # FZF
 excludes=(.cache .npm .gem .vim/undodir)
 excludes="$(for d in $excludes; do printf "--exclude $d "; done)"
-export FZF_CTRL_T_COMMAND="fd --type f --hidden $excludes"
+export FZF_DEFAULT_COMMAND="fd --type f --hidden $excludes"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 unset excludes
 
 # Less
