@@ -152,8 +152,7 @@ export NVM_DIR="$HOME/.nvm"
 alias axbrew='arch -x86_64 /usr/local/homebrew/bin/brew'
 
 # FZF
-source "$HOME/.dot/components/fzf/shell/key-bindings.zsh"
-source "$HOME/.dot/components/fzf/shell/completion.zsh"
+eval "$(fzf --zsh)"
 
 # awscli completions
 [[ -d /opt/aws-cli ]] && source /opt/aws-cli/bin/aws_zsh_completer.sh
