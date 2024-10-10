@@ -21,7 +21,6 @@ fi
 
 # Mine
 alias aliases='vim ~/.dot/files/.aliases'
-alias dot='cd ~/.dot'
 alias funcs='vim ~/.dot/files/.functions'
 alias socwd='command du -csh . | tail -1'
 alias setbg="nitrogen --set-zoom-fill --random ~/.config/i3/assets/backgrounds"
