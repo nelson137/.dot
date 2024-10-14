@@ -113,66 +113,6 @@ is_wsl() {
 
 
 
-newscript() {
-    # Make a new script with boilerplate code and executable if necessary
-    [[ $# == 0 ]] && files=( t.sh ) || files=( $@ )
-    for f in $files; do
-        if [[ -e $f ]]; then
-            echo "script already exists: $f" >&2
-            continue
-        fi
-
-        touch "$f"
-        print -s "vim $f"
-        if [[ $f =~ .+[.]c$ ]]; then
-            cat <<'EOF' > "$f"
-#include <stdio.h>
-
-
-int main(void) {
-
-    return 0;
-}
-EOF
-            vim +3 "$f"
-        elif [[ $f =~ .+[.]cpp$ ]]; then
-            cat <<'EOF' > "$f"
-#include <iostream>
-#include <string>
-#include <vector>
-
-using namespace std;
-
-
-int main() {
-
-    return 0;
-}
-EOF
-            vim +6 "$f"
-        elif [[ $f =~ .+[.]py$ ]]; then
-            cat <<'EOF' > "$f"
-#!/usr/bin/env python3
-
-
-
-EOF
-            vim + +startinsert "$f"  # "+" puts cursor at bottom of file
-            chmod +x "$f"
-        elif [[ $f =~ .+[.]zsh$ ]]; then
-            echo '#!/bin/zsh\n\n\n' > "$f"
-            vim + +startinsert "$f"
-            chmod +x "$f"
-        else
-            echo '#!/bin/bash\n\n\n' > "$f"
-            vim + +startinsert "$f"
-            chmod +x "$f"
-        fi
-    done
-}
-
-
-
 ping() {
     if [[ $# == 1 && "$1" == gateway ]]; then
         command ping -c3 "$(ip route | awk '/default/ {print $3}')"
