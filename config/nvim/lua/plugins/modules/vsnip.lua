@@ -25,6 +25,8 @@ return {
     'hrsh7th/vim-vsnip',
 
     config = function()
+        vim.g.vsnip_snippet_dir = '~/.config/nvim/snippets'
+
         vim.keymap.set({ 'i', 's' }, '<Tab>', jump_next_placeholder, { desc = 'Snippet: jump to next placeholder' })
         vim.keymap.set({ 'i', 's' }, '<S-Tab>', jump_prev_placeholder, { desc = 'Snippet: jump to previous placeholder' })
     end,

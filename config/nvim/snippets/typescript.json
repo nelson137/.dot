@@ -1,0 +1,10 @@
+{
+    "ItShould": {
+        "prefix": ["itshould"],
+        "body": [
+            "it('should $1', () => {",
+            "    $2",
+            "});"
+        ]
+    }
+}
