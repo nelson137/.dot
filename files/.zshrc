@@ -121,6 +121,17 @@ plugins=(
 # User configuration
 ######################################################################
 
+fzf-git-file-widget() {
+    LBUFFER="${LBUFFER}$(FZF_CTRL_T_COMMAND="$FZF_CTRL_G_COMMAND" __fzf_select)"
+    local ret=$?
+    zle reset-prompt
+    return $ret
+}
+zle     -N            fzf-git-file-widget
+bindkey -M emacs '^G' fzf-git-file-widget
+bindkey -M vicmd '^G' fzf-git-file-widget
+bindkey -M viins '^G' fzf-git-file-widget
+
 # Homebrew
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1

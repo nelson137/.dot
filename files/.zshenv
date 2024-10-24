@@ -24,6 +24,7 @@ excludes="$(for d in $excludes; do printf "--exclude $d "; done)"
 export FZF_DEFAULT_COMMAND="fd --type f --hidden $excludes"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 unset excludes
+export FZF_CTRL_G_COMMAND="git status --porcelain=v1 --untracked-files=all | awk '{print \$NF}'"
 
 # Less
 LESSHISTFILE="$HOME/.local/share/less/lesshst"
