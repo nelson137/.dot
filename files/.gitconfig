@@ -10,6 +10,9 @@
 	username = nelson.earle
 [credential "https://gitlab.redchimney.com"]
 	username = nelson.earle
+[fetch]
+    prune = true
+    prunetags = true
 [http "https://tfs.p.vu.local"]
 	sslcainfo = /home/nelson/.ssl/certs/ca-bundle.crt
 [merge]
