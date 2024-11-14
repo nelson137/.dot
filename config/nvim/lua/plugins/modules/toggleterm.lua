@@ -9,8 +9,7 @@ vim.api.nvim_create_autocmd({ 'TermOpen' }, {
             local opts = { buffer = 0, desc = 'ToggleTerm: ' .. desc }
             vim.keymap.set('t', lhs, rhs, opts)
         end
-        -- map('<C-w>', [[<C-\><C-n>]], 'escape')
-        map('<C-w>', [[<C-\><C-n><C-w>]], 'window command leader')
+        map('<C-]><C-]>', [[<C-\><C-n>]], 'escape')
     end,
 })
 
