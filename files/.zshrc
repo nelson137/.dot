@@ -1,59 +1,4 @@
 ######################################################################
-# Zsh
-######################################################################
-
-# Always jump to the end if a completion is made
-setopt ALWAYS_TO_END
-
-# Fix nice error
-setopt NO_BG_NICE
-
-# Disable prompt to fix typos in commands
-setopt NO_CORRECT
-
-# Delete duplicate history items before unique ones
-setopt HIST_EXPIRE_DUPS_FIRST
-
-# Don't add commands to history if they have a leading space
-setopt HIST_IGNORE_SPACE
-
-# Remove superfluous blanks in commands before adding to history
-setopt HIST_REDUCE_BLANKS
-
-# Add commands to history when they're run instead of at shell exit
-setopt INC_APPEND_HISTORY
-
-# Wait for commands to finish to add to history for accurate command duration reporting
-setopt INC_APPEND_HISTORY_TIME
-
-# Allow `''` in a single-quoted string to signify one single quote
-setopt RC_QUOTES
-
-# Vim mode
-bindkey -v
-
-# See this gist for a list of commands:
-# https://gist.github.com/ssebastianj/dd4a42da5eee3304751712dc8aa1dc62
-bindkey '^A' beginning-of-line
-bindkey '^E' end-of-line
-bindkey '^K' kill-line
-
-# Change what characters are considered a word
-my-backward-delete-word () {
-    local WORDCHARS='&*|'
-    zle backward-delete-word
-}
-zle -N my-backward-delete-word
-bindkey '^W' my-backward-delete-word
-
-ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;'
-ZLE_SPACE_SUFFIX_CHARS=$'&|'
-
-autoload -U promptinit
-promptinit
-prompt adam1
-
-######################################################################
 # Oh My Zsh
 ######################################################################
 
@@ -116,6 +61,61 @@ plugins=(
 )
 
 [ -s "$ZSH/oh-my-zsh.sh" ] && source "$ZSH/oh-my-zsh.sh"
+
+######################################################################
+# Zsh
+######################################################################
+
+# Always jump to the end if a completion is made
+setopt ALWAYS_TO_END
+
+# Fix nice error
+setopt NO_BG_NICE
+
+# Disable prompt to fix typos in commands
+setopt NO_CORRECT
+
+# Delete duplicate history items before unique ones
+setopt HIST_EXPIRE_DUPS_FIRST
+
+# Don't add commands to history if they have a leading space
+setopt HIST_IGNORE_SPACE
+
+# Remove superfluous blanks in commands before adding to history
+setopt HIST_REDUCE_BLANKS
+
+# Add commands to history when they're run instead of at shell exit
+setopt INC_APPEND_HISTORY
+
+# Wait for commands to finish to add to history for accurate command duration reporting
+setopt INC_APPEND_HISTORY_TIME
+
+# Allow `''` in a single-quoted string to signify one single quote
+setopt RC_QUOTES
+
+# Vim mode
+bindkey -v
+
+# See this gist for a list of commands:
+# https://gist.github.com/ssebastianj/dd4a42da5eee3304751712dc8aa1dc62
+bindkey '^A' beginning-of-line
+bindkey '^E' end-of-line
+bindkey '^K' kill-line
+
+# Change what characters are considered a word
+my-backward-delete-word () {
+    local WORDCHARS='&*|'
+    zle backward-delete-word
+}
+zle -N my-backward-delete-word
+bindkey '^W' my-backward-delete-word
+
+ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;'
+ZLE_SPACE_SUFFIX_CHARS=$'&|'
+
+autoload -U promptinit
+promptinit
+prompt adam1
 
 ######################################################################
 # User configuration
