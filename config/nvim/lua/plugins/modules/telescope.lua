@@ -9,7 +9,7 @@ return {
 
     event = 'VeryLazy',
 
-    dependencies = { 'nvim-lua/plenary.nvim' },
+    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope-live-grep-args.nvim' },
 
     opts = {
         defaults = {
@@ -33,6 +33,7 @@ return {
 
         telescope.setup(opts)
         telescope.load_extension('fzf')
+        telescope.load_extension('live_grep_args')
 
         vim.keymap.set('n', '<Leader>fF', builtin.find_files,
             { desc = 'Telescope: find files' })
@@ -40,8 +41,6 @@ return {
             { desc = 'Telescope: find buffers' })
         vim.keymap.set('n', '<Leader>fs', builtin.lsp_workspace_symbols,
             { desc = 'Telescope: find LSP workspace symbols' })
-        vim.keymap.set('n', '<Leader>F', builtin.live_grep,
-            { desc = 'Telescope: live grep of files' })
         vim.keymap.set('n', '<Leader><F12>', builtin.grep_string,
             { desc = 'Telescope: search for string under cursor or selection' })
         vim.keymap.set('n', '<Leader>ff', _git_files,
@@ -52,5 +51,13 @@ return {
             { desc = 'Telescope: list commits for current buffer' })
         vim.keymap.set('n', '<Leader>gs', builtin.git_status,
             { desc = 'Telescope: show git status' })
+
+        vim.keymap.set('n', '<Leader>F', telescope.extensions.live_grep_args.live_grep_args,
+            { desc = 'Telescope: live grep (args)' })
+        local live_grep_args = require('telescope-live-grep-args.shortcuts')
+        vim.keymap.set('v', '<Leader>F', live_grep_args.grep_visual_selection,
+            { desc = 'Telescope: live grep current selection (global)' })
+        vim.keymap.set('v', '<Leader>B', live_grep_args.grep_word_visual_selection_current_buffer,
+            { desc = 'Telescope: live grep current selection (current buffer)' })
     end,
 }
