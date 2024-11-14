@@ -81,6 +81,8 @@ alias gbu='git branch --set-upstream-to'
 alias gbUU='git branch --unset-upstream'
 alias gbv='git branch -vv'
 
+alias gcat='git cat-file'
+
 alias gco='git checkout'
 alias gcob='git checkout -b'
 alias gcop='git checkout --patch'
