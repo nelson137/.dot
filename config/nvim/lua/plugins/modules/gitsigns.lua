@@ -1,7 +1,5 @@
 -- Git buffer info
 
--- TODO
-
 return {
     'lewis6991/gitsigns.nvim',
 
@@ -10,10 +8,12 @@ return {
     event = 'BufReadPost',
 
     opts = {
-        current_line_blame = true,
+        current_line_blame = false,
+        current_line_blame_formatter = '<author> (<author_time:%R>) <summary>',
 
         on_attach = function(bufnr)
             local gs = require('gitsigns')
+            local gs_actions = require('gitsigns.actions')
 
             local map = function(mode, lhs, rhs, desc)
                 local opts = { buffer = bufnr, desc = 'Git: ' .. (desc or '') }
@@ -40,6 +40,7 @@ return {
             map('n', '<Leader>hu', gs.undo_stage_hunk, 'unstage hunk')
             map('n', '<Leader>hp', gs.preview_hunk, 'preview hunk')
             map('n', '<Leader>hd', gs.diffthis)
+            map('n', '<Leader>b', gs_actions.toggle_current_line_blame, 'toggle current line blame')
 
             -- Text objects
             map({ 'o', 'x' }, 'ih', '<C-u>:Gitsigns select_hunk<CR>', 'select hunk under cursor')
