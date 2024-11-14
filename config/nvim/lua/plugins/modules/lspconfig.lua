@@ -27,6 +27,7 @@ local on_attach = function(ev)
     vim.keymap.set('n', '<Leader>gD', telescope.lsp_type_definitions, key_opts)
     vim.keymap.set('n', '<Leader>gi', telescope.lsp_implementations, key_opts)
     vim.keymap.set('n', '<Leader>gr', telescope.lsp_references, key_opts)
+    vim.keymap.set('n', '<Leader>gS', telescope.lsp_document_symbols, key_opts)
 
     -- Jump to diagnostics
     vim.keymap.set('n', 'g]', vim.diagnostic.goto_next, key_opts)

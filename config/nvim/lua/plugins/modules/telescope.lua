@@ -39,8 +39,6 @@ return {
             { desc = 'Telescope: find files' })
         vim.keymap.set('n', '<Leader>fb', builtin.buffers,
             { desc = 'Telescope: find buffers' })
-        vim.keymap.set('n', '<Leader>fs', builtin.lsp_workspace_symbols,
-            { desc = 'Telescope: find LSP workspace symbols' })
         vim.keymap.set('n', '<Leader><F12>', builtin.grep_string,
             { desc = 'Telescope: search for string under cursor or selection' })
         vim.keymap.set('n', '<Leader>ff', _git_files,
