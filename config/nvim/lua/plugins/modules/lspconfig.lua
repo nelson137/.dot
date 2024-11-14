@@ -20,7 +20,6 @@ local on_attach = function(ev)
     vim.keymap.set('n', '<Leader>r', vim.lsp.buf.rename, key_opts)
 
     -- Code info
-    vim.keymap.set('n', '<Leader>k', vim.lsp.buf.hover, key_opts)
     vim.keymap.set('n', '<c-k>', vim.lsp.buf.signature_help, key_opts)
 
     -- Jump to code
