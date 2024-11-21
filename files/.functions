@@ -25,9 +25,15 @@ ckeys() {
 
 
 
+case "$(uname -s)" in
+Darwin)
+;;
+*)
 feh() {
     DISPLAY=:0 /usr/bin/feh --scale-down -x "$@" &>/dev/null & disown
 }
+;;
+esac
 
 
 
