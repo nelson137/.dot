@@ -31,6 +31,7 @@ display = [{ threshold = 40 }]
 [custom.username_hostname_seperator]
 when = '[ -n "${SSH_CONNECTION}${SSH_CLIENT}${SSH_TTY}" ]'
 format = '@'
+ignore_timeout = true
 
 [c]
 format = 'via [$name $version]($style)'
