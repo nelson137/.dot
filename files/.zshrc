@@ -94,12 +94,7 @@ bindkey -e
 bindkey '^[' vi-cmd-mode
 
 # Change what characters are considered a word
-my-backward-delete-word () {
-    local WORDCHARS='&*|'
-    zle backward-delete-word
-}
-zle -N my-backward-delete-word
-bindkey '^W' my-backward-delete-word
+export WORDCHARS='&|'
 
 ZLE_REMOVE_SUFFIX_CHARS=$' \t\n;'
 ZLE_SPACE_SUFFIX_CHARS=$'&|'
