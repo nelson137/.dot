@@ -112,6 +112,8 @@ gdss() {
 
 alias gf='git fetch'
 
+alias gi='git init'
+
 alias glo='git log --pretty=oneline-full -24'
 alias gloa='git log --pretty=oneline-full'
 alias glop='git log -p'
