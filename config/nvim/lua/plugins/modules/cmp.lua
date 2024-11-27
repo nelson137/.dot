@@ -18,7 +18,6 @@ return {
     -- See [config options](https://github.com/hrsh7th/nvim-cmp#basic-configuration)
     opts = function()
         local cmp = require('cmp')
-        -- cmp.mapping
         return {
             preselect = cmp.PreselectMode.None,
 
@@ -29,6 +28,8 @@ return {
             },
 
             mapping = {
+                ['<C-Space>'] = cmp.mapping.complete(),
+
                 ['<C-p>'] = cmp.mapping.select_prev_item(),
                 ['<C-n>'] = cmp.mapping.select_next_item(),
 
@@ -48,7 +49,6 @@ return {
                 { name = 'nvim_lsp_signature_help' },
                 { name = 'vsnip' },
                 { name = 'path' },
-                -- { name = 'buffer' },
             },
         }
     end,
