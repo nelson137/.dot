@@ -23,7 +23,7 @@ return {
 
             snippet = {
                 expand = function(args)
-                    vim.fn['vsnip#anonymous'](args.body)
+                    require('luasnip').expand(args.body)
                 end,
             },
 
@@ -47,7 +47,7 @@ return {
             sources = {
                 { name = 'nvim_lsp' },
                 { name = 'nvim_lsp_signature_help' },
-                { name = 'vsnip' },
+                { name = 'luasnip' },
                 { name = 'path' },
             },
         }
