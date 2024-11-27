@@ -90,14 +90,8 @@ setopt HIST_REDUCE_BLANKS
 # Allow `''` in a single-quoted string to signify one single quote
 setopt RC_QUOTES
 
-# Vim mode
-bindkey -v
-
-# See this gist for a list of commands:
-# https://gist.github.com/ssebastianj/dd4a42da5eee3304751712dc8aa1dc62
-bindkey '^A' beginning-of-line
-bindkey '^E' end-of-line
-bindkey '^K' kill-line
+bindkey -e
+bindkey '^[' vi-cmd-mode
 
 # Change what characters are considered a word
 my-backward-delete-word () {
