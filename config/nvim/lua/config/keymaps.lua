@@ -43,7 +43,7 @@ local function buf_close_others()
 end
 Map('Buffers', 'n', 'gl', '<Cmd>bn<CR>', 'next')
 Map('Buffers', 'n', 'gh', '<Cmd>bp<CR>', 'previous')
-Map('Buffers', 'n', 'gd', '<Cmd>bd<CR>', 'close')
+Map('Buffers', 'n', 'gd', '<Cmd>bprevious | bdelete #<CR>', 'close')
 Map('Buffers', 'n', 'gDD', '<Cmd>%bd<CR>', 'close all')
 Map('Buffers', 'n', 'gDO', buf_close_others, 'close other')
 
