@@ -75,6 +75,9 @@ setopt NO_BG_NICE
 # Disable prompt to fix typos in commands
 setopt NO_CORRECT
 
+# Don't import commands added to history file
+setopt NO_SHARE_HISTORY
+
 # Delete duplicate history items before unique ones
 setopt HIST_EXPIRE_DUPS_FIRST
 
@@ -83,12 +86,6 @@ setopt HIST_IGNORE_SPACE
 
 # Remove superfluous blanks in commands before adding to history
 setopt HIST_REDUCE_BLANKS
-
-# Add commands to history when they're run instead of at shell exit
-setopt INC_APPEND_HISTORY
-
-# Wait for commands to finish to add to history for accurate command duration reporting
-setopt INC_APPEND_HISTORY_TIME
 
 # Allow `''` in a single-quoted string to signify one single quote
 setopt RC_QUOTES
