@@ -1,6 +1,60 @@
 -- Common language server configs
 
--- TODO
+-- Copied from |vim.diagnostic|.
+local function _diagnostic_move_pos(opts, pos)
+    opts = opts or {}
+
+    local float = vim.F.if_nil(opts.float, true)
+    local win_id = opts.win_id or vim.api.nvim_get_current_win()
+
+    if not pos then
+        return
+    end
+
+    vim.api.nvim_win_call(win_id, function()
+        -- Save position in the window's jumplist
+        vim.cmd([[normal! m']])
+        vim.api.nvim_win_set_cursor(win_id, { pos[1] + 1, pos[2] })
+        -- Open folds under the cursor
+        vim.cmd([[normal! zv]])
+    end)
+
+    if float then
+        local float_opts = type(float) == 'table' and float or {}
+        vim.schedule(function()
+            vim.diagnostic.open_float(vim.tbl_extend('keep', float_opts, {
+                bufnr = vim.api.nvim_win_get_buf(win_id),
+                scope = 'cursor',
+                focus = false,
+            }))
+        end)
+    end
+end
+
+local function lsp_goto_diagnostic(get_pos, opts)
+    opts = opts or {}
+    -- Severities go from ERROR (1) to HINT (4)
+    for sev, _ in ipairs(vim.diagnostic.severity) do
+        local get_pos_opts = vim.tbl_extend('force', opts, { severity = sev })
+        local pos = get_pos(get_pos_opts)
+        if pos then
+            _diagnostic_move_pos(opts, pos)
+            return
+        end
+    end
+
+    vim.api.nvim_echo({ { 'No diagnostics to move to', 'WarningMsg' } }, true, {})
+end
+
+local function lsp_goto_next_diagnostic() lsp_goto_diagnostic(vim.diagnostic.get_next_pos) end
+local function lsp_goto_prev_diagnostic() lsp_goto_diagnostic(vim.diagnostic.get_prev_pos) end
+
+local function lsp_references()
+    require('telescope.builtin').lsp_references({
+        include_declaration = true,
+        include_current_line = true,
+    })
+end
 
 local on_attach = function(ev)
     local telescope = require('telescope.builtin')
@@ -30,8 +84,10 @@ local on_attach = function(ev)
     vim.keymap.set('n', '<Leader>gS', telescope.lsp_document_symbols, key_opts)
 
     -- Jump to diagnostics
-    vim.keymap.set('n', 'g]', vim.diagnostic.goto_next, key_opts)
-    vim.keymap.set('n', 'g[', vim.diagnostic.goto_prev, key_opts)
+    vim.keymap.set('n', 'g]', lsp_goto_next_diagnostic, key_opts)
+    vim.keymap.set('n', 'g[', lsp_goto_prev_diagnostic, key_opts)
+    vim.keymap.set('n', 'g}', vim.diagnostic.goto_next, key_opts)
+    vim.keymap.set('n', 'g{', vim.diagnostic.goto_prev, key_opts)
 
     -- -- Show diagnostic popup on cursor hover
     -- vim.api.nvim_create_autocmd('CursorHold', {
