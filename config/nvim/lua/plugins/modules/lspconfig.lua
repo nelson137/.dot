@@ -12,6 +12,7 @@ local on_attach = function(ev)
         signs = {
             severity = vim.diagnostic.severity.ERROR,
         },
+        severity_sort = true,
     })
 
     -- Disable semantic token highlighting, let Treesitter do that
