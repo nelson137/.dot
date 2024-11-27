@@ -9,9 +9,6 @@ local on_attach = function(ev)
     local key_opts = { buffer = ev.buf }
 
     vim.diagnostic.config({
-        signs = {
-            severity = vim.diagnostic.severity.ERROR,
-        },
         severity_sort = true,
     })
 
