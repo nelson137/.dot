@@ -37,9 +37,6 @@ if command -v nvim &>/dev/null; then
     export EDITOR=nvim
 fi
 
-# Fix zsh-autosuggestions plugin coloring in tmux
-export TERM=xterm-256color
-
 export PAGER='less -XF'
 
 path_prepend=(
