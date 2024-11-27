@@ -118,6 +118,28 @@ bindkey -M emacs '^G' fzf-git-file-widget
 bindkey -M vicmd '^G' fzf-git-file-widget
 bindkey -M viins '^G' fzf-git-file-widget
 
+# https://github.com/junegunn/fzf/blob/master/ADVANCED.md#switching-between-ripgrep-mode-and-fzf-mode
+fzf-rg-file-widget() {
+    local rg_prefix="rg --trim --no-heading --line-number --color=always --smart-case"
+    local fzf_base_opts="--disabled --ansi --delimiter=:"
+    local fzf_mode_opts="\
+        --bind='start:reload($rg_prefix {q})+unbind(ctrl-r)' \
+        --bind='change:reload:sleep 0.1; $rg_prefix {q} || true' --prompt='rg> ' \
+        --bind='ctrl-f:unbind(change,ctrl-f)+change-prompt(fzf> )+enable-search+transform-query(echo {q} >/tmp/fzf-query-r; cat /tmp/fzf-query-f)+rebind(ctrl-r)' \
+        --bind='ctrl-r:unbind(ctrl-r)+change-prompt(rg> )+disable-search+reload($rg_prefix {q} || true)+transform-query(echo {q} >/tmp/fzf-query-f; cat /tmp/fzf-query-r)+rebind(change,ctrl-f)'"
+    local fzf_output_opts="--bind='enter:become(printf \"%s\n\" {+} | cut -d: -f1)'"
+    local fzf_preview_opts="--preview='bat --color=always {1} --highlight-line {2}' --preview-window='up,60%,border-bottom,+{2}+3/3,~3'"
+    local fzf_opts="$fzf_base_opts $fzf_mode_opts $fzf_output_opts $fzf_preview_opts"
+    LBUFFER="${LBUFFER}$(FZF_CTRL_T_COMMAND=":" FZF_DEFAULT_OPTS="$fzf_opts" __fzf_select)"
+    local ret=$?
+    zle reset-prompt
+    return $ret
+}
+zle     -N            fzf-rg-file-widget
+bindkey -M emacs '^F' fzf-rg-file-widget
+bindkey -M vicmd '^F' fzf-rg-file-widget
+bindkey -M viins '^F' fzf-rg-file-widget
+
 # Homebrew
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
