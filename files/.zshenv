@@ -40,8 +40,7 @@ fi
 export PAGER='less -XF'
 
 path_prepend=(
-    "$HOME"/{.local,.cargo,.bun,go}/bin
-    '/mnt/c/Program Files/Oracle/VirtualBox'
+    "$HOME"/{.dot,.bun,go,.local}/bin
 )
 export PATH="${(j/:/)path_prepend}:$PATH"
 unset path_additions
