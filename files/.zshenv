@@ -19,11 +19,8 @@ export QT_QPA_PLATFORM=offscreen
 export QT_QPA_FONTDIR=/usr/share/fonts
 
 # FZF
-excludes=(.cache .npm .gem .vim/undodir)
-excludes="$(for d in $excludes; do printf "--exclude $d "; done)"
-export FZF_DEFAULT_COMMAND="fd --type f --hidden $excludes"
+export FZF_DEFAULT_COMMAND="fd --type f --hidden --exclude=.cache --exclude=.npm --exclude=.gem --exclude=.vim/undodir"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-unset excludes
 export FZF_CTRL_G_COMMAND="git status --porcelain=v1 --untracked-files=all | awk '{print \$NF}'"
 
 # Less
