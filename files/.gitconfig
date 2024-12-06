@@ -14,7 +14,7 @@
     prune = true
     prunetags = true
 [http "https://tfs.p.vu.local"]
-	sslcainfo = /home/nelson/.ssl/certs/ca-bundle.crt
+	sslcainfo = /home/nelson/.ssl/certs/vu-chain2021.pem
 [merge]
 	autoStash = true
 [pull]
