@@ -24,12 +24,18 @@ ln_dir_contents files "$HOME"
 # Link config directories
 declare -a CONFIG_ITEMS
 CONFIG_ITEMS=(nvim starship.toml)
-case "$(uname -s)" in
-    Darwin)
+case "$(uname -sr)" in
+    Darwin\ *)
         CONFIG_ITEMS+=()
         ;;
-    Linux)
+    Linux\ *WSL*)
+        CONFIG_ITEMS+=()
+        ;;
+    Linux\ *)
         CONFIG_ITEMS+=(compton.conf i3 zathura)
+        ;;
+    *)
+        echo "Warning: Unsupported OS: $(uname -sr)" >&2
         ;;
 esac
 ln_dir_contents config "$HOME/.config"
