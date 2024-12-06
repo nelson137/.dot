@@ -32,7 +32,7 @@ alias zshrc='vim ~/.zshrc'
 alias wsl='/mnt/c/Windows/System32/wsl.exe'
 
 # Commands
-if (( $+commands[bat] )); then
+if command -v bat &>/dev/null; then
     alias cat='bat'
 fi
 alias bc='bc -ql'
