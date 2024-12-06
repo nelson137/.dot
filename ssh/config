@@ -1,0 +1,3 @@
+# vim: ft=sshconfig
+Host gitlab.redchimney.com
+  IdentityFile /home/nelson/.ssh/id_rsa
