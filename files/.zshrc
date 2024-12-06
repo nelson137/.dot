@@ -107,6 +107,11 @@ prompt adam1
 # User configuration
 ######################################################################
 
+#region FZF
+if command -v fzf &>/dev/null; then
+
+eval "$(fzf --zsh)"
+
 fzf-git-file-widget() {
     LBUFFER="${LBUFFER}$(FZF_CTRL_T_COMMAND="$FZF_CTRL_G_COMMAND" __fzf_select)"
     local ret=$?
@@ -140,6 +145,9 @@ bindkey -M emacs '^F' fzf-rg-file-widget
 bindkey -M vicmd '^F' fzf-rg-file-widget
 bindkey -M viins '^F' fzf-rg-file-widget
 
+fi
+#endregion FZF
+
 # Homebrew
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
@@ -169,9 +177,6 @@ export NVM_DIR="$HOME/.nvm"
 
 # Homebrew
 alias axbrew='arch -x86_64 /usr/local/homebrew/bin/brew'
-
-# FZF
-eval "$(fzf --zsh)"
 
 # awscli completions
 [[ -d /opt/aws-cli ]] && source /opt/aws-cli/bin/aws_zsh_completer.sh
