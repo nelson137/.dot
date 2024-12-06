@@ -4,6 +4,32 @@ set -e
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
+# Usage: ln_dir_contents SRC DEST
+#
+# Create symbolic links in DEST for each child of SRC (non-recursive).
+#
+# Positional Arguments:
+#   SRC     The path of the directory in which to create the symbolic links.
+#   DEST    The path of the directory that contains the target files.
+#
+# Example:
+#
+#     $ ln_dir_contents ./files /tmp
+#
+# With files:
+#
+# ./files/
+# ├── .bashrc
+# ├── .zprofile
+# └── .zshrc
+#
+# Creates symbolic links:
+#
+# /tmp/
+# ├── .bashrc -> $PWD/files/.bashrc
+# ├── .zprofile -> $PWD/files/.zprofile
+# └── .zshrc -> $PWD/files/.zshrc
+#
 ln_dir_contents() {
     local src dest
     # Make sure src and dest are absolute dir paths
