@@ -66,6 +66,9 @@ local on_attach = function(ev)
         severity_sort = true,
     })
 
+    -- Use conform for range formatting
+    vim.bo[ev.buf].formatexpr = "v:lua.require'conform'.formatexpr()"
+
     -- Disable semantic token highlighting, let Treesitter do that
     client.server_capabilities.semanticTokensProvider = nil
 
@@ -117,7 +120,7 @@ return {
             group = vim.api.nvim_create_augroup('FormatOnSave', {}),
             pattern = { '*' },
             callback = function()
-                vim.lsp.buf.format()
+                -- require('conform').format()
             end,
         })
 
