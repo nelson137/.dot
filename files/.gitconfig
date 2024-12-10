@@ -1,20 +1,14 @@
+[includeIf "gitdir:/"]
+	path = ~/.gitconfig.personal
+[includeIf "gitdir:/opt/code/"]
+	path = ~/.gitconfig.work
 [init]
 	defaultBranch = main
-[user]
-	email = nelson.earle137@gmail.com
-	name = Nelson Earle
 [core]
 	editor = nvim
-[credential "https://tfs.p.vu.local"]
-	helper = store
-	username = nelson.earle
-[credential "https://gitlab.redchimney.com"]
-	username = nelson.earle
 [fetch]
     prune = true
     prunetags = true
-[http "https://tfs.p.vu.local"]
-	sslcainfo = /home/nelson/.ssl/certs/vu-chain2021.pem
 [merge]
 	autoStash = true
 [pull]

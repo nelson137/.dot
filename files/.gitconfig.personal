@@ -1,0 +1,6 @@
+; vim: ft=gitconfig
+[core]
+	sshCommand = ssh -i ~/.ssh/id_ed25519_personal
+[user]
+	email = nelson.earle137@gmail.com
+	name = Nelson Earle
