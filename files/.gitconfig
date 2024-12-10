@@ -1,17 +1,25 @@
 ; vim: ft=gitconfig noet
+
 [includeIf "gitdir:/"]
 	path = ~/.gitconfig.personal
 [includeIf "gitdir:/opt/code/"]
 	path = ~/.gitconfig.work
-[init]
-	defaultBranch = main
+
+[color]
+	diff = auto
+	status = auto
+	ui = auto
 [core]
 	editor = nvim
 [fetch]
 	prune = true
 	prunetags = true
+[init]
+	defaultBranch = main
 [merge]
 	autoStash = true
+[pretty]
+	oneline-full = %C(yellow)%h%C(reset) %s  %C(brightblack)%ah%C(reset)  %C(magenta)%D%C(reset)
 [pull]
 	rebase = true
 	default = "current"
@@ -20,11 +28,5 @@
 	autoSetupRemote = true
 [rebase]
 	autoStash = true
-[color]
-	diff = auto
-	status = auto
-	ui = auto
-[pretty]
-	oneline-full = %C(yellow)%h%C(reset) %s  %C(brightblack)%ah%C(reset)  %C(magenta)%D%C(reset)
 [user]
 	name = Nelson Earle
