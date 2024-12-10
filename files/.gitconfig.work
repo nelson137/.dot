@@ -1,13 +1,11 @@
 ; vim: ft=gitconfig noet
 [core]
 	sshCommand = ssh -i ~/.ssh/id_ed25519_work
+[credential]
+	username = nelson.earle
 [credential "https://tfs.p.vu.local"]
 	helper = store
-	username = nelson.earle
-[credential "https://gitlab.redchimney.com"]
-	username = nelson.earle
 [http "https://tfs.p.vu.local"]
 	sslcainfo = ~/.ssl/certs/vu-chain2021.pem
 [user]
 	email = nelson.earle@veteransunited.com
-	name = Nelson Earle
