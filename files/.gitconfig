@@ -26,3 +26,5 @@
 	ui = auto
 [pretty]
 	oneline-full = %C(yellow)%h%C(reset) %s  %C(brightblack)%ah%C(reset)  %C(magenta)%D%C(reset)
+[user]
+	name = Nelson Earle
