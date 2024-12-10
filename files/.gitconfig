@@ -1,3 +1,4 @@
+; vim: ft=gitconfig noet
 [includeIf "gitdir:/"]
 	path = ~/.gitconfig.personal
 [includeIf "gitdir:/opt/code/"]
@@ -7,8 +8,8 @@
 [core]
 	editor = nvim
 [fetch]
-    prune = true
-    prunetags = true
+	prune = true
+	prunetags = true
 [merge]
 	autoStash = true
 [pull]
@@ -24,4 +25,4 @@
 	status = auto
 	ui = auto
 [pretty]
-    oneline-full = %C(yellow)%h%C(reset) %s  %C(brightblack)%ah%C(reset)  %C(magenta)%D%C(reset)
+	oneline-full = %C(yellow)%h%C(reset) %s  %C(brightblack)%ah%C(reset)  %C(magenta)%D%C(reset)
