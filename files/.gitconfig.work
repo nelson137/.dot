@@ -3,8 +3,6 @@
 	sshCommand = ssh -i ~/.ssh/id_ed25519_work
 [credential]
 	username = nelson.earle
-[credential "https://tfs.p.vu.local"]
-	helper = store
 [http "https://tfs.p.vu.local"]
 	sslcainfo = ~/.ssl/certs/vu-chain2021.pem
 [user]
