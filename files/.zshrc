@@ -8,6 +8,8 @@ export ZSH="$HOME/.oh-my-zsh"
 # Set name of the theme to load.
 # ZSH_THEME="custom"
 
+ZSH_COMPDUMP="$ZSH/cache/zcompdump-$HOST"
+
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
