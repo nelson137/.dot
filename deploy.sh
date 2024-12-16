@@ -67,5 +67,9 @@ esac
 ln_dir_contents config "$HOME/.config"
 unset CONFIG_ITEMS
 
+# Link SSH config
+mkdir -p "$HOME/.ssh"
+ln_dir_contents ssh "$HOME/.ssh"
+
 # Install repository hooks
 ./install-hooks.sh
