@@ -18,11 +18,6 @@ export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS=1
 export QT_QPA_PLATFORM=offscreen
 export QT_QPA_FONTDIR=/usr/share/fonts
 
-# FZF
-export FZF_DEFAULT_COMMAND="fd --type f --hidden --exclude=.cache --exclude=.npm --exclude=.gem --exclude=.vim/undodir"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_CTRL_G_COMMAND="git status --porcelain=v1 --untracked-files=all | awk '{print \$NF}'"
-
 # Less
 LESSHISTFILE="$HOME/.local/share/less/lesshst"
 

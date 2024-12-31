@@ -126,6 +126,10 @@ if command -v fzf &>/dev/null; then
 
 eval "$(fzf --zsh)"
 
+export FZF_DEFAULT_COMMAND="fd --type f --hidden --exclude=.cache --exclude=.npm --exclude=.gem --exclude=.vim/undodir"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+export FZF_CTRL_G_COMMAND="git status --porcelain=v1 --untracked-files=all | awk '{print \$NF}'"
 fzf-git-file-widget() {
     LBUFFER="${LBUFFER}$(FZF_CTRL_T_COMMAND="$FZF_CTRL_G_COMMAND" __fzf_select)"
     local ret=$?
