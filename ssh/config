@@ -1,5 +1,45 @@
 # vim: ft=sshconfig
-Host gitlab.redchimney.com
-    IdentityFile /home/nelson/.ssh/id_rsa
+
 Host github.com
-    IdentityFile /home/nelson/.ssh/id_ed25519
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/id_ed25519_work
+
+Host redchimney
+    HostName gitlab.redchimney.com
+    User git
+
+# Mortgage Research Center
+Host mrc
+    HostName github.com
+    User org-134439726
+
+# VU Product Development
+Host pdev
+    HostName github.com
+    User org-158356857
+
+# VU Platform
+Host plat
+    HostName github.com
+    User org-158358431
+
+# VU PDT
+Host pdt
+    HostName github.com
+    User org-158357197
+
+# # Mortgage Research Center
+# Match Host github.com User org-134439726
+#     CertificateFile ~/.ssh/id_ed25519_work-cert-mrc.pub
+#
+# # VU Product Development
+# Match Host github.com User org-158356857
+#     CertificateFile ~/.ssh/id_ed25519_work-cert-vu-product-development.pub
+#
+# # VU Platform
+# Match Host github.com User org-158358431
+#     CertificateFile ~/.ssh/id_ed25519_work-cert-vu-platform.pub
+#
+# # VU PDT
+# Match Host github.com User org-158357197
+#     CertificateFile ~/.ssh/id_ed25519_work-cert-vu-pdt.pub
