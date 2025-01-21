@@ -131,6 +131,7 @@ alias gma='git merge --abort'
 alias gmv='git mv'
 
 alias gl='git pull'
+alias gl!='git pull --force'
 
 alias gp='git push'
 alias 'gp!'='git push --force-with-lease'
