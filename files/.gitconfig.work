@@ -1,9 +1,14 @@
 # vim: ft=gitconfig noet
+[commit]
+	gpgSign = true
 [core]
 	sshCommand = ssh -i ~/.ssh/id_ed25519_work
 [credential]
 	username = nelson.earle
+[gpg]
+	format = ssh
 [http "https://tfs.p.vu.local"]
 	sslcainfo = ~/.ssl/certs/vu-chain2021.pem
 [user]
 	email = nelson.earle@veteransunited.com
+	signingKey = /home/nelson/.ssh/id_ed25519_work
