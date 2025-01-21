@@ -1,0 +1,21 @@
+confirmOnQuit: true
+
+gui:
+  scrollOffMargin: 4
+  theme:
+    inactiveBorderColor: ['#606060']
+    activeBorderColor: ['#60ff60']
+  showRandomTip: false
+  showBottomLine: true
+  showIcons: true
+  nerdFontsVersion: '3'
+
+customCommands:
+  - key: '-'
+    context: 'global'
+    command: 'git switch -'
+    description: 'Switch to the previous branch'
+  - key: 'E'
+    context: 'global'
+    command: 'git commit -v --allow-empty -m "empty commit"'
+    description: 'Empty commit'
