@@ -12,7 +12,7 @@
 [core]
 	editor = nvim
 [credential]
-	helper = cache --timeout=2592000 # 30 days
+	helper = store #cache --timeout=2592000 # 30 days
 [fetch]
 	prune = true
 	prunetags = true
