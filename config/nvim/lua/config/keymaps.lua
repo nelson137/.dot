@@ -31,21 +31,11 @@ Map('Repeat last search', 'n', 'n', repeatSearch_Next, 'forward and flash the cu
 Map('Repeat last search', 'n', 'N', repeatSearch_Prev, 'backward and flash the cursor line')
 
 -- Better buffer control
-local function buf_close_others()
-    local curr_bufnr = vim.api.nvim_get_current_buf()
-    vim.cmd.bwipeout(vim.tbl_filter(
-        function(bufnr)
-            return vim.fn.buflisted(bufnr) and bufnr ~= curr_bufnr
-        end,
-        vim.api.nvim_list_bufs()
-    ))
-    vim.cmd.redrawtabline()
-end
 Map('Buffers', 'n', 'gl', '<Cmd>bn<CR>', 'next')
 Map('Buffers', 'n', 'gh', '<Cmd>bp<CR>', 'previous')
-Map('Buffers', 'n', 'gd', '<Cmd>bprevious | bdelete #<CR>', 'close')
-Map('Buffers', 'n', 'gDD', '<Cmd>%bd<CR>', 'close all')
-Map('Buffers', 'n', 'gDO', buf_close_others, 'close other')
+Map('Buffers', 'n', 'gd', function() Snacks.bufdelete.delete() end, 'close current')
+Map('Buffers', 'n', 'gDD', function() Snacks.bufdelete.all() end, 'close all')
+Map('Buffers', 'n', 'gDO', function() Snacks.bufdelete.other() end, 'close other')
 
 -- Better tab control
 Map('Tabs', 'n', 'tn', '<Cmd>tabnew<CR>', 'new')
