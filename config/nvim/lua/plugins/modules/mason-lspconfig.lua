@@ -25,8 +25,7 @@ return {
                 local util = require('lspconfig.util')
 
                 local get_probe_dir = function(root_dir)
-                    local project_root = util.find_node_modules_ancestor(root_dir)
-                    return project_root and (project_root .. '/node_modules') or ''
+                    return vim.fs.find('node_modules', { path = root_dir, upward = true })[1] or ''
                 end
 
                 local default_probe_dir = get_probe_dir(vim.fn.getcwd())
