@@ -140,6 +140,25 @@ py_include() {
 
 
 
+tmuxopen() {
+    local name="$1"; shift
+    local dir="$1"; shift
+
+    tmux list-sessions -f "#{==:#S,$name}" -F '#S'
+    local session=$(tmux list-sessions -f "#{==:#S,$name}" -F '#S')
+    if [[ -z $session ]]; then
+        tmux new-session -d -s "$name" -c "$dir"
+        tmux new-window -d -c "$dir" -n killme
+        tmux new-window -d -c "$dir" -n lazygit
+        tmux kill-window -t killme
+        tmux send-keys -t:lazygit lazygit Enter
+    fi
+
+    tmux attach-session -t "$name"
+}
+
+
+
 xset() {
     [[ $# == 2 && $1 == q ]] || { /usr/bin/xset "$@"; return $?; }
 
