@@ -14,7 +14,7 @@ return {
         local lsnip = require('luasnip')
         lsnip.setup(opts)
 
-        require('luasnip.loaders.from_vscode').lazy_load()
+        require('luasnip.loaders.from_vscode').lazy_load({ paths = './snippets' })
 
         vim.keymap.set({ 'i', 's' }, '<C-l>', function() lsnip.jump(1) end)
         vim.keymap.set({ 'i', 's' }, '<C-h>', function() lsnip.jump(-1) end)
