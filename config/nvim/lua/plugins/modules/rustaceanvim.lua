@@ -37,7 +37,7 @@ return {
 
     lazy = false,
 
-    version = '^5',
+    version = '^6',
 
     ft = { 'rust' },
 }
