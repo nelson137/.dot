@@ -116,13 +116,28 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = { 'nvim-telescope/telescope.nvim' },
     init = function()
+        vim.g.format_on_save = true
+
         vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
             group = vim.api.nvim_create_augroup('FormatOnSave', {}),
             pattern = { '*' },
             callback = function()
-                -- require('conform').format()
+                if vim.g.format_on_save then
+                    require('conform').format()
+                end
             end,
         })
+
+        vim.api.nvim_create_user_command('SaveWithoutFormatting', function(opts)
+            local original_value = vim.g.format_on_save
+            vim.g.format_on_save = false
+            vim.cmd.write({ bang = opts.bang })
+            vim.g.format_on_save = original_value
+        end, { bang = true })
+
+        vim.api.nvim_create_user_command('ToggleFormatOnSave', function()
+            vim.g.format_on_save = not vim.g.format_on_save
+        end, {})
 
         vim.api.nvim_create_autocmd({ 'LspAttach' }, {
             group = vim.api.nvim_create_augroup('LspConfig', {}),
