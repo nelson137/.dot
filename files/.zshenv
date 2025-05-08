@@ -2,8 +2,24 @@
 # Programs
 ######################################################################
 
+# Homebrew
+if [[ $SHLVL == 1 ]]; then
+    export HOMEBREW_NO_ANALYTICS=1
+    export HOMEBREW_NO_AUTO_UPDATE=1
+    export HOMEBREW_NO_ENV_HINTS=1
+    if (( $+commands[brew] )) && [[ $(arch) == arm64 ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [ -f /usr/local/bin/brew ]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    elif [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
+fi
+
 # Cargo
-[[ -d "$HOME/.cargo" ]] && source "$HOME/.cargo/env"
+if [[ $SHLVL == 1 ]]; then
+    [[ -d "$HOME/.cargo" ]] && source "$HOME/.cargo/env"
+fi
 
 # Python
 export PYTHONSTARTUP="$HOME/.pythonrc"
@@ -31,11 +47,13 @@ fi
 
 export PAGER='less -XF'
 
-path_prepend=(
-    "$HOME"/{.dot,.bun,go,.local}/bin
-)
-export PATH="${(j/:/)path_prepend}:$PATH"
-unset path_additions
+if [[ $SHLVL == 1 ]]; then
+    path_prepend=(
+        "$HOME"/{.dot,.bun,go,.local}/bin
+    )
+    export PATH="${(j/:/)path_prepend}:$PATH"
+    unset path_additions
+fi
 
 if command -v rustc &>/dev/null; then
     export DYLD_LIBRARY_PATH="$(rustc --print sysroot)/lib:$DYLD_LIBRARY_PATH"
