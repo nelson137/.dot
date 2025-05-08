@@ -8,6 +8,13 @@ return {
     dependencies = { 'williamboman/mason.nvim' },
 
     opts = {
+        automatic_enable = {
+            exclude = {
+                'rust_analyzer',
+                'ts_ls',
+            },
+        },
+
         ensure_installed = {
             'angularls@17.3.1',
             'eslint',
@@ -42,11 +49,11 @@ return {
             end,
 
             rust_analyzer = function()
-                -- noop
+                -- no setup, handled by `rustaceanvim`
             end,
 
             ts_ls = function()
-                -- noop, handled by `typescript-tools.nvim`
+                -- no setup, handled by `typescript-tools.nvim`
             end,
         },
     },
