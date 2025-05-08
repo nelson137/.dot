@@ -1,7 +1,7 @@
 -- Mason compatibility with lspconfig
 
 return {
-    'williamboman/mason-lspconfig',
+    'mason-org/mason-lspconfig.nvim',
 
     event = { 'BufReadPre', 'BufNewFile' },
 

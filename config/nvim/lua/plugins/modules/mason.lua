@@ -1,7 +1,7 @@
 -- Neovim package manager (language servers, linters, formaters, etc.)
 
 return {
-    'williamboman/mason.nvim',
+    'mason-org/mason.nvim',
 
     event = { 'BufReadPre', 'BufNewFile' },
 
