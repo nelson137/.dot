@@ -12,7 +12,7 @@ return {
             javascript = { 'prettier' },
             lua = { 'stylua' },
             python = { 'ruff_format' },
-            -- rust = { 'rustfmt' }, -- taken care of by rustaceanvim
+            rust = { 'rustfmt' },
             typescript = { 'prettier' },
             ['_'] = { 'trim_whitespace' },
         },
