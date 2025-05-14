@@ -28,6 +28,10 @@ return {
         fuzzy = {
             implementation = 'prefer_rust_with_warning',
         },
+        signature = {
+            enabled = true,
+            window = { show_documentation = true },
+        },
         snippets = {
             preset = 'luasnip',
         },
