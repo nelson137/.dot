@@ -22,7 +22,7 @@ if [[ $SHLVL == 1 ]]; then
 fi
 
 # Python
-export PYTHONSTARTUP="$HOME/.pythonrc"
+[[ -f "$HOME/.pythonrc" ]] && export PYTHONSTARTUP="$HOME/.pythonrc"
 export PYTHON_HISTORY="$HOME/.local/share/python/python_history"
 export PYTHONDONTWRITEBYTECODE=1
 
