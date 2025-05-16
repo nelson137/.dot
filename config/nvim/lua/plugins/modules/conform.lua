@@ -14,7 +14,7 @@ return {
             python = { 'ruff_format' },
             rust = { 'rustfmt' },
             typescript = { 'prettier' },
-            ['_'] = { 'trim_whitespace' },
+            ['_'] = { 'trim_newlines', 'trim_whitespace' },
         },
     },
 }
