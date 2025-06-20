@@ -22,3 +22,8 @@ customCommands:
     context: 'global'
     description: 'Empty commit'
     command: 'git commit -v --allow-empty -m "empty commit"'
+  - key: '<c-l>'
+    context: 'status,files,worktrees,localBranches,remotes,remoteBranches,tags,reflogCommits,stash'
+    description: 'Delete all of the local `*-current` tags'
+    command: 'git tag --list "*-current" | xargs --no-run-if-empty git tag --delete'
+    output: 'log'
