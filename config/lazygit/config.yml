@@ -1,5 +1,8 @@
 confirmOnQuit: true
 
+os:
+  shellFunctionsFile: ~/.dot/files/.aliases
+
 gui:
   scrollOffMargin: 4
   theme:
