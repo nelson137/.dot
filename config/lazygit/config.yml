@@ -13,9 +13,9 @@ gui:
 customCommands:
   - key: '-'
     context: 'global'
-    command: 'git switch -'
     description: 'Switch to the previous branch'
+    command: 'git switch -'
   - key: 'E'
     context: 'global'
-    command: 'git commit -v --allow-empty -m "empty commit"'
     description: 'Empty commit'
+    command: 'git commit -v --allow-empty -m "empty commit"'
