@@ -1,4 +1,4 @@
--- Switch text under the cursor
+-- Switch text under the cursor with `gs`
 
 return {
     'AndrewRadev/switch.vim',
