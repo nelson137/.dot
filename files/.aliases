@@ -63,119 +63,119 @@ alias lla="$LS -lA"
 alias llD="$LS -ld"
 
 # git
-alias g=git
+g() git "$@"
 
-alias ga='git add --all'
-alias gapa='git add --patch'
+ga() git add --all "$@"
+gapa() git add --patch "$@"
 
-alias gbs='git bisect'
-alias gbsb='git bisect bad'
-alias gbsg='git bisect good'
-alias gbsr='git bisect reset'
-alias gbss='git bisect start'
+gbs() git bisect "$@"
+gbsb() git bisect bad "$@"
+gbsg() git bisect good "$@"
+gbsr() git bisect reset "$@"
+gbss() git bisect start "$@"
 
-alias gb='git branch'
-alias gbd='git branch --delete'
-alias 'gbd!'='git branch --delete --force'
-alias gbm='git branch --move'
-alias gbu='git branch --set-upstream-to'
-alias gbUU='git branch --unset-upstream'
-alias gbv='git branch -vv'
+gb() git branch "$@"
+gbd() git branch --delete "$@"
+gbd!() git branch --delete --force "$@"
+gbm() git branch --move "$@"
+gbu() git branch --set-upstream-to "$@"
+gbUU() git branch --unset-upstream "$@"
+gbv() git branch -vv "$@"
 
-alias gcat='git cat-file'
+gcat() git cat-file "$@"
 
-alias gco='git checkout'
-alias gcob='git checkout -b'
-alias gcop='git checkout --patch'
+gco() git checkout "$@"
+gcob() git checkout -b "$@"
+gcop() git checkout --patch "$@"
 
-alias gpi='git cherry-pick'
-alias gpia='git cherry-pick --abort'
-alias gpic='git cherry-pick --continue'
+gpi() git cherry-pick "$@"
+gpia() git cherry-pick --abort "$@"
+gpic() git cherry-pick --continue "$@"
 
-alias gc='git commit -v'
-alias gca='git commit -v --all'
-alias gcam='git commit -v --all -m'
-alias gcae='git commit -v --all --amend --allow-empty --edit'
-alias 'gca!'='git commit -v --all --amend --no-edit'
-alias gce='git commit -v --amend --allow-empty --edit'
-alias 'gc!'='git commit -v --amend --no-edit'
-alias gcmsg='git commit -m'
+gc() git commit -v "$@"
+gca() git commit -v --all "$@"
+gcam() git commit -v --all -m "$@"
+gcae() git commit -v --all --amend --allow-empty --edit "$@"
+gca!() git commit -v --all --amend --no-edit "$@"
+gce() git commit -v --amend --allow-empty --edit "$@"
+gc!() git commit -v --amend --no-edit "$@"
+gcmsg() git commit -m "$@"
 
-alias gcf='git config --list'
+gcf() git config --list "$@"
 
-alias gd='git diff'
-alias gds='git diff --stat'
-alias gdca='git diff --cached'
-alias gdcas='git diff --cached --stat'
+gd() git diff "$@"
+gds() git diff --stat "$@"
+gdca() git diff --cached "$@"
+gdcas() git diff --cached --stat "$@"
 gdss() {
     local stat="$(git diff --shortstat "$@")"
     [[ $stat =~ '([0-9]+) ins.* ([0-9]+) del' ]] &&
         echo "$stat, $(( ${match[1]} - ${match[2]} )) line delta"
 }
 
-alias gf='git fetch'
+gf() git fetch "$@"
 
-alias gi='git init'
+gi() git init "$@"
 
-alias glo='git log --pretty=oneline-full -24'
-alias gloa='git log --pretty=oneline-full'
-alias glop='git log -p'
-alias glos='git log --compact-summary'
-alias glgg='git log --graph'
-alias glog='git log --graph --oneline --decorate'
-alias gloga='git log --graph --oneline --decorate --all'
+glo() git log --pretty=oneline-full -24 "$@"
+gloa() git log --pretty=oneline-full "$@"
+glop() git log -p "$@"
+glos() git log --compact-summary "$@"
+glgg() git log --graph "$@"
+glog() git log --graph --oneline --decorate "$@"
+gloga() git log --graph --oneline --decorate --all "$@"
 
-alias gm='git merge'
-alias gma='git merge --abort'
+gm() git merge "$@"
+gma() git merge --abort "$@"
 
-alias gmv='git mv'
+gmv() git mv "$@"
 
-alias gl='git pull'
-alias gl!='git pull --force'
+gl() git pull "$@"
+gl!() git pull --force "$@"
 
-alias gp='git push'
-alias 'gp!'='git push --force-with-lease'
-alias gpd='git push --dry-run'
-alias gpsup='git push --set-upstream origin $(git_current_branch)'
+gp() git push "$@"
+gp!() git push --force-with-lease "$@"
+gpd() git push --dry-run "$@"
+gpsup() git push --set-upstream origin $(git_current_branch) "$@"
 
-alias grb='git rebase'
-alias grba='git rebase --abort'
-alias grbc='git rebase --continue'
-alias grbe='git rebase --edit-todo'
-alias grbi='git rebase --interactive'
-alias grbif='git rebase --interactive --autosquash'
+grb() git rebase "$@"
+grba() git rebase --abort "$@"
+grbc() git rebase --continue "$@"
+grbe() git rebase --edit-todo "$@"
+grbi() git rebase --interactive "$@"
+grbif() git rebase --interactive --autosquash "$@"
 
-alias gr='git remote'
-alias gra='git remote add'
-alias grget='git remote get-url'
-alias grset='git remote set-url'
-alias grpa='git remote | xargs git remote prune'
+gr() git remote "$@"
+gra() git remote add "$@"
+grget() git remote get-url "$@"
+grset() git remote set-url "$@"
+grpa() { git remote | xargs git remote prune; }
 
-alias grh='git reset'
-alias grhh='git reset --hard'
+grh() git reset "$@"
+grhh() git reset --hard "$@"
 
-alias grm='git rm -r'
+grm() git rm -r "$@"
 
-alias grs='git restore'
-alias grsp='git restore -p'
+grs() git restore "$@"
+grsp() git restore -p "$@"
 
-alias gsta='git stash push'
-alias gstam='git stash push -m'
-alias gstaa='git stash apply'
-alias gstd='git stash drop'
-alias gstp='git stash pop'
-alias gstl='git stash list'
-alias gstls='git stash show --compact-summary'
-alias gsts='git stash show --text'
+gsta() git stash push "$@"
+gstam() git stash push -m "$@"
+gstaa() git stash apply "$@"
+gstd() git stash drop "$@"
+gstp() git stash pop "$@"
+gstl() git stash list "$@"
+gstls() git stash show --compact-summary "$@"
+gsts() git stash show --text "$@"
 
-alias gs='git status'
-alias gss='git status -s'
+gs() git status "$@"
+gss() git status -s "$@"
 
-alias gsa='git submodule add --depth=1'
-alias gsu='git submodule update --init --recursive --depth=1'
+gsa() git submodule add --depth=1 "$@"
+gsu() git submodule update --init --recursive --depth=1 "$@"
 
-alias gw='git switch'
-alias gwc='git switch --create'
-alias gwd='git switch --detach'
+gw() git switch "$@"
+gwc() git switch --create "$@"
+gwd() git switch --detach "$@"
 
-alias grt='cd "$(git rev-parse --show-toplevel || echo .)"'
+grt() cd "$(git rev-parse --show-toplevel || echo .)"
