@@ -27,3 +27,17 @@ customCommands:
     description: 'Delete all of the local `*-current` tags'
     command: 'git tag --list "*-current" | xargs --no-run-if-empty git tag --delete'
     output: 'log'
+  - key: '<c-f>'
+    context: 'commits'
+    description: 'Push selected commit'
+    prompts:
+      - type: 'confirm'
+        title: 'Force push to branch'
+        body: |
+          Are you sure you want to force push?
+
+          Push:   {{ .SelectedCommit.Hash }} -> {{ .CheckedOutBranch.Name }}
+          Author: {{ .SelectedCommit.AuthorName }} <{{ .SelectedCommit.AuthorEmail }}>
+
+          {{ .SelectedCommit.Name }}
+    command: 'git push --force-with-lease {{ .CheckedOutBranch.UpstreamRemote }} {{ .SelectedCommit.Hash }}:{{ .CheckedOutBranch.UpstreamBranch }}'
