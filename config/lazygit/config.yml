@@ -40,4 +40,4 @@ customCommands:
           Author: {{ .SelectedCommit.AuthorName }} <{{ .SelectedCommit.AuthorEmail }}>
 
           {{ .SelectedCommit.Name }}
-    command: 'git push --force-with-lease {{ .CheckedOutBranch.UpstreamRemote }} {{ .SelectedCommit.Hash }}:{{ .CheckedOutBranch.UpstreamBranch }}'
+    command: '_git_push_selected_commit "{{ .SelectedCommit.Hash }}" "{{ .CheckedOutBranch.Name }}" "{{ .CheckedOutBranch.UpstreamRemote }}" "{{ .CheckedOutBranch.UpstreamBranch }}"'

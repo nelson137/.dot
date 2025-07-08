@@ -138,6 +138,41 @@ gp!() git push --force-with-lease "$@"
 gpd() git push --dry-run "$@"
 gpsup() git push --set-upstream origin $(git_current_branch) "$@"
 
+_git_push_selected_commit() {
+    if (( $# < 2 )); then
+        echo 'Usage: _git_push_selected_commit COMMIT_HASH LOCAL_BRANCH [UPSTREAM_REMOTE] [UPSTREAM_BRANCH]' >&2
+        return 1
+    fi
+
+    local commit_hash local_branch upstream_remote upstream_branch
+    commit_hash=$1; (( $# > 0 )) && shift
+    local_branch=$1; (( $# > 0 )) && shift
+    upstream_remote=$1; (( $# > 0 )) && shift
+    upstream_branch=$1; (( $# > 0 )) && shift
+
+    local remote
+    if [[ -n $upstream_remote ]]; then
+        remote=$upstream_remote
+    else
+        remote=origin
+        # Ensure there is an `origin` remote
+        if ! command git remote get-url "$remote" &>/dev/null; then
+            echo "Error: branch has no upstream remote and default remote '$remote' does not exist" >&2
+            return 1
+        fi
+    fi
+
+    local branch
+    branch=${upstream_branch:-refs/heads/$local_branch}
+
+    git push --force-with-lease "$remote" "$commit_hash:$branch"
+
+    # Set upstream branch if pushing for the first time
+    if [[ -z $upstream_branch ]]; then
+        git branch --set-upstream-to="$remote/$local_branch" "$local_branch"
+    fi
+}
+
 grb() git rebase "$@"
 grba() git rebase --abort "$@"
 grbc() git rebase --continue "$@"
