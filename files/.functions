@@ -141,11 +141,22 @@ py_include() {
 
 
 tmuxopen() {
-    local name="$1"; shift
-    local dir="$1"; shift
+    local name dir session
+    name="$1"; (( $# > 0 )) && shift
+    dir="$1"; (( $# > 0 )) && shift
 
-    tmux list-sessions -f "#{==:#S,$name}" -F '#S'
-    local session=$(tmux list-sessions -f "#{==:#S,$name}" -F '#S')
+    if [[ -z $name ]] || (( $# > 0 )); then
+        echo >&2 'Usage: tmuxopen [SESSION_NAME] PATH'
+        return 1
+    fi
+
+    if [[ -z $dir ]]; then
+        dir=$name
+        name="${dir:t}"
+    fi
+
+    session=$(tmux list-sessions -f "#{==:#S,$name}" -F '#S')
+
     if [[ -z $session ]]; then
         tmux new-session -d -s "$name" -c "$dir"
         tmux new-window -d -c "$dir" -n killme
