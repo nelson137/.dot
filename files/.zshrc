@@ -179,6 +179,11 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
 
+if (( $+commands[fnm] )); then
+    eval "$(fnm env --shell=zsh --use-on-cd)"
+    eval "$(fnm completions --shell=zsh)"
+fi
+
 # Bun
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
