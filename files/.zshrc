@@ -166,6 +166,7 @@ elif [ -f /usr/local/bin/brew ]; then
 elif [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
+alias axbrew='arch -x86_64 /usr/local/homebrew/bin/brew'
 
 # Starship
 if (( $+commands[starship] )); then
@@ -186,9 +187,6 @@ fi
 
 # Bun
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-
-# Homebrew
-alias axbrew='arch -x86_64 /usr/local/homebrew/bin/brew'
 
 # awscli completions
 [[ -d /opt/aws-cli ]] && source /opt/aws-cli/bin/aws_zsh_completer.sh
