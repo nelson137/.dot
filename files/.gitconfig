@@ -2,7 +2,7 @@
 
 [includeIf "gitdir:/"]
 	path = ~/.gitconfig.personal
-[includeIf "gitdir:/opt/code/"]
+[includeIf "gitdir:/opt/code/work/"]
 	path = ~/.gitconfig.work
 
 [color]
