@@ -11,6 +11,7 @@ return {
         formatters_by_ft = {
             css = { 'prettier' },
             html = { 'prettier' },
+            htmlangular = { 'prettier' },
             javascript = { 'prettier' },
             json = { 'prettier' },
             json5 = { 'prettier' },
