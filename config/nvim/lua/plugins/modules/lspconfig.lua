@@ -113,9 +113,26 @@ end
 
 return {
     'neovim/nvim-lspconfig',
+
     event = { 'BufReadPre', 'BufNewFile' },
+
     dependencies = { 'nvim-telescope/telescope.nvim' },
+
     init = function()
+        vim.lsp.config('angularls', {
+            filetypes = { 'html', 'htmlangular' },
+            root_markers = { 'angular.json', 'nx.json' },
+        })
+
+        vim.lsp.config('lua_ls', {
+            settings = {
+                Lua = {
+                    runtime = { version = 'LuaJIT' },
+                    telemetry = { enable = false },
+                },
+            },
+        })
+
         vim.g.format_on_save = true
 
         vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
