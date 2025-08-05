@@ -8,6 +8,12 @@ return {
     -- | A | B | C                             X | Y | Z |
     -- +-------------------------------------------------+
     opts = {
+        options = {
+            disabled_filetypes = {
+                statusline = { 'neo-tree' },
+            },
+        },
+
         sections = {
             lualine_a = { 'mode' },
             lualine_b = { 'branch', 'diagnostics' },
