@@ -21,6 +21,7 @@ return {
             'lua_ls',
             'rust_analyzer',
             'ts_ls',
+            'basedpyright',
         },
     },
 }

@@ -133,6 +133,16 @@ return {
             },
         })
 
+        vim.lsp.config('basedpyright', {
+            settings = {
+                basedpyright = {
+                    analysis = {
+                        typeCheckingMode = 'basic',
+                    },
+                },
+            },
+        })
+
         vim.g.format_on_save = true
 
         vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
