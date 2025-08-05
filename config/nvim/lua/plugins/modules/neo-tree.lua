@@ -1,13 +1,11 @@
 -- Tree file explorer
 
---- @param sub_path string?
-local function P(sub_path)
-    local path = 'neo-tree'
-    if sub_path then
-        path = path .. '.' .. sub_path
-    end
-    return require(path)
-end
+local P = {
+    command = function() return require('neo-tree.command') end,
+}
+setmetatable(P, {
+    __call = function() return require('neo-tree') end,
+})
 
 return {
     'nvim-neo-tree/neo-tree.nvim',
@@ -35,11 +33,37 @@ return {
                 { source = 'document_symbols' },
             },
         },
+        default_component_configs = {
+            container = {
+                max_width = 74,
+            },
+        },
+        commands = {
+            focus_filesystem = function()
+                P.command().execute({ action = 'focus', source = 'filesystem' })
+            end,
+            focus_buffers = function()
+                P.command().execute({ action = 'focus', source = 'buffers' })
+            end,
+            focus_document_symbols = function()
+                P.command().execute({ action = 'focus', source = 'document_symbols' })
+            end,
+        },
         window = {
-            width = 74,
+            auto_expand_width = true,
             mappings = {
+                ['e'] = 'focus_filesystem',
+                ['E'] = 'focus_buffers',
+                ['Q'] = 'focus_document_symbols',
                 ['<C-j>'] = { 'scroll_preview', config = { direction = 10 } },
                 ['<C-k>'] = { 'scroll_preview', config = { direction = -10 } },
+                -- TODO: add mappings to find with telescope
+                --       https://github.com/nvim-neo-tree/neo-tree.nvim/wiki/Recipes#find-with-telescope
+                -- TODO: add mappings to open file with diffview
+                -- TODO: implement LSP reference updates on file rename
+                --       https://github.com/nvim-neo-tree/neo-tree.nvim/wiki/Recipes#handle-rename-or-move-file-event
+                --       implement this function's logic:
+                --       https://github.com/pmizio/typescript-tools.nvim/blob/3c501d7c7f79457932a8750a2a1476a004c5c1a9/lua/typescript-tools/api.lua#L158
             },
         },
         filesystem = {
@@ -53,48 +77,9 @@ return {
                 leave_dirs_open = false,
             },
             use_libuv_file_watcher = false,
-            renderers = {
-                -- TODO: dynamically insert these configs by filtering the arrays from
-                -- `require('neo-tree.defaults').renderers.{file,directory}`
-                file = {
-                    { "indent" },
-                    { "icon" },
-                    {
-                        "container",
-                        content = {
-                            { "name",           zindex = 10 },
-                            { "symlink_target", zindex = 10, highlight = "NeoTreeSymbolicLinkTarget" },
-                            { "clipboard",      zindex = 10 },
-                            { "bufnr",          zindex = 10 },
-                            { "modified",       zindex = 20, align = "right" },
-                            { "diagnostics",    zindex = 20, align = "right" },
-                            { "git_status",     zindex = 10, align = "right" },
-                            -- { "file_size",      zindex = 10, align = "right" },
-                            -- { "type",           zindex = 10, align = "right" },
-                            -- { "last_modified",  zindex = 10, align = "right" },
-                            { "created",        zindex = 10, align = "right" },
-                        },
-                    },
-                },
-                directory = {
-                    { "indent" },
-                    { "icon" },
-                    { "current_filter" },
-                    {
-                        "container",
-                        content = {
-                            { "name",           zindex = 10 },
-                            { "symlink_target", zindex = 10, highlight = "NeoTreeSymbolicLinkTarget" },
-                            { "clipboard",      zindex = 10 },
-                            { "diagnostics",    zindex = 20, align = "right",                        hide_when_expanded = true, errors_only = true },
-                            { "git_status",     zindex = 10, align = "right",                        hide_when_expanded = true },
-                            -- { "file_size",      zindex = 10, align = "right" },
-                            -- { "type",           zindex = 10, align = "right" },
-                            -- { "last_modified",  zindex = 10, align = "right" },
-                            { "created",        zindex = 10, align = "right" },
-                        },
-                    },
-                },
+            mappings = {
+                ['f'] = 'filter_on_submit',
+                ['<C-x>'] = 'clear_filter',
             },
         },
     },
@@ -102,8 +87,13 @@ return {
     config = function(_, opts)
         P().setup(opts)
 
-        vim.keymap.set('n', '<Leader>e', function()
-            P('command').execute({ action = 'focus', source = 'filesystem', toggle = true })
-        end, { desc = 'NeoTree: toggle filesystem' })
+        local function toggle_source(source)
+            return function()
+                P.command().execute({ action = 'focus', source = source, toggle = true })
+            end
+        end
+
+        Map('NeoTree', 'n', '<Leader>e', toggle_source('filesystem'), 'toggle filesystem')
+        Map('NeoTree', 'n', '<Leader>E', toggle_source('buffers'), 'toggle buffers')
     end,
 }
