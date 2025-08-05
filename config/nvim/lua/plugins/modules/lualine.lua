@@ -10,7 +10,7 @@ return {
     opts = {
         options = {
             disabled_filetypes = {
-                statusline = { 'neo-tree' },
+                statusline = { 'neo-tree', 'dapui_scopes', 'dapui_breakpoints', 'dapui_stacks', 'dapui_watches', 'dapui_console', 'dap-repl' },
             },
         },
 
