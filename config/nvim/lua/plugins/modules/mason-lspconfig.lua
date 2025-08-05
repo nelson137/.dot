@@ -16,7 +16,7 @@ return {
         },
 
         ensure_installed = {
-            'angularls@17.3.1',
+            'angularls',
             'eslint',
             'lua_ls',
             'rust_analyzer',
