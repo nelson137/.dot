@@ -16,6 +16,6 @@ return {
 
         local map = Map('Illuminate')
         map('n', '<C-n>', illuminate.goto_next_reference, 'goto next reference')
-        map('n', '<C-m>', illuminate.goto_prev_reference, 'goto prev reference')
+        map('n', '<C-p>', illuminate.goto_prev_reference, 'goto prev reference')
     end,
 }
