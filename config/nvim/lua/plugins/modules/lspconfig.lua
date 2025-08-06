@@ -81,7 +81,7 @@ local on_attach = function(ev)
     vim.keymap.set('n', '<Leader>r', vim.lsp.buf.rename, key_opts)
 
     -- Code info
-    vim.keymap.set('n', '<c-k>', vim.lsp.buf.signature_help, key_opts)
+    vim.keymap.set('i', '<c-k>', vim.lsp.buf.signature_help, key_opts)
 
     -- Jump to code
     vim.keymap.set('n', '<Leader>gd', telescope.lsp_definitions, key_opts)
