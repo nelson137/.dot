@@ -95,3 +95,6 @@ vim.opt.updatetime = 400
 vim.opt.visualbell = true
 
 vim.opt.wildmenu = true
+
+-- Floating window border
+vim.opt.winborder = 'rounded'
