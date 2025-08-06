@@ -43,7 +43,7 @@ local function lsp_goto_diagnostic(get_pos, opts)
         end
     end
 
-    vim.api.nvim_echo({ { 'No diagnostics to move to', 'WarningMsg' } }, true, {})
+    vim.notify('No diagnostics to move to', vim.log.levels.WARN)
 end
 
 local function lsp_goto_next_diagnostic() lsp_goto_diagnostic(vim.diagnostic.get_next_pos) end
