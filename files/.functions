@@ -152,8 +152,10 @@ tmuxopen() {
 
     if [[ -z $path_ ]]; then
         path_=$name
-        name="${path_:t}"
+        name=$(basename "$path_")
     fi
+
+    name=$(tr '.:' '__' <<< "$name")
 
     session=$(tmux list-sessions -f "#{==:#S,$name}" -F '#S')
 
