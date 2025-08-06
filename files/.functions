@@ -26,6 +26,21 @@ ckeys() {
 
 
 case "$(uname -s)" in
+Darwin*)
+default_gateway() {
+    route -n get default | awk '$1 == "gateway:" { print $2 }'
+}
+;;
+*)
+default_gateway() {
+    ip route | awk '/default/ {print $3}'
+}
+;;
+esac
+
+
+
+case "$(uname -s)" in
 Darwin)
 ;;
 *)
