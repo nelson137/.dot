@@ -196,7 +196,7 @@ fi
 
 # User config files
 for f in aliases functions; do
-    f="$HOME/.dot/files/$f"
+    f="$HOME/.dot/shell/$f"
     [[ -f "$f" ]] && source "$f"
 done
 unset f

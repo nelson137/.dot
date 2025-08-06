@@ -102,7 +102,7 @@ bash_files=(
     functions
 )
 for bf in "${bash_files[@]}"; do
-    bf="$HOME/.dot/files/$bf"
+    bf="$HOME/.dot/shell/$bf"
     if [ -f "$bf" ]; then
         source "$bf"
     else
