@@ -379,7 +379,7 @@ tmuxopen() {
         name=$(basename "$path_")
     fi
 
-    name=$(tr '.:' '__' <<< "$name")
+    name=$(sed 's/^[.:]*//; s/[.:]*$//; s/[.:]/_/g' <<< "$name")
 
     session=$(tmux list-sessions -f "#{==:#S,$name}" -F '#S')
 
