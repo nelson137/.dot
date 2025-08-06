@@ -18,7 +18,8 @@ return {
         {
             '<Leader>xc',
             '<cmd>Trouble diagnostics close<CR>',
-            desc = 'Trouble: close diagnostics'},
+            desc = 'Trouble: close diagnostics'
+        },
         {
             '<Leader>xX',
             '<cmd>Trouble diagnostics toggle filter.buf=0<CR>',
