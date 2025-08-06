@@ -1,53 +1,33 @@
 -- Common language server configs
 
--- Copied from |vim.diagnostic|.
-local function _diagnostic_move_pos(opts, pos)
-    opts = opts or {}
-
-    local float = vim.F.if_nil(opts.float, true)
-    local win_id = opts.win_id or vim.api.nvim_get_current_win()
-
-    if not pos then
-        return
-    end
-
-    vim.api.nvim_win_call(win_id, function()
-        -- Save position in the window's jumplist
-        vim.cmd([[normal! m']])
-        vim.api.nvim_win_set_cursor(win_id, { pos[1] + 1, pos[2] })
-        -- Open folds under the cursor
-        vim.cmd([[normal! zv]])
-    end)
-
-    if float then
-        local float_opts = type(float) == 'table' and float or {}
-        vim.schedule(function()
-            vim.diagnostic.open_float(vim.tbl_extend('keep', float_opts, {
-                bufnr = vim.api.nvim_win_get_buf(win_id),
-                scope = 'cursor',
-                focus = false,
-            }))
-        end)
-    end
+---@param direction 1|-1 Whether to jump to the next (`1`) or prev (`-1`)
+---    diagnostic.
+---@return fun() A function that jumps to the next diagnostic in the given
+---    direction.
+local function diagnostic_jump(direction)
+    return function() vim.diagnostic.jump({ count = direction, float = true }) end
 end
 
-local function lsp_goto_diagnostic(get_pos, opts)
+---@param direction 1|-1 Whether to jump to the next (`1`) or prev (`-1`)
+---    diagnostic.
+local function lsp_goto_diagnostic(direction, opts)
     opts = opts or {}
     -- Severities go from ERROR (1) to HINT (4)
     for sev, _ in ipairs(vim.diagnostic.severity) do
-        local get_pos_opts = vim.tbl_extend('force', opts, { severity = sev })
-        local pos = get_pos(get_pos_opts)
-        if pos then
-            _diagnostic_move_pos(opts, pos)
-            return
-        end
+        local jump_opts = vim.tbl_extend('force', opts, {
+            count = direction,
+            float = true,
+            severity = sev,
+        })
+        local diagnostic = vim.diagnostic.jump(jump_opts)
+        if diagnostic then return end
     end
 
     vim.notify('No diagnostics to move to', vim.log.levels.WARN)
 end
 
-local function lsp_goto_next_diagnostic() lsp_goto_diagnostic(vim.diagnostic.get_next_pos) end
-local function lsp_goto_prev_diagnostic() lsp_goto_diagnostic(vim.diagnostic.get_prev_pos) end
+local function lsp_goto_next_diagnostic() lsp_goto_diagnostic(1) end
+local function lsp_goto_prev_diagnostic() lsp_goto_diagnostic(-1) end
 
 local function lsp_references()
     require('telescope.builtin').lsp_references({
@@ -55,6 +35,12 @@ local function lsp_references()
         include_current_line = true,
     })
 end
+
+-- Default mappings for buffers that don't attach a client (e.g. toml).
+-- Overridden by the same mappings below with extra options.
+local default_map = Map('LSP')
+default_map('n', 'g]', diagnostic_jump(1))
+default_map('n', 'g[', diagnostic_jump(-1))
 
 local on_attach = function(ev)
     local telescope = require('telescope.builtin')
@@ -95,8 +81,8 @@ local on_attach = function(ev)
     -- Jump to diagnostics
     map('n', 'g]', lsp_goto_next_diagnostic, 'jump to next most severe diagnostic')
     map('n', 'g[', lsp_goto_prev_diagnostic, 'jump to prev most severe diagnostic')
-    map('n', 'g}', vim.diagnostic.goto_next, 'jump to next hidiagnostic')
-    map('n', 'g{', vim.diagnostic.goto_prev, 'jump to prev hidiagnostic')
+    map('n', 'g}', diagnostic_jump(1), 'jump to next hidiagnostic')
+    map('n', 'g{', diagnostic_jump(-1), 'jump to prev hidiagnostic')
 
     -- -- Show diagnostic popup on cursor hover
     -- vim.api.nvim_create_autocmd('CursorHold', {
