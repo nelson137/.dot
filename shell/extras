@@ -256,11 +256,13 @@ file_birth() {
 ;;
 *)
 file_birth() {
-    inode="$(stat -c %i "$1")"
-    dev="$(df --output=source "$1" | tail -1)"
-    sudo debugfs -R "stat <$inode>" "$dev" \
-      | grep crtime \
-      | cut -d ' ' -f 4-
+    for file; do
+        inode="$(stat -c %i "$file")"
+        dev="$(df --output=source "$1" | tail -1)"
+        sudo debugfs -R "stat <$inode>" "$dev" \
+          | grep crtime \
+          | cut -d ' ' -f 4-
+    done
 }
 ;;
 esac
