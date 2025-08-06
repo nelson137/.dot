@@ -1,7 +1,7 @@
 confirmOnQuit: true
 
 os:
-  shellFunctionsFile: ~/.dot/shell/aliases
+  shellFunctionsFile: ~/.dot/shell/lazygit_functions
 
 gui:
   scrollOffMargin: 4
