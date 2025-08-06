@@ -30,7 +30,7 @@ end
 ---@generic T
 ---@param func fun(value: T): boolean (function) Function
 ---@param t table<any, T> (table) Table
----@return T|nil (value) The first element that passes the predicate or nil
+---@return T? (value) The first element that passes the predicate or nil
 function vim.tbl_find(func, t)
     vim.validate('func', func, 'callable')
     vim.validate('t', t, 'table')
@@ -108,12 +108,12 @@ end
 
 --- Dump value of a variable in a formatted string
 --
---- @param o       any         Dumpable object
---- @param indent  string|nil  Tabulation string, '  ' by default
---- @param depth   number|nil  Initial tabulation level, 0 by default
---- @param lines   table|nil
---- @param prefix  string|nil
---- @return        string
+--- @param o       any      Dumpable object
+--- @param indent  string?  Tabulation string, '  ' by default
+--- @param depth   number?  Initial tabulation level, 0 by default
+--- @param lines   table?
+--- @param prefix  string?
+--- @return        table
 function dump(o, indent, depth, lines, prefix)
     lines = lines or {}
     prefix = prefix or ''
