@@ -141,26 +141,26 @@ py_include() {
 
 
 tmuxopen() {
-    local name dir session
+    local name path_ session
     name="$1"; (( $# > 0 )) && shift
-    dir="$1"; (( $# > 0 )) && shift
+    path_="$1"; (( $# > 0 )) && shift
 
     if [[ -z $name ]] || (( $# > 0 )); then
         echo >&2 'Usage: tmuxopen [SESSION_NAME] PATH'
         return 1
     fi
 
-    if [[ -z $dir ]]; then
-        dir=$name
-        name="${dir:t}"
+    if [[ -z $path_ ]]; then
+        path_=$name
+        name="${path_:t}"
     fi
 
     session=$(tmux list-sessions -f "#{==:#S,$name}" -F '#S')
 
     if [[ -z $session ]]; then
-        tmux new-session -d -s "$name" -c "$dir"
-        tmux new-window -d -c "$dir" -n killme
-        tmux new-window -d -c "$dir" -n lazygit
+        tmux new-session -d -s "$name" -c "$path_"
+        tmux new-window -d -c "$path_" -n killme
+        tmux new-window -d -c "$path_" -n lazygit
         tmux kill-window -t killme
         tmux send-keys -t:lazygit lazygit Enter
     fi
