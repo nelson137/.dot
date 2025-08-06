@@ -1,0 +1,422 @@
+# vim: ft=bash
+
+# System-specific aliases
+
+if [[ -d /mnt/c/Users ]]; then
+    alias desktop="cd /mnt/c/Users/$USER"
+else
+    alias desktop='cd ~/Desktop'
+fi
+
+case "$(uname -s)" in
+    Darwin*)
+        alias win10wine='MTL_HUD_ENABLED=0 WINEESYNC=1 WINEPREFIX=/opt/Windows10 /usr/local/opt/game-porting-toolkit/bin/wine64'
+        ;;
+    *) ;;
+esac
+
+if command -v kitten &>/dev/null; then
+    alias imgcat='kitten icat'
+fi
+
+# Command Aliases | Custom
+
+alias extras='vim ~/.dot/shell/extras'
+alias npmi='npm install'
+alias setbg="nitrogen --set-zoom-fill --random ~/.config/i3/assets/backgrounds"
+alias socwd='command du -csh . | tail -1'
+alias vimrc='vim ~/.vimrc'
+alias wifi='nohup nm-connection-editor &>/dev/null &!'
+alias wsl='/mnt/c/Windows/System32/wsl.exe'
+alias zshenv='vim ~/.zshenv'
+alias zshhist='vim ~/.zsh_history'
+alias zshrc='vim ~/.zshrc'
+
+if command -v bat &>/dev/null; then
+    alias cat='bat'
+fi
+
+if command -v nvim &>/dev/null; then
+    alias vim='nvim'
+fi
+
+# Command Aliases | Preset Arguments
+
+alias bc='bc -ql'
+alias diff='git diff --no-index'
+alias du='du -h'
+alias less='less -c'
+alias lg='lazygit'
+alias mkdir='mkdir -p'
+alias mv='mv -i'
+alias pdflatex='pdflatex -file-line-error'
+alias sqlite3='sqlite3 -header -column'
+alias wget="wget --hsts-file $HOME/.local/share/wget/wget-hsts"
+alias whois='whois -H'
+alias zathura='zathura --fork'
+
+# Command Aliases | LS
+
+LS="command ls -vhp"
+case "$(uname -s)" in
+    Linux*) LS="$LS --color=auto --time-style=long-iso --group-directories-first" ;;
+    Darwin*) LS="$LS -G" ;;
+esac
+alias ls="$LS"
+alias la="$LS -A"
+alias ll="$LS -l"
+alias lla="$LS -lA"
+alias llD="$LS -ld"
+unset LS
+
+# Command Aliases | Git
+
+g() git "$@"
+
+ga() git add --all "$@"
+gapa() git add --patch "$@"
+
+gbs() git bisect "$@"
+gbsb() git bisect bad "$@"
+gbsg() git bisect good "$@"
+gbsr() git bisect reset "$@"
+gbss() git bisect start "$@"
+
+gb() git branch "$@"
+gbd() git branch --delete "$@"
+gbd!() git branch --delete --force "$@"
+gbm() git branch --move "$@"
+gbu() git branch --set-upstream-to "$@"
+gbUU() git branch --unset-upstream "$@"
+gbv() git branch -vv "$@"
+
+gcat() git cat-file "$@"
+
+gco() git checkout "$@"
+gcob() git checkout -b "$@"
+gcop() git checkout --patch "$@"
+
+gpi() git cherry-pick "$@"
+gpia() git cherry-pick --abort "$@"
+gpic() git cherry-pick --continue "$@"
+
+gc() git commit -v "$@"
+gca() git commit -v --all "$@"
+gcam() git commit -v --all -m "$@"
+gcae() git commit -v --all --amend --allow-empty --edit "$@"
+gca!() git commit -v --all --amend --no-edit "$@"
+gce() git commit -v --amend --allow-empty --edit "$@"
+gc!() git commit -v --amend --no-edit "$@"
+gcmsg() git commit -m "$@"
+
+gcf() git config --list "$@"
+
+gd() git diff "$@"
+gds() git diff --stat "$@"
+gdca() git diff --cached "$@"
+gdcas() git diff --cached --stat "$@"
+gdss() {
+    local stat="$(git diff --shortstat "$@")"
+    [[ $stat =~ '([0-9]+) ins.* ([0-9]+) del' ]] &&
+        echo "$stat, $(( ${match[1]} - ${match[2]} )) line delta"
+}
+
+gf() git fetch "$@"
+
+gi() git init "$@"
+
+glo() git log --pretty=oneline-full -24 "$@"
+gloa() git log --pretty=oneline-full "$@"
+glop() git log -p "$@"
+glos() git log --compact-summary "$@"
+glgg() git log --graph "$@"
+glog() git log --graph --oneline --decorate "$@"
+gloga() git log --graph --oneline --decorate --all "$@"
+
+gm() git merge "$@"
+gma() git merge --abort "$@"
+
+gmv() git mv "$@"
+
+gl() git pull "$@"
+gl!() git pull --force "$@"
+
+gp() git push "$@"
+gp!() git push --force-with-lease "$@"
+gpd() git push --dry-run "$@"
+gpsup() git push --set-upstream origin $(git_current_branch) "$@"
+
+grb() git rebase "$@"
+grba() git rebase --abort "$@"
+grbc() git rebase --continue "$@"
+grbe() git rebase --edit-todo "$@"
+grbi() git rebase --interactive "$@"
+grbif() git rebase --interactive --autosquash "$@"
+
+gr() git remote "$@"
+gra() git remote add "$@"
+grget() git remote get-url "$@"
+grset() git remote set-url "$@"
+grpa() { git remote | xargs git remote prune; }
+
+grh() git reset "$@"
+grhh() git reset --hard "$@"
+
+grm() git rm -r "$@"
+
+grs() git restore "$@"
+grsp() git restore -p "$@"
+
+gsta() git stash push "$@"
+gstam() git stash push -m "$@"
+gstaa() git stash apply "$@"
+gstd() git stash drop "$@"
+gstp() git stash pop "$@"
+gstl() git stash list "$@"
+gstls() git stash show --compact-summary "$@"
+gsts() git stash show --text "$@"
+
+gs() git status "$@"
+gss() git status -s "$@"
+
+gsa() git submodule add --depth=1 "$@"
+gsu() git submodule update --init --recursive --depth=1 "$@"
+
+gw() git switch "$@"
+gwc() git switch --create "$@"
+gwd() git switch --detach "$@"
+
+grt() cd "$(git rev-parse --show-toplevel || echo .)"
+
+# Function | Battery
+#
+# Get the current battery stats.
+#
+case "$(uname -s)" in
+Darwin*)
+;;
+*)
+battery() {
+    upower -i "$(upower -e | grep BAT)" |
+        grep -E --color=never 'state|to empty|percentage'
+}
+;;
+esac
+
+# Function | C/See Keys
+#
+# Run `xev` but show only key presses.
+#
+ckeys() {
+    local regex='^.+(keycode) ([0-9]+) \((keysym) ([^,]+), ([^\)]+)\).+$'
+    local replace='key: \5   \1: \2   \3: \4'
+    xev -event keyboard | sed -En "/keysym/ s/$regex/$replace/p"
+}
+
+# Function | Default Gateway
+#
+# Print the default gateway on the primary interface.
+#
+case "$(uname -s)" in
+Darwin*)
+default_gateway() {
+    route -n get default | awk '$1 == "gateway:" { print $2 }'
+}
+;;
+*)
+default_gateway() {
+    ip route | awk '/default/ {print $3}'
+}
+;;
+esac
+
+# Function | FEH
+#
+# Run `feh` with sensible arguments.
+#
+case "$(uname -s)" in
+Darwin)
+;;
+*)
+feh() {
+    DISPLAY=:0 /usr/bin/feh --scale-down -x "$@" &>/dev/null & disown
+}
+;;
+esac
+
+# Function | File Birth
+#
+# Show the creation time of the given paths.
+#
+case "$(uname -s)" in
+Darwin)
+file_birth() {
+    stat -f '%SB' -t '%Y-%m-%d %I:%M:%S %p' "$@"
+}
+;;
+*)
+file_birth() {
+    inode="$(stat -c %i "$1")"
+    dev="$(df --output=source "$1" | tail -1)"
+    sudo debugfs -R "stat <$inode>" "$dev" \
+      | grep crtime \
+      | cut -d ' ' -f 4-
+}
+;;
+esac
+
+# Function | Force WiFi
+#
+# Force the WAP portal.
+#
+force_wifi() {
+    xdg-open 'https://google.com' &>/dev/null & disown
+}
+
+# Function | Git CLone
+#
+# Convenience wrapper around `git clone`.
+#
+# Usage:
+#   gcl <repo>         # clones `nelson137/<repo>`
+#   gcl <user>/<repo>  # clones `<user>/<repo>`
+#
+gcl() {
+    local gc='git clone --recurse-submodules'
+    # git clone username/repo(.git) or repo(.git)
+    # In the case without a username, it's assumed the repo is mine
+    for name in "$@"; do
+        local repo="${name%.git}"
+        if [[ $repo =~ ^.*/$ || $repo =~ ^/.+$ ]]; then
+            # Invalid repo names:
+            #  abc/
+            #  /abc
+            #  /
+            echo "invalid repo name: $repo" >&2
+        elif [[ $repo =~ .+/.+ ]]; then
+            # Clone someone else's repo
+            eval "$gc" "https://github.com/${repo}.git"
+        else
+            # Clone my repo
+            eval "$gc" "git@github.com:nelson137/${repo}.git"
+        fi
+    done
+}
+
+# Function | Get IP
+#
+# Print public and private ip addresses.
+#
+case "$(uname -s)" in
+Darwin)
+getip() {
+    echo "Public:  $(curl -s https://icanhazip.com)"
+    echo -n "Private:"
+    ifconfig \
+      | grep 'inet ' \
+      | awk '$2!="127.0.0.1"{printf " %s",$2} END{printf "\n"}'
+}
+;;
+*)
+getip() {
+    echo "Public:  $(curl -s https://icanhazip.com)"
+    local private_ip="$(
+        ip route get 1 |
+        grep -oE '192\.168(\.[0-9]{1,3}){2}' |
+        grep -v '^192\.168\.1\.1$'
+    )"
+    echo "Private: $private_ip"
+}
+;;
+esac
+
+# Function | Is WSL
+#
+# Return whether currently in WSL.
+#
+is_wsl() {
+    grep -qE '(Microsoft|WSL)' /proc/version 2>/dev/null
+}
+
+# Function | Ping
+#
+# Convenience wrapper around `ping`.
+#
+# Usage:
+#   ping gateway  # pings the default gateway
+#   ping ...      # pass-through to the real ping
+ping() {
+    if [[ $# == 1 && "$1" == gateway ]]; then
+        command ping -c3 "$(default_gateway)"
+    else
+        command ping "$@"
+    fi
+}
+
+# Function | Tmux Open
+#
+# Create or attach to sessions with preset windows & panes.
+#
+# Usage:
+#   tmuxopen [SESSION_NAME] PATH
+#
+# If no `SESSION_NAME` is given use a sanitized version of `PATH`.
+#
+tmuxopen() {
+    local name path_ session
+    name="$1"; (( $# > 0 )) && shift
+    path_="$1"; (( $# > 0 )) && shift
+
+    if [[ -z $name ]] || (( $# > 0 )); then
+        echo >&2 'Usage: tmuxopen [SESSION_NAME] PATH'
+        return 1
+    fi
+
+    if [[ -z $path_ ]]; then
+        path_=$name
+        name=$(basename "$path_")
+    fi
+
+    name=$(tr '.:' '__' <<< "$name")
+
+    session=$(tmux list-sessions -f "#{==:#S,$name}" -F '#S')
+
+    if [[ -z $session ]]; then
+        tmux new-session -d -s "$name" -c "$path_"
+        tmux new-window -d -c "$path_" -n killme
+        tmux new-window -d -c "$path_" -n lazygit
+        tmux kill-window -t killme
+        tmux send-keys -t:lazygit lazygit Enter
+    fi
+
+    tmux attach-session -t "$name"
+}
+
+# Function | Xset
+#
+# Convenience wrapper around `xset q` to get specific sections of the output.
+#
+# Usage:
+#   xset q keyboard  # isolate the "Keyboard Control" section from `xset q`
+#   xset q mouse     # isolate the "Pointer Control" section from `xset q`
+#   xset q s         # isolate the "Screen Saver" section from `xset q`
+#   xset q p         # isolate the "Colors" section from `xset q`
+#   xset q fp        # isolate the "Font Path" section from `xset q`
+#   xset q dpms      # isolate the "DPMS (Energy Star)" section from `xset q`
+#   xset ...         # pass-through to the real `xset`
+xset() {
+    [[ $# == 2 && $1 == q ]] || { command xset "$@"; return $?; }
+
+    local setting
+    case "$2" in
+        keyboard) setting='Keyboard Control' ;;
+        mouse)    setting='Pointer Control' ;;
+        s)        setting='Screen Saver' ;;
+        p)        setting='Colors' ;;
+        fp)       setting='Font Path' ;;
+        dpms)     setting='DPMS \(Energy Star\)' ;;
+        *)        echo "xset setting not recognized: $2" >&2; return 1 ;;
+    esac
+
+    command xset q | sed -E "/$setting:/,/^\\S/!d" | sed -E '$s/^(\S)/\1/;Te;d;:e'
+}

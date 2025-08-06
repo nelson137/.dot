@@ -194,11 +194,7 @@ fi
 # Create vim undodir if it doesn't exist
 [[ ! -d ~/.vim/undodir ]] && mkdir -p ~/.vim/undodir
 
-# User config files
-for f in aliases functions; do
-    f="$HOME/.dot/shell/$f"
-    [[ -f "$f" ]] && source "$f"
-done
-unset f
+# Shell extras
+source "$HOME/.dot/shell/extras"
 
 true

@@ -99,7 +99,7 @@ fi
 # User config files
 bash_files=(
     bash_aliases bash_additions
-    functions
+    extras
 )
 for bf in "${bash_files[@]}"; do
     bf="$HOME/.dot/shell/$bf"
