@@ -76,25 +76,27 @@ local on_attach = function(ev)
     -- Disable semantic token highlighting, let Treesitter do that
     client.server_capabilities.semanticTokensProvider = nil
 
+    local map = Map('LSP', key_opts)
+
     -- Code actions
-    vim.keymap.set({ 'n', 'v' }, '<Leader>.', vim.lsp.buf.code_action, key_opts)
-    vim.keymap.set('n', '<Leader>r', vim.lsp.buf.rename, key_opts)
+    map({ 'n', 'v' }, '<Leader>.', vim.lsp.buf.code_action, 'code action')
+    map('n', '<Leader>r', vim.lsp.buf.rename, 'rename symbol')
 
     -- Code info
     vim.keymap.set('i', '<c-k>', vim.lsp.buf.signature_help, key_opts)
 
     -- Jump to code
-    vim.keymap.set('n', '<Leader>gd', telescope.lsp_definitions, key_opts)
-    vim.keymap.set('n', '<Leader>gD', telescope.lsp_type_definitions, key_opts)
-    vim.keymap.set('n', '<Leader>gi', telescope.lsp_implementations, key_opts)
-    vim.keymap.set('n', '<Leader>gr', telescope.lsp_references, key_opts)
-    vim.keymap.set('n', '<Leader>gS', telescope.lsp_document_symbols, key_opts)
+    map('n', '<Leader>gd', telescope.lsp_definitions, 'jump to definition(s)')
+    map('n', '<Leader>gD', telescope.lsp_type_definitions, 'jump to type definition(s)')
+    map('n', '<Leader>gi', telescope.lsp_implementations, 'jump to implementation(s)')
+    map('n', '<Leader>gr', telescope.lsp_references, 'jump to references')
+    map('n', '<Leader>gS', telescope.lsp_document_symbols, 'open document symbols')
 
     -- Jump to diagnostics
-    vim.keymap.set('n', 'g]', lsp_goto_next_diagnostic, key_opts)
-    vim.keymap.set('n', 'g[', lsp_goto_prev_diagnostic, key_opts)
-    vim.keymap.set('n', 'g}', vim.diagnostic.goto_next, key_opts)
-    vim.keymap.set('n', 'g{', vim.diagnostic.goto_prev, key_opts)
+    map('n', 'g]', lsp_goto_next_diagnostic, 'jump to next most severe diagnostic')
+    map('n', 'g[', lsp_goto_prev_diagnostic, 'jump to prev most severe diagnostic')
+    map('n', 'g}', vim.diagnostic.goto_next, 'jump to next hidiagnostic')
+    map('n', 'g{', vim.diagnostic.goto_prev, 'jump to prev hidiagnostic')
 
     -- -- Show diagnostic popup on cursor hover
     -- vim.api.nvim_create_autocmd('CursorHold', {

@@ -14,9 +14,8 @@ return {
         local illuminate = require('illuminate')
         illuminate.configure(opts)
 
-        vim.keymap.set('n', '<C-n>', illuminate.goto_next_reference,
-            { desc = "Illuminate: goto next reference" })
-        vim.keymap.set('n', '<C-m>', illuminate.goto_prev_reference,
-            { desc = "Illuminate: goto prev reference" })
+        local map = Map('Illuminate')
+        map('n', '<C-n>', illuminate.goto_next_reference, 'goto next reference')
+        map('n', '<C-m>', illuminate.goto_prev_reference, 'goto prev reference')
     end,
 }

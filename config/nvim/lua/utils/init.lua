@@ -46,22 +46,41 @@ end
 --- Common
 ----------------------------------------------------------------------
 
----Create a keymap.
----@param label string The mapping label, or used as the description if `description` is `nil`.
----@param mode string|table Mode short-name, see |nvim_set_keymap()|.
----@param lhs string Left-hand |{lhs}| of the mapping.
----@param rhs string|function Right-hand |{rhs}| of the mapping, can be a Lua function.
----@param description string|nil Appended to `label` with `': '`, if given, for the description.
----@param other_opts table|nil Table of |:map-arguments|.
-function Map(label, mode, lhs, rhs, description, other_opts)
-    local desc = label
-    if description then desc = desc .. ': ' .. description end
-    local opts = vim.tbl_extend(
-        'force',
-        other_opts or {},
-        { desc = desc }
-    )
-    vim.keymap.set(mode, lhs, rhs, opts)
+---Create a grouped keymapper.
+---
+---Returns a keymapper function with an API very similar to `vim.keymap.set`.
+---Calling the returned keymapper function create a new keymap.
+---
+---Keymapper function parameters:
+--- - `mode`: Mode short-name, see `|nvim_set_keymap()|`.
+--- - `lhs`: Left-hand `{lhs}` of the mapping.
+--- - `rhs`: Right-hand `{rhs}` of the mapping, can be a Lua function.
+--- - `description`: Appended to `label` with `': '`, if given, for the description.
+--- - `extra_opts`: Table of `|:map-arguments|`.
+---
+---The description of a keymap is the concatenation of the group `label` and
+---the given `description`, if any. If a `description` is given then the
+---description is `label .. ': ' .. description`. If no `description` is given
+---then the description is just `label`.
+---
+---The options passed to `vim.keymap.set` are `group_opts`, overlayed with
+---`extra_opts`, overlayed with the description.
+---
+---@param group_label string The group mapping label.
+---@param group_opts table? The group options (see `|:map-arguments|`).
+---@return fun(mode: string|table, lhs: string, rhs: string|function, description: string?, extra_opts: table?)
+function Map(group_label, group_opts)
+    return function(mode, lhs, rhs, description, extra_opts)
+        local desc = group_label
+        if description then desc = desc .. ': ' .. description end
+        local opts = vim.tbl_extend(
+            'force',
+            group_opts or {},
+            extra_opts or {},
+            { desc = desc }
+        )
+        vim.keymap.set(mode, lhs, rhs, opts)
+    end
 end
 
 function pinspect(...)

@@ -28,7 +28,7 @@ return {
         -- dap.listeners.before.event_terminated.dapui = dapui_close
         dap.listeners.before.event_exited.dapui = dapui_close
 
-        Map('DAP UI', 'v', '<M-k>', dapui_eval)
-        Map('DAP UI', 'n', '<Leader>LL', dapui_toggle)
+        Map('DAP UI')('v', '<M-k>', dapui_eval, 'eval selection')
+        Map('DAP UI')('n', '<Leader>LL', dapui_toggle, 'toggle UI')
     end,
 }

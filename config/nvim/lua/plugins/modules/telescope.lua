@@ -30,32 +30,28 @@ return {
     config = function(_, opts)
         local telescope = require('telescope')
         local builtin = require('telescope.builtin')
+        local live_grep_args = require('telescope-live-grep-args.shortcuts')
 
         telescope.setup(opts)
         telescope.load_extension('fzf')
         telescope.load_extension('live_grep_args')
 
-        vim.keymap.set('n', '<Leader>fF', builtin.find_files,
-            { desc = 'Telescope: find files' })
-        vim.keymap.set('n', '<Leader>fb', builtin.buffers,
-            { desc = 'Telescope: find buffers' })
-        vim.keymap.set('n', '<Leader><F12>', builtin.grep_string,
-            { desc = 'Telescope: search for string under cursor or selection' })
-        vim.keymap.set('n', '<Leader>ff', _git_files,
-            { desc = 'Telescope: find git files' })
-        vim.keymap.set('n', '<Leader>gc', builtin.git_commits,
-            { desc = 'Telescope: list commits' })
-        vim.keymap.set('n', '<Leader>gC', builtin.git_bcommits,
-            { desc = 'Telescope: list commits for current buffer' })
-        vim.keymap.set('n', '<Leader>gs', builtin.git_status,
-            { desc = 'Telescope: show git status' })
+        local map = Map('Telescope')
 
-        vim.keymap.set('n', '<Leader>F', telescope.extensions.live_grep_args.live_grep_args,
-            { desc = 'Telescope: live grep (args)' })
-        local live_grep_args = require('telescope-live-grep-args.shortcuts')
-        vim.keymap.set('v', '<Leader>F', live_grep_args.grep_visual_selection,
-            { desc = 'Telescope: live grep current selection (global)' })
-        vim.keymap.set('v', '<Leader>B', live_grep_args.grep_word_visual_selection_current_buffer,
-            { desc = 'Telescope: live grep current selection (current buffer)' })
+        map('n', '<Leader>fF', builtin.find_files, 'find files')
+        map('n', '<Leader>fb', builtin.buffers, 'find buffers')
+        map('n', '<Leader><F12>', builtin.grep_string,
+            'search for string under cursor or selection')
+        map('n', '<Leader>ff', _git_files, 'find git files')
+        map('n', '<Leader>gc', builtin.git_commits, 'list commits')
+        map('n', '<Leader>gC', builtin.git_bcommits, 'list commits for current buffer')
+        map('n', '<Leader>gs', builtin.git_status, 'show git status')
+
+        map('n', '<Leader>F', telescope.extensions.live_grep_args.live_grep_args,
+            'live grep (args)')
+        map('v', '<Leader>F', live_grep_args.grep_visual_selection,
+            'live grep current selection (global)')
+        map('v', '<Leader>B', live_grep_args.grep_word_visual_selection_current_buffer,
+            'live grep current selection (current buffer)')
     end,
 }

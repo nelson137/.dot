@@ -94,7 +94,8 @@ return {
             end
         end
 
-        Map('NeoTree', 'n', '<Leader>e', toggle_source('filesystem'), 'toggle filesystem')
-        Map('NeoTree', 'n', '<Leader>E', toggle_source('buffers'), 'toggle buffers')
+        local map = Map('NeoTree')
+        map('n', '<Leader>e', toggle_source('filesystem'), 'toggle filesystem')
+        map('n', '<Leader>E', toggle_source('buffers'), 'toggle buffers')
     end,
 }

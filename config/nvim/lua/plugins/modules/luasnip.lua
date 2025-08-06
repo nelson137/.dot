@@ -16,13 +16,14 @@ return {
 
         require('luasnip.loaders.from_vscode').lazy_load({ paths = './snippets' })
 
-        vim.keymap.set({ 'i', 's' }, '<C-l>', function() lsnip.jump(1) end)
-        vim.keymap.set({ 'i', 's' }, '<C-h>', function() lsnip.jump(-1) end)
+        local map = Map('LuaSnip')
+        map({ 'i', 's' }, '<C-l>', function() lsnip.jump(1) end, 'jump to next placeholder')
+        map({ 'i', 's' }, '<C-h>', function() lsnip.jump(-1) end, 'jump to prev placeholder')
 
-        vim.keymap.set({ 'i', 's' }, '<C-e>', function()
+        map({ 'i', 's' }, '<C-e>', function()
             if lsnip.choice_active() then
                 lsnip.change_choice(1)
             end
-        end)
+        end, 'change choice node')
     end,
 }

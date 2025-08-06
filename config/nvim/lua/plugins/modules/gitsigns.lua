@@ -15,10 +15,7 @@ return {
             local gs = require('gitsigns')
             local gs_actions = require('gitsigns.actions')
 
-            local map = function(mode, lhs, rhs, desc)
-                local opts = { buffer = bufnr, desc = 'Git: ' .. (desc or '') }
-                vim.keymap.set(mode, lhs, rhs, opts)
-            end
+            local map = Map('Git', { buffer = bufnr })
 
             -- Navigation
             map('n', ']c', function()

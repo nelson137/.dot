@@ -86,11 +86,13 @@ return {
 
         vim.keymap.del('n', 'gh');
         vim.keymap.del('n', 'gl');
-        Map('BufferLine', 'n', 'gh', function() b.cycle(-1) end, 'previous')
-        Map('BufferLine', 'n', 'gl', function() b.cycle(1) end, 'next')
-        Map('BufferLine', 'n', 'g,', function() b.move(-1) end, 'move previous')
-        Map('BufferLine', 'n', 'g.', function() b.move(1) end, 'move next')
-        Map('BufferLine', 'n', 'g<', function() b.move_to(1) end, 'move to start')
-        Map('BufferLine', 'n', 'g>', function() b.move_to(-1) end, 'move to end')
+
+        local map = Map('BufferLine')
+        map('n', 'gh', function() b.cycle(-1) end, 'previous')
+        map('n', 'gl', function() b.cycle(1) end, 'next')
+        map('n', 'g,', function() b.move(-1) end, 'move previous')
+        map('n', 'g.', function() b.move(1) end, 'move next')
+        map('n', 'g<', function() b.move_to(1) end, 'move to start')
+        map('n', 'g>', function() b.move_to(-1) end, 'move to end')
     end,
 }

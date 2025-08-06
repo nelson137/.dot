@@ -16,19 +16,9 @@ return {
             completion = true,
             hover = true,
             on_attach = function(_, bufnr)
-                local keyopts = { buffer = bufnr }
-                Map(
-                    'LSP',
-                    { 'n', 'v' }, '<Leader>.', vim.lsp.buf.code_action,
-                    'code action',
-                    keyopts
-                )
-                Map(
-                    'LSP',
-                    'n', '<Leader>k', vim.lsp.buf.hover,
-                    'hover',
-                    keyopts
-                )
+                local map = Map('LSP', { buffer = bufnr })
+                map({ 'n', 'v' }, '<Leader>.', vim.lsp.buf.code_action, 'code action')
+                map({ 'n' }, '<Leader>k', vim.lsp.buf.hover, 'hover')
             end,
         },
     },

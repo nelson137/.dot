@@ -5,11 +5,7 @@ vim.api.nvim_create_autocmd({ 'TermOpen' }, {
     group = vim.api.nvim_create_augroup('SetTerminalKeymaps', {}),
     pattern = { 'term://*' },
     callback = function()
-        local function map(lhs, rhs, desc)
-            local opts = { buffer = 0, desc = 'ToggleTerm: ' .. desc }
-            vim.keymap.set('t', lhs, rhs, opts)
-        end
-        map('<C-]><C-]>', [[<C-\><C-n>]], 'escape')
+        Map('ToggleTerm')('t', '<C-]><C-]>', [[<C-\><C-n>]], 'escape')
     end,
 })
 
