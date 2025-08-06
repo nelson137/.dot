@@ -75,7 +75,7 @@ local on_attach = function(ev)
     map('n', '<Leader>gd', telescope.lsp_definitions, 'jump to definition(s)')
     map('n', '<Leader>gD', telescope.lsp_type_definitions, 'jump to type definition(s)')
     map('n', '<Leader>gi', telescope.lsp_implementations, 'jump to implementation(s)')
-    map('n', '<Leader>gr', telescope.lsp_references, 'jump to references')
+    map('n', '<Leader>gr', lsp_references, 'jump to references')
     map('n', '<Leader>gS', telescope.lsp_document_symbols, 'open document symbols')
 
     -- Jump to diagnostics
