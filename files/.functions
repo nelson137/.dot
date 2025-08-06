@@ -136,7 +136,7 @@ is_wsl() {
 
 ping() {
     if [[ $# == 1 && "$1" == gateway ]]; then
-        command ping -c3 "$(ip route | awk '/default/ {print $3}')"
+        command ping -c3 "$(default_gateway)"
     else
         command ping "$@"
     fi
