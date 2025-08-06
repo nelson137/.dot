@@ -27,6 +27,14 @@ LESSHISTFILE="$HOME/.local/share/less/lesshst"
 # System
 ######################################################################
 
+case "$(uname -s)" in
+    Darwin*)
+        export XDG_CONFIG_HOME="$HOME/.config"
+        ;;
+    *)
+        ;;
+esac
+
 if command -v nvim &>/dev/null; then
     export EDITOR=nvim
 fi
