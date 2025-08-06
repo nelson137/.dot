@@ -60,6 +60,10 @@ local on_attach = function(ev)
     local telescope = require('telescope.builtin')
 
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if not client then
+        vim.notify('Invalid client_id: ' .. ev.data.client_id, vim.log.levels.WARN);
+        return
+    end
     local key_opts = { buffer = ev.buf }
 
     vim.diagnostic.config({
