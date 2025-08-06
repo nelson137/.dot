@@ -22,7 +22,7 @@ return {
     lazy = false,
 
     ---@module 'neo-tree'
-    ---@type neotree.Config?
+    ---@type neotree.Config
     opts = {
         sources = { 'filesystem', 'buffers', 'document_symbols' },
         source_selector = {
@@ -32,6 +32,7 @@ return {
                 { source = 'buffers' },
                 { source = 'document_symbols' },
             },
+            truncation_character = '…',
         },
         default_component_configs = {
             container = {
