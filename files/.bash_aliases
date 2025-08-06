@@ -1,6 +1,6 @@
 # vim: ft=bash
 
-aliases_f="$HOME/.aliases"
+aliases_f="$HOME/.dot/files/.aliases"
 [ -f "$aliases_f" ] && source "$aliases_f"
 
 # cd ancestor

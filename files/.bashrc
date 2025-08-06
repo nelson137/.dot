@@ -98,12 +98,11 @@ fi
 
 # User config files
 bash_files=(
-    .bash_additions
-    .aliases .bash_aliases
+    .bash_aliases .bash_additions
     .functions
 )
 for bf in "${bash_files[@]}"; do
-    bf="$HOME/$bf"
+    bf="$HOME/.dot/files/$bf"
     if [ -f "$bf" ]; then
         source "$bf"
     else
