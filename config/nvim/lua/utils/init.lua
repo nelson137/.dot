@@ -84,7 +84,7 @@ function Map(group_label, group_opts)
     end
 end
 
-function pinspect(...)
+function Pinspect(...)
     for _, value in ipairs({ ... }) do
         print(vim.inspect(value))
     end
@@ -114,7 +114,7 @@ end
 --- @param lines   table?
 --- @param prefix  string?
 --- @return        table
-function dump(o, indent, depth, lines, prefix)
+function Dump(o, indent, depth, lines, prefix)
     lines = lines or {}
     prefix = prefix or ''
 
@@ -145,7 +145,7 @@ function dump(o, indent, depth, lines, prefix)
         if k == '"fs_stat"' then
         elseif k == '"parent"' then
         elseif depth < 5 then
-            dump(v, indent, depth, lines, p)
+            Dump(v, indent, depth, lines, p)
         else
             table.insert(lines, p .. '...')
         end
@@ -156,22 +156,22 @@ function dump(o, indent, depth, lines, prefix)
     return lines
 end
 
-function display(thing)
+function Display(thing)
     vim.cmd('split')
     local win = vim.api.nvim_get_current_win()
     local buf = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_win_set_buf(win, buf)
-    vim.api.nvim_buf_set_lines(buf, 0, 1, false, dump(thing))
+    vim.api.nvim_buf_set_lines(buf, 0, 1, false, Dump(thing))
 end
 
 ----------------------------------------------------------------------
 --- Table Methods
 ----------------------------------------------------------------------
 
-function _table_merge(dest, a, b)
+function table._merge_impl(dest, a, b)
     for k, b_v in pairs(b) do
         if type(b_v) == 'table' and type(a[k] or false) == 'table' then
-            dest[k] = _table_merge(dest[k], a[k], b_v)
+            dest[k] = table._merge_impl(dest[k], a[k], b_v)
         else
             dest[k] = b_v
         end
@@ -190,7 +190,7 @@ function table.merge(a, b)
         error('Expected table')
     end
 
-    return _table_merge(vim.deepcopy(a), a, b)
+    return table._merge_impl(vim.deepcopy(a), a, b)
 end
 
 -- -- A more simple implementation that mutates `a`
@@ -214,13 +214,13 @@ end
 --- Plugin Utilities
 ----------------------------------------------------------------------
 
-function module_exists(module)
-    status, _ = pcall(require, module)
+function ModuleExists(module)
+    local status, _ = pcall(require, module)
     return status
 end
 
-function check_module(module)
+function CheckModule(module)
     return function()
-        return module_exists(module)
+        return ModuleExists(module)
     end
 end
