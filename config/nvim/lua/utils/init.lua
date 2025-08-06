@@ -32,14 +32,14 @@ end
 ---@param t table<any, T> (table) Table
 ---@return T|nil (value) The first element that passes the predicate or nil
 function vim.tbl_find(func, t)
-  vim.validate({ func = { func, 'c' }, t = { t, 't' } })
+    vim.validate({ func = { func, 'c' }, t = { t, 't' } })
 
-  for _, entry in ipairs(t) do
-    if func(entry) then
-      return entry
+    for _, entry in ipairs(t) do
+        if func(entry) then
+            return entry
+        end
     end
-  end
-  return nil
+    return nil
 end
 
 ----------------------------------------------------------------------
