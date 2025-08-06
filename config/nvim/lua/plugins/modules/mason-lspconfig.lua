@@ -7,6 +7,8 @@ return {
 
     dependencies = { 'williamboman/mason.nvim' },
 
+    ---@module 'mason-lspconfig'
+    ---@type MasonLspconfigSettings
     opts = {
         automatic_enable = {
             exclude = {

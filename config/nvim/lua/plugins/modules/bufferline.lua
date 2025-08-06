@@ -1,5 +1,12 @@
 -- Fancy buffer line (instead of the default tab line)
 
+---@class BufferLineTab
+---@field name string
+---@field path string
+---@field bufnr integer
+---@field tabnr integer
+---@field buffers integer[]
+
 vim.opt.termguicolors = true
 vim.opt.mousemoveevent = true
 
@@ -35,6 +42,8 @@ return {
         'nvim-tree/nvim-web-devicons',
     },
 
+    ---@module 'bufferline'
+    ---@type bufferline.UserConfig
     opts = {
         options = {
             diagnostics = 'nvim_lsp',
@@ -56,6 +65,7 @@ return {
             left_trunc_marker = '⟵',
             max_name_length = 42,
             max_prefix_length = 16,
+            ---@param buf BufferLineTab
             name_formatter = function(buf)
                 for _, f in pairs(formatters) do
                     if vim.endswith(buf.name, f.suffix) then

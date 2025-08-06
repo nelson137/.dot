@@ -3,6 +3,8 @@ return {
 
     dependencies = { 'neovim/nvim-lspconfig' },
 
+    ---@module 'conform'
+    ---@type conform.setupOpts
     opts = {
         default_format_opts = {
             lsp_format = 'fallback',

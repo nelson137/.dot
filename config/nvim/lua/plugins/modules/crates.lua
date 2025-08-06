@@ -7,6 +7,8 @@ return {
 
     event = { 'BufRead Cargo.toml' },
 
+    ---@module 'crates'
+    ---@type crates.UserConfig
     opts = {
         lsp = {
             enabled = true,

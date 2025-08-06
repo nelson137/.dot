@@ -42,8 +42,11 @@ return {
         },
     },
 
+    ---@module 'trouble'
+    ---@type trouble.Config
     opts = {
         focus = true,
+        ---@type trouble.Window.opts
         preview = {
             type = 'float',
             scratch = true,

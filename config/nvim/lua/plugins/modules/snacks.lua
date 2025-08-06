@@ -6,6 +6,7 @@ return {
     lazy = false,
     priority = 1000,
 
+    ---@module 'snacks'
     ---@type snacks.Config
     opts = {
         bigfile = { enabled = true },

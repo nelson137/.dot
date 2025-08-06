@@ -23,7 +23,10 @@ local rust_analyzer_settings = {
     },
 }
 
+---@module 'rustaceanvim'
+---@type rustaceanvim.Config
 vim.g.rustaceanvim = {
+    ---@type rustaceanvim.lsp.ClientConfig
     server = {
         on_attach = on_attach,
         default_settings = {
