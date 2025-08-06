@@ -19,16 +19,16 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 # With files:
 #
 # ./files/
-# ├── .bashrc
-# ├── .zprofile
-# └── .zshrc
+# ├── bashrc
+# ├── zprofile
+# └── zshrc
 #
 # Creates symbolic links:
 #
 # /tmp/
-# ├── .bashrc -> $PWD/files/.bashrc
-# ├── .zprofile -> $PWD/files/.zprofile
-# └── .zshrc -> $PWD/files/.zshrc
+# ├── .bashrc -> $PWD/files/bashrc
+# ├── .zprofile -> $PWD/files/zprofile
+# └── .zshrc -> $PWD/files/zshrc
 #
 ln_dir_contents() {
     local src dest

@@ -195,7 +195,7 @@ fi
 [[ ! -d ~/.vim/undodir ]] && mkdir -p ~/.vim/undodir
 
 # User config files
-for f in .aliases .functions; do
+for f in aliases functions; do
     f="$HOME/.dot/files/$f"
     [[ -f "$f" ]] && source "$f"
 done

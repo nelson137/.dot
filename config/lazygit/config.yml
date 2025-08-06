@@ -1,7 +1,7 @@
 confirmOnQuit: true
 
 os:
-  shellFunctionsFile: ~/.dot/files/.aliases
+  shellFunctionsFile: ~/.dot/files/aliases
 
 gui:
   scrollOffMargin: 4
