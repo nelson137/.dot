@@ -14,10 +14,6 @@ gui:
   nerdFontsVersion: '3'
 
 customCommands:
-  - key: '-'
-    context: 'global'
-    description: 'Switch to the previous branch'
-    command: 'git switch -'
   - key: 'E'
     context: 'global'
     description: 'Empty commit'
