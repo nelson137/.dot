@@ -11,6 +11,7 @@ gui:
   showRandomTip: false
   showBottomLine: true
   showIcons: true
+  showRootItemInFileTree: false
   nerdFontsVersion: '3'
 
 customCommands:
