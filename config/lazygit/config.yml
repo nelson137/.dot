@@ -3,6 +3,9 @@ confirmOnQuit: true
 os:
   shellFunctionsFile: ~/.dot/shell/lazygit_functions
 
+git:
+  overrideGpg: true
+
 gui:
   scrollOffMargin: 4
   theme:
