@@ -34,11 +34,6 @@ return {
             },
             truncation_character = '…',
         },
-        default_component_configs = {
-            container = {
-                max_width = 74,
-            },
-        },
         commands = {
             focus_filesystem = function()
                 P.command().execute({ action = 'focus', source = 'filesystem' })
