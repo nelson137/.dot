@@ -43,6 +43,21 @@ function vim.tbl_find(func, t)
     return nil
 end
 
+---@class Entry
+---@field key string
+---@field value any
+
+---Transform a list of key-value pairs into an object.
+---@param table Entry[] an array of entries
+---@returns table<string, any> an object where the
+function vim.tbl_from_entries(table)
+    local output = {}
+    for _, o in ipairs(table) do
+        output[o.key] = o.value
+    end
+    return output
+end
+
 ----------------------------------------------------------------------
 --- Common
 ----------------------------------------------------------------------

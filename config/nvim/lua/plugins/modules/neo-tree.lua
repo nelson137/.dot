@@ -44,6 +44,56 @@ return {
             focus_document_symbols = function()
                 P.command().execute({ action = 'focus', source = 'document_symbols' })
             end,
+            prompt_copy_node_path = function(state)
+                -- Inspired by:
+                -- https://github.com/nvim-neo-tree/neo-tree.nvim/discussions/370#discussioncomment-6679447
+
+                local node = state.tree:get_node()
+                local filepath = node:get_id()
+                local filename = node.name
+                local modify = vim.fn.fnamemodify
+
+                local options = vim.tbl_filter(
+                    function(o) return o.value ~= '' end,
+                    {
+                        { key = 'Filename     ', value = filename },
+                        { key = 'Path (cwd)   ', value = modify(filepath, ':.') },
+                        { key = 'Absolute Path', value = filepath },
+                        -- { key = 'Basename     ', value = modify(filename, ':r') },
+                        -- { key = 'Extension    ', value = modify(filename, ':e') },
+                        { key = 'PATH (~)     ', value = modify(filepath, ':~') },
+                        { key = 'URI          ', value = vim.uri_from_fname(filepath) },
+                    }
+                )
+
+                if vim.tbl_isempty(options) then
+                    vim.notify('No values to copy', vim.log.levels.WARN)
+                    return
+                end
+
+                local values = vim.tbl_from_entries(options)
+                local items = vim.tbl_map(
+                    function(o) return o.key end,
+                    options
+                )
+
+                vim.ui.select(
+                    items,
+                    {
+                        prompt = 'Choose to copy to clipboard:',
+                        format_item = function(item)
+                            return ('%s : %s'):format(item, values[item])
+                        end,
+                    },
+                    function(choice)
+                        local result = values[choice]
+                        if result then
+                            vim.notify(('Copied: `%s`'):format(result))
+                            vim.fn.setreg('+', result)
+                        end
+                    end
+                )
+            end,
         },
         window = {
             auto_expand_width = true,
@@ -53,6 +103,7 @@ return {
                 ['Q'] = 'focus_document_symbols',
                 ['<C-j>'] = { 'scroll_preview', config = { direction = 10 } },
                 ['<C-k>'] = { 'scroll_preview', config = { direction = -10 } },
+                ['Y'] = 'prompt_copy_node_path',
                 -- TODO: add mappings to find with telescope
                 --       https://github.com/nvim-neo-tree/neo-tree.nvim/wiki/Recipes#find-with-telescope
                 -- TODO: add mappings to open file with diffview
