@@ -129,6 +129,116 @@ return {
                 ['<C-x>'] = 'clear_filter',
             },
         },
+        renderers = {
+            directory = {
+                { "indent" },
+                { "icon" },
+                { "current_filter" },
+                {
+                    "container",
+                    content = {
+                        { "name",        zindex = 10 },
+                        {
+                            "symlink_target",
+                            zindex = 10,
+                            highlight = "NeoTreeSymbolicLinkTarget",
+                        },
+                        { "clipboard",   zindex = 10 },
+                        { "diagnostics", errors_only = true, zindex = 20,     align = "right",          hide_when_expanded = true },
+                        { "git_status",  zindex = 10,        align = "right", hide_when_expanded = true },
+                        -- { "file_size",     zindex = 10,        align = "right" },
+                        -- { "type",          zindex = 10,        align = "right" },
+                        -- { "last_modified", zindex = 10,        align = "right" },
+                        { "created",     zindex = 10,        align = "right" },
+                    },
+                },
+            },
+            file = {
+                { "indent" },
+                { "icon" },
+                {
+                    "container",
+                    content = {
+                        {
+                            "name",
+                            zindex = 10
+                        },
+                        {
+                            "symlink_target",
+                            zindex = 10,
+                            highlight = "NeoTreeSymbolicLinkTarget",
+                        },
+                        { "clipboard",   zindex = 10 },
+                        { "bufnr",       zindex = 10 },
+                        { "modified",    zindex = 20, align = "right" },
+                        { "diagnostics", zindex = 20, align = "right" },
+                        { "git_status",  zindex = 10, align = "right" },
+                        -- { "file_size",     zindex = 10, align = "right" },
+                        -- { "type",          zindex = 10, align = "right" },
+                        -- { "last_modified", zindex = 10, align = "right" },
+                        { "created",     zindex = 10, align = "right" },
+                    },
+                },
+            },
+            message = {
+                { "indent", with_markers = false },
+                { "name",   highlight = "NeoTreeMessage" },
+            },
+            terminal = {
+                { "indent" },
+                { "icon" },
+                { "name" },
+                { "bufnr" }
+            }
+        },
+        buffers = {
+            renderers = {
+                directory = {
+                    { "indent" },
+                    { "icon" },
+                    { "current_filter" },
+                    {
+                        "container",
+                        content = {
+                            { "name",        zindex = 10 },
+                            {
+                                "symlink_target",
+                                zindex = 10,
+                                highlight = "NeoTreeSymbolicLinkTarget",
+                            },
+                            { "clipboard",   zindex = 10 },
+                            { "diagnostics", zindex = 20, align = "right", hide_when_expanded = true, errors_only = true },
+                            { "git_status",  zindex = 10, align = "right", hide_when_expanded = true },
+                            { "created",     zindex = 10, align = "right" },
+                        },
+                    },
+                },
+                file = {
+                    { "indent" },
+                    { "icon" },
+                    {
+                        "container",
+                        content = {
+                            {
+                                "name",
+                                zindex = 10
+                            },
+                            {
+                                "symlink_target",
+                                zindex = 10,
+                                highlight = "NeoTreeSymbolicLinkTarget",
+                            },
+                            { "clipboard",   zindex = 10 },
+                            { "bufnr",       zindex = 10 },
+                            { "modified",    zindex = 20, align = "right" },
+                            { "diagnostics", zindex = 20, align = "right" },
+                            { "git_status",  zindex = 10, align = "right" },
+                            { "created",     zindex = 10, align = "right" },
+                        },
+                    },
+                },
+            },
+        },
     },
 
     config = function(_, opts)
