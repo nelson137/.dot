@@ -30,8 +30,8 @@ customCommands:
     output: 'log'
   - key: '<c-l>'
     context: 'status,files,worktrees,localBranches,remotes,remoteBranches,tags,reflogCommits,stash'
-    description: 'Delete all of the local `*-current` tags'
-    command: 'git tag --list "*-current" | xargs --no-run-if-empty git tag --delete'
+    description: "Delete all tags that do not point to the same object as in 'origin'"
+    command: '_git_delete_moved_tags'
     output: 'log'
   - key: '<c-f>'
     context: 'commits'
