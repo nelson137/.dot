@@ -133,6 +133,36 @@ alias glgg='git log --graph'
 alias glog='git log --graph --oneline --decorate'
 alias gloga='git log --graph --oneline --decorate --all'
 
+glogref() {
+    local parsing_opts=1 arg full_ref
+    local -a refs git_log_args
+
+    local git_log_fmt='%C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(magenta)%an%C(reset) %C(brightblack)%ai%C(reset)%n%s%n'
+    git_log_args=(git log --graph --pretty="'$git_log_fmt'" --decorate)
+
+    for arg; do
+        if [[ -n $parsing_opts && $arg =~ ^- ]]; then
+            if [[ $arg == '--' ]]; then
+                parsing_opts=
+            else
+                git_log_args+=("$arg")
+            fi
+        else
+            if ! full_ref=$(git show-ref "$arg" | awk '{print $2; exit}'); then
+                echo >&2 "Error: invalid ref: $arg"
+            fi
+            git_log_args+=("--decorate-refs=$full_ref")
+            refs+=("$arg")
+        fi
+    done
+
+    for ref in "${refs[@]}"; do
+        git_log_args+=("$ref")
+    done
+
+    eval "${git_log_args[@]}"
+}
+
 alias gm='git merge'
 alias gma='git merge --abort'
 
