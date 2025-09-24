@@ -124,9 +124,8 @@ return {
                 leave_dirs_open = false,
             },
             use_libuv_file_watcher = false,
-            mappings = {
-                ['f'] = 'filter_on_submit',
-                ['<C-x>'] = 'clear_filter',
+            window = {
+                mappings = {},
             },
         },
         renderers = {
