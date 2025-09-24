@@ -111,11 +111,6 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
 
     init = function()
-        vim.lsp.config('angularls', {
-            filetypes = { 'html', 'htmlangular' },
-            root_markers = { 'angular.json', 'nx.json' },
-        })
-
         vim.lsp.config('lua_ls', {
             settings = {
                 Lua = {
