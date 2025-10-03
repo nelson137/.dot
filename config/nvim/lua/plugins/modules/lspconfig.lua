@@ -130,6 +130,13 @@ return {
             },
         })
 
+        vim.lsp.enable('ts_ls', false)
+        vim.lsp.config('tsgo', {
+            cmd = { 'tsgo', '--lsp', '--stdio' },
+            filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
+        })
+        vim.lsp.enable('tsgo')
+
         vim.g.format_on_save = true
 
         vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
