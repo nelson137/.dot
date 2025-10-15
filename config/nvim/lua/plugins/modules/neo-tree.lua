@@ -191,6 +191,65 @@ return {
             }
         },
         buffers = {
+            commands = {
+                safe_buffer_delete = function(state)
+                    local selected_node = state.tree:get_node()
+                    if not selected_node then return end
+
+                    local stack = { selected_node }
+                    local file_nodes = {}
+
+                    -- Recursively find files that are children of the current node
+                    while #stack > 0 do
+                        local node = table.remove(stack)
+                        if node.type == 'directory' then
+                            local children = state.tree:get_nodes(node.id)
+                            if type(children) == 'table' then
+                                for _i, child in ipairs(children) do
+                                    stack[#stack + 1] = child
+                                end
+                            end
+                        elseif node.type == 'file' then
+                            file_nodes[#file_nodes + 1] = node
+                        end
+                    end
+
+                    -- Close all discovered descendant file nodes
+                    for _i, node in ipairs(file_nodes) do
+                        local bufnr = node.extra.bufnr
+                        local info = vim.fn.getbufinfo(bufnr)[1]
+
+                        if info.hidden == 0 then
+                            local buffers = vim.tbl_filter(function(b)
+                                local b_info = vim.fn.getbufinfo(b)[1]
+                                return b_info.loaded == 1 and b_info.listed == 1
+                            end, vim.api.nvim_list_bufs())
+
+                            if #buffers < 2 then return end
+
+                            local prev_i = -1
+                            for i, b in ipairs(buffers) do
+                                if b == bufnr then
+                                    prev_i = i - 1
+                                end
+                            end
+                            if prev_i < 1 then prev_i = #buffers end
+
+                            vim.api.nvim_win_set_buf(info.windows[1], buffers[prev_i])
+                        end
+
+                        vim.api.nvim_buf_delete(bufnr, { force = false, unload = false })
+                    end
+
+                    require('neo-tree.sources.buffers.commands').refresh()
+                end,
+            },
+            window = {
+                mappings = {
+                    ['d'] = 'safe_buffer_delete',
+                    ['bd'] = 'noop',
+                },
+            },
             renderers = {
                 directory = {
                     { "indent" },
