@@ -32,7 +32,7 @@ local function lsp_goto_prev_diagnostic() lsp_goto_diagnostic(-1) end
 local function lsp_references()
     require('telescope.builtin').lsp_references({
         include_declaration = true,
-        include_current_line = true,
+        include_current_line = false,
     })
 end
 
