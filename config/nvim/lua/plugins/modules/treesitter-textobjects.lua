@@ -23,6 +23,17 @@ return {
                     ['ic'] = '@class.inner',
                     ['ac'] = '@class.outer',
                     ['ax'] = '@comment.outer',
+                    ['as'] = '@statement.outer',
+                },
+
+                -- Options:
+                --   - 'v': charwise
+                --   - 'V': linewise
+                --   - '<C-v>': blockwise
+                selection_modes = {
+                    ['@class.inner'] = 'V',
+                    ['@class.outer'] = 'V',
+                    ['@statement.outer'] = 'V',
                 },
 
                 include_surrounding_whitespace = false
