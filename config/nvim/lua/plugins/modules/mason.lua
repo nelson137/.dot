@@ -7,5 +7,10 @@ return {
 
     dependencies = { 'neovim/nvim-lspconfig' },
 
-    config = true,
+    opts = {
+        registries = {
+            'github:mason-org/mason-registry',
+            'github:Crashdummyy/mason-registry',
+        },
+    },
 }

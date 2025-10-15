@@ -50,5 +50,25 @@ return {
                 map('n', 'q', '<C-w>c', 'close float')
             end,
         })
+
+        local mason_path = vim.fn.stdpath('data') .. '/mason/packages/netcoredbg/netcoredbg'
+        dap.adapters.netcoredbg = {
+            type = 'executable',
+            command = mason_path,
+            args = { '--interpreter=vscode' },
+        }
+
+        dap.configurations['cs'] = {
+            {
+                name = 'launch - netcoredbg',
+                type = 'coreclr',
+                request = 'launch',
+                program = function()
+                    local path = vim.fn.getcwd() .. '/bin/Debug/net9.0/'
+                    local dll_path = vim.fn.input('DLL: ', path, 'file')
+                    return dll_path
+                end,
+            }
+        }
     end
 }
