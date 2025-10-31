@@ -133,8 +133,12 @@ alias glgg='git log --graph'
 alias glog='git log --graph --oneline --decorate'
 alias gloga='git log --graph --oneline --decorate --all'
 
+_glogref_resolve() {
+    git for-each-ref --format='%(refname)' --exclude=refs/remotes/origin/HEAD --points-at="$1"
+}
+
 glogref() {
-    local parsing_opts=1 arg full_ref
+    local parsing_opts=1 arg ref_info ref_hash ref_fullname
     local -a refs git_log_args
 
     local git_log_fmt='%C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(magenta)%an%C(reset) %C(brightblack)%ai%C(reset)%n%s%n'
@@ -148,17 +152,32 @@ glogref() {
                 git_log_args+=("$arg")
             fi
         else
-            if ! full_ref=$(git show-ref "$arg" | awk '{print $2; exit}'); then
-                echo >&2 "Error: invalid ref: $arg"
+            if ! ref_info=$(git show-ref "$arg" | head -1); then
+                echo >&2 "Error: failed to resolve ref: $arg"
+                return 1
             fi
-            git_log_args+=("--decorate-refs=$full_ref")
+
+            read ref_hash ref_fullname <<< "$ref_info"
+
+            if [[ -z $ref_hash ]]; then
+                echo >&2 "Error: failed to get hash for ref: $arg"
+                return 1
+            fi
+
+            if [[ -z $ref_fullname ]]; then
+                echo >&2 "Error: failed to get full name of ref: $arg"
+                return 1
+            fi
+
             refs+=("$arg")
+
+            for resolved_ref in $(_glogref_resolve "$ref_hash"); do
+                git_log_args+=("--decorate-refs=${resolved_ref}")
+            done
         fi
     done
 
-    for ref in "${refs[@]}"; do
-        git_log_args+=("$ref")
-    done
+    git_log_args+=("${refs[@]}")
 
     eval "${git_log_args[@]}"
 }
@@ -415,9 +434,14 @@ tmuxopen() {
 
     if [[ -z $session ]]; then
         tmux new-session -d -s "$name" -c "$path_"
+        tmux rename-window -t 0 ai
+        tmux new-window -c "$path_"
+        tmux new-window -c "$path_" -n nvim
         tmux new-window -d -c "$path_" -n killme
         tmux new-window -d -c "$path_" -n lazygit
         tmux kill-window -t killme
+        tmux send-keys -t:ai claude Enter
+        tmux send-keys -t:nvim vim Enter
         tmux send-keys -t:lazygit lazygit Enter
     fi
 
