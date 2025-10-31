@@ -21,6 +21,10 @@ gcat() git cat-file "$@"
 gco() git checkout "$@"
 gcob() git checkout -b "$@"
 
+gpi() git cherry-pick "$@"
+gpia() git cherry-pick --abort "$@"
+gpic() git cherry-pick --continue "$@"
+
 gc() git commit -v "$@"
 gca() git commit -v --all "$@"
 gcam() git commit -v --all -m "$@"
