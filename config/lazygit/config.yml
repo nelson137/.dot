@@ -22,7 +22,7 @@ customCommands:
   - key: 'E'
     context: 'global'
     description: 'Empty commit'
-    command: 'git commit -v --allow-empty -m "empty commit"'
+    command: 'git commit -v --allow-empty -m "(empty)"'
   - key: '<c-f>'
     context: 'localBranches'
     description: 'Fetch upstream remote'
