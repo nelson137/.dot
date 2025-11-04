@@ -37,7 +37,7 @@ return {
             map('n', '<Leader>hu', gs.undo_stage_hunk, 'unstage hunk')
             map('n', '<Leader>hp', gs.preview_hunk, 'preview hunk')
             map('n', '<Leader>hd', gs.diffthis)
-            map('n', '<Leader>B', gs_actions.toggle_current_line_blame, 'toggle current line blame')
+            map('n', '<Leader>b', gs_actions.toggle_current_line_blame, 'toggle current line blame')
 
             -- Text objects
             map({ 'o', 'x' }, 'ih', '<C-u>:Gitsigns select_hunk<CR>', 'select hunk under cursor')

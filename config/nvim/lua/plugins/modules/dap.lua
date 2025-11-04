@@ -29,7 +29,7 @@ return {
         map({ 'n' }, '<Leader>ll', function() P().step_over() end, 'step over')
         map({ 'n' }, '<Leader>lj', function() P().step_into() end, 'step into')
         map({ 'n' }, '<Leader>lk', function() P().step_out() end, 'step out')
-        map({ 'n' }, '<Leader>b', function() P().toggle_breakpoint() end, 'toggle breakpoint')
+        map({ 'n' }, '<Leader>lb', function() P().toggle_breakpoint() end, 'toggle breakpoint')
         map({ 'n' }, '<Leader>lB', function() P().clear_breakpoints() end, 'clear breakpoints')
         map(
             { 'n' },
