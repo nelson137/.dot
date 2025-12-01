@@ -136,6 +136,11 @@ return {
         vim.lsp.config('tsgo', {
             cmd = { 'tsgo', '--lsp', '--stdio' },
             filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
+            settings = {
+                tsserver_file_preferences = {
+                    importModuleSpecifierPreference = 'project-relative',
+                },
+            },
         })
         vim.lsp.enable('tsgo')
 
