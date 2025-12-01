@@ -3,7 +3,7 @@
 [includeIf "gitdir:/"]
 	path = ~/.gitconfig.personal
 [includeIf "gitdir:/opt/code/work/"]
-	path = ~/.gitconfig.work
+	path = ~/.gitconfig.vu
 
 [color]
 	diff = auto

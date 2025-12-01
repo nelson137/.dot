@@ -2,7 +2,7 @@
 [commit]
 	gpgSign = true
 [core]
-	sshCommand = ssh -i ~/.ssh/id_ed25519_work
+	sshCommand = ssh -i ~/.ssh/id_ed25519_vu
 [credential]
 	username = nelson.earle
 [gpg]
@@ -11,4 +11,4 @@
 	sslcainfo = ~/.ssl/certs/vu-chain2021.pem
 [user]
 	email = nelson.earle@veteransunited.com
-	signingKey = /home/nelson/.ssh/id_ed25519_work
+	signingKey = ~/.ssh/id_ed25519_vu
