@@ -4,6 +4,8 @@
 	path = ~/.gitconfig.personal
 [includeIf "gitdir:/opt/code/work/"]
 	path = ~/.gitconfig.vu
+[includeIf "gitdir:/opt/code/pdt/"]
+	path = ~/.gitconfig.vu
 
 [color]
 	diff = auto
