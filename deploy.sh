@@ -45,7 +45,9 @@ mkdir -p "$HOME/.config"
 git submodule update --init --recursive
 
 # Link config files
-ln_dir_contents files "$HOME"
+for file in "$PWD/files/"*; do
+    ln -fs "$file" "$HOME/.${file##*/}"
+done
 
 # Link config directories
 declare -a CONFIG_ITEMS
