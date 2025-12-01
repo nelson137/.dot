@@ -36,7 +36,7 @@ ln_dir_contents() {
     src="$(cd "$1" && pwd)"
     dest="$(cd "$2" && pwd)"
     # Link files
-    find "$src" -mindepth 1 -maxdepth 1 -exec ln -fst "$dest" '{}' \+
+    find "$src" -mindepth 1 -maxdepth 1 -exec ln -fs '{}' "$dest" \;
 }
 
 mkdir -p "$HOME/.config"
