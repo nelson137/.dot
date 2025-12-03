@@ -19,13 +19,13 @@ return {
 
         ensure_installed = {
             'angularls',
+            'basedpyright',
             'eslint',
             'lua_ls',
             -- 'netcoredbg', -- Mason can't install packages from 3rd-party registries
             -- 'roslyn', -- Mason can't install packages from 3rd-party registries
             'rust_analyzer',
             'ts_ls',
-            'basedpyright',
         },
     },
 }
