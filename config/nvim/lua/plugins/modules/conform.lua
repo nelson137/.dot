@@ -17,6 +17,7 @@ return {
             javascript = { 'prettier' },
             json = { 'prettier' },
             json5 = { 'prettier' },
+            jsonc = { 'prettier' },
             lua = { 'stylua' },
             -- python = { 'ruff_format' },
             rust = { 'rustfmt' },
