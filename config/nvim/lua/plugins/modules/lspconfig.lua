@@ -111,6 +111,14 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
 
     init = function()
+        vim.lsp.config('angularls', {
+            filetypes = { 'html', 'htmlangular', 'typescript', 'typescriptreact' },
+        })
+
+        vim.lsp.config('eslint', {
+            filetypes = { 'astro', 'htmlangular', 'javascript', 'javascriptreact', 'svelte', 'typescript', 'typescriptreact', 'vue' },
+        })
+
         vim.lsp.config('lua_ls', {
             settings = {
                 Lua = {
@@ -130,12 +138,14 @@ return {
             },
         })
 
-        vim.lsp.config('roslyn', {})
+        vim.lsp.config('roslyn', {
+            filetypes = { 'cs' },
+        })
 
         vim.lsp.enable('ts_ls', false)
         vim.lsp.config('tsgo', {
             cmd = { 'tsgo', '--lsp', '--stdio' },
-            filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
+            filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
             settings = {
                 tsserver_file_preferences = {
                     importModuleSpecifierPreference = 'project-relative',
