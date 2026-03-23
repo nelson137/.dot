@@ -409,22 +409,21 @@ ping() {
 # Create or attach to sessions with preset windows & panes.
 #
 # Usage:
-#   tmuxopen [SESSION_NAME] PATH
+#   tmuxopen PATH [SESSION_NAME]
 #
-# If no `SESSION_NAME` is given use a sanitized version of `PATH`.
+# If no `SESSION_NAME` is given use a sanitized version of the basename of `PATH`.
 #
 tmuxopen() {
     local name path_ session
-    name="$1"; (( $# > 0 )) && shift
     path_="$1"; (( $# > 0 )) && shift
+    name="$1"; (( $# > 0 )) && shift
 
-    if [[ -z $name ]] || (( $# > 0 )); then
-        echo >&2 'Usage: tmuxopen [SESSION_NAME] PATH'
+    if [[ -z $path_ ]] || (( $# > 0 )); then
+        echo >&2 'Usage: tmuxopen PATH [SESSION_NAME]'
         return 1
     fi
 
-    if [[ -z $path_ ]]; then
-        path_=$name
+    if [[ -z $name ]]; then
         name=$(basename "$path_")
     fi
 
