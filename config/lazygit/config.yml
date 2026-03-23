@@ -23,6 +23,10 @@ customCommands:
     context: 'global'
     description: 'Empty commit'
     command: 'git commit -v --allow-empty -m "(empty)"'
+  - key: '<c-e>'
+    context: global
+    description: 'Divider commit'
+    command: 'git commit -v --allow-empty -m "──────────────────────────────────────────────────"'
   - key: '<c-f>'
     context: 'localBranches'
     description: 'Fetch upstream remote'
