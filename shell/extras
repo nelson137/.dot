@@ -439,8 +439,6 @@ tmuxopen() {
         tmux new-window -d -c "$path_" -n killme
         tmux new-window -d -c "$path_" -n lazygit
         tmux kill-window -t killme
-        tmux send-keys -t:ai claude Enter
-        tmux send-keys -t:nvim vim Enter
         tmux send-keys -t:lazygit lazygit Enter
     fi
 
