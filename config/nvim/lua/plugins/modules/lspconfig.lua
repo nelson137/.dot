@@ -138,6 +138,9 @@ return {
             },
         })
 
+        vim.lsp.config('sourcekit', {})
+        vim.lsp.enable('sourcekit')
+
         vim.lsp.enable('ts_ls', false)
         vim.lsp.config('tsgo', {
             cmd = { 'tsgo', '--lsp', '--stdio' },
