@@ -138,10 +138,6 @@ return {
             },
         })
 
-        vim.lsp.config('roslyn', {
-            filetypes = { 'cs' },
-        })
-
         vim.lsp.enable('ts_ls', false)
         vim.lsp.config('tsgo', {
             cmd = { 'tsgo', '--lsp', '--stdio' },
