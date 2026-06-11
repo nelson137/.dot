@@ -1,9 +1,19 @@
 return {
-    'mfussenegger/nvim-dap-python',
+    pack = {
+        src = { github = 'mfussenegger/nvim-dap-python' },
+    },
 
-    dependencies = { 'mfussenegger/nvim-dap' },
+    spec = {
+        'nvim-dap-python',
 
-    config = function()
-        require('dap-python').setup('uv')
-    end,
+        ft = 'python',
+
+        before = function()
+            require('lz.n').trigger_load('nvim-dap')
+        end,
+
+        after = function()
+            require('dap-python').setup('uv')
+        end,
+    },
 }

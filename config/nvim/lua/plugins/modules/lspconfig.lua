@@ -104,83 +104,93 @@ local on_attach = function(ev)
 end
 
 return {
-    'neovim/nvim-lspconfig',
+    pack = {
+        src = { github = 'neovim/nvim-lspconfig' },
+    },
 
-    event = { 'BufReadPre', 'BufNewFile' },
+    spec = {
+        'nvim-lspconfig',
 
-    dependencies = { 'nvim-telescope/telescope.nvim' },
+        event = { 'BufReadPre', 'BufNewFile' },
 
-    init = function()
-        vim.lsp.config('angularls', {
-            filetypes = { 'html', 'htmlangular', 'typescript', 'typescriptreact' },
-        })
+        -- `on_attach` (below) uses `telescope.builtin`, so telescope must be loaded
+        -- before the first LSP attaches.
+        before = function()
+            require('lz.n').trigger_load('telescope.nvim')
+        end,
 
-        vim.lsp.config('eslint', {
-            filetypes = { 'astro', 'htmlangular', 'javascript', 'javascriptreact', 'svelte', 'typescript', 'typescriptreact', 'vue' },
-        })
+        after = function()
+            vim.lsp.config('angularls', {
+                filetypes = { 'html', 'htmlangular', 'typescript', 'typescriptreact' },
+            })
 
-        vim.lsp.config('lua_ls', {
-            settings = {
-                Lua = {
-                    runtime = { version = 'LuaJIT' },
-                    telemetry = { enable = false },
-                },
-            },
-        })
+            vim.lsp.config('eslint', {
+                filetypes = { 'astro', 'htmlangular', 'javascript', 'javascriptreact', 'svelte', 'typescript', 'typescriptreact', 'vue' },
+            })
 
-        vim.lsp.config('basedpyright', {
-            settings = {
-                basedpyright = {
-                    analysis = {
-                        typeCheckingMode = 'basic',
+            vim.lsp.config('lua_ls', {
+                settings = {
+                    Lua = {
+                        runtime = { version = 'LuaJIT' },
+                        telemetry = { enable = false },
                     },
                 },
-            },
-        })
+            })
 
-        vim.lsp.config('sourcekit', {})
-        vim.lsp.enable('sourcekit')
-
-        vim.lsp.enable('ts_ls', false)
-        vim.lsp.config('tsgo', {
-            cmd = { 'tsgo', '--lsp', '--stdio' },
-            filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
-            root_markers = { 'tsconfig.json', 'package.json' },
-            settings = {
-                tsserver_file_preferences = {
-                    importModuleSpecifierPreference = 'project-relative',
+            vim.lsp.config('basedpyright', {
+                settings = {
+                    basedpyright = {
+                        analysis = {
+                            typeCheckingMode = 'basic',
+                        },
+                    },
                 },
-            },
-        })
-        vim.lsp.enable('tsgo')
+            })
 
-        vim.g.format_on_save = true
+            vim.lsp.config('sourcekit', {})
+            vim.lsp.enable('sourcekit')
 
-        vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
-            group = vim.api.nvim_create_augroup('FormatOnSave', {}),
-            pattern = { '*' },
-            callback = function()
-                if vim.g.format_on_save then
-                    require('conform').format()
-                end
-            end,
-        })
+            vim.lsp.enable('ts_ls', false)
+            vim.lsp.config('tsgo', {
+                cmd = { 'tsgo', '--lsp', '--stdio' },
+                filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+                root_markers = { 'tsconfig.json', 'package.json' },
+                settings = {
+                    tsserver_file_preferences = {
+                        importModuleSpecifierPreference = 'project-relative',
+                    },
+                },
+            })
+            vim.lsp.enable('tsgo')
 
-        vim.api.nvim_create_user_command('SaveWithoutFormatting', function(opts)
-            local original_value = vim.g.format_on_save
-            vim.g.format_on_save = false
-            vim.cmd.write({ bang = opts.bang })
-            vim.g.format_on_save = original_value
-        end, { bang = true })
+            vim.g.format_on_save = true
 
-        vim.api.nvim_create_user_command('ToggleFormatOnSave', function()
-            vim.g.format_on_save = not vim.g.format_on_save
-        end, {})
+            vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
+                group = vim.api.nvim_create_augroup('FormatOnSave', {}),
+                pattern = { '*' },
+                callback = function()
+                    if vim.g.format_on_save then
+                        require('conform').format()
+                    end
+                end,
+            })
 
-        vim.api.nvim_create_autocmd({ 'LspAttach' }, {
-            group = vim.api.nvim_create_augroup('LspConfig', {}),
-            pattern = { '*' },
-            callback = on_attach,
-        })
-    end,
+            vim.api.nvim_create_user_command('SaveWithoutFormatting', function(opts)
+                local original_value = vim.g.format_on_save
+                vim.g.format_on_save = false
+                vim.cmd.write({ bang = opts.bang })
+                vim.g.format_on_save = original_value
+            end, { bang = true })
+
+            vim.api.nvim_create_user_command('ToggleFormatOnSave', function()
+                vim.g.format_on_save = not vim.g.format_on_save
+            end, {})
+
+            vim.api.nvim_create_autocmd({ 'LspAttach' }, {
+                group = vim.api.nvim_create_augroup('LspConfig', {}),
+                pattern = { '*' },
+                callback = on_attach,
+            })
+        end,
+    },
 }

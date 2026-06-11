@@ -4,21 +4,33 @@
 --   - preservim/nerdcommenter
 --   - tomtom/tcomment_vim
 
+vim.pack.add({
+    { src = 'https://github.com/JoosepAlviste/nvim-ts-context-commentstring' }
+}, { load = function() end })
+
 return {
-    'numToStr/Comment.nvim',
+    pack = {
+        src = { github = 'numToStr/Comment.nvim' },
+    },
 
-    dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
+    spec = {
+        'Comment.nvim',
 
-    event = 'BufReadPost',
+        event = 'BufReadPost',
 
-    opts = function()
-        local commenter = require('ts_context_commentstring.integrations.comment_nvim')
-        return {
-            toggler = {
-                line = '<Leader>/',
-            },
+        before = function()
+            vim.cmd.packadd('nvim-ts-context-commentstring')
+        end,
 
-            pre_hook = commenter.create_pre_hook(),
-        }
-    end,
+        after = function()
+            local commenter = require('ts_context_commentstring.integrations.comment_nvim')
+            require('Comment').setup({
+                toggler = {
+                    line = '<Leader>/',
+                },
+
+                pre_hook = commenter.create_pre_hook(),
+            })
+        end,
+    },
 }

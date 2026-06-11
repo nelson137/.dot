@@ -1,7 +1,17 @@
 -- Key binding popup window
 
 return {
-    'folke/which-key.nvim',
+    pack = {
+        src = { github = 'folke/which-key.nvim' },
+    },
 
-    opts = {},
+    spec = {
+        'which-key.nvim',
+
+        event = 'DeferredUIEnter',
+
+        after = function()
+            require('which-key').setup({})
+        end,
+    },
 }

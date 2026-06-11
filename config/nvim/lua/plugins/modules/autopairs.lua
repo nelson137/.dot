@@ -4,7 +4,17 @@
 --   - echasnovski/mini.pairs
 
 return {
-    'windwp/nvim-autopairs',
+    pack = {
+        src = { github = 'windwp/nvim-autopairs' },
+    },
 
-    config = true,
+    spec = {
+        'nvim-autopairs',
+
+        event = 'InsertEnter',
+
+        after = function()
+            require('nvim-autopairs').setup()
+        end,
+    },
 }

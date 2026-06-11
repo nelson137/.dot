@@ -1,16 +1,26 @@
 -- Neovim package manager (language servers, linters, formaters, etc.)
 
 return {
-    'mason-org/mason.nvim',
+    pack = {
+        src = { github = 'mason-org/mason.nvim' },
+    },
 
-    event = { 'BufReadPre', 'BufNewFile' },
+    spec = {
+        'mason.nvim',
 
-    dependencies = { 'neovim/nvim-lspconfig' },
+        event = { 'BufReadPre', 'BufNewFile' },
 
-    opts = {
-        registries = {
-            'github:mason-org/mason-registry',
-            'github:Crashdummyy/mason-registry',
-        },
+        before = function()
+            require('lz.n').trigger_load('nvim-lspconfig')
+        end,
+
+        after = function()
+            require('mason').setup({
+                registries = {
+                    'github:mason-org/mason-registry',
+                    'github:Crashdummyy/mason-registry',
+                },
+            })
+        end,
     },
 }

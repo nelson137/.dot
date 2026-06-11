@@ -4,9 +4,17 @@
 --   - tpope/vim-surround
 
 return {
-    'kylechui/nvim-surround',
+    pack = {
+        src = { github = 'kylechui/nvim-surround' },
+    },
 
-    event = 'VeryLazy',
+    spec = {
+        'nvim-surround',
 
-    config = true,
+        event = 'DeferredUIEnter',
+
+        after = function()
+            require('nvim-surround').setup()
+        end,
+    },
 }

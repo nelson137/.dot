@@ -10,40 +10,44 @@ vim.api.nvim_create_autocmd({ 'TermOpen' }, {
 })
 
 return {
-    'akinsho/toggleterm.nvim',
-
-    keys = {
-        {
-            '<Leader>tt',
-            '<Cmd>ToggleTerm direction=horizontal<CR>',
-            desc = 'ToggleTerm: new',
-        },
-        {
-            '<Leader>tf',
-            '<Cmd>ToggleTerm direction=float<CR>',
-            desc = 'ToggleTerm: floating',
-        },
-        {
-            '<Leader>ts',
-            '<Cmd>ToggleTermSendVisualSelection<CR>',
-            mode = 'v',
-            desc = 'ToggleTerm: send visual selection',
-        },
-        {
-            '<Leader>tl',
-            '<Cmd>ToggleTermSendVisualLines<CR>',
-            mode = 'v',
-            desc = 'ToggleTerm: send visual lines',
-        },
+    pack = {
+        src = { github = 'akinsho/toggleterm.nvim' },
     },
 
-    opts = {
-        on_create = function()
-            vim.env.NO_STARSHIP = '1'
+    spec = {
+        'toggleterm.nvim',
+
+        keys = {
+            {
+                '<Leader>tt',
+                '<Cmd>ToggleTerm direction=horizontal<CR>',
+                desc = 'ToggleTerm: new',
+            },
+            {
+                '<Leader>tf',
+                '<Cmd>ToggleTerm direction=float<CR>',
+                desc = 'ToggleTerm: floating',
+            },
+            {
+                '<Leader>ts',
+                '<Cmd>ToggleTermSendVisualSelection<CR>',
+                mode = 'v',
+                desc = 'ToggleTerm: send visual selection',
+            },
+            {
+                '<Leader>tl',
+                '<Cmd>ToggleTermSendVisualLines<CR>',
+                mode = 'v',
+                desc = 'ToggleTerm: send visual lines',
+            },
+        },
+
+        after = function()
+            require('toggleterm').setup({
+                on_create = function()
+                    vim.env.NO_STARSHIP = '1'
+                end,
+            })
         end,
     },
-
-    config = function(_, opts)
-        require('toggleterm').setup(opts)
-    end,
 }

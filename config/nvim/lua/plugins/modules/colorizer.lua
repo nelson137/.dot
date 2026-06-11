@@ -1,12 +1,22 @@
 -- Preview colors in code
 
 return {
-    'NvChad/nvim-colorizer.lua',
+    pack = {
+        src = { github = 'NvChad/nvim-colorizer.lua' },
+    },
 
-    opts = {
-        filetypes = {
-            'css',
-            'scss',
-        },
+    spec = {
+        'nvim-colorizer.lua',
+
+        ft = { 'css', 'scss' },
+
+        after = function()
+            require('colorizer').setup({
+                filetypes = {
+                    'css',
+                    'scss',
+                },
+            })
+        end,
     },
 }

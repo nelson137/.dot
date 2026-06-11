@@ -1,9 +1,18 @@
 -- Git conflict utility
 
 return {
-    'akinsho/git-conflict.nvim',
+    pack = {
+        src = { github = 'akinsho/git-conflict.nvim' },
+        version = vim.version.range('*'),
+    },
 
-    version = '*',
+    spec = {
+        'git-conflict.nvim',
 
-    config = true,
+        event = 'BufReadPost',
+
+        after = function()
+            require('git-conflict').setup()
+        end,
+    },
 }

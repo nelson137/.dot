@@ -1,12 +1,23 @@
 -- Text case converter utility
 
 return {
-    'johmsalas/text-case.nvim',
+    pack = {
+        src = { github = 'johmsalas/text-case.nvim' },
+    },
 
-    dependencies = { "nvim-telescope/telescope.nvim" },
+    spec = {
+        'text-case.nvim',
 
-    config = function(_, opts)
-        require('textcase').setup(opts)
-        require('telescope').load_extension('textcase')
-    end,
+        event = 'DeferredUIEnter',
+
+        -- Registers a telescope extension below.
+        before = function()
+            require('lz.n').trigger_load('telescope.nvim')
+        end,
+
+        after = function()
+            require('textcase').setup({})
+            require('telescope').load_extension('textcase')
+        end,
+    },
 }

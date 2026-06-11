@@ -16,59 +16,83 @@ setmetatable(P, {
 })
 
 return {
-    'mfussenegger/nvim-dap',
+    pack = {
+        src = { github = 'mfussenegger/nvim-dap' },
+    },
 
-    config = function()
-        local dap = require('dap')
-        dap.defaults.fallback.terminal_win_cmd = 'tabnew'
+    spec = {
+        'nvim-dap',
 
-        local map = Map('DAP')
+        keys = {
+            '<F5>',
+            '<Leader>lt',
+            '<Leader>ll',
+            '<Leader>lj',
+            '<Leader>lb',
+            '<Leader>lB',
+            '<Leader>lr',
+            { '<Leader>lk', mode = { 'n', 'v' } },
+            { '<Leader>lp', mode = { 'n', 'v' } },
+            { '<Leader>lf', mode = { 'n', 'v' } },
+            { '<Leader>ls', mode = { 'n', 'v' } },
+        },
 
-        map({ 'n' }, '<F5>', function() P().continue() end, 'continue')
-        map({ 'n' }, '<Leader>lt', function() P().terminate() end, 'terminate')
-        map({ 'n' }, '<Leader>ll', function() P().step_over() end, 'step over')
-        map({ 'n' }, '<Leader>lj', function() P().step_into() end, 'step into')
-        map({ 'n' }, '<Leader>lk', function() P().step_out() end, 'step out')
-        map({ 'n' }, '<Leader>lb', function() P().toggle_breakpoint() end, 'toggle breakpoint')
-        map({ 'n' }, '<Leader>lB', function() P().clear_breakpoints() end, 'clear breakpoints')
-        map(
-            { 'n' },
-            '<Leader>lp',
-            function() P().set_breakpoint(nil, nil, vim.fn.input('Log point: ')) end,
-            'set log point'
-        )
-        map({ 'n' }, '<Leader>lr', function() P().repl.open() end, 'open REPL')
-        map({ 'n', 'v' }, '<Leader>lk', function() P.ui().hover() end, 'hover')
-        map({ 'n', 'v' }, '<Leader>lp', function() P.ui().preview() end, 'preview')
-        map({ 'n', 'v' }, '<Leader>lf', P.ui(function(ui) ui.centered_float(ui.frames) end), 'frames')
-        map({ 'n', 'v' }, '<Leader>ls', P.ui(function(ui) ui.centered_float(ui.scopes) end), 'scopes')
+        after = function()
+            local dap = require('dap')
+            dap.defaults.fallback.terminal_win_cmd = 'tabnew'
 
-        vim.api.nvim_create_autocmd({ 'FileType' }, {
-            group = vim.api.nvim_create_augroup('Ft_dap_float', {}),
-            pattern = { 'dap-float' },
-            callback = function()
-                map('n', 'q', '<C-w>c', 'close float')
-            end,
-        })
+            local map = Map('DAP')
 
-        local mason_path = vim.fn.stdpath('data') .. '/mason/packages/netcoredbg/netcoredbg'
-        dap.adapters.netcoredbg = {
-            type = 'executable',
-            command = mason_path,
-            args = { '--interpreter=vscode' },
-        }
+            map({ 'n' }, '<F5>', function() P().continue() end, 'continue')
+            map({ 'n' }, '<Leader>lt', function() P().terminate() end, 'terminate')
+            map({ 'n' }, '<Leader>ll', function() P().step_over() end, 'step over')
+            map({ 'n' }, '<Leader>lj', function() P().step_into() end, 'step into')
+            map({ 'n' }, '<Leader>lk', function() P().step_out() end, 'step out')
+            map({ 'n' }, '<Leader>lb', function() P().toggle_breakpoint() end, 'toggle breakpoint')
+            map({ 'n' }, '<Leader>lB', function() P().clear_breakpoints() end, 'clear breakpoints')
+            map(
+                { 'n' },
+                '<Leader>lp',
+                function() P().set_breakpoint(nil, nil, vim.fn.input('Log point: ')) end,
+                'set log point'
+            )
+            map({ 'n' }, '<Leader>lr', function() P().repl.open() end, 'open REPL')
+            map({ 'n', 'v' }, '<Leader>lk', function() P.ui().hover() end, 'hover')
+            map({ 'n', 'v' }, '<Leader>lp', function() P.ui().preview() end, 'preview')
+            map({ 'n', 'v' }, '<Leader>lf', P.ui(function(ui) ui.centered_float(ui.frames) end), 'frames')
+            map({ 'n', 'v' }, '<Leader>ls', P.ui(function(ui) ui.centered_float(ui.scopes) end), 'scopes')
 
-        dap.configurations['cs'] = {
-            {
-                name = 'launch - netcoredbg',
-                type = 'coreclr',
-                request = 'launch',
-                program = function()
-                    local path = vim.fn.getcwd() .. '/bin/Debug/net9.0/'
-                    local dll_path = vim.fn.input('DLL: ', path, 'file')
-                    return dll_path
+            vim.api.nvim_create_autocmd({ 'FileType' }, {
+                group = vim.api.nvim_create_augroup('Ft_dap_float', {}),
+                pattern = { 'dap-float' },
+                callback = function()
+                    map('n', 'q', '<C-w>c', 'close float')
                 end,
+            })
+
+            local mason_path = vim.fn.stdpath('data') .. '/mason/packages/netcoredbg/netcoredbg'
+            dap.adapters.netcoredbg = {
+                type = 'executable',
+                command = mason_path,
+                args = { '--interpreter=vscode' },
             }
-        }
-    end
+
+            dap.configurations['cs'] = {
+                {
+                    name = 'launch - netcoredbg',
+                    type = 'coreclr',
+                    request = 'launch',
+                    program = function()
+                        local path = vim.fn.getcwd() .. '/bin/Debug/net9.0/'
+                        local dll_path = vim.fn.input('DLL: ', path, 'file')
+                        return dll_path
+                    end,
+                }
+            }
+
+            -- Load the UI alongside dap so its listeners are registered and the UI
+            -- auto-opens when a debug session starts.
+            require('lz.n').trigger_load('nvim-dap-ui')
+        end
+    },
 }

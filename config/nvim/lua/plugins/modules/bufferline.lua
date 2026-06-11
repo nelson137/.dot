@@ -1,12 +1,5 @@
 -- Fancy buffer line (instead of the default tab line)
 
----@class BufferLineTab
----@field name string
----@field path string
----@field bufnr integer
----@field tabnr integer
----@field buffers integer[]
-
 vim.opt.termguicolors = true
 vim.opt.mousemoveevent = true
 
@@ -50,63 +43,67 @@ local formatters = {
 }
 
 return {
-    'akinsho/bufferline.nvim',
-
-    dependencies = {
-        'nvim-tree/nvim-web-devicons',
+    pack = {
+        src = { github = 'akinsho/bufferline.nvim' },
     },
 
-    ---@module 'bufferline'
-    ---@type bufferline.UserConfig
-    opts = {
-        options = {
-            diagnostics = 'nvim_lsp',
-            diagnostics_indicator = function(_, _, diagnostics_dict)
-                local errors = diagnostics_dict['error']
-                local warnings = diagnostics_dict['warning']
-                local infos = diagnostics_dict['info']
-                local sections = {}
-                if errors and errors > 0 then table.insert(sections, errors .. '') end
-                if warnings and warnings > 0 then table.insert(sections, warnings .. '') end
-                if infos and infos > 0 then table.insert(sections, infos .. '🛈 ') end
-                return table.concat(sections, ' ')
-            end,
-            hover = {
-                enabled = true,
-                delay = 0,
-                reveal = { 'close' },
-            },
-            left_trunc_marker = '⟵',
-            max_name_length = 42,
-            max_prefix_length = 16,
-            ---@param buf BufferLineTab
-            name_formatter = function(buf)
-                for _, f in pairs(formatters) do
-                    if vim.endswith(buf.name, f.suffix) then
-                        return string.sub(buf.name, 1, #buf.name - #f.suffix) .. f.replacement
-                    end
-                end
-                return buf.name
-            end,
-            right_trunc_marker = '⟶',
-            sort_by = 'insert_at_end',
-        },
+    spec = {
+        'bufferline.nvim',
+
+        lazy = false,
+
+        after = function()
+            ---@module 'bufferline'
+            ---@type bufferline.UserConfig
+            local opts = {
+                options = {
+                    diagnostics = 'nvim_lsp',
+                    diagnostics_indicator = function(_, _, diagnostics_dict)
+                        local errors = diagnostics_dict['error']
+                        local warnings = diagnostics_dict['warning']
+                        local infos = diagnostics_dict['info']
+                        local sections = {}
+                        if errors and errors > 0 then table.insert(sections, errors .. '') end
+                        if warnings and warnings > 0 then table.insert(sections, warnings .. '') end
+                        if infos and infos > 0 then table.insert(sections, infos .. '🛈 ') end
+                        return table.concat(sections, ' ')
+                    end,
+                    hover = {
+                        enabled = true,
+                        delay = 0,
+                        reveal = { 'close' },
+                    },
+                    left_trunc_marker = '⟵',
+                    max_name_length = 42,
+                    max_prefix_length = 16,
+                    ---@param buf BufferLineTab
+                    name_formatter = function(buf)
+                        for _, f in pairs(formatters) do
+                            if vim.endswith(buf.name, f.suffix) then
+                                return string.sub(buf.name, 1, #buf.name - #f.suffix) .. f.replacement
+                            end
+                        end
+                        return buf.name
+                    end,
+                    right_trunc_marker = '⟶',
+                    sort_by = 'insert_at_end',
+                },
+            }
+
+            local b = require('bufferline')
+
+            b.setup(opts)
+
+            vim.keymap.del('n', 'gh');
+            vim.keymap.del('n', 'gl');
+
+            local map = Map('BufferLine')
+            map('n', 'gh', function() b.cycle(-1) end, 'previous')
+            map('n', 'gl', function() b.cycle(1) end, 'next')
+            map('n', 'g,', function() b.move(-1) end, 'move previous')
+            map('n', 'g.', function() b.move(1) end, 'move next')
+            map('n', 'g<', function() b.move_to(1) end, 'move to start')
+            map('n', 'g>', function() b.move_to(-1) end, 'move to end')
+        end,
     },
-
-    config = function(_, opts)
-        local b = require('bufferline')
-
-        b.setup(opts)
-
-        vim.keymap.del('n', 'gh');
-        vim.keymap.del('n', 'gl');
-
-        local map = Map('BufferLine')
-        map('n', 'gh', function() b.cycle(-1) end, 'previous')
-        map('n', 'gl', function() b.cycle(1) end, 'next')
-        map('n', 'g,', function() b.move(-1) end, 'move previous')
-        map('n', 'g.', function() b.move(1) end, 'move next')
-        map('n', 'g<', function() b.move_to(1) end, 'move to start')
-        map('n', 'g>', function() b.move_to(-1) end, 'move to end')
-    end,
 }

@@ -1,19 +1,29 @@
 -- Configure LuaLS for Neovim development
 
 return {
-    'folke/lazydev.nvim',
+    pack = {
+        src = { github = 'folke/lazydev.nvim' },
+    },
 
-    ft = 'lua',
+    spec = {
+        'lazydev.nvim',
 
-    ---@module 'lazydev'
-    ---@type lazydev.Config
-    opts = {
-        enabled = function(root_dir)
-            return not vim.uv.fs_stat(root_dir .. '/.luarc.json') and
-                root_dir == vim.env.HOME .. '/.dot'
+        ft = 'lua',
+
+        after = function()
+            ---@module 'lazydev'
+            ---@type lazydev.Config
+            local opts = {
+                enabled = function(root_dir)
+                    return not vim.uv.fs_stat(root_dir .. '/.luarc.json') and
+                        root_dir == vim.env.HOME .. '/.dot'
+                end,
+                library = {
+                    { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+                },
+            }
+
+            require('lazydev').setup(opts)
         end,
-        library = {
-            { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
-        },
     },
 }

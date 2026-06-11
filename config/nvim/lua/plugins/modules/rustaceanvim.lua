@@ -23,24 +23,34 @@ local rust_analyzer_settings = {
     },
 }
 
----@module 'rustaceanvim'
----@type rustaceanvim.Config
-vim.g.rustaceanvim = {
-    ---@type rustaceanvim.lsp.ClientConfig
-    server = {
-        on_attach = on_attach,
-        default_settings = {
-            ['rust-analyzer'] = rust_analyzer_settings,
-        },
-    },
-}
-
+-- rustaceanvim is a filetype plugin: it activates itself on rust buffers, so it
+-- must be a *start* plugin (sourced eagerly by `vim.pack.add`) rather than
+-- lazy-loaded on `ft`. It is configured via `vim.g.rustaceanvim`, which it reads
+-- the first time a rust buffer starts the LSP, so setting it in `before` (at
+-- startup) is in time.
 return {
-    'mrcjkb/rustaceanvim',
+    pack = {
+        src = { github = 'mrcjkb/rustaceanvim' },
+        version = vim.version.range('^6'),
+    },
 
-    lazy = false,
+    spec = {
+        'rustaceanvim',
 
-    version = '^6',
+        lazy = false,
 
-    ft = { 'rust' },
+        before = function()
+            ---@module 'rustaceanvim'
+            ---@type rustaceanvim.Config
+            vim.g.rustaceanvim = {
+                ---@type rustaceanvim.lsp.ClientConfig
+                server = {
+                    on_attach = on_attach,
+                    default_settings = {
+                        ['rust-analyzer'] = rust_analyzer_settings,
+                    },
+                },
+            }
+        end,
+    },
 }

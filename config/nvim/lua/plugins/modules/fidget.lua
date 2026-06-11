@@ -1,9 +1,17 @@
 -- Language server progress visualizer
 
 return {
-    'j-hui/fidget.nvim',
+    pack = {
+        src = { github = 'j-hui/fidget.nvim' },
+    },
 
-    event = 'LspAttach',
+    spec = {
+        'fidget.nvim',
 
-    config = true,
+        event = 'LspAttach',
+
+        after = function()
+            require('fidget').setup()
+        end,
+    },
 }

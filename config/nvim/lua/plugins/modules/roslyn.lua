@@ -3,11 +3,19 @@
 -- * debug & test runner
 
 return {
-    'seblyng/roslyn.nvim',
+    pack = {
+        src = { github = 'seblyng/roslyn.nvim' },
+    },
 
-    ft = { 'cs' },
+    spec = {
+        'roslyn.nvim',
 
-    ---@module 'roslyn.config'
-    ---@type RoslynNvimConfig
-    opts = {},
+        ft = { 'cs' },
+
+        after = function()
+            ---@module 'roslyn.config'
+            ---@type RoslynNvimConfig
+            require('roslyn').setup({})
+        end,
+    },
 }

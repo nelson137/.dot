@@ -1,25 +1,34 @@
 -- crates.io completions
 
 return {
-    'saecki/crates.nvim',
+    pack = {
+        src = { github = 'saecki/crates.nvim' },
+        version = 'stable',
+    },
 
-    tag = 'stable',
+    spec = {
+        'crates.nvim',
 
-    event = { 'BufRead Cargo.toml' },
+        event = { event = 'BufRead', pattern = 'Cargo.toml' },
 
-    ---@module 'crates'
-    ---@type crates.UserConfig
-    opts = {
-        lsp = {
-            enabled = true,
-            actions = true,
-            completion = true,
-            hover = true,
-            on_attach = function(_, bufnr)
-                local map = Map('LSP', { buffer = bufnr })
-                map({ 'n', 'v' }, '<Leader>.', vim.lsp.buf.code_action, 'code action')
-                map({ 'n' }, '<Leader>k', vim.lsp.buf.hover, 'hover')
-            end,
-        },
+        after = function()
+            ---@module 'crates'
+            ---@type crates.UserConfig
+            local opts = {
+                lsp = {
+                    enabled = true,
+                    actions = true,
+                    completion = true,
+                    hover = true,
+                    on_attach = function(_, bufnr)
+                        local map = Map('LSP', { buffer = bufnr })
+                        map({ 'n', 'v' }, '<Leader>.', vim.lsp.buf.code_action, 'code action')
+                        map({ 'n' }, '<Leader>k', vim.lsp.buf.hover, 'hover')
+                    end,
+                },
+            }
+
+            require('crates').setup(opts)
+        end,
     },
 }

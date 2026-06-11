@@ -1,11 +1,17 @@
 -- Startup time graph
 
 return {
-    'dstein64/vim-startuptime',
+    pack = {
+        src = { github = 'dstein64/vim-startuptime' },
+    },
 
-    cmd = 'StartupTime',
+    spec = {
+        'vim-startuptime',
 
-    init = function()
-        vim.g.startuptime_tries = 5
-    end,
+        cmd = 'StartupTime',
+
+        before = function()
+            vim.g.startuptime_tries = 5
+        end,
+    },
 }
