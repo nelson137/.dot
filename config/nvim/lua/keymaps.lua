@@ -36,9 +36,9 @@ search_map('n', 'N', repeatSearch_Prev, 'repeat backward and flash the cursor li
 local buf_map = Map('Buffers')
 buf_map('n', 'gl', '<Cmd>bn<CR>', 'next')
 buf_map('n', 'gh', '<Cmd>bp<CR>', 'previous')
-buf_map('n', 'gd', function() Snacks.bufdelete.delete() end, 'close current')
-buf_map('n', 'gDD', function() Snacks.bufdelete.all() end, 'close all')
-buf_map('n', 'gDO', function() Snacks.bufdelete.other() end, 'close other')
+buf_map('n', 'gd', function() require('snacks').bufdelete.delete() end, 'close current')
+buf_map('n', 'gDD', function() require('snacks').bufdelete.all() end, 'close all')
+buf_map('n', 'gDO', function() require('snacks').bufdelete.other() end, 'close other')
 
 -- Better tab control
 local tab_map = Map('Tabs')

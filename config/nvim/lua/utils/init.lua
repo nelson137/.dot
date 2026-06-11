@@ -1,6 +1,29 @@
+-- vim:foldmethod=marker
+
 ----------------------------------------------------------------------
---- Standard Library
+-- Timing utility (`vim.g.times`) {{{
+
+local Times = { nanos_per_sec = 1000000000 }
+
+---@param name string
+function Times.mark(name)
+    local t = vim.uv.hrtime()
+    vim.g.times = vim.tbl_deep_extend('keep', vim.g.times, { [name] = t })
+end
+
+---@param from string
+---@param to string
+function Times.get(from, to)
+    return (vim.g.times[to] - vim.g.times[from]) / vim.g.times.nanos_per_sec
+end
+
+vim.g.times = Times
+
+-- }}}
 ----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+-- Standard Library {{{
 
 --- Looks for the last match of `pattern` in the string.
 ---
@@ -58,9 +81,11 @@ function vim.tbl_from_entries(table)
     return output
 end
 
+-- }}}
 ----------------------------------------------------------------------
---- Common
+
 ----------------------------------------------------------------------
+-- Common {{{
 
 ---Create a grouped keymapper.
 ---
@@ -105,48 +130,5 @@ function Pinspect(...)
     end
 end
 
+-- }}}
 ----------------------------------------------------------------------
---- Table Methods
-----------------------------------------------------------------------
-
-function table._merge_impl(dest, a, b)
-    for k, b_v in pairs(b) do
-        if type(b_v) == 'table' and type(a[k] or false) == 'table' then
-            dest[k] = table._merge_impl(dest[k], a[k], b_v)
-        else
-            dest[k] = b_v
-        end
-    end
-    return dest
-end
-
--- Merge two tables, values in `b` overwrite those in `a`.
---
--- Source: https://stackoverflow.com/questions/1283388
---
--- Tables can't use colon functions because they don't have metatables.
--- See: https://stackoverflow.com/a/33052346/5673922
-function table.merge(a, b)
-    if type(b) ~= 'table' then
-        error('Expected table')
-    end
-
-    return table._merge_impl(vim.deepcopy(a), a, b)
-end
-
--- -- A more simple implementation that mutates `a`
--- function table.merge(a, b)
---     if type(b) ~= 'table' then
---         error('Expected table')
---     end
---
---     for k, v in pairs(b) do
---         if type(v) == 'table' and type(a[k] or false) == 'table' then
---             a[k] = table.merge_mut(a[k], v)
---         else
---             a[k] = v
---         end
---     end
---
---     return a
--- end
