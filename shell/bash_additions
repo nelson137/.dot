@@ -15,6 +15,9 @@ LESSHISTFILE=/dev/null
 # mysql_histfile, stfu
 MYSQL_HISTFILE=/dev/null
 
+# Cargo
+[[ -d "$HOME/.cargo" ]] && source "$HOME/.cargo/env"
+
 # awscli completions
 [[ -d /opt/aws-cli ]] && source /opt/aws-cli/bin/aws_zsh_completer.sh
 
