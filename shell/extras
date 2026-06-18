@@ -344,12 +344,14 @@ gcl() {
             #  /abc
             #  /
             echo "invalid repo name: $repo" >&2
-        elif [[ $repo =~ .+/.+ ]]; then
-            # Clone someone else's repo
+        elif [[ $repo =~ ^[^/]+/[^/]+$ ]]; then
+            # Clone repo: username/repo
             eval "$gc" "https://github.com/${repo}.git"
-        else
-            # Clone my repo
+        elif ! [[ $repo =~ / ]]; then
+            # Clone one of my repos by name
             eval "$gc" "git@github.com:nelson137/${repo}.git"
+        else
+            eval "$gc" "$repo"
         fi
     done
 }
