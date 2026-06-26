@@ -425,6 +425,8 @@ tmuxopen() {
         return 1
     fi
 
+    path_=$(realpath "$path_")
+
     if [[ -z $name ]]; then
         name=$(basename "$path_")
     fi
