@@ -96,8 +96,8 @@ local opts = {
             [']c'] = 'next_git_modified',
             ['[g'] = 'noop',
             [']g'] = 'noop',
-            ['<C-j>'] = { 'scroll_preview', config = { direction = 10 } },
-            ['<C-k>'] = { 'scroll_preview', config = { direction = -10 } },
+            ['<C-j>'] = { 'scroll_preview', config = { direction = -10 } },
+            ['<C-k>'] = { 'scroll_preview', config = { direction = 10 } },
             ['Y'] = 'prompt_copy_node_path',
             -- TODO: add mappings to find with telescope
             --       https://github.com/nvim-neo-tree/neo-tree.nvim/wiki/Recipes#find-with-telescope
