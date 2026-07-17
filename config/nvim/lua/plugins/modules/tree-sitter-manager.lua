@@ -9,6 +9,7 @@ return {
         after = function()
             require('tree-sitter-manager').setup({
                 ensure_installed = {
+                    'angular',
                     'c',
                     'c_sharp',
                     'comment',
@@ -29,6 +30,7 @@ return {
                     'markdown_inline',
                     'python',
                     'rust',
+                    'scss',
                     'svelte',
                     'toml',
                     'tsx',
