@@ -15,6 +15,8 @@ setmetatable(P, {
 ---@module 'neo-tree'
 ---@type neotree.Config
 local opts = {
+    enable_diagnostics = false,
+    enable_git_status = false,
     sources = { 'filesystem', 'buffers', 'document_symbols' },
     source_selector = {
         statusline = true,
@@ -261,7 +263,6 @@ local opts = {
                         },
                         { "clipboard",   zindex = 10 },
                         { "diagnostics", zindex = 20, align = "right", hide_when_expanded = true, errors_only = true },
-                        { "git_status",  zindex = 10, align = "right", hide_when_expanded = true },
                         { "created",     zindex = 10, align = "right" },
                     },
                 },
@@ -285,7 +286,6 @@ local opts = {
                         { "bufnr",       zindex = 10 },
                         { "modified",    zindex = 20, align = "right" },
                         { "diagnostics", zindex = 20, align = "right" },
-                        { "git_status",  zindex = 10, align = "right" },
                         { "created",     zindex = 10, align = "right" },
                     },
                 },
