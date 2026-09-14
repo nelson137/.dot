@@ -22,7 +22,7 @@
 [merge]
 	autoStash = true
 [pretty]
-	oneline-full = %C(yellow)%h%C(reset) %s  %C(brightblack)%ah%C(reset)  %C(magenta)%D%C(reset)
+	oneline-full = %C(yellow)%h%C(reset) %C(brightblack)%<(15,trunc)%an%C(reset) %s  %C(brightblack)%ah%C(reset)  %C(magenta)%D%C(reset)
 [pull]
 	rebase = true
 	default = "current"
