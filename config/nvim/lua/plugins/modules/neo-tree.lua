@@ -94,10 +94,6 @@ local opts = {
             ['e'] = 'focus_filesystem',
             ['E'] = 'focus_buffers',
             ['Q'] = 'focus_document_symbols',
-            ['[c'] = 'prev_git_modified',
-            [']c'] = 'next_git_modified',
-            ['[g'] = 'noop',
-            [']g'] = 'noop',
             ['<C-j>'] = { 'scroll_preview', config = { direction = -10 } },
             ['<C-k>'] = { 'scroll_preview', config = { direction = 10 } },
             ['Y'] = 'prompt_copy_node_path',
@@ -122,7 +118,12 @@ local opts = {
         },
         use_libuv_file_watcher = false,
         window = {
-            mappings = {},
+            mappings = {
+                ['[c'] = 'prev_git_modified',
+                [']c'] = 'next_git_modified',
+                ['[g'] = 'noop',
+                [']g'] = 'noop',
+            },
         },
     },
     renderers = {
@@ -290,6 +291,13 @@ local opts = {
                     },
                 },
             },
+        },
+    },
+    document_symbols = {
+        window = {
+            mappings = {
+                ['<C-r>'] = 'noop'
+            }
         },
     },
 }
