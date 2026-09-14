@@ -28,15 +28,6 @@ local opts = {
         truncation_character = '…',
     },
     commands = {
-        focus_filesystem = function()
-            P.command().execute({ action = 'focus', source = 'filesystem' })
-        end,
-        focus_buffers = function()
-            P.command().execute({ action = 'focus', source = 'buffers' })
-        end,
-        focus_document_symbols = function()
-            P.command().execute({ action = 'focus', source = 'document_symbols' })
-        end,
         prompt_copy_node_path = function(state)
             -- Inspired by:
             -- https://github.com/nvim-neo-tree/neo-tree.nvim/discussions/370#discussioncomment-6679447
@@ -91,9 +82,6 @@ local opts = {
     window = {
         auto_expand_width = true,
         mappings = {
-            ['e'] = 'focus_filesystem',
-            ['E'] = 'focus_buffers',
-            ['Q'] = 'focus_document_symbols',
             ['<C-j>'] = { 'scroll_preview', config = { direction = -10 } },
             ['<C-k>'] = { 'scroll_preview', config = { direction = 10 } },
             ['Y'] = 'prompt_copy_node_path',
