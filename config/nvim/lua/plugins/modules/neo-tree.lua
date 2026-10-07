@@ -15,6 +15,7 @@ setmetatable(P, {
 ---@module 'neo-tree'
 ---@type neotree.Config
 local opts = {
+    close_if_last_window = true,
     enable_diagnostics = false,
     enable_git_status = false,
     sources = { 'filesystem', 'buffers', 'document_symbols' },
