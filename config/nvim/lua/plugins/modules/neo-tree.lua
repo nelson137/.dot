@@ -108,6 +108,7 @@ local opts = {
         use_libuv_file_watcher = false,
         window = {
             mappings = {
+                ['<space>'] = 'noop',
                 ['[c'] = 'prev_git_modified',
                 [']c'] = 'next_git_modified',
                 ['[g'] = 'noop',
