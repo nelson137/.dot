@@ -18,6 +18,7 @@ local opts = {
     close_if_last_window = true,
     enable_diagnostics = false,
     enable_git_status = false,
+    popup_border_style = '',
     sources = { 'filesystem', 'buffers', 'document_symbols' },
     source_selector = {
         statusline = true,
