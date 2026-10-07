@@ -13,6 +13,7 @@ setmetatable(P, {
 })
 
 ---@module 'neo-tree'
+---@module 'nui.tree'
 ---@type neotree.Config
 local opts = {
     close_if_last_window = true,
@@ -39,7 +40,11 @@ local opts = {
             -- Inspired by:
             -- https://github.com/nvim-neo-tree/neo-tree.nvim/discussions/370#discussioncomment-6679447
 
-            local node = state.tree:get_node()
+            ---@type NuiTree
+            local tree = state.tree
+            local node = tree:get_node()
+            if node == nil then return end
+
             local filepath = node:get_id()
             local filename = node.name
             local modify = vim.fn.fnamemodify
@@ -137,7 +142,7 @@ local opts = {
                     if node.type == 'directory' then
                         local children = state.tree:get_nodes(node.id)
                         if type(children) == 'table' then
-                            for _i, child in ipairs(children) do
+                            for _, child in ipairs(children) do
                                 stack[#stack + 1] = child
                             end
                         end
@@ -147,7 +152,7 @@ local opts = {
                 end
 
                 -- Close all discovered descendant file nodes
-                for _i, node in ipairs(file_nodes) do
+                for _, node in ipairs(file_nodes) do
                     local bufnr = node.extra.bufnr
                     local info = vim.fn.getbufinfo(bufnr)[1]
 
