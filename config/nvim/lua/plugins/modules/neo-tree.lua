@@ -211,15 +211,12 @@ return {
         after = function()
             P().setup(opts)
 
-            local function toggle_source(source)
-                return function()
-                    P.command().execute({ action = 'focus', source = source, toggle = true })
-                end
-            end
-
             local map = Map('NeoTree')
-            map('n', '<Leader>e', toggle_source('filesystem'), 'toggle filesystem')
-            map('n', '<Leader>E', toggle_source('buffers'), 'toggle buffers')
+
+            local function toggle_neo_tree()
+                P.command().execute({ action = 'focus', toggle = true })
+            end
+            map('n', '<Leader>e', toggle_neo_tree, 'toggle')
         end,
     },
 }
