@@ -16,7 +16,7 @@ gui:
   showIcons: true
   showRootItemInFileTree: false
   nerdFontsVersion: '3'
-  useHunkModeInStagingView: true
+  useHunkModeInDiffView: true
 
 customCommands:
   - key: 'E'
